@@ -1,4 +1,3 @@
-swkroa
-======
+# swkroa
 
 Southwest Kansas Royalty Owners Association
