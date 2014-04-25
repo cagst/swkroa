@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		<div data-th-fragment="listComments">
+			<div class="spacer-top">
+				<div class="divider-inner-header sub-header">
+					<span data-th-text="#{com.cagst.swkroa.membership.comments}">zzz Comments</span>
+					<span class="pull-right">
+						<button type="button" class="btn btn-success btn-xs"
+								        data-toggle="modal" data-target="#modifyComment"
+								        data-ng-click="addComment()">
+							<i class="fa fa-plus"></i>
+						</button>
+					</span>
+				</div>
+				
+				<table class="table table-hover table-bordered">
+					<tr data-ng-repeat="comment in membership.comments | orderBy : 'commentDate' : true"
+					    data-ng-show="comment.active">
+						<td style="width:100px">{{comment.commentDate | date:'mediumDate'}}</td>
+						<td class="comment-text">{{comment.commentText}}</td>
+						<td style="width:75px">
+							<div class="pull-right">
+								<button type="button" class="btn btn-primary btn-xs"
+								        data-toggle="modal" data-target="#modifyComment"
+								        data-ng-click="selectComment(comment)">
+									<i class="fa fa-edit"></i>
+								</button>
+								<button type="button" class="btn btn-danger btn-xs"
+								        data-toggle="modal" data-target="#deleteComment"
+								        data-ng-click="selectComment(comment)">
+									<i class="fa fa-trash-o"></i>
+								</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>

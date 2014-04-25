@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- Activates various annotations to be detected in bean classes. -->
+	<context:annotation-config />
+	
+	<!-- Scans the class path for annotated components that will be auto-registered as Spring beans. -->
+	<context:component-scan base-package="com.cagst.swkroa" />
+	
+	<bean id="jsonObjectMapper" class="com.cagst.swkroa.web.util.JacksonObjectMapper" />
+	
+	<!-- Configures the annotation-driven Spring MVC Controller programming model. -->
+	<!-- NOTE: With Spring 3.0, this tag works in Servlet MVC only! -->
+	<mvc:annotation-driven >
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper" ref="jsonObjectMapper" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>properties/i18n/common</value>
+				<value>properties/i18n/auth</value>
+				<value>properties/i18n/membership</value>
+				<value>properties/i18n/report</value>
+				<value>properties/i18n/maintenance</value>
+				<value>properties/i18n/user</value>
+			</list>
+		</property>
+	</bean>
+	
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+			<property name="cacheSeconds" value="0" />
+		</bean>
+	</mvc:interceptors>
+	
+	<bean id="environmentConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:environment.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="nameFormatter" class="com.cagst.common.formatter.DefaultNameFormatter" scope="prototype" />
+	<bean id="ageFormatter" class="com.cagst.common.formatter.DefaultAgeFormatter" scope="prototype" />
+	<bean id="phoneFormatter" class="com.cagst.common.formatter.DefaultPhoneNumberFormatter" scope="prototype" />
+</beans>

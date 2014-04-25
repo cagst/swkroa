@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+	<head>
+<!-- 
+		<base href="/swkroa-angular-war">
+-->
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		
+<!-- 
+		<meta http-equiv="refresh" content="<%=session.getMaxInactiveInterval() - 5%>; url=<cagst:static key='url.auth.timedout' />" />
+-->
+		
+		<title layout:title-pattern="$DECORATOR_TITLE" data-th-text="#{com.cagst.swkroa.title}">zzz SWKROA</title>
+		
+		<link type="text/css" data-th-href="@{//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css}" rel="stylesheet" />
+		<link type="text/css" data-th-href="@{//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css}" rel="stylesheet" />
+		<link type="text/css" data-th-href="@{/static/bootstrap_form_helper/css/bootstrap-formhelpers.min.css}" rel="stylesheet" />
+		<link type="text/css" data-th-href="@{/static/css/cagst.css}" rel="stylesheet" />
+		<link type="text/css" data-th-href="@{/static/css/swkroa.css}" rel="stylesheet" />
+		
+		<script type="text/javascript" data-th-src="@{//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js}"></script>
+		<script type="text/javascript" data-th-src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js}"></script>
+	</head>
+	
+	<body>
+		<div id="page-header">
+			<span id="page-title">
+				<a data-th-href="@{/}" href="#">
+					<img data-th-src="@{/static/images/swkroa_logo_small.jpg}" />
+				</a>
+			</span>
+			<ul id="account-navigation">
+				<li>
+					<span data-th-text="#{com.cagst.swkroa.header.welcome}">
+						zzz Welcome
+					</span>
+					<span data-th-text="${#authentication.principal.firstName}">
+					</span>
+				</li>
+				<li>
+					<a data-th-href="@{/j_spring_security_logout}" data-th-text="#{com.cagst.swkroa.header.signout}">
+						zzz Sign Out
+					</a>
+				</li>
+				<li>
+					<a href="#" data-th-text="#{com.cagst.swkroa.header.help}">
+						zzz Help
+					</a>
+				</li>
+			</ul>
+		</div>
+		
+		<div id="page-navigation" class="navbar navbar-inverse">
+			<div class="navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="#" data-th-href="@{/}" data-th-text="#{com.cagst.swkroa.nav.home}">
+							zzz Home
+						</a>
+					</li>
+					<li>
+						<a href="/membership/listing" data-th-href="@{/membership/home}" data-th-text="#{com.cagst.swkroa.nav.membership}">
+							zzz Memberships
+						</a>
+					</li>
+					<li>
+						<a href="/report/listing" data-th-href="@{/report/listing}" data-th-text="#{com.cagst.swkroa.nav.reports}">
+							zzz Reports
+						</a>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<span data-th-text="#{com.cagst.swkroa.nav.maintain}">zzz Maintain</span>
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="/maintain/codesets" data-th-href="@{/maintain/codesets}" data-th-text="#{com.cagst.swkroa.maintain.menu.codeset}">
+									zzz Code Sets
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<span class="navbar-brand pull-right">
+					<a href="#" data-th-text="#{com.cagst.brand}">
+						zzz CAGST
+					</a>
+				</span>
+			</div>
+		</div>
+		
+		<div id="page-content">
+			<div layout:fragment="content">
+				<h1>zzzPage content goes here!</h1>
+			</div>
+		</div>
+		
+		<script type="text/javascript" data-th-src="@{//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" data-th-src="@{/static/bootstrap_form_helper/js/bootstrap-formhelpers.min.js}"></script>
+	</body>
+</html>

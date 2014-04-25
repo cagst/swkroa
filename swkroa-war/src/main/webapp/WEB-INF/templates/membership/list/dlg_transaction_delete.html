@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		<div data-th-fragment="dlgDeleteTransaction">
+			<div class="modal fade" id="deleteTransaction" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.transaction.delete.title}">zzz Please confirm</h4>
+						</div>
+						<div class="modal-body">
+							<p data-th-text="#{com.cagst.swkroa.membership.transaction.delete.message}">zzz Delete this?</p>
+							<div>
+								<span>{{transaction.transactionDate | date:'mediumDate'}}</span>
+								<span>{{transaction.transactionType.display}}</span>
+								<span>{{transaction.transactionAmount | currency}}</span>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger"
+							        data-ng-click="removeTransaction()"
+							        data-th-text="#{com.cagst.swkroa.delete}">
+								zzz Delete
+							</button>
+							<button type="button" class="btn btn-primary"
+							        data-dismiss="modal"
+							        data-th-text="#{com.cagst.swkroa.keep}">
+								zzz Keep
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

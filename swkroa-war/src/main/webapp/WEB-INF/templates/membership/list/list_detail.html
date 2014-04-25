@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<body>
+		<div data-th-fragment="membershipDetail">
+			<div data-ng-show="!membership">
+				<em>
+					<label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.membership.notselected}">
+						zzz No membership selected.
+					</label>
+				</em>
+			</div>
+			<div data-ng-show="membership">
+				<div class="container-inner">
+					<h2 class="lead">
+						<span>{{membership.primaryMember.effectiveMemberName}}</span>
+						<small data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
+						       data-ng-show="membership.primaryMember.joinDate">
+							zzz Since
+						</small>
+					</h2>
+					<div>
+						<div>
+							<div class="text-muted divider-bottom" data-th-text="#{com.cagst.swkroa.membership.members}">
+								zzz Members
+							</div>
+							<div data-ng-show="membership.primaryMember">
+								<span>
+									<strong>{{membership.primaryMember.effectiveMemberName}}</strong>
+								</span>
+								<small class="text-muted">({{membership.primaryMember.ownerIdent}})</small>
+								<small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
+								       data-ng-show="membership.primaryMember.joinDate">
+									zzz Since
+								</small>
+							</div>
+							<div data-ng-show="membership.primarySpouse">
+								<span>{{membership.primarySpouse.effectiveMemberName}}</span>
+								<small class="text-muted">({{membership.primarySpouse.ownerIdent}})</small>
+								<small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.spouse.since}">
+									zzz Since
+								</small>
+							</div>
+							<div data-ng-repeat="member in membership.additionalMembers">
+								<span>{{member.effectiveMemberName}}</span>
+								<small class="text-muted">({{member.ownerIdent}})</small>
+								<small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.since}">
+									zzz Since
+								</small>
+							</div>
+						</div>
+						
+						<div class="spacer-top">
+							<div class="text-muted divider-bottom" data-th-text="#{com.cagst.swkroa.membership.counties}">
+								zzz Counties
+							</div>
+							<div data-ng-repeat="membershipCounty in membership.membershipCounties">
+								<span data-ng-class="{text_bold: membershipCounty.votingCounty===true}">
+									{{membershipCounty.county.countyName}}
+									<small class="text-muted text_normal" data-th-text="#{com.cagst.swkroa.membership.member.detail.county}">
+										zzz County Details
+									</small>
+								</span>
+							</div>
+						</div>
+						
+						<div data-th-include="membership/list/detail_comments"></div>
+						<div data-th-include="membership/list/detail_transactions"></div>
+					</div>
+				</div>
+				<div class="divider-top split-footer">
+					<div class="split-footer-content">
+						<a class="btn btn-primary btn-xs"
+						        data-ng-href="../membership/edit/{{membership.membershipUID}}">
+							<i class="fa fa-edit"></i>
+							<span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+						</a>
+						<button type="button" class="btn btn-danger btn-xs"
+						        data-toggle="modal" data-target="#deleteMembership">
+							<i class="fa fa-trash-o"></i>
+							<span data-th-text="#{com.cagst.swkroa.delete}">zzz Delete</span>
+						</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="deleteMembership" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please confirm</h4>
+						</div>
+						<div class="modal-body">
+							<span data-th-text="#{com.cagst.swkroa.membership.delete.message}">zzz Delete this?</span>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger"
+							        data-ng-click="removeMembership()"
+							        data-th-text="#{com.cagst.swkroa.delete}">
+								zzz Delete
+							</button>
+							<button type="button" class="btn btn-primary"
+							        data-dismiss="modal"
+							        data-th-text="#{com.cagst.swkroa.keep}">
+								zzz Keep
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div data-th-include="membership/list/dlg_comment_modify"></div>
+			<div data-th-include="membership/list/dlg_comment_delete"></div>
+			<div data-th-include="membership/list/dlg_transaction_modify"></div>
+			<div data-th-include="membership/list/dlg_transaction_delete"></div>
+		</div>
+		
+	</body>
+</html>

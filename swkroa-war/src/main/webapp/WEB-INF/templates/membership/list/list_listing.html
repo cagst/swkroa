@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">	
+	<body>
+		<div data-th-fragment="membershipListing">
+			<div class="split-header">
+				<div class="split-header-content form-group expand">
+					<div class="input-group">
+						<a data-th-href="@{/membership/add}" class="input-group-addon add-btn">
+							<i class="fa fa-plus"></i>
+						</a>
+						<input type="text" class="form-control" autofocus
+						       data-th-placeholder="#{com.cagst.swkroa.membership.search.prompt}"
+						       data-ng-model="query" />
+						<a class="input-group-addon btn btn-primary"
+							 data-ng-click="getMemberships()"
+							 data-th-text="#{com.cagst.swkroa.membership.search.button}">
+							zzz Search
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="list-group listing divider-right">
+				<div>
+					<div>
+						<div class="panel-body text-muted" data-ng-show="!memberships.length">
+							<em data-th-text="#{com.cagst.swkroa.membership.nomemberships}">zzz No memberships.</em>
+						</div>
+						<div data-ng-show="memberships.length">
+							<div class="membership list-group-item alt-list-group-item sel-list-group-item"
+							     data-ng-repeat="membership in memberships"
+							     data-ng-click="getMembership(membership.membershipUID)">
+								<div class="lead lead-in">
+									<span data-ng-bind="membership.safePrimaryMember.effectiveMemberName">zzz Membership Name</span>
+									<span data-ng-show="membership.membershipType.meaning == 'MEMBERSHIP_REGULAR'">
+										<i class="fa fa-user pull-right"></i>
+									</span>
+									<span data-ng-show="membership.membershipType.meaning == 'MEMBERSHIP_FAMILY'">
+										<i class="fa fa-users pull-right"></i>
+									</span>
+								</div>
+								<div data-ng-if="membership.safePrimaryMember.joinDate != null">
+									<span data-th-text="#{com.cagst.swkroa.membership.member.since}">
+										zzz Member Since
+									</span>
+								</div>
+								<div>
+									<span data-th-text="#{com.cagst.swkroa.membership.dues}">zzz Dues Of</span>
+									<span data-th-text="#{com.cagst.swkroa.membership.cal.dues}" class="text-warning"
+									      data-ng-show="membership.effectiveDuesAmount != membership.calculatedDuesAmount">
+										zzz Calculated Dues
+									</span>
+
+									<span class="pull-right text-danger"
+									      data-ng-bind="membership.amountDue | currency"
+									      data-ng-show="membership.amountDue < 0">
+										zzz Past Due
+									</span>
+									<span class="pull-right text-success"
+									      data-ng-bind="membership.amountDue | currency"
+									      data-ng-show="membership.amountDue > 0">
+										zzz Credit
+									</span>
+									<span class="pull-right"
+									      data-ng-bind="membership.amountDue | currency"
+									      data-ng-show="membership.amountDue == 0">
+										zzz Paid
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

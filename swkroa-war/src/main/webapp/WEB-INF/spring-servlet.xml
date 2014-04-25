@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- Map the DispatcherServlet to "/" and while still allowing static resources to be -->
+	<!-- handled by the container's default Servlet. -->
+	<mvc:default-servlet-handler/>
+	
+	<!-- Define our static resources so they don't get processed by the DispatcherServlet -->
+	<mvc:resources location="/static/css/**" mapping="/static/css/"/>
+	<mvc:resources location="/static/img/**" mapping="/static/img/"/>
+	<mvc:resources location="/wro/*" mapping="/wro/*"/>
+	
+	<bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+		<property name="prefix" value="/WEB-INF/templates/" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="LEGACYHTML5" />
+		<property name="cacheable" value="false"/>
+	</bean>
+	
+	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+		<property name="templateResolver" ref="templateResolver" />
+		
+		<!-- Add the Dialect to Thymeleaf -->
+		<property name="additionalDialects">
+			<set>
+				<bean class="org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect" />
+				<bean class="nz.net.ultraq.thymeleaf.LayoutDialect" />
+			</set>
+		</property>
+	</bean>
+	
+	<!-- Declare a view resolver -->
+	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+		<property name="templateEngine" ref="templateEngine" />
+		<property name="order" value="1" />
+	</bean>
+</beans>

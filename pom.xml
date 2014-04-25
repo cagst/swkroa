@@ -1,0 +1,345 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.cagst.swkroa</groupId>
+	<artifactId>swkroa-parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>SWKROA Parent</name>
+	<packaging>pom</packaging>
+
+	<organization>
+		<name>CAGST Solutions</name>
+		<url>http://www.cagst.com/swkroa</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>cgaskill</id>
+			<name>Craig Gaskill</name>
+			<email>craig.gaskill@gmail.com</email>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>gtobey</id>
+			<name>Greg Tobey</name>
+			<email>gtobey23824@gmail.com</email>
+			<roles>
+				<role>UIDesigner</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Common Utilities -->
+		<commons-lang-version>3.1</commons-lang-version>
+
+		<!-- Spring Frameworks -->
+		<spring-version>3.1.3.RELEASE</spring-version>
+		<spring-security-version>3.1.3.RELEASE</spring-security-version>
+		<spring-webflow-version>2.3.1.RELEASE</spring-webflow-version>
+		<spring-batch-version>2.2.4.RELEASE</spring-batch-version>
+
+		<!-- AspectJ Framework -->
+		<aspectj-version>1.7.2</aspectj-version>
+
+		<!-- Logging Framework -->
+		<slf4j-version>1.7.2</slf4j-version>
+		<logback-version>1.1.2</logback-version>
+
+		<!-- JodaTime Framework -->
+		<jodatime-version>2.1</jodatime-version>
+
+		<!-- ECache Framework -->
+		<ehcache-version>2.6.2</ehcache-version>
+
+		<!-- Thymeleaf Framework -->
+		<thymeleaf-version>2.1.2.RELEASE</thymeleaf-version>
+
+		<!-- Hibernate Validation Framework -->
+		<hibernate-version>4.3.0.Final</hibernate-version>
+
+		<!-- Jackson JSON Framework -->
+		<fasterxml.jackson-version>2.3.1</fasterxml.jackson-version>
+
+		<!-- MySQL -->
+		<mysql-version>5.1.30</mysql-version>
+
+		<!-- JUnit/Mockito/PowerMock Testing Framework -->
+		<junit-version>4.11</junit-version>
+		<mockito-version>1.9.5</mockito-version>
+		<powermock-version>1.5</powermock-version>
+
+		<!-- HSQLDB In-Memory Database -->
+		<hsqldb-version>2.2.8</hsqldb-version>
+
+		<!-- Miscellaneous -->
+		<servlet-api-version>3.0.1</servlet-api-version>
+		<jstl-version>1.2</jstl-version>
+		<servlet-jsp-version>2.2.1</servlet-jsp-version>
+
+		<openid-version>0.9.5</openid-version>
+		<wro4j-version>1.7.0</wro4j-version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Apache Commons Dependencies -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang-version}</version>
+			</dependency>
+
+			<!-- Joda Time Dependencies -->
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${jodatime-version}</version>
+			</dependency>
+
+			<!-- Spring Core Dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+
+			<!-- Spring JDBC Dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+
+			<!-- Spring Web Dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+
+			<!-- Spring Web MVC Dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${spring-version}</version>
+			</dependency>
+
+			<!-- Spring Security Dependencies -->
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${spring-security-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-web</artifactId>
+				<version>${spring-security-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-config</artifactId>
+				<version>${spring-security-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-taglibs</artifactId>
+				<version>${spring-security-version}</version>
+			</dependency>
+
+			<!-- Spring WebFlow Dependencies -->
+			<dependency>
+				<groupId>org.springframework.webflow</groupId>
+				<artifactId>spring-webflow</artifactId>
+				<version>${spring-webflow-version}</version>
+			</dependency>
+
+			<!-- Spring Batch dependencies -->
+			<dependency>
+				<groupId>org.springframework.batch</groupId>
+				<artifactId>spring-batch-core</artifactId>
+				<version>${spring-batch-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.batch</groupId>
+				<artifactId>spring-batch-infrastructure</artifactId>
+				<version>${spring-batch-version}</version>
+			</dependency>
+
+			<!-- AspectJ Dependencies -->
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>1.7.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>1.7.2</version>
+			</dependency>
+
+			<!-- EhCache Dependencies -->
+			<dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache-core</artifactId>
+				<version>${ehcache-version}</version>
+			</dependency>
+
+			<!-- Log4J Compile Dependencies -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>integration</artifactId>
+				<version>${slf4j-version}</version>
+			</dependency>
+
+			<!-- Used to send log4j logs to the SLF4J framework instead -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>${slf4j-version}</version>
+			</dependency>
+
+			<!-- Logback Dependencies -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>${logback-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback-version}</version>
+			</dependency>
+
+			<!-- Servlet Dependencies -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${servlet-api-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>javax.servlet.jsp-api</artifactId>
+				<version>${servlet-jsp-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jstl</artifactId>
+				<version>${jstl-version}</version>
+			</dependency>
+
+			<!-- OpenID Dependencies -->
+			<dependency>
+				<groupId>org.openid4java</groupId>
+				<artifactId>openid4java-consumer</artifactId>
+				<version>${openid-version}</version>
+			</dependency>
+
+			<!-- MySQL Dependencies -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-version}</version>
+			</dependency>
+
+			<!-- Thymeleaf Dependencies -->
+			<dependency>
+				<groupId>org.thymeleaf</groupId>
+				<artifactId>thymeleaf</artifactId>
+				<version>${thymeleaf-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.thymeleaf</groupId>
+				<artifactId>thymeleaf-spring3</artifactId>
+				<version>${thymeleaf-version}</version>
+			</dependency>
+
+			<!-- Hibernate Validation Dependencies -->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-version}</version>
+			</dependency>
+
+			<!-- Jackson JSON -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${fasterxml.jackson-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${fasterxml.jackson-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${fasterxml.jackson-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-joda</artifactId>
+				<version>${fasterxml.jackson-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>ro.isdc.wro4j</groupId>
+				<artifactId>wro4j-core</artifactId>
+				<version>${wro4j-version}</version>
+			</dependency>
+
+			<!-- Testing Dependencies -->
+
+			<!-- JUnit Dependencies -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit-version}</version>
+			</dependency>
+
+			<!-- HSQL DB Dependencies -->
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>${hsqldb-version}</version>
+			</dependency>
+
+			<!-- Mockito Dependencies -->
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${mockito-version}</version>
+			</dependency>
+
+			<!-- PowerMock Dependencies for mocking final classes-->
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-module-junit4</artifactId>
+				<version>${powermock-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-mockito-release-full</artifactId>
+				<version>${powermock-version}</version>
+				<type>pom</type>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<modules>
+		<module>swkroa-domain</module>
+		<module>swkroa-service</module>
+		<module>swkroa-war</module>
+	</modules>
+</project>

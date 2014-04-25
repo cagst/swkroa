@@ -1,0 +1,162 @@
+package com.cagst.swkroa.county;
+
+import java.io.Serializable;
+import java.text.Collator;
+
+import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+/**
+ * Represents a County within the system.
+ * 
+ * @author Craig Gaskill
+ * 
+ * @version 1.0.0
+ * 
+ */
+public class County implements Serializable, Comparable<County> {
+	private static final long serialVersionUID = 6048112429446895825L;
+
+	private long county_id;
+	private String state_code;
+	private String county_code;
+	private String county_name;
+	private boolean swkroa_county_ind;
+
+	// meta-data
+	private boolean active_ind = true;
+	private long updt_cnt;
+
+	public long getCountyUID() {
+		return county_id;
+	}
+
+	public void setCountyUID(final long uid) {
+		this.county_id = uid;
+	}
+
+	public String getState() {
+		return state_code;
+	}
+
+	public void setState(final String stateCode) {
+		this.state_code = stateCode;
+	}
+
+	public String getCountyCode() {
+		return county_code;
+	}
+
+	public void setCountyCode(final String code) {
+		this.county_code = code;
+	}
+
+	public String getCountyName() {
+		return county_name;
+	}
+
+	public void setCountyName(final String name) {
+		this.county_name = name;
+	}
+
+	public boolean isSwkroaCounty() {
+		return swkroa_county_ind;
+	}
+
+	public void setSwkroaCounty(final boolean swkroaCounty) {
+		this.swkroa_county_ind = swkroaCounty;
+	}
+
+	public boolean isActive() {
+		return active_ind;
+	}
+
+	public void setActive(final boolean active) {
+		this.active_ind = active;
+	}
+
+	public long getCountyUpdateCount() {
+		return updt_cnt;
+	}
+
+	public void setCountyUpdateCount(final long count) {
+		this.updt_cnt = count;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder();
+		builder.append(state_code);
+		builder.append(county_code);
+
+		return builder.build();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof County)) {
+			return false;
+		}
+
+		County rhs = (County) obj;
+
+		EqualsBuilder builder = new EqualsBuilder();
+		builder.append(state_code, rhs.getState());
+		builder.append(county_code, rhs.getCountyCode());
+
+		return builder.build();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+		builder.append("state_code", state_code);
+		builder.append("county_code", county_code);
+
+		return builder.build();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(final County rhs) {
+		CompareToBuilder builder = new CompareToBuilder();
+		builder.append(state_code, rhs.getState());
+		builder.append(county_code, rhs.getCountyCode());
+
+		Collator collator = Collator.getInstance();
+		collator.setStrength(Collator.PRIMARY);
+
+		String lhsValue = state_code + county_code;
+		String rhsValue = rhs.getState() + rhs.getCountyName();
+
+		return collator.compare(lhsValue, rhsValue);
+	}
+}

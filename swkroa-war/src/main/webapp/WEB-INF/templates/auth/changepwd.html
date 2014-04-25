@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/auth" >
+      
+	<body>
+		<div data-layout-fragment="content">
+			<div class="page-header">
+				<h3 data-th-text="#{com.cagst.swkroa.changepwd.title}">zzz Change Password</h3>
+			</div>
+			
+			<form action="/auth/changepwd" data-th-attr="action=@{/auth/changepwd}"
+			      method="POST"
+			      autocomplete="off"
+			      class="container-center-large divider-bottom">
+			
+				<div class="text-info divider-bottom">
+					<p class="lead lead-sm"
+					   data-th-text="#{com.cagst.swkroa.changepwd.reason.expired}"
+					   data-th-if="${#authentication.principal.passwordExpired}">
+						zzz Expired
+					</p>
+					<p class="lead lead-sm"
+					   data-th-text="#{com.cagst.swkroa.changepwd.reason.temporary}"
+					   data-th-if="${#authentication.principal.passwordTemporary}">
+						zzz Temporary
+					</p>
+				</div>
+				<div class="spacer-top">
+					<div class="container-medium pull-right">
+						<p class="lead lead-sm" data-th-text="#{com.cagst.swkroa.changepwd.message}"></p>
+						<p><strong class="text-danger" data-th-text="${session.changingpwdError}"></strong></p>
+					</div>
+					<div class="container-medium divider-right" style="padding-right:20px;">
+						<div class="form-group">
+							<label for="oldPassword" class="form_label label-required" data-th-text="#{com.cagst.swkroa.changepwd.oldpwd.label}">
+								zzz Current Password
+							</label>
+							<input id="oldPassword" name="oldPassword" type="password" maxlength="60"
+							       class="form-control input-block-level" autofocus
+							       data-th-placeholder="#{com.cagst.swkroa.changepwd.oldpwd.prompt}" />
+						</div>
+						<div class="form-group">
+							<label for="newPassword" class="form_label label-required" data-th-text="#{com.cagst.swkroa.changepwd.newpwd.label}">
+								zzz New Password
+							</label>
+							<input id="newPassword" name="newPassword" type="password" maxlength="60"
+							       class="form-control input-block-level"
+							       data-th-placeholder="#{com.cagst.swkroa.changepwd.newpwd.prompt}" />
+						</div>
+						<div class="form-group">
+							<label for="confirmPassword" class="form_label label-required" data-th-text="#{com.cagst.swkroa.changepwd.confirm.label}">
+								zzz Confirm New Password
+							</label>
+							<input id="confirmPassword" name="confirmPassword" type="password" maxlength="60"
+							       class="form-control input-block-level"
+							       data-th-placeholder="#{com.cagst.swkroa.changepwd.confirm.prompt}" />
+						</div>
+						
+						<button id="changePassword" type="submit" class="btn btn-primary btn-block" data-th-text="#{com.cagst.swkroa.changepwd.change}">
+							zzz Change
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

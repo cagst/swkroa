@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder" />
+	
+	<bean name="securityService" class="com.cagst.swkroa.security.SecurityServiceImpl">
+		<property name="maximumSigninAttempts" value="${security.max.signin.attempts}" />
+		<property name="timeoutPeriodInMinutes" value="${security.timeout.period.mins}" />
+		<property name="passwordExpiryInDays" value="${security.password.expiry.days}" />
+		<property name="accountLockedDays" value="${security.account.locked.days}" />
+	</bean>
+	
+</beans>

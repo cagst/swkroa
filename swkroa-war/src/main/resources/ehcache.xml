@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+	<diskStore path="java.io.tmpdir"/>
+	
+	<!-- Maintains a Cache of individual CodeValues by UID or Meaning -->
+	<cache name="codeValues"
+         maxElementsInMemory="50"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+	
+	<!-- Maintains a Cache of CodeValues for a CodeSet by UID or Meaning -->
+	<cache name="codeValueLists"
+         maxElementsInMemory="10"
+         eternal="true"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+	
+	<!-- Maintains a Cache of individual Counties by UID -->
+	<cache name="counties"
+         maxElementsInMemory="50"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+	
+	<!-- Maintains a Cache of active Counties -->
+	<cache name="countyLists"
+         maxElementsInMemory="1"
+         eternal="true"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+
+	<!-- Maintains a Cache of individual MemberTypes by UID / Meaning -->	
+	<cache name="memberTypes"
+         maxElementsInMemory="10"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+
+	<!-- Maintains a Cache of the active MemberType in a collection -->	
+	<cache name="memberTypeList"
+         maxElementsInMemory="1"
+         eternal="true"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+	
+	<!-- Maintains a Cache of individual Memberships by UID -->
+	<cache name="memberships"
+         maxElementsInMemory="2500"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+	
+	<!-- Maintains a Cache of a List of Members for a Membership -->
+	<cache name="membersList"
+         maxElementsInMemory="2500"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+	
+	<!-- Maintains a Cache of a List of Membership Counties for a Membership -->
+	<cache name="membershipCountiesList"
+         maxElementsInMemory="2500"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+	
+	<!-- Maintains a Cache of a List of Comments for a Membership -->
+	<cache name="commentsList"
+         maxElementsInMemory="2500"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+	
+	<!-- Maintains a Cache of Users -->
+	<cache name="users"
+         maxElementsInMemory="50"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
+         statistics="true"
+         diskPersistent="false"
+         overflowToDisk="false">
+	</cache>
+</ehcache>
