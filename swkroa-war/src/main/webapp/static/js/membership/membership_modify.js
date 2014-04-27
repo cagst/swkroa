@@ -262,9 +262,22 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 
 	$scope.save = function() {
 		$http.post("../svc/membership", $scope.membership).success(function(data) {
-			$window.location.href = "/swkroa-angular-war/membership/home";
+			$window.location.href = "/swkroa-war/membership/home";
 		});
 	};
+
+	$scope.validateVotingCounty = function(membership, membershipCounty) {
+  	if (membershipCounty.votingCounty) {
+  		angular.forEach(membership.membershipCounties, function(cnty) {
+  			cnty.votingCounty = false;
+  		});
+
+  		membershipCounty.votingCounty = true;
+  	} else {
+  		membershipCounty.votingCounty = false;
+  	}
+  }
+
 }]);
 
 var syncAllItems = function(scope) {

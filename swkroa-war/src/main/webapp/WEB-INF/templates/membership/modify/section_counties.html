@@ -33,7 +33,7 @@
 				     data-ng-form="countyForm">
 					<div class="col-xs-2" data-ng-class="{'has-error': countyForm.county.$invalid}">
 						<select class="form-control" name="county"
-						        data-ng-options="cnty.countyName for cnty in counties"
+						        data-ng-options="cnty.countyName group by cnty.votingCounty for cnty in counties"
 						        data-ng-model="membershipCounty.county"
 						        data-ng-required="true">
 						</select>
@@ -47,6 +47,14 @@
 						<input type="number"
 						       class="form-control"
 						       data-ng-model="membershipCounty.surfaceAcres" />
+					</div>
+					<div class="col-xs-2">
+						<div data-ng-show="membershipCounty.county.swkroaCounty == true">
+							<input type="checkbox" name="votingCounty"
+							       data-ng-model="membershipCounty.votingCounty"
+							       data-ng-change="validateVotingCounty(membership, membershipCounty)"/>
+							<label data-th-text="#{com.cagst.swkroa.membership.county.voting}">zzz Voting County</label>
+						</div>
 					</div>
 					<div class="col-xs-2">
 						<button type="button" class="btn btn-danger btn-xs hover-reveal"

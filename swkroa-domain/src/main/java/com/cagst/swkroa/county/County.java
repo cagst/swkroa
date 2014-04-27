@@ -3,6 +3,7 @@ package com.cagst.swkroa.county;
 import java.io.Serializable;
 import java.text.Collator;
 
+import com.cagst.common.util.CGTCollatorBuilder;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,6 +20,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class County implements Serializable, Comparable<County> {
 	private static final long serialVersionUID = 6048112429446895825L;
+
+	private static final String VOTING_COUNTY = "Voting County";
+	private static final String NON_VOTING_COUNTY = "Non-Voting County";
 
 	private long county_id;
 	private String state_code;
@@ -64,6 +68,10 @@ public class County implements Serializable, Comparable<County> {
 
 	public boolean isSwkroaCounty() {
 		return swkroa_county_ind;
+	}
+
+	public String getVotingCounty() {
+		return isSwkroaCounty() ? VOTING_COUNTY : NON_VOTING_COUNTY;
 	}
 
 	public void setSwkroaCounty(final boolean swkroaCounty) {
@@ -147,16 +155,12 @@ public class County implements Serializable, Comparable<County> {
 	 */
 	@Override
 	public int compareTo(final County rhs) {
-		CompareToBuilder builder = new CompareToBuilder();
+		CGTCollatorBuilder builder = new CGTCollatorBuilder();
+
+		builder.append(!isSwkroaCounty(), !rhs.isSwkroaCounty());
 		builder.append(state_code, rhs.getState());
 		builder.append(county_code, rhs.getCountyCode());
 
-		Collator collator = Collator.getInstance();
-		collator.setStrength(Collator.PRIMARY);
-
-		String lhsValue = state_code + county_code;
-		String rhsValue = rhs.getState() + rhs.getCountyName();
-
-		return collator.compare(lhsValue, rhsValue);
+		return builder.build();
 	}
 }
