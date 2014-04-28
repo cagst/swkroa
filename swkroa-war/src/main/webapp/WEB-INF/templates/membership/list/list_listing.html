@@ -11,7 +11,8 @@
 						</a>
 						<input type="text" class="form-control" autofocus
 						       data-th-placeholder="#{com.cagst.swkroa.membership.search.prompt}"
-						       data-ng-model="query" />
+						       data-ng-model="query"
+						       data-ng-keydown="queryKeydown($event)"/>
 						<a class="input-group-addon btn btn-primary"
 							 data-ng-click="getMemberships()"
 							 data-th-text="#{com.cagst.swkroa.membership.search.button}">

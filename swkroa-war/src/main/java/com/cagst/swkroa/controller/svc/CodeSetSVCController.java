@@ -35,11 +35,11 @@ public final class CodeSetSVCController {
 	private CodeValueRepository codeValueRepo;
 
 	/**
-	 * Handles the request and retrieves the active CodeSets within the system.
+	 * Handles the request and retrieves the active {@link CodeSet CodeSets} within the system.
 	 * 
-	 * @return A JSON representation of the active CodeSets within the system.
+	 * @return A JSON representation of the active {@link CodeSet CodeSets} within the system.
 	 */
-	@RequestMapping(value = "/svc/codesets", method = RequestMethod.GET)
+	@RequestMapping(value = "/svc/codeset", method = RequestMethod.GET)
 	@ResponseBody
 	public List<CodeSet> getActiveCodeSets() {
 		LOGGER.info("Received request to retrieve active codesets.");
@@ -51,7 +51,7 @@ public final class CodeSetSVCController {
 	}
 
 	/**
-	 * Handles the request and retrieves the CodeValues associated to the specified CodeSet.
+	 * Handles the request and retrieves the {@link CodeValue CodeValues} associated to the specified CodeSet.
 	 * 
 	 * @param codeSetMeaning
 	 *          A {@link String} that represents the {@link CodeSet} to retrieve {@link CodeValue
@@ -59,7 +59,7 @@ public final class CodeSetSVCController {
 	 * 
 	 * @return A JSON representation of the CodeValues associated to the specified CodeSet.
 	 */
-	@RequestMapping(value = { "/svc/codesets/{codeSetMeaning}", "/membership/svc/codesets/{codeSetMeaning}" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/svc/codeset/{codeSetMeaning}", "/membership/svc/codeset/{codeSetMeaning}" }, method = RequestMethod.GET)
 	@ResponseBody
 	public List<CodeValue> getCodeValuesForCodeSet(final @PathVariable String codeSetMeaning) {
 		LOGGER.info("Received request to retrieve codevalues for codeset [{}].", codeSetMeaning);

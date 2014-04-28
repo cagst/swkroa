@@ -16,7 +16,7 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	var syncCount    = 0;
 
 	syncItems++;
-	$http.get('../svc/codesets/MEMBERSHIP_TYPE/').success(function(data) {
+	$http.get('../svc/codeset/MEMBERSHIP_TYPE/').success(function(data) {
 		$scope.membershipTypes = data;
 		
 		syncCount++;
@@ -26,7 +26,7 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	});
 
 	syncItems++;
-	$http.get('../svc/codesets/ENTITY_TYPE/').success(function(data) {
+	$http.get('../svc/codeset/ENTITY_TYPE/').success(function(data) {
 		$scope.entityTypes = data;
 		
 		syncCount++;
@@ -36,7 +36,7 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	});
 
 	syncItems++;
-	$http.get('../svc/codesets/TITLE/').success(function(data) {
+	$http.get('../svc/codeset/TITLE/').success(function(data) {
 		$scope.titles = data;
 		
 		syncCount++;
@@ -46,7 +46,7 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	});
 
 	syncItems++;
-	$http.get('../svc/codesets/GENDER/').success(function(data) {
+	$http.get('../svc/codeset/GENDER/').success(function(data) {
 		$scope.genders = data;
 		
 		syncCount++;
@@ -56,7 +56,7 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	});
 
 	syncItems++;
-	$http.get('../svc/codesets/ADDRESS_TYPE').success(function(data) {
+	$http.get('../svc/codeset/ADDRESS_TYPE').success(function(data) {
 		$scope.addressTypes = data;
 		
 		syncCount++;
@@ -66,7 +66,7 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	});
 
 	syncItems++;
-	$http.get('../svc/codesets/PHONE_TYPE').success(function(data) {
+	$http.get('../svc/codeset/PHONE_TYPE').success(function(data) {
 		$scope.phoneTypes = data;
 		
 		syncCount++;
@@ -76,9 +76,19 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	});
 
 	syncItems++;
-	$http.get('../svc/codesets/EMAIL_TYPE').success(function(data) {
+	$http.get('../svc/codeset/EMAIL_TYPE').success(function(data) {
 		$scope.emailTypes = data;
 		
+		syncCount++;
+		if (syncCount == syncItems) {
+			syncAllItems($scope);
+		}
+	});
+
+	syncItems++;
+	$http.get('../svc/membertype').success(function(data) {
+		$scope.memberTypes = data;
+
 		syncCount++;
 		if (syncCount == syncItems) {
 			syncAllItems($scope);
@@ -301,6 +311,15 @@ var syncAllItems = function(scope) {
 	}
 
 	if (scope.membership.primaryMember.person) {
+		if (scope.membership.primaryMember.memberType) {
+			for (var idx = 0; idx < scope.memberTypes.length; idx++) {
+				if (scope.membership.primaryMember.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
+					scope.membership.primaryMember.memberType = scope.memberTypes[idx];
+					break;
+				}
+			}
+		}
+
 		if (scope.membership.primaryMember.person.title) {
 			for (var idx = 0; idx < scope.titles.length; idx++) {
 				if (scope.membership.primaryMember.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
@@ -348,6 +367,15 @@ var syncAllItems = function(scope) {
 	}
 
 	if (scope.membership.primarySpouse && scope.membership.primarySpouse.person) {
+		if (scope.membership.primarySpouse.memberType) {
+			for (var idx = 0; idx < scope.memberTypes.length; idx++) {
+				if (scope.membership.primarySpouse.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
+					scope.membership.primarySpouse.memberType = scope.memberTypes[idx];
+					break;
+				}
+			}
+		}
+
 		if (scope.membership.primarySpouse.person.title) {
 			for (var idx = 0; idx < scope.titles.length; idx++) {
 				if (scope.membership.primarySpouse.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
