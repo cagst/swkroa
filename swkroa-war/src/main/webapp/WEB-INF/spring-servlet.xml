@@ -35,9 +35,17 @@
 		</property>
 	</bean>
 	
-	<!-- Declare a view resolver -->
+	<!-- Declare a view resolver for Thymeleaf resources -->
 	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
-		<property name="templateEngine" ref="templateEngine" />
 		<property name="order" value="1" />
+		<property name="templateEngine" ref="templateEngine" />
+		<property name="excludedViewNames" value="reports/*" />
 	</bean>
+
+	<!-- Declare a view resolver for Japser report resources -->
+	<bean class="org.springframework.web.servlet.view.XmlViewResolver">
+		<property name="order" value="0" />
+		<property name="location" value="classpath:appCtx/jasper-view.xml" />
+	</bean>
+
 </beans>

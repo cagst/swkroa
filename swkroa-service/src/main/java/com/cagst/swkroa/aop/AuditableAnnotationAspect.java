@@ -78,9 +78,7 @@ public final class AuditableAnnotationAspect {
 				for (int idx1 = 0; idx1 < annotations.length; idx1++) {
 					Annotation[] paramAnnotations = annotations[idx1];
 
-					for (int idx2 = 0; idx2 < paramAnnotations.length; idx2++) {
-						Annotation paramAnnotation = paramAnnotations[idx2];
-
+					for (Annotation paramAnnotation : paramAnnotations) {
 						if (paramAnnotation instanceof AuditInstigator) {
 							if (objs[idx1] instanceof User) {
 								user = (User) objs[idx1];
@@ -104,7 +102,7 @@ public final class AuditableAnnotationAspect {
 		SecurityContext secCtx = SecurityContextHolder.getContext();
 		if (secCtx != null && secCtx.getAuthentication() != null) {
 			Authentication auth = secCtx.getAuthentication();
-			if (auth != null && auth.getPrincipal() != null && auth.getPrincipal() instanceof User) {
+			if (auth.getPrincipal() != null && auth.getPrincipal() instanceof User) {
 				user = (User) auth.getPrincipal();
 			}
 		}

@@ -145,7 +145,6 @@ public final class MembershipSVCController {
 	 * @param model
 	 *          The {@link MembershipModel} to persist.
 	 * 
-	 * @return The {@link Membership} after it has been persisted.
 	 */
 	@RequestMapping(value = { "/membership/svc/membership", "/svc/membership" }, method = RequestMethod.POST)
 	public void saveMembershipModel(final @RequestBody MembershipModel model) {

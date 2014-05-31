@@ -144,11 +144,9 @@ public class Person implements Serializable, Comparable<Person> {
 	public String getFullName() {
 		if (getPersonUID() == 1L) {
 			return name_last;
-		} else if (nameFormatter != null) {
-			return nameFormatter.formatFullName(name_last, name_first, name_middle);
 		}
 
-		return StringUtils.EMPTY;
+		return nameFormatter.formatFullName(name_last, name_first, name_middle);
 	}
 
 	/**

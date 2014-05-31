@@ -1,6 +1,5 @@
 package com.cagst.swkroa.controller.svc;
 
-import com.cagst.swkroa.codevalue.CodeSet;
 import com.cagst.swkroa.member.MemberType;
 import com.cagst.swkroa.member.MemberTypeRepository;
 import org.slf4j.Logger;

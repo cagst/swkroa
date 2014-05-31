@@ -107,10 +107,7 @@ import com.cagst.swkroa.user.User;
 		Map<String, Long> params = new HashMap<String, Long>(1);
 		params.put("membership_id", membership.getMembershipUID());
 
-		List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_FOR_MEMBERSHIP), params,
-				new MemberMapper(personRepo, memberTypeRepo));
-
-		return members;
+		return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_FOR_MEMBERSHIP), params, new MemberMapper(personRepo, memberTypeRepo));
 	}
 
 	/*

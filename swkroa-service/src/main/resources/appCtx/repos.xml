@@ -63,4 +63,8 @@
 		<constructor-arg ref="codeValueRepo" />
 		<constructor-arg ref="memberRepo" />
 	</bean>
+
+	<bean name="reportRepo" class="com.cagst.swkroa.report.ReportRepositoryJdbc">
+		<constructor-arg ref="datasource" />
+	</bean>
 </beans>
