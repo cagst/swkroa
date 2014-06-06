@@ -11,8 +11,8 @@
 	</bean>
 	-->
 
-	<bean id="htmlMembershipListingReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView">
-		<property name="url" value="classpath:reports/MembershipListingReport.jrxml" />
+	<bean id="membershipListingReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView">
+		<property name="url" value="classpath:reports/jasper/MembershipListingReport.jasper" />
 		<property name="jdbcDataSource" ref="datasource" />
 	</bean>
 

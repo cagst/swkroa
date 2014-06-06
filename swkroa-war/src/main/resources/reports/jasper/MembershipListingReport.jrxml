@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipListingReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ff1417b-b07f-4412-9ad0-03b68e9852f0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="membership_type" class="java.lang.Long">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT iq2.membership_id
+      ,iq2.fixed_dues_amount
+      ,iq2.calculated_dues_amount
+      ,iq2.member_count
+      ,iq2.member_id
+      ,iq2.company_name
+      ,iq2.full_name
+      ,COALESCE(iq2.company_name, iq2.full_name) AS membership_name
+      ,cv1.codevalue_display AS membership_type_display
+      ,mt.member_type_display
+      ,mt.dues_amount
+ FROM (SELECT iq1.membership_id
+             ,iq1.membership_type_cd
+             ,iq1.fixed_dues_amount
+             ,iq1.calculated_dues_amount
+             ,iq1.member_count
+             ,m.member_id
+             ,m.company_name
+             ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
+             ,m.member_type_id
+         FROM (SELECT ms.membership_id
+                     ,ms.membership_type_cd
+                     ,ms.dues_amount AS fixed_dues_amount
+                     ,SUM(mt.dues_amount) AS calculated_dues_amount
+                     ,COUNT(m.member_id) AS member_count
+                 FROM membership ms
+                     ,member m
+                     ,member_type mt
+                WHERE ms.active_ind = 1
+                  AND (ms.membership_type_cd = $P{membership_type} OR $P{membership_type} = 0)
+                  AND m.membership_id = ms.membership_id
+                  AND m.active_ind = 1
+                  AND mt.prev_member_type_id = m.member_type_id
+                  AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
+                GROUP BY m.membership_id
+              )iq1
+              ,member m
+         LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
+        WHERE m.membership_id = iq1.membership_id
+          AND m.active_ind = 1
+      )iq2
+      ,member_type mt
+      ,codevalue cv1
+WHERE mt.prev_member_type_id = iq2.member_type_id
+  AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
+  AND cv1.codevalue_id = iq2.membership_type_cd
+ORDER BY membership_name ASC]]>
+	</queryString>
+	<field name="membership_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fixed_dues_amount" class="java.math.BigDecimal"/>
+	<field name="calculated_dues_amount" class="java.math.BigDecimal"/>
+	<field name="member_count" class="java.lang.Long"/>
+	<field name="member_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="company_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="full_name" class="java.lang.String"/>
+	<field name="membership_name" class="java.lang.String"/>
+	<field name="membership_type_display" class="java.lang.String"/>
+	<field name="member_type_display" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dues_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="total_dues" class="java.lang.String">
+		<variableExpression><![CDATA[($F{fixed_dues_amount}.equals( $F{calculated_dues_amount} )) ?
+"Total Dues Amount: " + $F{calculated_dues_amount}.toString()  :
+"Total Dues Amount: " + $F{fixed_dues_amount}.toString() + "(f) / " + $F{calculated_dues_amount}.toString() + "(c)"
+]]></variableExpression>
+	</variable>
+	<group name="membership_group" keepTogether="true">
+		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
+		<groupHeader>
+			<band height="24">
+				<textField>
+					<reportElement x="0" y="0" width="286" height="20" uuid="72d49b3c-f7af-4b4f-b795-e798c32ae6da"/>
+					<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="23">
+				<textField>
+					<reportElement x="356" y="0" width="216" height="20" uuid="7ec13e06-7a06-4f62-8ee3-ed555d9ecd04"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{total_dues}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement x="-20" y="-1" width="613" height="30" uuid="ccff0a75-d35f-4f5a-b922-25e24c7033fd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="18"/>
+				</textElement>
+				<text><![CDATA[Membership Listing]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="39" y="0" width="247" height="20" uuid="e53bb38f-5280-483c-baa6-cb6c44322ce4"/>
+				<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="0" width="100" height="20" uuid="9747d626-d157-493a-84d0-533f248ef730"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dues_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="452" y="1" width="80" height="20" uuid="e4255344-85da-40d3-b972-efad84653233"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="532" y="1" width="40" height="20" uuid="b3bffb09-4b85-419c-b1a0-af6ae571c964"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE, MMM d, yyyy h:mm a">
+				<reportElement x="70" y="1" width="286" height="20" uuid="191f7e67-4f61-4200-9b6f-0b790c7b57a6"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="70" height="20" uuid="32ab96e5-105b-4bc4-9d90-74c64f756d67"/>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="22" splitType="Stretch"/>
+	</summary>
+</jasperReport>

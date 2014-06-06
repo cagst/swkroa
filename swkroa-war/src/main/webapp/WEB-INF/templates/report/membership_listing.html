@@ -4,35 +4,38 @@
 			xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 			layout:decorator="layouts/main">
 
-	<head>
-		<script type="text/javascript" data-th-src="@{/static/js/report/membership_listing.js}"></script>
-	</head>
-
 	<body data-ng-app="swkroaApp">
-		<div data-layout-fragment="content" data-ng-controller="swkroaController">
+		<div data-layout-fragment="content">
 			<div class="page-header">
 				<h3 data-th-text="#{com.cagst.swkroa.report.membership.listing.report}">zzz Membership Listing Report</h3>
 			</div>
-			<div class="row">
-				<div class="col-xs-2">
-					<label class="control-label" data-th-text="#{com.cagst.swkroa.report.membership.listing.type}">
-						zzz Membership Type
-					</label>
-					<select class="form-control"
-					        data-ng-model="membershipType"
-					        data-ng-options="type.display for type in membershipTypes">
-						<option value="">Any</option>
-					</select>
+
+			<form method="POST" action="#" name="runMembershipListing" target="_blank"
+						class="css-form"
+						data-th-action="@{/report/membership_listing}">
+				<div class="row">
+					<div class="col-xs-2">
+						<label class="control-label" data-th-text="#{com.cagst.swkroa.report.membership.listing.type}">
+							zzz Membership Type
+						</label>
+						<select class="form-control" name="membershipType">
+							<option value="0">All</option>
+							<option data-th-each="type : ${membershipTypes}"
+							        data-th-value="${type.codeValueUID}"
+							        data-th-text="${type.display}">
+								zzz Option
+							</option>
+						</select>
+					</div>
+					<div class="col-xs-2">
+						<label class="control-label">&nbsp;</label>
+						<button type="submit" class="btn btn-primary form-control"
+						        data-th-text="#{com.cagst.swkroa.report.generate}">
+							zzz Generate Report
+						</button>
+					</div>
 				</div>
-				<div class="col-xs-2">
-					<label class="control-label">&nbsp;</label>
-					<button type="button" class="btn btn-primary form-control"
-					        data-th-text="#{com.cagst.swkroa.report.generate}"
-					        data-ng-click="getMembershipListing()">
-						zzz Generate Report
-					</button>
-				</div>
-			</div>
+			</form>
 		</div>
 	</body>
 </html>
