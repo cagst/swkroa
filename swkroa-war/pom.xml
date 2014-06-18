@@ -4,19 +4,17 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.cagst.swkroa</groupId>
-	<artifactId>swkroa-war</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<name>SWKROA Webapp</name>
-	<url>http://www.swkroa.com</url>
-	<packaging>war</packaging>
-	<inceptionYear>2013</inceptionYear>
-
 	<parent>
 		<groupId>com.cagst.swkroa</groupId>
 		<artifactId>swkroa-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
+
+	<artifactId>swkroa-war</artifactId>
+	<name>SWKROA Webapp</name>
+	<url>http://www.swkroa.com</url>
+	<inceptionYear>2013</inceptionYear>
+	<packaging>war</packaging>
 
 	<dependencies>
 		<!-- CAGST Dependencies -->
@@ -246,6 +244,20 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Jasper Reporting Engine -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<type>jar</type>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -257,13 +269,43 @@
 		<finalName>swkroa-${project.version}</finalName>
 
 		<plugins>
+			<!-- Compile Jasper Report Files
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jasperreports-maven-plugin</artifactId>
+				<version>1.0-beta-2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile-reports</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<sourceDirectory>src/main/resources/reports/jasper</sourceDirectory>
+					<outputDirectory>${project.basedir}/target/reports/jasper</outputDirectory>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.sf.jasperreports</groupId>
+						<artifactId>jasperreports</artifactId>
+						<version>${jasper-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			-->
+
+			<!-- Additional configuration for WAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+			</plugin>
+
+			<!-- Enable Tomcat 7 Support -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
-				<configuration>
-					<contextReloadable>true</contextReloadable>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

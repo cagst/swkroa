@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */
 @JsonSerialize
 public class DefaultMineralUtilities implements MineralUtilities {
-	private final Integer baseAcres = new Integer(160);
+	private final Integer baseAcres = 160;
 	private final BigDecimal incrementalFee = new BigDecimal(5.00);
 
 	/*
@@ -32,7 +32,7 @@ public class DefaultMineralUtilities implements MineralUtilities {
 
 		int extraAcerage = county.getNetMineralAcres() - baseAcres;
 		if (extraAcerage > 0) {
-			Double extraUnits = new Double(Math.ceil(extraAcerage / baseAcres.doubleValue()));
+			Double extraUnits = Math.ceil(extraAcerage / baseAcres.doubleValue());
 			int units = extraUnits.intValue();
 
 			fee = fee.add(incrementalFee.multiply(new BigDecimal(units)));

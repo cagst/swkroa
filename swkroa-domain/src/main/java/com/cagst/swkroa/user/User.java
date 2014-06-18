@@ -193,11 +193,7 @@ public final class User extends Person implements UserDetails {
 	 */
 	@Override
 	public boolean isAccountNonLocked() {
-		if (account_locked_dt_tm == null) {
-			return true;
-		}
-
-		return account_locked_dt_tm.isAfterNow();
+		return (account_locked_dt_tm == null || account_locked_dt_tm.isAfterNow());
 	}
 
 	/**
@@ -221,11 +217,7 @@ public final class User extends Person implements UserDetails {
 	 */
 	@Override
 	public boolean isAccountNonExpired() {
-		if (account_expired_dt_tm == null) {
-			return true;
-		}
-
-		return account_expired_dt_tm.isAfterNow();
+		return (account_expired_dt_tm == null || account_expired_dt_tm.isAfterNow());
 	}
 
 	public void setAccountExpiredDate(final DateTime expiredDate) {

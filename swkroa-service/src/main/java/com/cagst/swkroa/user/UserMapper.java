@@ -69,8 +69,6 @@ import com.cagst.swkroa.person.BasePersonMapper;
 		user.setLastName(rs.getString(NAME_LAST));
 		user.setFirstName(rs.getString(NAME_FIRST));
 		user.setMiddleName(rs.getString(NAME_MIDDLE));
-		user.setGender(codeValueRepo.getCodeValueByUID(rs.getLong(GENDER_CD)));
-		user.setDob(rs.getTimestamp(DOB_DT) != null ? new DateTime(rs.getTime(DOB_DT)) : null);
 		user.setUsername(rs.getString(USERNAME));
 		user.setPassword(rs.getString(PASSWORD));
 		user.setPasswordTemporary(rs.getBoolean(TEMPORARY_PWD_IND));

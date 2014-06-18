@@ -13,13 +13,13 @@ csApp.run(function(editableOptions) {
 });
 
 csApp.controller('csListController', function($scope, $http) {
-	$http.get('../svc/codesets').success(function(data) {
+	$http.get('../svc/codeset').success(function(data) {
 		$scope.codesets = data;
 	});
 
 	$scope.getCodeValues = function(codeSet) {
 		$scope.selectedCodeSet = codeSet;
-		$http.get('../svc/codesets/' + codeSet.meaning).success(function(data) {
+		$http.get('../svc/codeset/' + codeSet.meaning).success(function(data) {
 			$scope.codevalues = data;
 		});
 	};

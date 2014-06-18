@@ -1,9 +1,5 @@
 package com.cagst.swkroa.controller.web;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.member.MembershipRepository;
-import com.cagst.swkroa.model.MembershipModel;
 
 /**
  * Handles and retrieves the membership page(s) depending on the URI template.
@@ -41,16 +36,7 @@ public final class MembershipController {
 	public ModelAndView getMembershipListingPage() {
 		LOGGER.info("Received request to show membership listing page.");
 
-//		List<Membership> memberships = membershipRepo.getActiveMemberships();
-//		List<MembershipModel> models = new ArrayList<MembershipModel>(memberships.size());
-//		for (Membership membership : memberships) {
-//			models.add(new MembershipModel(membership));
-//		}
-//
-//		Collections.sort(models);
-
 		ModelAndView mav = new ModelAndView("membership/index");
-//		mav.addObject("memberships", models);
 
 		return mav;
 	}

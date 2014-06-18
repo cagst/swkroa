@@ -29,7 +29,7 @@
 	-->
 
 <!--
-	<Resource name="jdbc/swkroadb"
+	<Resource name="jdbc/SWKROADataSource"
 	          auth="Container"
 	          type="javax.sql.DataSource"
 	          

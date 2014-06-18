@@ -1,10 +1,8 @@
 package com.cagst.swkroa.county;
 
 import java.io.Serializable;
-import java.text.Collator;
 
 import com.cagst.common.util.CGTCollatorBuilder;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

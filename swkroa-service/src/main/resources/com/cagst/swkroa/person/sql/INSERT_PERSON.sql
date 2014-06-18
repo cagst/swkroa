@@ -4,8 +4,6 @@ INSERT INTO person (title_cd
                    ,name_first
                    ,name_first_key
                    ,name_middle
-                   ,dob_dt
-                   ,gender_cd
                    ,locale_language
                    ,locale_country
                    ,time_zone
@@ -20,8 +18,6 @@ INSERT INTO person (title_cd
                    ,:name_first
                    ,:name_first_key
                    ,:name_middle
-                   ,:dob_dt
-                   ,:gender_cd
                    ,:locale_language
                    ,:locale_country
                    ,:time_zone

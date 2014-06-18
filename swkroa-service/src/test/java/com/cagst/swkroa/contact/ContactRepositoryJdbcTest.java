@@ -35,8 +35,6 @@ import com.cagst.swkroa.user.User;
 public class ContactRepositoryJdbcTest extends BaseTestRepository {
 	private ContactRepositoryJdbc repo;
 
-	private CodeValueRepository codeValueRepo;
-
 	private CodeValue home;
 	private User user;
 
@@ -55,7 +53,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
 		cvWork.setMeaning("WORK");
 		cvWork.setDisplay("Work");
 
-		codeValueRepo = Mockito.mock(CodeValueRepository.class);
+		CodeValueRepository codeValueRepo = Mockito.mock(CodeValueRepository.class);
 
 		Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(home);
 		Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(cvWork);

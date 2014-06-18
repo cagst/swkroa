@@ -6,12 +6,18 @@
  * Version: 1.0.0
  */
 
-var msListApp = angular.module('msListApp', ['ui.bootstrap', 'ui.utils']);
+var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
+                       .controller('swkroaController', ['$scope', '$http', function($scope, $http) {
 
-msListApp.controller('listController', ['$scope', '$http', function($scope, $http) {
-	$http.get('../svc/codesets/TRANSACTION_TYPE/').success(function(data) {
+	$http.get('../svc/codeset/TRANSACTION_TYPE/').success(function(data) {
 		$scope.transactionTypes = data;
 	});
+
+	$scope.queryKeydown = function($event) {
+		if ($event.keyCode == 13) {
+			$scope.getMemberships();
+		}
+	};
 
 	$scope.getMemberships = function() {
 		$scope.membership = null;

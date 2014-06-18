@@ -63,8 +63,6 @@ CREATE TABLE person (
 	name_first						VARCHAR(50) NOT NULL,
 	name_first_key				VARCHAR(50) NOT NULL,
 	name_middle						VARCHAR(50) NULL,
-	dob_dt								DATE NULL,
-	gender_cd							BIGINT UNSIGNED NULL,
 	locale_language				VARCHAR(10) NULL,
 	locale_country				VARCHAR(10) NULL,
 	time_zone							VARCHAR(50) NULL,
