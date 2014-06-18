@@ -9,53 +9,90 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT iq2.membership_id
-      ,iq2.fixed_dues_amount
-      ,iq2.calculated_dues_amount
-      ,iq2.member_count
-      ,iq2.member_id
-      ,iq2.company_name
-      ,iq2.full_name
-      ,COALESCE(iq2.company_name, iq2.full_name) AS membership_name
-      ,cv1.codevalue_display AS membership_type_display
-      ,mt.member_type_display
-      ,mt.dues_amount
- FROM (SELECT iq1.membership_id
-             ,iq1.membership_type_cd
-             ,iq1.fixed_dues_amount
-             ,iq1.calculated_dues_amount
-             ,iq1.member_count
-             ,m.member_id
-             ,m.company_name
-             ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
-             ,m.member_type_id
-         FROM (SELECT ms.membership_id
-                     ,ms.membership_type_cd
-                     ,ms.dues_amount AS fixed_dues_amount
-                     ,SUM(mt.dues_amount) AS calculated_dues_amount
-                     ,COUNT(m.member_id) AS member_count
-                 FROM membership ms
+		<![CDATA[SELECT iq3.membership_id
+      ,iq3.fixed_dues_amount
+      ,iq3.calculated_dues_amount
+      ,iq3.member_count
+      ,iq3.member_id
+      ,iq3.company_name
+      ,iq3.full_name
+      ,iq3.membership_name
+      ,iq3.membership_type_display
+      ,iq3.owner_ident
+      ,iq3.member_type_display
+      ,iq3.dues_amount
+      ,iq3.address_id
+      ,a.address1
+      ,a.address2
+      ,a.address3
+      ,a.city
+      ,a.state_code
+      ,a.postal_code
+      ,a.country_code
+  FROM (SELECT iq2.membership_id
+              ,iq2.fixed_dues_amount
+              ,iq2.calculated_dues_amount
+              ,iq2.member_count
+              ,iq2.member_id
+              ,iq2.company_name
+              ,iq2.full_name
+              ,COALESCE(iq2.company_name, iq2.full_name) AS membership_name
+              ,cv1.codevalue_display AS membership_type_display
+              ,iq2.owner_ident
+              ,mt.member_type_display
+              ,mt.dues_amount
+              ,iq2.address_id
+         FROM (SELECT iq1.membership_id
+                     ,iq1.membership_type_cd
+                     ,iq1.fixed_dues_amount
+                     ,iq1.calculated_dues_amount
+                     ,iq1.member_count
+                     ,m.member_id
+                     ,m.company_name
+                     ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
+                     ,m.member_type_id
+                     ,m.owner_ident
+                     ,MIN(a.address_id) AS address_id
+                FROM (SELECT ms.membership_id
+                            ,ms.membership_type_cd
+                            ,ms.dues_amount AS fixed_dues_amount
+                            ,SUM(mt.dues_amount) AS calculated_dues_amount
+                            ,COUNT(m.member_id) AS member_count
+                        FROM membership ms
+                            ,member m
+                            ,member_type mt
+                       WHERE ms.active_ind = 1
+                         AND (ms.membership_type_cd = $P{membership_type} OR $P{membership_type} = 0)
+                         AND m.membership_id = ms.membership_id
+                         AND m.active_ind = 1
+                         AND mt.prev_member_type_id = m.member_type_id
+                         AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
+                       GROUP BY m.membership_id
+                     )iq1
                      ,member m
-                     ,member_type mt
-                WHERE ms.active_ind = 1
-                  AND (ms.membership_type_cd = $P{membership_type} OR $P{membership_type} = 0)
-                  AND m.membership_id = ms.membership_id
-                  AND m.active_ind = 1
-                  AND mt.prev_member_type_id = m.member_type_id
-                  AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
-                GROUP BY m.membership_id
-              )iq1
-              ,member m
-         LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
-        WHERE m.membership_id = iq1.membership_id
-          AND m.active_ind = 1
-      )iq2
-      ,member_type mt
-      ,codevalue cv1
-WHERE mt.prev_member_type_id = iq2.member_type_id
-  AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
-  AND cv1.codevalue_id = iq2.membership_type_cd
-ORDER BY membership_name ASC]]>
+                LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
+                LEFT OUTER JOIN address a ON (a.parent_entity_name = 'MEMBER' AND a.parent_entity_id = m.member_id AND a.active_ind = 1)
+               WHERE m.membership_id = iq1.membership_id
+                 AND m.active_ind = 1
+               GROUP BY membership_id
+                       ,membership_type_cd
+                       ,fixed_dues_amount
+                       ,calculated_dues_amount
+                       ,member_count
+                       ,member_id
+                       ,company_name
+                       ,full_name
+                       ,member_type_id
+                       ,owner_ident
+             )iq2
+             ,member_type mt
+             ,codevalue cv1
+       WHERE mt.prev_member_type_id = iq2.member_type_id
+         AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
+         AND cv1.codevalue_id = iq2.membership_type_cd
+       )iq3
+  LEFT OUTER JOIN address a ON (a.address_id = iq3.address_id)
+ORDER BY iq3.membership_name]]>
 	</queryString>
 	<field name="membership_id" class="java.math.BigInteger">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -72,17 +109,51 @@ ORDER BY membership_name ASC]]>
 	<field name="full_name" class="java.lang.String"/>
 	<field name="membership_name" class="java.lang.String"/>
 	<field name="membership_type_display" class="java.lang.String"/>
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="member_type_display" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="dues_amount" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="address_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address3" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="state_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="postal_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="country_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<variable name="total_dues" class="java.lang.String">
 		<variableExpression><![CDATA[($F{fixed_dues_amount}.equals( $F{calculated_dues_amount} )) ?
 "Total Dues Amount: " + $F{calculated_dues_amount}.toString()  :
-"Total Dues Amount: " + $F{fixed_dues_amount}.toString() + "(f) / " + $F{calculated_dues_amount}.toString() + "(c)"
-]]></variableExpression>
+"Total Dues Amount: " + $F{fixed_dues_amount}.toString() + "(f) / " + $F{calculated_dues_amount}.toString() + "(c)"]]></variableExpression>
+	</variable>
+	<variable name="address" class="java.lang.String">
+		<variableExpression><![CDATA[($F{address1} == null ? "" : $F{address1}) +
+($F{address2} == null ? "" : ", " + $F{address2}) +
+($F{address3} == null ? "" : ", " + $F{address3}) +
+($F{city} == null ? "" : ", " + $F{city}) +
+($F{state_code} == null ? "" : ", " + $F{state_code}) +
+($F{postal_code} == null ? "" : ", " + $F{postal_code})]]></variableExpression>
 	</variable>
 	<group name="membership_group" keepTogether="true">
 		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
@@ -90,6 +161,9 @@ ORDER BY membership_name ASC]]>
 			<band height="24">
 				<textField>
 					<reportElement x="0" y="0" width="286" height="20" uuid="72d49b3c-f7af-4b4f-b795-e798c32ae6da"/>
+					<textElement>
+						<font fontName="Helvetica Neue" size="14"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -97,8 +171,10 @@ ORDER BY membership_name ASC]]>
 		<groupFooter>
 			<band height="23">
 				<textField>
-					<reportElement x="356" y="0" width="216" height="20" uuid="7ec13e06-7a06-4f62-8ee3-ed555d9ecd04"/>
-					<textElement textAlignment="Right"/>
+					<reportElement x="219" y="0" width="353" height="20" uuid="7ec13e06-7a06-4f62-8ee3-ed555d9ecd04"/>
+					<textElement textAlignment="Right">
+						<font fontName="Helvetica Neue" size="14"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$V{total_dues}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -125,15 +201,34 @@ ORDER BY membership_name ASC]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
-			<textField>
-				<reportElement x="39" y="0" width="247" height="20" uuid="e53bb38f-5280-483c-baa6-cb6c44322ce4"/>
-				<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
-			</textField>
+		<band height="40" splitType="Stretch">
 			<textField>
 				<reportElement x="472" y="0" width="100" height="20" uuid="9747d626-d157-493a-84d0-533f248ef730"/>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right">
+					<font fontName="Helvetica Neue" size="12"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{dues_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="2" width="59" height="20" forecolor="#999999" uuid="a46c03f8-40a7-41ca-96f7-1416787e860c"/>
+				<textElement>
+					<font fontName="Helvetica Neue" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(" + $F{owner_ident} + ")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="2" width="179" height="20" uuid="33181344-8d31-4cb1-9aac-82a6315c659e"/>
+				<textElement>
+					<font fontName="Helvetica Neue" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="20" width="402" height="20" isRemoveLineWhenBlank="true" uuid="3bba7e15-94ee-4339-9f7d-3bf35595bf9a"/>
+				<textElement>
+					<font fontName="Helvetica Neue"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{address}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -144,19 +239,30 @@ ORDER BY membership_name ASC]]>
 		<band height="21" splitType="Stretch">
 			<textField>
 				<reportElement x="452" y="1" width="80" height="20" uuid="e4255344-85da-40d3-b972-efad84653233"/>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right">
+					<font fontName="Helvetica Neue"/>
+				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="532" y="1" width="40" height="20" uuid="b3bffb09-4b85-419c-b1a0-af6ae571c964"/>
+				<textElement>
+					<font fontName="Helvetica Neue"/>
+				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="EEE, MMM d, yyyy h:mm a">
 				<reportElement x="70" y="1" width="286" height="20" uuid="191f7e67-4f61-4200-9b6f-0b790c7b57a6"/>
+				<textElement>
+					<font fontName="Helvetica Neue"/>
+				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="1" width="70" height="20" uuid="32ab96e5-105b-4bc4-9d90-74c64f756d67"/>
+				<textElement>
+					<font fontName="Helvetica Neue"/>
+				</textElement>
 				<text><![CDATA[Generated on:]]></text>
 			</staticText>
 		</band>

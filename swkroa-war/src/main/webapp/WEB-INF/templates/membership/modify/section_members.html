@@ -66,12 +66,6 @@
 								       data-ng-model="member.ownerIdent"
 								       data-ng-required="true" />
 							</div>
-							<div class="col-xs-2">
-								<label data-th-text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
-								<input type="text" class="form-control" maxlength="25"
-								       data-th-placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
-								       data-ng-model="member.greeting" />
-							</div>
 						</div>
 					</div>
 					
@@ -92,26 +86,15 @@
 							</div>
 						</div>
 						<div class="col-xs-2">
-							<label data-th-text="#{com.cagst.swkroa.membership.member.gender}">zzz Gender</label>
-							<select class="form-control"
-							        data-ng-model="member.person.gender"
-							        data-ng-options="gender.display for gender in genders">
-							</select>
+							<label data-th-text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
+							<input type="text" class="form-control" maxlength="25"
+										 data-th-placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
+										 data-ng-model="member.greeting" />
 						</div>
 						<div class="col-xs-2">
-							<label data-th-text="#{com.cagst.swkroa.membership.member.dob}">zzz DOB</label>
-							<div class="input-group">
-								<input type="text" class="form-control"
-								       data-datepicker-popup="MM/dd/yyyy"
-								       data-show-button-bar="false"
-								       data-datepicker-options="dateOptions"
-								       data-ng-model="member.person.dob"/>
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-default" data-ng-click="open($event)">
-										<i class="fa fa-calendar"></i>
-									</button>
-								</span>
-							</div>
+							<label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz C/O</label>
+							<input type="text" class="form-control" maxlength="50"
+							       data-ng-model="member.inCareOf" />
 						</div>
 						<div class="col-xs-2">
 							<div>&nbsp;</div>
@@ -122,11 +105,6 @@
 							<div>&nbsp;</div>
 							<input id="primaryEmailNewsletter" type="checkbox" data-ng-model="member.emailNewsletter" />
 							<label for="primaryEmailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.email}">zzz Email</label>
-						</div>
-						<div class="col-xs-2">
-							<label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz C/O</label>
-							<input type="text" class="form-control" maxlength="50"
-							       data-ng-model="member.inCareOf" />
 						</div>
 					</div>
 					

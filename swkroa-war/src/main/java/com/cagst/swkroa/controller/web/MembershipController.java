@@ -36,16 +36,7 @@ public final class MembershipController {
 	public ModelAndView getMembershipListingPage() {
 		LOGGER.info("Received request to show membership listing page.");
 
-//		List<Membership> memberships = membershipRepo.getActiveMemberships();
-//		List<MembershipModel> models = new ArrayList<MembershipModel>(memberships.size());
-//		for (Membership membership : memberships) {
-//			models.add(new MembershipModel(membership));
-//		}
-//
-//		Collections.sort(models);
-
 		ModelAndView mav = new ModelAndView("membership/index");
-//		mav.addObject("memberships", models);
 
 		return mav;
 	}

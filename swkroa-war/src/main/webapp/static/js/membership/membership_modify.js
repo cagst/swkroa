@@ -46,16 +46,6 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	});
 
 	syncItems++;
-	$http.get('../svc/codeset/GENDER/').success(function(data) {
-		$scope.genders = data;
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
-
-	syncItems++;
 	$http.get('../svc/codeset/ADDRESS_TYPE').success(function(data) {
 		$scope.addressTypes = data;
 		

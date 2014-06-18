@@ -51,12 +51,6 @@
 						       data-ng-model="membership.primarySpouse.ownerIdent"
 						       data-ng-required="membership.primarySpouse" />
 					</div>
-					<div class="col-xs-2">
-						<label data-th-text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
-						<input type="text" class="form-control" maxlength="25"
-						       data-th-placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
-						       data-ng-model="membership.primarySpouse.greeting" />
-					</div>
 				</div>
 			</div>
 			
@@ -77,28 +71,12 @@
 					</div>
 				</div>
 				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.gender}">zzz Gender</label>
-					<select class="form-control"
-					        data-ng-model="membership.primarySpouse.person.gender"
-					        data-ng-options="gender.display for gender in genders">
-					</select>
+					<label data-th-text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
+					<input type="text" class="form-control" maxlength="25"
+								 data-th-placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
+								 data-ng-model="membership.primarySpouse.greeting" />
 				</div>
 				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.dob}">zzz DOB</label>
-					<div class="input-group">
-						<input type="text" class="form-control"
-						       data-datepicker-popup="MM/dd/yyyy"
-						       data-show-button-bar="false"
-						       data-datepicker-options="dateOptions"
-						       data-ng-model="membership.primarySpouse.person.dob"/>
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" data-ng-click="open($event)">
-								<i class="fa fa-calendar"></i>
-							</button>
-						</span>
-					</div>
-				</div>
-				<div class="col-xs-2 col-xs-offset-4">
 					<label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz Greeting</label>
 					<input type="text" class="form-control" maxlength="50"
 					       data-ng-model="membership.primarySpouse.inCareOf" />

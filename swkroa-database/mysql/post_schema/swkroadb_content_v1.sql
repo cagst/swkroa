@@ -106,11 +106,11 @@ INSERT INTO county (state_code, county_code, county_name, create_id, create_dt_t
 INSERT INTO county (state_code, county_code, county_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('KS', 'WY', 'Wyandotte', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 
 -- Insert Genders
-INSERT INTO codeset (codeset_id, codeset_display, codeset_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Gender', 'GENDER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
-
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Unknown', 'GENDER_UNKNOWN', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Male', 'GENDER_MALE', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Female', 'GENDER_FEMALE', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+--INSERT INTO codeset (codeset_id, codeset_display, codeset_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Gender', 'GENDER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+--
+--INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Unknown', 'GENDER_UNKNOWN', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+--INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Male', 'GENDER_MALE', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+--INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Female', 'GENDER_FEMALE', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 
 -- Insert Titles
 INSERT INTO codeset (codeset_id, codeset_display, codeset_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (2, 'Title', 'TITLE', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
@@ -174,9 +174,9 @@ INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_
 INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Payment', 'TRANS_PAYMENT', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
 -- Insert Member Types
-INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 1, 'Associate Member', 'MEMBER_ASSOCIATE', 70.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
-INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (2, 2, 'Regular Member', 'MEMBER_REGULAR', 70.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
-INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (3, 3, 'Member Spouse', 'MEMBER_SPOUSE', 0.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 1, 'Associate', 'MEMBER_ASSOCIATE', 70.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (2, 2, 'Regular', 'MEMBER_REGULAR', 70.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (3, 3, 'Spouse', 'MEMBER_SPOUSE', 0.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (4, 4, 'Family Head', 'MEMBER_FAMILY_HEAD', 70.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (5, 5, 'Family Member', 'MEMBER_FAMILY_MEMBER', 20.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (6, 6, 'Mailing List', 'MEMBER_MAIL_LIST', 0.00, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);

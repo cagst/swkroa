@@ -28,8 +28,6 @@ public abstract class BasePersonMapper {
 	protected static final String NAME_FIRST = "name_first";
 	protected static final String NAME_FIRST_KEY = "name_first_key";
 	protected static final String NAME_MIDDLE = "name_middle";
-	protected static final String DOB_DT = "dob_dt";
-	protected static final String GENDER_CD = "gender_cd";
 	protected static final String LOCALE_LANGUAGE = "locale_language";
 	protected static final String LOCALE_COUNTRY = "locale_country";
 	protected static final String TIME_ZONE = "time_zone";
@@ -56,14 +54,9 @@ public abstract class BasePersonMapper {
 		Person person = new Person();
 
 		long titleCd = rs.getLong(TITLE_CD);
-		long genderCd = rs.getLong(GENDER_CD);
 
 		if (titleCd > 0L) {
 			person.setTitle(codeValueRepo.getCodeValueByUID(titleCd));
-		}
-
-		if (genderCd > 0L) {
-			person.setGender(codeValueRepo.getCodeValueByUID(genderCd));
 		}
 
 		String language = rs.getString(LOCALE_LANGUAGE);
@@ -80,7 +73,6 @@ public abstract class BasePersonMapper {
 		person.setFirstName(rs.getString(NAME_FIRST));
 		person.setMiddleName(rs.getString(NAME_MIDDLE));
 		person.setLastName(rs.getString(NAME_LAST));
-		person.setDob(CGTDateTimeUtils.getDateTime(rs, DOB_DT));
 
 		// meta-data
 		person.setPersonUpdateCount(rs.getLong(PERSON_UPDT_CNT));
@@ -135,8 +127,6 @@ public abstract class BasePersonMapper {
 		params.addValue(NAME_FIRST, person.getFirstName());
 		params.addValue(NAME_FIRST_KEY, CGTStringUtils.normalizeToKey(person.getFirstName()));
 		params.addValue(NAME_MIDDLE, StringUtils.isNotBlank(person.getMiddleName()) ? person.getMiddleName() : null);
-		params.addValue(DOB_DT, CGTDateTimeUtils.convertDateTimeToTimestamp(person.getDob()));
-		params.addValue(GENDER_CD, person.getGender() != null ? person.getGender().getCodeValueUID() : null);
 		params.addValue(LOCALE_LANGUAGE, person.getLocale() != null ? person.getLocale().getLanguage() : null);
 		params.addValue(LOCALE_COUNTRY, person.getLocale() != null ? person.getLocale().getCountry() : null);
 		params.addValue(TIME_ZONE, person.getTimeZone() != null ? person.getTimeZone().toString() : null);

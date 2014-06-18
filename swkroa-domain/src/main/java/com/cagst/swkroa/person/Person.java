@@ -39,8 +39,6 @@ public class Person implements Serializable, Comparable<Person> {
 	private String name_last;
 	private String name_first;
 	private String name_middle;
-	private DateTime dob;
-	private CodeValue gender;
 	private Locale locale;
 	private DateTimeZone time_zone;
 
@@ -149,34 +147,6 @@ public class Person implements Serializable, Comparable<Person> {
 		return nameFormatter.formatFullName(name_last, name_first, name_middle);
 	}
 
-	/**
-	 * Gets the Date of Birth for the Person.
-	 * 
-	 * @return {@link Date} of Birth for the Person.
-	 */
-	@Past
-	public DateTime getDob() {
-		return dob;
-	}
-
-	/**
-	 * Sets the Date of Birth for the Person.
-	 * 
-	 * @param dob
-	 *          The {@link Date} of Birth for the Person.
-	 */
-	public void setDob(final DateTime dob) {
-		this.dob = dob;
-	}
-
-	public CodeValue getGender() {
-		return gender;
-	}
-
-	public void setGender(final CodeValue gender) {
-		this.gender = gender;
-	}
-
 	public Locale getLocale() {
 		return locale;
 	}
@@ -268,7 +238,6 @@ public class Person implements Serializable, Comparable<Person> {
 		HashCodeBuilder builder = new HashCodeBuilder();
 		builder.append(name_last);
 		builder.append(name_first);
-		builder.append(dob);
 
 		return builder.build();
 	}
@@ -295,7 +264,6 @@ public class Person implements Serializable, Comparable<Person> {
 		EqualsBuilder builder = new EqualsBuilder();
 		builder.append(name_last, rhs.getLastName());
 		builder.append(name_first, rhs.getFirstName());
-		builder.append(dob, rhs.getDob());
 
 		return builder.build();
 	}
@@ -311,7 +279,6 @@ public class Person implements Serializable, Comparable<Person> {
 		builder.append("person_id", person_id);
 		builder.append("name_last", name_last);
 		builder.append("name_first", name_first);
-		builder.append("dob", dob == null ? StringUtils.EMPTY : dob.toString());
 		builder.append("updateCount", updt_cnt);
 		builder.appendSuper(super.toString());
 

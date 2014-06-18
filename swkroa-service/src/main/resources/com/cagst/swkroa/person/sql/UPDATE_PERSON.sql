@@ -5,8 +5,6 @@ UPDATE person
       ,name_first      = :name_first
       ,name_first_key  = :name_first_key
       ,name_middle     = :name_middle
-      ,dob_dt          = :dob_dt
-      ,gender_cd       = :gender_cd
       ,locale_language = :locale_language
       ,locale_country  = :locale_country
       ,time_zone       = :time_zone
