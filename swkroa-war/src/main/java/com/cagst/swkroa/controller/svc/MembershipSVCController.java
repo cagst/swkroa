@@ -96,11 +96,10 @@ public final class MembershipSVCController {
 
 		if (membershipId == 0L) {
 			Member primary = new Member();
-			primary.setMemberType(memberTypeRepo.getMemberTypeByMeaning(MemberType.MEMBER_REGULAR));
+			primary.setMemberType(memberTypeRepo.getMemberTypeByMeaning(MemberType.REGULAR));
 			primary.setPerson(new Person());
 
 			Membership membership = new Membership();
-			membership.setMembershipType(codeValueRepo.getCodeValueByMeaning("MEMBERSHIP_REGULAR"));
 			membership.setEntityType(codeValueRepo.getCodeValueByMeaning("ENTITY_INDIVIDUAL"));
 			membership.addMember(primary);
 

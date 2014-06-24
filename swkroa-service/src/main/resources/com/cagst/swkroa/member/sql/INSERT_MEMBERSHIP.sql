@@ -1,5 +1,4 @@
-INSERT INTO membership (membership_type_cd
-                       ,entity_type_cd
+INSERT INTO membership (entity_type_cd
                        ,due_on_dt
                        ,dues_amount
                        ,active_ind
@@ -7,8 +6,7 @@ INSERT INTO membership (membership_type_cd
                        ,create_dt_tm
                        ,updt_id
                        ,updt_dt_tm)
-                VALUES (:membership_type_cd
-                       ,:entity_type_cd
+                VALUES (:entity_type_cd
                        ,:due_on_dt
                        ,:dues_amount
                        ,:active_ind

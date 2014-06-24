@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
 import com.cagst.common.db.DataSourceFactory;
@@ -93,8 +94,7 @@ public class TransactionRepositoryJdbcTest {
 		Transaction trans = repo.getTransactionByUID(1L);
 
 		assertNotNull("Ensure we found a transaction.", trans);
-		assertEquals("Ensure it is the correct transaction (amount).", 70.00, trans.getTransactionAmount().doubleValue(),
-				0.001);
+		assertEquals("Ensure it is the correct transaction (amount).", 90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 	}
 
 	/**
@@ -120,8 +120,38 @@ public class TransactionRepositoryJdbcTest {
 
 		List<Transaction> transactions = repo.getTransactionsForMembership(membership);
 		assertNotNull("Ensure the transaction list exists.", transactions);
-		assertFalse("Ensure the transaction list is empty.", transactions.isEmpty());
-		assertEquals("Ensure we found the correct number of transactions.", 3, transactions.size());
+		assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
+		assertEquals("Ensure we found the correct number of transactions.", 2, transactions.size());
+
+		for (Transaction trans : transactions) {
+			assertFalse("Ensure the transaction entries are not empty", trans.getTransactionEntries().isEmpty());
+			assertEquals("Ensure each transaction has 2 entries", 2, trans.getTransactionEntries().size());
+		}
+	}
+
+	/**
+	 * Test the saveTransaction method by inserting a Transaction with no entries.
+	 */
+	@Test(expected = IncorrectResultSizeDataAccessException.class)
+	public void testSaveTransaction_Insert_NoEntries() {
+		User user = new User();
+		user.setUserUID(1L);
+
+		Membership membership = new Membership();
+		membership.setMembershipUID(2L);
+
+		List<Transaction> transactions1 = repo.getTransactionsForMembership(membership);
+		assertNotNull("Ensure the transaction list exists.", transactions1);
+		assertFalse("Ensure the transaction list is empty.", transactions1.isEmpty());
+		assertEquals("Ensure we found the correct number of transactions.", 3, transactions1.size());
+
+		Transaction newTrans = new Transaction();
+		newTrans.setTransactionDate(new DateTime());
+		newTrans.setTransactionAmount(new BigDecimal(25));
+		newTrans.setTransactionType(TransactionType.INVOICE);
+		newTrans.setMembershipUID(membership.getMembershipUID());
+
+		repo.saveTransaction(newTrans, user);
 	}
 
 	/**
@@ -143,9 +173,8 @@ public class TransactionRepositoryJdbcTest {
 		Transaction newTrans = new Transaction();
 		newTrans.setTransactionDate(new DateTime());
 		newTrans.setTransactionAmount(new BigDecimal(25));
-		newTrans.setTransactionType(codeValueRepo.getCodeValueByUID(1L));
+		newTrans.setTransactionType(TransactionType.INVOICE);
 		newTrans.setMembershipUID(membership.getMembershipUID());
-		newTrans.setMember(member);
 
 		Transaction insertedTrans = repo.saveTransaction(newTrans, user);
 		assertNotNull("Ensure we have a valid transaction", insertedTrans);

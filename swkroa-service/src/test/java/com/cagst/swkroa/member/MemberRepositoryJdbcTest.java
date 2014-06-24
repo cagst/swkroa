@@ -66,41 +66,35 @@ public class MemberRepositoryJdbcTest {
 
 		CodeValue associate = new CodeValue();
 		associate.setCodeValueUID(1L);
-		associate.setMeaning(Membership.MEMBERSHIP_ASSOCIATE);
 		associate.setDisplay("Associate Membership");
 
 		CodeValue regular = new CodeValue();
 		regular.setCodeValueUID(2L);
-		regular.setMeaning(Membership.MEMBERSHIP_REGULAR);
 		regular.setDisplay("Regular Membership");
 
 		CodeValue family = new CodeValue();
 		family.setCodeValueUID(3L);
-		family.setMeaning(Membership.MEMBERSHIP_FAMILY);
 		family.setDisplay("Family Membership");
 
 		Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(associate);
 		Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(regular);
 		Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(family);
-		Mockito.when(codeValueRepo.getCodeValueByMeaning(Membership.MEMBERSHIP_ASSOCIATE)).thenReturn(associate);
-		Mockito.when(codeValueRepo.getCodeValueByMeaning(Membership.MEMBERSHIP_REGULAR)).thenReturn(regular);
-		Mockito.when(codeValueRepo.getCodeValueByMeaning(Membership.MEMBERSHIP_FAMILY)).thenReturn(family);
 
 		MemberType regularMember = new MemberType();
 		regularMember.setMemberTypeUID(1L);
-		regularMember.setMemberTypeMeaning(MemberType.MEMBER_REGULAR);
+		regularMember.setMemberTypeMeaning(MemberType.REGULAR);
 		regularMember.setMemberTypeDisplay("Regular");
 
 		MemberType familyHead = new MemberType();
 		familyHead.setMemberTypeUID(2L);
-		familyHead.setMemberTypeMeaning(MemberType.MEMBER_FAMILY_HEAD);
+		familyHead.setMemberTypeMeaning(MemberType.FAMILY_HEAD);
 		familyHead.setMemberTypeDisplay("Family Head");
 
 		Mockito.when(memberTypeRepo.getMemberTypeByID(1L)).thenReturn(regularMember);
 		Mockito.when(memberTypeRepo.getMemberTypeByID(2L)).thenReturn(familyHead);
 
-		Mockito.when(memberTypeRepo.getMemberTypeByMeaning(MemberType.MEMBER_REGULAR)).thenReturn(regularMember);
-		Mockito.when(memberTypeRepo.getMemberTypeByMeaning(MemberType.MEMBER_FAMILY_HEAD)).thenReturn(familyHead);
+		Mockito.when(memberTypeRepo.getMemberTypeByMeaning(MemberType.REGULAR)).thenReturn(regularMember);
+		Mockito.when(memberTypeRepo.getMemberTypeByMeaning(MemberType.FAMILY_HEAD)).thenReturn(familyHead);
 
 		svCounty = new County();
 		svCounty.setCountyUID(1L);
@@ -161,7 +155,7 @@ public class MemberRepositoryJdbcTest {
 		assertNotNull("Ensure the member is not NULL!", member);
 		assertEquals("Ensure we found the correct member!", 2, member.getMemberUID());
 		assertNotNull("Ensure we have a valid MemberType.", member.getMemberType());
-		assertEquals("Ensure it is the correct MemberType.", MemberType.MEMBER_REGULAR, member.getMemberType()
+		assertEquals("Ensure it is the correct MemberType.", MemberType.REGULAR, member.getMemberType()
 				.getMemberTypeMeaning());
 	}
 
@@ -263,7 +257,7 @@ public class MemberRepositoryJdbcTest {
 		assertFalse("Ensure the members collection is not empty.", members1.isEmpty());
 		assertEquals("Ensure we found the correct number of members.", 2, members1.size());
 
-		MemberType type = memberTypeRepo.getMemberTypeByMeaning(MemberType.MEMBER_REGULAR);
+		MemberType type = memberTypeRepo.getMemberTypeByMeaning(MemberType.REGULAR);
 
 		Person person = new Person();
 		person.setFirstName("FNAME");
@@ -298,7 +292,7 @@ public class MemberRepositoryJdbcTest {
 		assertFalse("Ensure the members collection is not empty.", members1.isEmpty());
 		assertEquals("Ensure we found the correct number of members.", 2, members1.size());
 
-		MemberType type = memberTypeRepo.getMemberTypeByMeaning(MemberType.MEMBER_REGULAR);
+		MemberType type = memberTypeRepo.getMemberTypeByMeaning(MemberType.REGULAR);
 
 		Member builder = new Member();
 		builder.setOwnerIdent("LNAFNA1");

@@ -17,6 +17,10 @@ import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.member.Member;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 /**
  * Representation of a Transaction within the system.
  * 
@@ -30,14 +34,15 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 
 	private long transaction_id;
 	private long membership_id;
-	private Member member;
 	private DateTime transaction_dt;
-	private CodeValue transaction_type;
+	private TransactionType transaction_type;
 	private BigDecimal transaction_amount;
+	private String transaction_desc;
+	private BigDecimal remaining_amount;
 	private String ref_num;
 	private String memo_txt;
 
-	private List<Transaction> related_transactions = new ArrayList<Transaction>();
+	private List<TransactionEntry> entries = new ArrayList<TransactionEntry>();
 
 	// meta-data
 	private boolean active_ind = true;
@@ -59,14 +64,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		this.membership_id = uid;
 	}
 
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(final Member member) {
-		this.member = member;
-	}
-
+	@NotNull
 	public DateTime getTransactionDate() {
 		return transaction_dt;
 	}
@@ -75,14 +73,16 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		this.transaction_dt = transactionDate;
 	}
 
-	public CodeValue getTransactionType() {
+	@NotNull
+	public TransactionType getTransactionType() {
 		return transaction_type;
 	}
 
-	public void setTransactionType(final CodeValue transactionType) {
+	public void setTransactionType(final TransactionType transactionType) {
 		this.transaction_type = transactionType;
 	}
 
+	@NotNull
 	public BigDecimal getTransactionAmount() {
 		return transaction_amount;
 	}
@@ -91,6 +91,24 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		this.transaction_amount = transactionAmount;
 	}
 
+	@Size(max = 50)
+	public String getTransactionDescription() {
+		return transaction_desc;
+	}
+
+	public void setTransactionDescription(final String desc) {
+		this.transaction_desc = desc;
+	}
+
+	public BigDecimal getRemainingAmount() {
+		return remaining_amount;
+	}
+
+	public void setRemainingAmount(final BigDecimal remainingAmount) {
+		this.remaining_amount = remainingAmount;
+	}
+
+	@Size(max = 50)
 	public String getReferenceNumber() {
 		return ref_num;
 	}
@@ -99,6 +117,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		this.ref_num = refNum;
 	}
 
+	@Size(max = 250)
 	public String getMemo() {
 		return memo_txt;
 	}
@@ -107,24 +126,25 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		this.memo_txt = memo;
 	}
 
-	public void clearRelatedTransactions() {
-		related_transactions.clear();
+	public void clearEntries() {
+		entries.clear();
 	}
 
-	public void addRelatedTransaction(final Transaction transaction) {
-		related_transactions.add(transaction);
+	public void addEntry(final TransactionEntry entry) {
+		entries.add(entry);
 	}
 
-	public void removeRelatedTransaction(final Transaction transaction) {
-		related_transactions.remove(transaction);
+	public void removeEntry(final TransactionEntry entry) {
+		entries.remove(entry);
 	}
 
-	public Collection<Transaction> getRelatedTransactions() {
-		return Collections.unmodifiableList(related_transactions);
+	@Size(min = 1)
+	public List<TransactionEntry> getTransactionEntries() {
+		return Collections.unmodifiableList(entries);
 	}
 
-	public void setRelatedTransactions(final List<Transaction> relatedTransactions) {
-		this.related_transactions = relatedTransactions;
+	public void setTransactionEntries(final List<TransactionEntry> entries) {
+		this.entries = entries;
 	}
 
 	public boolean isActive() {
@@ -154,6 +174,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		builder.append("transaction_dt", transaction_dt);
 		builder.append("transaction_type", transaction_type);
 		builder.append("transaction_amount", transaction_amount);
+		builder.append("transaction_desc", transaction_desc);
 		builder.append("ref_num", ref_num);
 		builder.append("memo", memo_txt);
 
@@ -169,8 +190,8 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 	public int hashCode() {
 		HashCodeBuilder builder = new HashCodeBuilder();
 		builder.append(membership_id);
-		builder.append(transaction_type);
 		builder.append(transaction_dt);
+		builder.append(transaction_type);
 		builder.append(transaction_amount);
 
 		return builder.build();
@@ -197,8 +218,8 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 
 		EqualsBuilder builder = new EqualsBuilder();
 		builder.append(membership_id, rhs.getMembershipUID());
-		builder.append(transaction_type, rhs.getTransactionType());
 		builder.append(transaction_dt, rhs.getTransactionDate());
+		builder.append(transaction_type, rhs.getTransactionType());
 		builder.append(transaction_amount, rhs.getTransactionAmount());
 
 		return builder.build();

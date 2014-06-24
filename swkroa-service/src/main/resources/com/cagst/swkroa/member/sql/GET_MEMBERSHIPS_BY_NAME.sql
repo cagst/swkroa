@@ -1,5 +1,4 @@
 SELECT m.membership_id
-      ,m.membership_type_cd
       ,m.entity_type_cd
       ,m.due_on_dt
       ,m.dues_amount

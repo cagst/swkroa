@@ -29,11 +29,11 @@ public final class UserController {
 	 *
 	 * @return The location and name of the page template.
 	 */
-	@RequestMapping(value = "/user/home", method = RequestMethod.GET)
+	@RequestMapping(value = "/maintain/user", method = RequestMethod.GET)
 	public ModelAndView getUsersPage() {
-		LOGGER.info("Received request to show Users Page");
+		LOGGER.info("Received request to show users listing page");
 
-		ModelAndView mav = new ModelAndView("user/index");
+		ModelAndView mav = new ModelAndView("maintain/user");
 
 		return mav;
 	}

@@ -17,8 +17,6 @@ SELECT u.user_id
       ,p.name_last
       ,p.name_first
       ,p.name_middle
-      ,p.dob_dt
-      ,p.gender_cd
       ,p.locale_language
       ,p.locale_country
       ,p.time_zone

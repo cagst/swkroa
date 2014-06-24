@@ -16,16 +16,6 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 	var syncCount    = 0;
 
 	syncItems++;
-	$http.get('../svc/codeset/MEMBERSHIP_TYPE/').success(function(data) {
-		$scope.membershipTypes = data;
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
-
-	syncItems++;
 	$http.get('../svc/codeset/ENTITY_TYPE/').success(function(data) {
 		$scope.entityTypes = data;
 		
@@ -282,15 +272,6 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 
 var syncAllItems = function(scope) {
 	// sync up our code lists
-	if (scope.membership.membershipType) {
-		for (var idx = 0; idx < scope.membershipTypes.length; idx++) {
-			if (scope.membership.membershipType.codeValueUID == scope.membershipTypes[idx].codeValueUID) {
-				scope.membership.membershipType = scope.membershipTypes[idx];
-				break;
-			}
-		}
-	}
-
 	if (scope.membership.entityType) {
 		for (var idx = 0; idx < scope.entityTypes.length; idx++) {
 			if (scope.membership.entityType.codeValueUID == scope.entityTypes[idx].codeValueUID) {

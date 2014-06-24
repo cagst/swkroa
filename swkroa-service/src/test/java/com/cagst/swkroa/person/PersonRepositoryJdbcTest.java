@@ -93,7 +93,6 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
 		person.setLastName("Person");
 		person.setFirstName("Test");
 		person.setTitle(home);
-		person.setDob(new DateTime(1970, 04, 19, 0, 0));
 
 		assertEquals("Ensure our new Person doesn't have an Id yet.", 0, person.getPersonUID());
 
@@ -112,7 +111,6 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
 		person.setPersonUID(1L);
 		person.setLastName("Gaskill");
 		person.setFirstName("Craig");
-		person.setDob(new DateTime(1970, 04, 19, 0, 0));
 
 		Person updatedPerson = repo.savePerson(person, user);
 		assertNotNull("Ensure we have a Person.", person);
@@ -129,7 +127,6 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
 		person.setPersonUID(1L);
 		person.setLastName("Gaskill");
 		person.setFirstName("Craig");
-		person.setDob(new DateTime(1970, 04, 19, 0, 0));
 
 		// force a failure due to update count
 		person.setPersonUpdateCount(99L);

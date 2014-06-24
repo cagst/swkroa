@@ -33,10 +33,10 @@
 							     data-ng-click="getMembership(membership.membershipUID)">
 								<div class="lead lead-in">
 									<span data-ng-bind="membership.safePrimaryMember.effectiveMemberName">zzz Membership Name</span>
-									<span data-ng-show="membership.membershipType.meaning == 'MEMBERSHIP_REGULAR'">
+									<span data-ng-show="membership.membershipType.memberTypeMeaning == 'REGULAR'">
 										<i class="fa fa-user pull-right"></i>
 									</span>
-									<span data-ng-show="membership.membershipType.meaning == 'MEMBERSHIP_FAMILY'">
+									<span data-ng-show="membership.membershipType.memberTypeMeaning == 'FAMILY'">
 										<i class="fa fa-users pull-right"></i>
 									</span>
 								</div>

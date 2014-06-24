@@ -3,6 +3,9 @@ SELECT member_type_id
       ,member_type_display
       ,member_type_meaning
       ,dues_amount
+      ,primary_ind
+      ,allow_spouse_ind
+      ,allow_member_ind
       ,beg_eff_dt_tm
       ,end_eff_dt_tm
       ,active_ind

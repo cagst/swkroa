@@ -28,13 +28,7 @@ import com.cagst.swkroa.utils.MineralUtilities;
 public final class Membership implements Serializable {
 	private static final long serialVersionUID = 5583617519331577882L;
 
-	public static final String MEMBERSHIP_ASSOCIATE = "MEMBERSHIP_ASSOCIATE";
-	public static final String MEMBERSHIP_FAMILY = "MEMBERSHIP_FAMILY";
-	public static final String MEMBERSHIP_REGULAR = "MEMBERSHIP_REGULAR";
-	public static final String MEMBERSHIP_MAILING = "MEMBERSHIP_MAILING";
-
 	private long membership_id;
-	private CodeValue membership_type;
 	private CodeValue entity_type;
 	private DateTime due_on;
 	private BigDecimal dues_amount;
@@ -61,15 +55,6 @@ public final class Membership implements Serializable {
 
 	public void setMembershipUID(final long membershipID) {
 		this.membership_id = membershipID;
-	}
-
-	@NotNull
-	public CodeValue getMembershipType() {
-		return membership_type;
-	}
-
-	public void setMembershipType(final CodeValue membershipType) {
-		this.membership_type = membershipType;
 	}
 
 	@NotNull

@@ -4,6 +4,98 @@
 	<body>
 		<div data-th-fragment="primaryMember">
 			<div class="row">
+				<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.entityType.$invalid}">
+					<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.entity}">
+						zzz Entity Type
+					</label>
+					<select class="form-control" name="entityType"
+									data-ng-options="entityType.display for entityType in entityTypes"
+									data-ng-model="membership.entityType"
+									data-ng-required="true">
+					</select>
+				</div>
+				<div class="col-xs-4" data-ng-class="{'has-error': membershipForm.companyName.$invalid}">
+					<label class="control-label"
+								 data-ng-class="{'label-required': membership.entityType.meaning != 'ENTITY_INDIVIDUAL'}"
+								 data-th-text="#{com.cagst.swkroa.membership.name.label}">
+						zzz Membership Name
+					</label>
+					<input type="text" class="form-control" name="companyName" maxlength="250"
+								 data-th-placeholder="#{com.cagst.swkroa.membership.name.prompt}"
+								 data-ng-model="membership.primaryMember.companyName"
+								 data-ng-disabled="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
+								 data-ng-required="membership.entityType.meaning != 'ENTITY_INDIVIDUAL'" />
+				</div>
+				<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.dueDate.$invalid}">
+					<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.dueon}">
+						zzz Due On
+					</label>
+					<div class="input-group">
+						<input type="text" class="form-control" name="dueDate"
+									 data-datepicker-popup="MM/dd/yyyy"
+									 data-show-button-bar="false"
+									 data-datepicker-options="dateOptions"
+									 data-ng-model="membership.dueOn"
+									 data-ng-required="true" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" data-ng-click="openDateControl($event)">
+										<i class="fa fa-calendar"></i>
+									</button>
+								</span>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<div data-ng-show="!fixedDuesAmount">
+						<label>
+							<span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
+							<span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
+						</label>
+						<div class="input-group">
+							<input type="number" class="form-control"
+										 data-ng-model="membership.calculatedDuesAmount"
+										 disabled />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default"
+														data-ng-click="toggleDuesAmount(true);"
+														data-th-tooltip="#{com.cagst.swkroa.membership.amountdue.calculated.tooltip}">
+											<i class="fa fa-cogs muted"></i>
+										</button>
+									</span>
+						</div>
+					</div>
+					<div data-ng-show="fixedDuesAmount">
+						<label>
+							<span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
+							<span data-th-text="#{com.cagst.swkroa.membership.dues.fixed}">(zzz Fixed)</span>
+						</label>
+						<div class="input-group">
+							<input type="number" class="form-control"
+										 data-ng-model="membership.duesAmount"
+										 data-ng-show="!customizeDuesAmount"/>
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default"
+														data-ng-click="toggleDuesAmount(false);"
+														data-th-tooltip="#{com.cagst.swkroa.membership.amountdue.calculated.tooltip}">
+											<i class="fa fa-cogs muted"></i>
+										</button>
+									</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<div data-ng-show="fixedDuesAmount">
+						<label>
+							<span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
+							<span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
+						</label>
+						<div>
+							{{membership.calculatedDuesAmount | currency}}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row spacer-top">
 				<div class="col-xs-2">
 					<label data-th-text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
 					<select class="form-control"

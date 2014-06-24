@@ -55,23 +55,17 @@ public class MembershipRepositoryJdbcTest {
 		memberRepo = Mockito.mock(MemberRepository.class);
 
 		associate.setCodeValueUID(1L);
-		associate.setMeaning(Membership.MEMBERSHIP_ASSOCIATE);
 		associate.setDisplay("Associate Membership");
 
 		regular.setCodeValueUID(2L);
-		regular.setMeaning(Membership.MEMBERSHIP_REGULAR);
 		regular.setDisplay("Regular Membership");
 
 		family.setCodeValueUID(3L);
-		family.setMeaning(Membership.MEMBERSHIP_FAMILY);
 		family.setDisplay("Family Membership");
 
 		Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(associate);
 		Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(regular);
 		Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(family);
-		Mockito.when(codeValueRepo.getCodeValueByMeaning(Membership.MEMBERSHIP_ASSOCIATE)).thenReturn(associate);
-		Mockito.when(codeValueRepo.getCodeValueByMeaning(Membership.MEMBERSHIP_REGULAR)).thenReturn(regular);
-		Mockito.when(codeValueRepo.getCodeValueByMeaning(Membership.MEMBERSHIP_FAMILY)).thenReturn(family);
 
 		repo = new MembershipRepositoryJdbc(createTestDataSource(), memberRepo, codeValueRepo);
 		repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
@@ -147,11 +141,9 @@ public class MembershipRepositoryJdbcTest {
 		assertEquals("Ensure we found the correct number of membersships!", 5, memberships1.size());
 
 		DateTime now = new DateTime();
-		CodeValue type = codeValueRepo.getCodeValueByMeaning(Membership.MEMBERSHIP_ASSOCIATE);
 
 		Membership builder = new Membership();
 		builder.setDueOn(new DateTime(now.plusYears(1).toDate()));
-		builder.setMembershipType(type);
 		builder.setEntityType(codeValueRepo.getCodeValueByUID(1L));
 
 		Membership membership = repo.saveMembership(builder, user);

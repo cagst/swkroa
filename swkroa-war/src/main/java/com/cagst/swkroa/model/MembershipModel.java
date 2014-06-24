@@ -59,9 +59,9 @@ public final class MembershipModel implements Comparable<MembershipModel> {
 		for (Member member : membership.getMembers()) {
 			String memberType = member.getMemberType().getMemberTypeMeaning();
 
-			if (MemberType.MEMBER_SPOUSE.equals(memberType)) {
+			if (MemberType.SPOUSE.equals(memberType)) {
 				this.spouse = member;
-			} else if (MemberType.MEMBER_FAMILY_MEMBER.equals(memberType)) {
+			} else if (MemberType.FAMILY_MEMBER.equals(memberType)) {
 				this.additional.add(member);
 			} else {
 				this.primary = member;
@@ -82,12 +82,12 @@ public final class MembershipModel implements Comparable<MembershipModel> {
 	}
 
 	@NotNull
-	public CodeValue getMembershipType() {
-		return membership.getMembershipType();
-	}
+	public MemberType getMembershipType() {
+		if (primary != null) {
+			return primary.getMemberType();
+		}
 
-	public void setMembershipType(final CodeValue membershipType) {
-		this.membership.setMembershipType(membershipType);
+		return null;
 	}
 
 	@NotNull
@@ -227,7 +227,7 @@ public final class MembershipModel implements Comparable<MembershipModel> {
 		membership.addMember(primary);
 
 		if (spouse != null) {
-			spouse.setMemberType(memberTypeRepo.getMemberTypeByMeaning(MemberType.MEMBER_SPOUSE));
+			spouse.setMemberType(memberTypeRepo.getMemberTypeByMeaning(MemberType.SPOUSE));
 			membership.addMember(spouse);
 		}
 

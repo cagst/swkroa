@@ -23,6 +23,7 @@ import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
+import org.springframework.util.CollectionUtils;
 
 /**
  * JDBC Template implementation of the {@link TransactionRepository} interface.
@@ -42,6 +43,9 @@ import com.cagst.swkroa.user.User;
 	private static final String INSERT_TRANSACTION = "INSERT_TRANSACTION";
 	private static final String UPDATE_TRANSACTION = "UPDATE_TRANSACTION";
 
+	private static final String INSERT_TRANSACTION_ENTRY = "INSERT_TRANSACTION_ENTRY";
+	private static final String UPDATE_TRANSACTION_ENTRY = "UPDATE_TRANSACTION_ENTRY";
+
 	private final CodeValueRepository codeValueRepo;
 	private final MemberRepository memberRepo;
 
@@ -55,8 +59,9 @@ import com.cagst.swkroa.user.User;
 	 * @param memberRepo
 	 *          The {@link MemberRepository} to us to retrieve Member information.
 	 */
-	public TransactionRepositoryJdbc(final DataSource dataSource, final CodeValueRepository codeValueRepo,
-			final MemberRepository memberRepo) {
+	public TransactionRepositoryJdbc(final DataSource dataSource,
+																	 final CodeValueRepository codeValueRepo,
+																	 final MemberRepository memberRepo) {
 		super(dataSource);
 
 		this.codeValueRepo = codeValueRepo;
@@ -78,8 +83,7 @@ import com.cagst.swkroa.user.User;
 		Map<String, Long> params = new HashMap<String, Long>(1);
 		params.put("transaction_id", uid);
 
-		List<Transaction> trans = getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTION_BY_UID), params,
-				new TransactionMapper(codeValueRepo, memberRepo));
+		List<Transaction> trans = getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTION_BY_UID), params, new TransactionMapper());
 
 		if (trans.size() == 1) {
 			return trans.get(0);
@@ -108,8 +112,7 @@ import com.cagst.swkroa.user.User;
 		Map<String, Long> params = new HashMap<String, Long>();
 		params.put("membership_id", membership.getMembershipUID());
 
-		return getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP), params,
-				new TransactionMapper(codeValueRepo, memberRepo));
+		return getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP), params, new TransactionMapper());
 	}
 
 	/*
@@ -127,11 +130,23 @@ import com.cagst.swkroa.user.User;
 
 		LOGGER.info("Saving Transaction for Membership [{}]", transaction.getMembershipUID());
 
-		if (transaction.getTransactionUID() == 0L) {
-			return insertTransaction(transaction, user);
-		} else {
-			return updateTransaction(transaction, user);
+		if (CollectionUtils.isEmpty(transaction.getTransactionEntries())) {
+			throw new IncorrectResultSizeDataAccessException(1, 0);
 		}
+
+		Transaction trans;
+		if (transaction.getTransactionUID() == 0L) {
+			trans = insertTransaction(transaction, user);
+		} else {
+			trans = updateTransaction(transaction, user);
+		}
+
+		// save the entries related to this transaction
+		for (TransactionEntry entry : transaction.getTransactionEntries()) {
+			saveTransactionEntry(entry, user);
+		}
+
+		return trans;
 	}
 
 	private Transaction insertTransaction(final Transaction transaction, final User user) {
@@ -170,5 +185,51 @@ import com.cagst.swkroa.user.User;
 		}
 
 		return transaction;
+	}
+
+	private TransactionEntry saveTransactionEntry(final TransactionEntry entry, final User user) {
+		if (entry.getTransactionEntryUID() == 0L) {
+			return insertTransactionEntry(entry, user);
+		} else {
+			return updateTransactionEntry(entry, user);
+		}
+	}
+
+	private TransactionEntry insertTransactionEntry(final TransactionEntry entry, final User user) {
+		LOGGER.info("Inserting TransactionEntry for Transaction [{}]", entry.getTransactionEntryUID());
+
+		StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+
+		int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_TRANSACTION_ENTRY),
+				TransactionEntryMapper.mapInsertStatement(entry, user));
+
+		if (cnt == 1) {
+			entry.setTransactionEntryUID(keyHolder.getKey().longValue());
+		} else {
+			throw new IncorrectResultSizeDataAccessException(1, cnt);
+		}
+
+		return entry;
+	}
+
+	private TransactionEntry updateTransactionEntry(final TransactionEntry entry, final User user) {
+		LOGGER.info("Updating TransactionEntry for Transaction [{}]", entry.getTransactionEntryUID());
+
+		StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+		int cnt = getJdbcTemplate().update(stmtLoader.load(UPDATE_TRANSACTION_ENTRY),
+				TransactionEntryMapper.mapUpdateStatement(entry, user));
+
+		if (cnt == 1) {
+			entry.setTransactionEntryUpdateCount(entry.getTransactionEntryUpdateCount() + 1);
+		} else if (cnt == 0) {
+			throw new OptimisticLockingFailureException("invalid update count of [" + cnt
+					+ "] possible update count mismatch");
+		} else {
+			throw new IncorrectResultSizeDataAccessException(1, cnt);
+		}
+
+		return entry;
 	}
 }

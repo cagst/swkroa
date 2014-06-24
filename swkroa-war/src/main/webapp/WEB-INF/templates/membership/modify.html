@@ -27,7 +27,7 @@
 			<form method="POST" name="membershipForm" novalidate data-ng-submit="save()" class="css-form">
 				<div data-th-include="membership/modify/section_membership"></div>
 				<div data-th-include="membership/modify/section_counties"></div>
-				<div data-th-include="membership/modify/section_members" data-ng-show="membership.membershipType.meaning == 'MEMBERSHIP_FAMILY'"></div>
+				<div data-th-include="membership/modify/section_members" data-ng-show="membership.primaryMember.memberType.allowMember"></div>
 				
 				<div class="spacer-top">
 					<div class="divider-top">

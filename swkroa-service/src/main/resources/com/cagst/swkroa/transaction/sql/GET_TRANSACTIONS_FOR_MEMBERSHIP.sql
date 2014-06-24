@@ -1,9 +1,10 @@
 SELECT t.transaction_id
       ,t.membership_id
-      ,t.member_id
       ,t.transaction_dt
-      ,t.transaction_type_cd
+      ,t.transaction_type_flag
       ,t.transaction_amount
+      ,t.transaction_desc
+      ,t.remaining_amount
       ,t.ref_num
       ,t.memo_txt
       ,t.active_ind

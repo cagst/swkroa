@@ -21,36 +21,21 @@ import com.cagst.swkroa.user.User;
  * 
  */
 /* package */final class TransactionMapper implements RowMapper<Transaction> {
-	private static final String TRANSACTION_ID = "transaction_id";
-	private static final String MEMBERSHIP_ID = "membership_id";
-	private static final String MEMBER_ID = "member_id";
-	private static final String TRANSACTION_DT = "transaction_dt";
-	private static final String TRANSACTION_TYPE_CD = "transaction_type_cd";
-	private static final String TRANSACTION_AMOUNT = "transaction_amount";
-	private static final String REF_NUM = "ref_num";
-	private static final String MEMO_TXT = "memo_txt";
+	private static final String TRANSACTION_ID        = "transaction_id";
+	private static final String MEMBERSHIP_ID         = "membership_id";
+	private static final String TRANSACTION_DT        = "transaction_dt";
+	private static final String TRANSACTION_TYPE_FLAG = "transaction_type_flag";
+	private static final String TRANSACTION_AMOUNT    = "transaction_amount";
+	private static final String TRANSACTION_DESC      = "transaction_desc";
+	private static final String REMAINING_AMOUNT      = "remaining_amount";
+	private static final String REF_NUM               = "ref_num";
+	private static final String MEMO_TXT              = "memo_txt";
 
 	// meta-data
-	private static final String ACTIVE_IND = "active_ind";
-	private static final String CREATE_ID = "create_id";
-	private static final String UPDT_ID = "updt_id";
+	private static final String ACTIVE_IND           = "active_ind";
+	private static final String CREATE_ID            = "create_id";
+	private static final String UPDT_ID              = "updt_id";
 	private static final String TRANSACTION_UPDT_CNT = "transaction_updt_cnt";
-
-	private final CodeValueRepository codeValueRepo;
-	private final MemberRepository memberRepo;
-
-	/**
-	 * Primary Constructor used to create an instance of <i>TransactionMapper</i>.
-	 * 
-	 * @param codeValueRepo
-	 *          The {@link CodeValueRepository} to use to retrieve Transaction Type.
-	 * @param memberRepo
-	 *          The {@link MemberRepository} to us to retrieve Member associated to Transaction.
-	 */
-	public TransactionMapper(final CodeValueRepository codeValueRepo, final MemberRepository memberRepo) {
-		this.codeValueRepo = codeValueRepo;
-		this.memberRepo = memberRepo;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -62,10 +47,11 @@ import com.cagst.swkroa.user.User;
 		Transaction trans = new Transaction();
 		trans.setTransactionUID(rs.getLong(TRANSACTION_ID));
 		trans.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
-		trans.setMember(memberRepo.getMemberByUID(rs.getLong(MEMBER_ID)));
 		trans.setTransactionDate(CGTDateTimeUtils.getDateTime(rs, TRANSACTION_DT));
+		trans.setTransactionType(TransactionType.values()[rs.getInt(TRANSACTION_TYPE_FLAG)]);
 		trans.setTransactionAmount(rs.getBigDecimal(TRANSACTION_AMOUNT));
-		trans.setTransactionType(codeValueRepo.getCodeValueByUID(rs.getLong(TRANSACTION_TYPE_CD)));
+		trans.setTransactionDescription(rs.getString(TRANSACTION_DESC));
+		trans.setRemainingAmount(rs.getBigDecimal(REMAINING_AMOUNT));
 		trans.setReferenceNumber(rs.getString(REF_NUM));
 		trans.setMemo(rs.getString(MEMO_TXT));
 
@@ -118,10 +104,11 @@ import com.cagst.swkroa.user.User;
 			final User user) {
 
 		params.addValue(MEMBERSHIP_ID, transaction.getMembershipUID());
-		params.addValue(MEMBER_ID, transaction.getMember().getMemberUID());
 		params.addValue(TRANSACTION_DT, CGTDateTimeUtils.convertDateTimeToTimestamp(transaction.getTransactionDate()));
-		params.addValue(TRANSACTION_TYPE_CD, transaction.getTransactionType().getCodeValueUID());
+		params.addValue(TRANSACTION_TYPE_FLAG, transaction.getTransactionType().ordinal());
 		params.addValue(TRANSACTION_AMOUNT, transaction.getTransactionAmount());
+		params.addValue(TRANSACTION_DESC, transaction.getTransactionDescription());
+		params.addValue(REMAINING_AMOUNT, transaction.getRemainingAmount());
 		params.addValue(REF_NUM, transaction.getReferenceNumber());
 		params.addValue(MEMO_TXT, transaction.getMemo());
 		params.addValue(ACTIVE_IND, transaction.isActive());

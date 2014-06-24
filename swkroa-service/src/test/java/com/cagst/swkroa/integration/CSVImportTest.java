@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.cagst.swkroa.transaction.TransactionEntry;
+import com.cagst.swkroa.transaction.TransactionType;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -106,11 +108,8 @@ public class CSVImportTest {
 	private final int FIELD_ACTIVE = 45;
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-
-	private CodeValue membershipTypeR_Regular;
-	private CodeValue membershipTypeA_Associate;
-	private CodeValue membershipTypeF_Family;
-	private CodeValue membershipTypeM_Mailing;
+	private final String INVOICE = "2014 Invoice";
+	private final String PAYMENT = "Payment";
 
 	private CodeValue title_Mr;
 	private CodeValue title_Ms;
@@ -135,12 +134,12 @@ public class CSVImportTest {
 	private MemberType memberType_Spouse;
 	private MemberType memberTypeM_Mailing;
 
-	private CodeValue transType_Base;
-	private CodeValue transType_Inc;
-	private CodeValue transType_Family;
-	private CodeValue transType_Credit;
-	private CodeValue transType_Special;
-	private CodeValue transType_Payment;
+	private CodeValue transEntryType_Base;
+	private CodeValue transEntryType_Inc;
+	private CodeValue transEntryType_Family;
+	private CodeValue transEntryType_Credit;
+	private CodeValue transEntryType_Special;
+	private CodeValue transEntryType_Payment;
 
 	private DateTime unknownDueDt;
 	private DateTime nowDt;
@@ -153,10 +152,6 @@ public class CSVImportTest {
 		ApplicationContext appCtx = new ClassPathXmlApplicationContext("classpath*:/test-appCtx/**/*.xml");
 
 		CodeValueRepository codeValueRepo = (CodeValueRepository) appCtx.getBean("codeValueRepo");
-		membershipTypeR_Regular = codeValueRepo.getCodeValueByMeaning("MEMBERSHIP_REGULAR");
-		membershipTypeA_Associate = codeValueRepo.getCodeValueByMeaning("MEMBERSHIP_ASSOCIATE");
-		membershipTypeF_Family = codeValueRepo.getCodeValueByMeaning("MEMBERSHIP_FAMILY");
-		membershipTypeM_Mailing = codeValueRepo.getCodeValueByMeaning("MEMBERSHIP_MAILING");
 
 		entityType_Individual = codeValueRepo.getCodeValueByMeaning("ENTITY_INDIVIDUAL");
 		entityType_LLC = codeValueRepo.getCodeValueByMeaning("ENTITY_LLC");
@@ -175,22 +170,22 @@ public class CSVImportTest {
 		phoneType_Home = codeValueRepo.getCodeValueByMeaning("PHONE_HOME");
 
 		MemberTypeRepository memberTypeRepo = (MemberTypeRepository) appCtx.getBean("memberTypeRepo");
-		memberTypeA_Associate = memberTypeRepo.getMemberTypeByMeaning("MEMBER_ASSOCIATE");
-		memberTypeFH_FamilyHead = memberTypeRepo.getMemberTypeByMeaning("MEMBER_FAMILY_HEAD");
-		memberTypeFM_FamilyMember = memberTypeRepo.getMemberTypeByMeaning("MEMBER_FAMILY_MEMBER");
-		memberTypeR_Regular = memberTypeRepo.getMemberTypeByMeaning("MEMBER_REGULAR");
-		memberType_Spouse = memberTypeRepo.getMemberTypeByMeaning("MEMBER_SPOUSE");
-		memberTypeM_Mailing = memberTypeRepo.getMemberTypeByMeaning("MEMBER_MAIL_LIST");
+		memberTypeA_Associate = memberTypeRepo.getMemberTypeByMeaning("ASSOCIATE");
+		memberTypeFH_FamilyHead = memberTypeRepo.getMemberTypeByMeaning("FAMILY_HEAD");
+		memberTypeFM_FamilyMember = memberTypeRepo.getMemberTypeByMeaning("FAMILY_MEMBER");
+		memberTypeR_Regular = memberTypeRepo.getMemberTypeByMeaning("REGULAR");
+		memberType_Spouse = memberTypeRepo.getMemberTypeByMeaning("SPOUSE");
+		memberTypeM_Mailing = memberTypeRepo.getMemberTypeByMeaning("MAIL_LIST");
 
 		membershipService = (MembershipService) appCtx.getBean("membershipService");
 		countyRepo = (CountyRepository) appCtx.getBean("countyRepo");
 
-		transType_Base = codeValueRepo.getCodeValueByMeaning("TRANS_2014_DUES_BASE");
-		transType_Inc = codeValueRepo.getCodeValueByMeaning("TRANS_2014_DUES_INC");
-		transType_Family = codeValueRepo.getCodeValueByMeaning("TRANS_2014_DUES_FAMILY");
-		transType_Special = codeValueRepo.getCodeValueByMeaning("TRANS_2014_SPECIAL_FUNDS");
-		transType_Credit = codeValueRepo.getCodeValueByMeaning("TRANS_CREDIT");
-		transType_Payment = codeValueRepo.getCodeValueByMeaning("TRANS_PAYMENT");
+		transEntryType_Base = codeValueRepo.getCodeValueByMeaning("TRANS_2014_DUES_BASE");
+		transEntryType_Inc = codeValueRepo.getCodeValueByMeaning("TRANS_2014_DUES_INC");
+		transEntryType_Family = codeValueRepo.getCodeValueByMeaning("TRANS_2014_DUES_FAMILY");
+		transEntryType_Special = codeValueRepo.getCodeValueByMeaning("TRANS_2014_SPECIAL_FUNDS");
+		transEntryType_Credit = codeValueRepo.getCodeValueByMeaning("TRANS_CREDIT");
+		transEntryType_Payment = codeValueRepo.getCodeValueByMeaning("TRANS_PAYMENT");
 
 		unknownDueDt = new DateTime(2015, 3, 1, 0, 0);
 		nowDt = new DateTime();
@@ -279,20 +274,6 @@ public class CSVImportTest {
 				}
 
 				memberships.put(fldMembershipId, membership);
-
-				if ("R".equalsIgnoreCase(fldMemberType)) {
-					membership.setMembershipType(membershipTypeR_Regular);
-				} else if ("A".equalsIgnoreCase(fldMemberType)) {
-					membership.setMembershipType(membershipTypeA_Associate);
-				} else if ("F".equalsIgnoreCase(fldMemberType) || "FH".equalsIgnoreCase(fldMemberType)
-						|| "FM".equalsIgnoreCase(fldMemberType)) {
-					membership.setMembershipType(membershipTypeF_Family);
-				} else if ("M".equalsIgnoreCase(fldMemberType)) {
-					membership.setMembershipType(membershipTypeM_Mailing);
-				} else {
-					LOGGER.debug("Unrecognized Member(ship) Type [{}]", fldMemberType);
-					membership.setMembershipType(membershipTypeR_Regular);
-				}
 
 				// assume an Individual membership (may get reset later after reviewing members)
 				membership.setEntityType(entityType_Individual);
@@ -502,24 +483,29 @@ public class CSVImportTest {
 				membership.addComment(comment);
 			}
 
+			// Calculate Invoice
 			BigDecimal duesAmount = new BigDecimal(0.0);
+
+			Transaction invoice = new Transaction();
+			invoice.setTransactionDescription(INVOICE);
+			invoice.setTransactionDate(currentDueDt);
+			invoice.setTransactionType(TransactionType.INVOICE);
 
 			if (!StringUtils.isBlank(fld2015base)) {
 				try {
 					BigDecimal transAmount = new BigDecimal(fld2015base);
 					if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-						Transaction trans = new Transaction();
-						trans.setTransactionDate(currentDueDt);
-						trans.setTransactionAmount(transAmount.negate());
+						TransactionEntry entry = new TransactionEntry();
+						entry.setTransactionEntryAmount(transAmount.negate());
 
 						if (member.getMemberType() == memberTypeFM_FamilyMember) {
-							trans.setTransactionType(transType_Family);
+							entry.setTransactionEntryType(transEntryType_Family);
 						} else {
-							trans.setTransactionType(transType_Base);
+							entry.setTransactionEntryType(transEntryType_Base);
 						}
 
-						trans.setMember(member);
-						membership.addTransaction(trans);
+						entry.setMember(member);
+						invoice.addEntry(entry);
 					}
 
 					// Add the Base to our Dues Amount
@@ -533,13 +519,11 @@ public class CSVImportTest {
 				try {
 					BigDecimal transAmount = new BigDecimal(fld2015inc);
 					if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-						Transaction trans = new Transaction();
-						trans.setTransactionDate(currentDueDt);
-						trans.setTransactionAmount(transAmount.negate());
-						trans.setTransactionType(transType_Inc);
+						TransactionEntry entry = new TransactionEntry();
+						entry.setTransactionEntryType(transEntryType_Inc);
 
-						trans.setMember(member);
-						membership.addTransaction(trans);
+						entry.setMember(member);
+						invoice.addEntry(entry);
 					}
 
 					// Add the Incremental to our Dues Amount
@@ -552,6 +536,13 @@ public class CSVImportTest {
 			if (!StringUtils.isBlank(fld2015family)) {
 				try {
 					BigDecimal transAmount = new BigDecimal(fld2015family);
+					if (transAmount.compareTo(new BigDecimal(0)) != 0) {
+						TransactionEntry entry = new TransactionEntry();
+						entry.setTransactionEntryType(transEntryType_Family);
+
+						entry.setMember(member);
+						invoice.addEntry(entry);
+					}
 
 					// Add the Family Dues to our Dues Amount
 					duesAmount = duesAmount.add(transAmount);
@@ -560,27 +551,43 @@ public class CSVImportTest {
 				}
 			}
 
+			if (duesAmount.doubleValue() > 0.0) {
+				invoice.setTransactionAmount(duesAmount);
+				membership.addTransaction(invoice);
+			}
+
+			// Calculate Payment
+			BigDecimal paymentAmount = new BigDecimal(0.0);
+			BigDecimal totalAmount   = new BigDecimal(0.0);
+
+			Transaction payment = new Transaction();
+			payment.setTransactionType(TransactionType.PAYMENT);
+			payment.setTransactionDescription(PAYMENT);
+
 			if (!StringUtils.isBlank(fld2015specialFunds)) {
 				try {
 					BigDecimal transAmount = new BigDecimal(fld2015specialFunds);
 					if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-						Transaction trans = new Transaction();
-						trans.setTransactionAmount(transAmount.negate());
-						trans.setTransactionType(transType_Special);
+						TransactionEntry entry = new TransactionEntry();
+						entry.setTransactionEntryAmount(transAmount);
+						entry.setTransactionEntryType(transEntryType_Special);
 
 						if (!StringUtils.isBlank(fldDatePaid)) {
 							try {
-								trans.setTransactionDate(new DateTime(dateFormat.parse(fldDatePaid)));
+								payment.setTransactionDate(new DateTime(dateFormat.parse(fldDatePaid)));
 							} catch (ParseException ex) {
 								LOGGER.warn("Unable to parse date [{}]", fldDatePaid);
-								trans.setTransactionDate(currentDueDt);
+								payment.setTransactionDate(currentDueDt);
 							}
 						} else {
-							trans.setTransactionDate(currentDueDt);
+							payment.setTransactionDate(currentDueDt);
 						}
 
-						trans.setMember(member);
-						membership.addTransaction(trans);
+						entry.setMember(member);
+						payment.addEntry(entry);
+
+						// Add the Special Funds to our Total Payment Amount
+						totalAmount = totalAmount.add(transAmount);
 					}
 				} catch (NumberFormatException ex) {
 					LOGGER.warn("Failed to convert special fund [{}].", fld2015specialFunds);
@@ -591,52 +598,55 @@ public class CSVImportTest {
 				try {
 					BigDecimal transAmount = new BigDecimal(fld2015credit);
 					if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-						Transaction trans = new Transaction();
-						trans.setTransactionDate(currentDueDt);
-						trans.setTransactionAmount(transAmount);
-						trans.setTransactionType(transType_Credit);
+						TransactionEntry entry = new TransactionEntry();
+						entry.setTransactionEntryAmount(transAmount);
+						entry.setTransactionEntryType(transEntryType_Credit);
 
-						trans.setMember(member);
-						membership.addTransaction(trans);
+						entry.setMember(member);
+						payment.addEntry(entry);
+
+						// Add the Credit to our Payment Amount
+						paymentAmount = paymentAmount.add(transAmount);
+						totalAmount = totalAmount.add(transAmount);
 					}
 				} catch (NumberFormatException ex) {
 					LOGGER.warn("Failed to convert credit [{}].", fld2015credit);
 				}
 			}
 
-			if (!MemberType.MEMBER_FAMILY_MEMBER.equals(member.getMemberType().getMemberTypeMeaning())
-					&& !MemberType.MEMBER_SPOUSE.equals(member.getMemberType().getMemberTypeMeaning())) {
-				if (!StringUtils.isBlank(fldDatePaid)) {
-					Transaction trans = new Transaction();
-					trans.setTransactionType(transType_Payment);
-					trans.setTransactionAmount(new BigDecimal(0.0));
-					trans.setReferenceNumber(fldCheckNo);
+			if (!MemberType.FAMILY_MEMBER.equals(member.getMemberType().getMemberTypeMeaning())
+					&& !MemberType.SPOUSE.equals(member.getMemberType().getMemberTypeMeaning())) {
+//				if (!StringUtils.isBlank(fldDatePaid)) {
+//					Transaction trans = new Transaction();
+//					trans.setTransactionType(transType_Payment);
+//					trans.setTransactionAmount(new BigDecimal(0.0));
+//					trans.setReferenceNumber(fldCheckNo);
+//
+//					if (!StringUtils.isBlank(fld2015debit)) {
+//						LOGGER.warn("2015 Debit of [{}]", fld2015debit);
+//						try {
+//							BigDecimal debitAmount = new BigDecimal(fld2015debit);
+//							trans.setTransactionAmount(debitAmount);
+//						} catch (NumberFormatException ex) {
+//							LOGGER.warn("Failed to convert debit [{}]", fld2015debit);
+//						}
+//					}
+//
+//					try {
+//						trans.setTransactionDate(new DateTime(dateFormat.parse(fldDatePaid)));
+//					} catch (ParseException ex) {
+//						LOGGER.warn("Unable to parse date [{}]", fldDatePaid);
+//						trans.setTransactionDate(currentDueDt);
+//					}
+//
+//					trans.setMember(member);
+//					membership.addTransaction(trans);
+//				}
+//			}
 
-					if (!StringUtils.isBlank(fld2015debit)) {
-						LOGGER.warn("2015 Debit of [{}]", fld2015debit);
-						try {
-							BigDecimal debitAmount = new BigDecimal(fld2015debit);
-							trans.setTransactionAmount(debitAmount);
-						} catch (NumberFormatException ex) {
-							LOGGER.warn("Failed to convert debit [{}]", fld2015debit);
-						}
-					}
-
-					try {
-						trans.setTransactionDate(new DateTime(dateFormat.parse(fldDatePaid)));
-					} catch (ParseException ex) {
-						LOGGER.warn("Unable to parse date [{}]", fldDatePaid);
-						trans.setTransactionDate(currentDueDt);
-					}
-
-					trans.setMember(member);
-					membership.addTransaction(trans);
-				}
-			}
-
-			if (!MemberType.MEMBER_FAMILY_MEMBER.equals(member.getMemberType().getMemberTypeMeaning())
-					&& !MemberType.MEMBER_SPOUSE.equals(member.getMemberType().getMemberTypeMeaning())) {
-				membership.setDuesAmount(duesAmount);
+//			if (!MemberType.MEMBER_FAMILY_MEMBER.equals(member.getMemberType().getMemberTypeMeaning())
+//					&& !MemberType.MEMBER_SPOUSE.equals(member.getMemberType().getMemberTypeMeaning())) {
+//				membership.setDuesAmount(duesAmount);
 			}
 
 			membership.addMember(member);
@@ -667,9 +677,9 @@ public class CSVImportTest {
 				}
 
 				// remove Addresses from Spouse and associate with Primary
-				if (MemberType.MEMBER_SPOUSE.equalsIgnoreCase(member.getMemberType().getMemberTypeMeaning())) {
+				if (MemberType.SPOUSE.equalsIgnoreCase(member.getMemberType().getMemberTypeMeaning())) {
 					spouse = member;
-				} else if (!MemberType.MEMBER_FAMILY_MEMBER.equalsIgnoreCase(member.getMemberType().getMemberTypeMeaning())) {
+				} else if (!MemberType.FAMILY_MEMBER.equalsIgnoreCase(member.getMemberType().getMemberTypeMeaning())) {
 					primary = member;
 				}
 
@@ -698,57 +708,57 @@ public class CSVImportTest {
 			membership.setActive(active);
 
 			// check for any payments
-			Transaction payment = null;
-			BigDecimal amountDue = new BigDecimal(0.0);
-			for (Transaction trans : membership.getTransactions()) {
-				if (trans.getTransactionType() == transType_Payment) {
-					payment = trans;
-				} else {
-					amountDue = amountDue.add(trans.getTransactionAmount());
-				}
-			}
-
-			if (payment != null) {
-				// at this point our Amount Due should be negative (the Debit amount the Membership owes)
-				// so we need to negate it to turn it into the amount that needs to be paid (Credited)
-				amountDue = amountDue.negate();
-
-				// now we need to calculate the amount paid.
-				// we would have previously stored any 2015 debit amount here
-				// which would be the amount they still owe after the payment
-				BigDecimal amountPaid = amountDue.subtract(payment.getTransactionAmount());
-				payment.setTransactionAmount(amountPaid);
-
-				// now to go through the transactions an calculate how much was paid for each one
-				// this will be a first come first serve
-				for (Transaction trans : membership.getTransactions()) {
-					if (trans.getTransactionType() != transType_Credit && trans.getTransactionType() != transType_Payment) {
-						BigDecimal amt = trans.getTransactionAmount().abs();
-
-						int result = amt.compareTo(amountPaid);
-						if (result < 0) {
-							// if the LHS < RHS then the payment exceeds this amount owed
-							// so the entire amount is paid
-
-							// now calculate the amount that still needs to be associated to transactions
-							amountPaid = amountPaid.subtract(amt);
-						} else if (result == 0) {
-							// if the LHS == RHS then the payment matches this amount
-							// so the entire amount is paid
-
-							// the entire balance has been paid
-							break;
-						} else {
-							// if the LHS > RHS then the payment wasn't enough to cover the amount owed
-
-							// there is no more to cover additional debit
-							break;
-						}
-
-						trans.addRelatedTransaction(payment);
-					}
-				}
-			}
+//			Transaction payment = null;
+//			BigDecimal amountDue = new BigDecimal(0.0);
+//			for (Transaction trans : membership.getTransactions()) {
+//				if (trans.getTransactionType() == transType_Payment) {
+//					payment = trans;
+//				} else {
+//					amountDue = amountDue.add(trans.getTransactionAmount());
+//				}
+//			}
+//
+//			if (payment != null) {
+//				// at this point our Amount Due should be negative (the Debit amount the Membership owes)
+//				// so we need to negate it to turn it into the amount that needs to be paid (Credited)
+//				amountDue = amountDue.negate();
+//
+//				// now we need to calculate the amount paid.
+//				// we would have previously stored any 2015 debit amount here
+//				// which would be the amount they still owe after the payment
+//				BigDecimal amountPaid = amountDue.subtract(payment.getTransactionAmount());
+//				payment.setTransactionAmount(amountPaid);
+//
+//				// now to go through the transactions an calculate how much was paid for each one
+//				// this will be a first come first serve
+//				for (Transaction trans : membership.getTransactions()) {
+//					if (trans.getTransactionType() != transType_Credit && trans.getTransactionType() != transType_Payment) {
+//						BigDecimal amt = trans.getTransactionAmount().abs();
+//
+//						int result = amt.compareTo(amountPaid);
+//						if (result < 0) {
+//							// if the LHS < RHS then the payment exceeds this amount owed
+//							// so the entire amount is paid
+//
+//							// now calculate the amount that still needs to be associated to transactions
+//							amountPaid = amountPaid.subtract(amt);
+//						} else if (result == 0) {
+//							// if the LHS == RHS then the payment matches this amount
+//							// so the entire amount is paid
+//
+//							// the entire balance has been paid
+//							break;
+//						} else {
+//							// if the LHS > RHS then the payment wasn't enough to cover the amount owed
+//
+//							// there is no more to cover additional debit
+//							break;
+//						}
+//
+//						trans.addRelatedTransaction(payment);
+//					}
+//				}
+//			}
 
 			if (membership.getDueOn() == null) {
 				membership.setDueOn(unknownDueDt);

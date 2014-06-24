@@ -21,7 +21,6 @@ import com.cagst.swkroa.user.User;
  */
 /* package */final class MembershipMapper implements RowMapper<Membership> {
 	private static final String MEMBERSHIP_ID = "membership_id";
-	private static final String MEMBERSHIP_TYPE_CD = "membership_type_cd";
 	private static final String ENTITY_TYPE_CD = "entity_type_cd";
 	private static final String DUE_ON = "due_on_dt";
 	private static final String DUES_AMOUNT = "dues_amount";
@@ -59,7 +58,6 @@ import com.cagst.swkroa.user.User;
 		Membership membership = new Membership();
 
 		membership.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
-		membership.setMembershipType(codeValueRepo.getCodeValueByUID(rs.getLong(MEMBERSHIP_TYPE_CD)));
 		membership.setEntityType(codeValueRepo.getCodeValueByUID(rs.getLong(ENTITY_TYPE_CD)));
 		membership.setDueOn(CGTDateTimeUtils.getDateTime(rs, DUE_ON));
 		membership.setDuesAmount(rs.getBigDecimal(DUES_AMOUNT));
@@ -122,7 +120,6 @@ import com.cagst.swkroa.user.User;
 	private static void mapCommonProperties(final MapSqlParameterSource params, final Membership membership,
 			final User user) {
 
-		params.addValue(MEMBERSHIP_TYPE_CD, membership.getMembershipType().getCodeValueUID());
 		params.addValue(DUE_ON, CGTDateTimeUtils.convertDateTimeToTimestamp(membership.getDueOn()));
 		params.addValue(ENTITY_TYPE_CD, membership.getEntityType().getCodeValueUID());
 		params.addValue(DUES_AMOUNT, membership.getDuesAmount());
