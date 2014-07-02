@@ -10,6 +10,7 @@ import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.user.User;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 /**
  * Maps a row in the resultset into a {@link Transaction} object. Used to marshal / unmarshal a {@link Transaction} to /
@@ -21,13 +22,12 @@ import com.cagst.swkroa.user.User;
  * 
  */
 /* package */final class TransactionMapper implements RowMapper<Transaction> {
-	private static final String TRANSACTION_ID        = "transaction_id";
+	/* package */ static final String TRANSACTION_ID  = "transaction_id";
 	private static final String MEMBERSHIP_ID         = "membership_id";
 	private static final String TRANSACTION_DT        = "transaction_dt";
 	private static final String TRANSACTION_TYPE_FLAG = "transaction_type_flag";
 	private static final String TRANSACTION_AMOUNT    = "transaction_amount";
 	private static final String TRANSACTION_DESC      = "transaction_desc";
-	private static final String REMAINING_AMOUNT      = "remaining_amount";
 	private static final String REF_NUM               = "ref_num";
 	private static final String MEMO_TXT              = "memo_txt";
 
@@ -51,12 +51,28 @@ import com.cagst.swkroa.user.User;
 		trans.setTransactionType(TransactionType.values()[rs.getInt(TRANSACTION_TYPE_FLAG)]);
 		trans.setTransactionAmount(rs.getBigDecimal(TRANSACTION_AMOUNT));
 		trans.setTransactionDescription(rs.getString(TRANSACTION_DESC));
-		trans.setRemainingAmount(rs.getBigDecimal(REMAINING_AMOUNT));
 		trans.setReferenceNumber(rs.getString(REF_NUM));
 		trans.setMemo(rs.getString(MEMO_TXT));
 
 		trans.setActive(rs.getBoolean(ACTIVE_IND));
 		trans.setTransactionUpdateCount(rs.getLong(TRANSACTION_UPDT_CNT));
+
+		return trans;
+	}
+
+	public Transaction mapRow(final SqlRowSet rs) throws SQLException {
+		Transaction trans = new Transaction();
+		trans.setTransactionUID(rs.getLong(TRANSACTION_ID));
+		trans.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
+		trans.setTransactionDate(CGTDateTimeUtils.getDateTime(rs.getTimestamp(TRANSACTION_DT)));
+		trans.setTransactionType(TransactionType.values()[rs.getInt(TRANSACTION_TYPE_FLAG)]);
+		trans.setTransactionAmount(rs.getBigDecimal(TRANSACTION_AMOUNT));
+		trans.setTransactionDescription(rs.getString(TRANSACTION_DESC));
+		trans.setReferenceNumber(rs.getString(REF_NUM));
+		trans.setMemo(rs.getString(MEMO_TXT));
+
+		trans.setActive(rs.getBoolean(ACTIVE_IND));
+		trans.setTransactionUpdateCount(rs.getLong(11));
 
 		return trans;
 	}
@@ -108,7 +124,6 @@ import com.cagst.swkroa.user.User;
 		params.addValue(TRANSACTION_TYPE_FLAG, transaction.getTransactionType().ordinal());
 		params.addValue(TRANSACTION_AMOUNT, transaction.getTransactionAmount());
 		params.addValue(TRANSACTION_DESC, transaction.getTransactionDescription());
-		params.addValue(REMAINING_AMOUNT, transaction.getRemainingAmount());
 		params.addValue(REF_NUM, transaction.getReferenceNumber());
 		params.addValue(MEMO_TXT, transaction.getMemo());
 		params.addValue(ACTIVE_IND, transaction.isActive());

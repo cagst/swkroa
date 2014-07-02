@@ -151,10 +151,10 @@ INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_
 -- Insert Transaction Entry Types
 INSERT INTO codeset (codeset_id, codeset_display, codeset_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (8, 'Transaction Entry Type', 'TRANSACTION_ENTRY_TYPE', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, '2014 Base Dues', 'TRANS_2014_DUES_BASE', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, '2014 Incremental Dues', 'TRANS_2014_DUES_INC', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, '2014 Family Dues', 'TRANS_2014_DUES_FAMILY', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, '2014 Special Funds', 'TRANS_2014_SPECIAL_FUNDS', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Base Dues', 'TRANS_DUES_BASE', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Incremental Dues', 'TRANS_DUES_INC', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Family Dues', 'TRANS_DUES_FAMILY', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Special Funds', 'TRANS_SPECIAL_FUNDS', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Credit', 'TRANS_CREDIT', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Payment', 'TRANS_PAYMENT', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 

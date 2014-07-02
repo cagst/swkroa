@@ -1,8 +1,8 @@
 package com.cagst.swkroa.transaction;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.*;
 
 import javax.sql.DataSource;
 
@@ -14,6 +14,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -83,7 +84,7 @@ import org.springframework.util.CollectionUtils;
 		Map<String, Long> params = new HashMap<String, Long>(1);
 		params.put("transaction_id", uid);
 
-		List<Transaction> trans = getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTION_BY_UID), params, new TransactionMapper());
+		List<Transaction> trans = (List<Transaction>)getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTION_BY_UID), params, new TransactionListExtractor(codeValueRepo, memberRepo));
 
 		if (trans.size() == 1) {
 			return trans.get(0);
@@ -112,7 +113,7 @@ import org.springframework.util.CollectionUtils;
 		Map<String, Long> params = new HashMap<String, Long>();
 		params.put("membership_id", membership.getMembershipUID());
 
-		return getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP), params, new TransactionMapper());
+		return (List<Transaction>)getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP), params, new TransactionListExtractor(codeValueRepo, memberRepo));
 	}
 
 	/*
@@ -134,6 +135,14 @@ import org.springframework.util.CollectionUtils;
 			throw new IncorrectResultSizeDataAccessException(1, 0);
 		}
 
+		// update TransactionAmount and RemainingAmount
+		BigDecimal transactionAmount = new BigDecimal(0.0);
+		for (TransactionEntry entry : transaction.getTransactionEntries()) {
+			transactionAmount = transactionAmount.add(entry.getTransactionEntryAmount());
+		}
+
+		transaction.setTransactionAmount(transactionAmount);
+
 		Transaction trans;
 		if (transaction.getTransactionUID() == 0L) {
 			trans = insertTransaction(transaction, user);
@@ -143,6 +152,8 @@ import org.springframework.util.CollectionUtils;
 
 		// save the entries related to this transaction
 		for (TransactionEntry entry : transaction.getTransactionEntries()) {
+			// ensure the entry is associated with the transaction
+			entry.setTransaction(trans);
 			saveTransactionEntry(entry, user);
 		}
 
@@ -161,7 +172,7 @@ import org.springframework.util.CollectionUtils;
 		if (cnt == 1) {
 			transaction.setTransactionUID(keyHolder.getKey().longValue());
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to insert Transaction: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return transaction;
@@ -181,7 +192,7 @@ import org.springframework.util.CollectionUtils;
 			throw new OptimisticLockingFailureException("invalid update count of [" + cnt
 					+ "] possible update count mismatch");
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to update Transaction: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return transaction;
@@ -202,12 +213,12 @@ import org.springframework.util.CollectionUtils;
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
 		int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_TRANSACTION_ENTRY),
-				TransactionEntryMapper.mapInsertStatement(entry, user));
+				TransactionEntryMapper.mapInsertStatement(entry, user), keyHolder);
 
 		if (cnt == 1) {
 			entry.setTransactionEntryUID(keyHolder.getKey().longValue());
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to insert TransactionEntry: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return entry;
@@ -227,7 +238,7 @@ import org.springframework.util.CollectionUtils;
 			throw new OptimisticLockingFailureException("invalid update count of [" + cnt
 					+ "] possible update count mismatch");
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to update TransactionEntry: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return entry;

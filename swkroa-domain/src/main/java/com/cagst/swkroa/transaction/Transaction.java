@@ -38,7 +38,6 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 	private TransactionType transaction_type;
 	private BigDecimal transaction_amount;
 	private String transaction_desc;
-	private BigDecimal remaining_amount;
 	private String ref_num;
 	private String memo_txt;
 
@@ -98,14 +97,6 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 
 	public void setTransactionDescription(final String desc) {
 		this.transaction_desc = desc;
-	}
-
-	public BigDecimal getRemainingAmount() {
-		return remaining_amount;
-	}
-
-	public void setRemainingAmount(final BigDecimal remainingAmount) {
-		this.remaining_amount = remainingAmount;
 	}
 
 	@Size(max = 50)

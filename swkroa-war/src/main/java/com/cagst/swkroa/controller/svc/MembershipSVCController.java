@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.cagst.common.web.servlet.tags.StaticResourceAssistant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,8 @@ import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.model.MembershipModel;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Handles and retrieves {@link Membership}, {@link Member}, and {@link MembershipCounty} objects depending upon the URI
@@ -92,7 +95,7 @@ public final class MembershipSVCController {
 	@RequestMapping(value = { "/svc/membership/{membershipId}", "/membership/svc/membership/{membershipId}" }, method = RequestMethod.GET)
 	@ResponseBody
 	public MembershipModel getMembership(final @PathVariable long membershipId) {
-		LOGGER.info("Recevied request to retrieve membership [{}].", membershipId);
+		LOGGER.info("Received request to retrieve membership [{}].", membershipId);
 
 		if (membershipId == 0L) {
 			Member primary = new Member();
@@ -146,11 +149,14 @@ public final class MembershipSVCController {
 	 * 
 	 */
 	@RequestMapping(value = { "/membership/svc/membership", "/svc/membership" }, method = RequestMethod.POST)
-	public void saveMembershipModel(final @RequestBody MembershipModel model) {
+	@ResponseBody
+	public String saveMembershipModel(final @RequestBody MembershipModel model, final HttpServletRequest request) {
 		LOGGER.info("Received request to save membership [{}]", model.getMembershipUID());
 
 		model.setMemberTypeRepository(memberTypeRepo);
 		membershipService.saveMembership(model.build(), WebAppUtils.getUser());
+
+		return StaticResourceAssistant.getString("url.membership.home", request);
 	}
 
 	/**

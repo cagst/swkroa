@@ -301,7 +301,6 @@ CREATE TABLE transaction (
 	transaction_type_flag		BIGINT NOT NULL,
 	transaction_amount			NUMERIC(10, 2) NOT NULL,
 	transaction_desc				VARCHAR(50) NULL,
-	remaining_amount				NUMERIC(10, 2) DEFAULT 0.0 NOT NULL,
 	ref_num									VARCHAR(25) NULL,
 	memo_txt								VARCHAR(250) NULL,
 	active_ind							BOOLEAN DEFAULT 1 NOT NULL,

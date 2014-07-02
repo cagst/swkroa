@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -43,23 +44,24 @@ public class TransactionRepositoryJdbcTest {
 	private TransactionRepositoryJdbc repo;
 	private CodeValueRepository codeValueRepo;
 
+	private CodeValue typeDues    = new CodeValue();
+	private CodeValue typePayment = new CodeValue();
+	private CodeValue typeSpecial = new CodeValue();
+
 	private Member member;
 
 	@Before
 	public void setUp() {
 		codeValueRepo = Mockito.mock(CodeValueRepository.class);
 
-		CodeValue typeDues = new CodeValue();
 		typeDues.setCodeValueUID(1L);
 		typeDues.setDisplay("Annual Dues");
 		typeDues.setMeaning("ANNUAL DUES");
 
-		CodeValue typePayment = new CodeValue();
 		typePayment.setCodeValueUID(2L);
 		typePayment.setDisplay("Payment");
 		typePayment.setMeaning("PAYMENT");
 
-		CodeValue typeSpecial = new CodeValue();
 		typeSpecial.setCodeValueUID(3L);
 		typeSpecial.setDisplay("Special Funds");
 		typeSpecial.setMeaning("SPECIAL FUNDS");
@@ -94,7 +96,7 @@ public class TransactionRepositoryJdbcTest {
 		Transaction trans = repo.getTransactionByUID(1L);
 
 		assertNotNull("Ensure we found a transaction.", trans);
-		assertEquals("Ensure it is the correct transaction (amount).", 90.00, trans.getTransactionAmount().doubleValue(), 0.001);
+		assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 	}
 
 	/**
@@ -143,7 +145,7 @@ public class TransactionRepositoryJdbcTest {
 		List<Transaction> transactions1 = repo.getTransactionsForMembership(membership);
 		assertNotNull("Ensure the transaction list exists.", transactions1);
 		assertFalse("Ensure the transaction list is empty.", transactions1.isEmpty());
-		assertEquals("Ensure we found the correct number of transactions.", 3, transactions1.size());
+		assertEquals("Ensure we found the correct number of transactions.", 2, transactions1.size());
 
 		Transaction newTrans = new Transaction();
 		newTrans.setTransactionDate(new DateTime());
@@ -168,13 +170,20 @@ public class TransactionRepositoryJdbcTest {
 		List<Transaction> transactions1 = repo.getTransactionsForMembership(membership);
 		assertNotNull("Ensure the transaction list exists.", transactions1);
 		assertFalse("Ensure the transaction list is empty.", transactions1.isEmpty());
-		assertEquals("Ensure we found the correct number of transactions.", 3, transactions1.size());
+		assertEquals("Ensure we found the correct number of transactions.", 2, transactions1.size());
 
 		Transaction newTrans = new Transaction();
 		newTrans.setTransactionDate(new DateTime());
-		newTrans.setTransactionAmount(new BigDecimal(25));
 		newTrans.setTransactionType(TransactionType.INVOICE);
 		newTrans.setMembershipUID(membership.getMembershipUID());
+
+		TransactionEntry newEntry = new TransactionEntry();
+		newEntry.setTransactionEntryAmount(new BigDecimal(-25));
+		newEntry.setTransactionEntryDescription("My Transaction Entry");
+		newEntry.setTransactionEntryType(typeDues);
+		newEntry.setTransaction(newTrans);
+
+		newTrans.addEntry(newEntry);
 
 		Transaction insertedTrans = repo.saveTransaction(newTrans, user);
 		assertNotNull("Ensure we have a valid transaction", insertedTrans);
@@ -185,7 +194,7 @@ public class TransactionRepositoryJdbcTest {
 		List<Transaction> transactions2 = repo.getTransactionsForMembership(membership);
 		assertNotNull("Ensure the transaction list exists.", transactions2);
 		assertFalse("Ensure the transaction list is empty.", transactions2.isEmpty());
-		assertEquals("Ensure we found the correct number of transactions.", 4, transactions2.size());
+		assertEquals("Ensure we found the correct number of transactions.", 3, transactions2.size());
 	}
 
 	/**
@@ -199,15 +208,19 @@ public class TransactionRepositoryJdbcTest {
 		Transaction trans = repo.getTransactionByUID(1L);
 
 		assertNotNull("Ensure we found a transaction.", trans);
-		assertEquals("Ensure it is the correct transaction (amount).", 70.00, trans.getTransactionAmount().doubleValue(),
-				0.001);
+		assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 
-		trans.setTransactionAmount(new BigDecimal(100));
+		trans.setTransactionAmount(new BigDecimal(-100));
+		for (TransactionEntry entry : trans.getTransactionEntries()) {
+			if (entry.getMember() == null) {
+				entry.setTransactionEntryAmount(new BigDecimal(-35));
+			}
+		}
 
 		Transaction updatedTrans = repo.saveTransaction(trans, user);
 		assertNotNull("Ensure we have a valid transaction", updatedTrans);
 		assertEquals("Ensure it has been updated.", 1, updatedTrans.getTransactionUpdateCount());
-		assertEquals("Ensure it is still updated.", 100.00, updatedTrans.getTransactionAmount().doubleValue(), 0.001);
+		assertEquals("Ensure it is still updated.", -105.00, updatedTrans.getTransactionAmount().doubleValue(), 0.001);
 	}
 
 	/**
@@ -221,11 +234,15 @@ public class TransactionRepositoryJdbcTest {
 		Transaction trans = repo.getTransactionByUID(1L);
 
 		assertNotNull("Ensure we found a transaction.", trans);
-		assertEquals("Ensure it is the correct transaction (amount).", 70.00, trans.getTransactionAmount().doubleValue(),
-				0.001);
+		assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 
-		trans.setTransactionAmount(new BigDecimal(100));
-		trans.setTransactionUpdateCount(trans.getTransactionUpdateCount() + 1);
+		trans.setTransactionAmount(new BigDecimal(-100));
+		for (TransactionEntry entry : trans.getTransactionEntries()) {
+			if (entry.getMember() == null) {
+				entry.setTransactionEntryAmount(new BigDecimal(-35));
+				entry.setTransactionEntryUpdateCount(entry.getTransactionEntryUpdateCount() + 1);
+			}
+		}
 
 		repo.saveTransaction(trans, user);
 	}

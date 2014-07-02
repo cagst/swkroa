@@ -306,7 +306,7 @@ import com.cagst.swkroa.user.User;
 		if (cnt == 1) {
 			member.setMemberUID(keyHolder.getKey().longValue());
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to insert Member: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return member;
@@ -328,7 +328,7 @@ import com.cagst.swkroa.user.User;
 			throw new OptimisticLockingFailureException("invalid update count of [" + cnt
 					+ "] possible update count mismatch");
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to update Member: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return member;
@@ -348,7 +348,7 @@ import com.cagst.swkroa.user.User;
 		if (cnt == 1) {
 			county.setMembershipCountyUID(keyHolder.getKey().longValue());
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to insert MembershipCounty: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return county;
@@ -371,7 +371,7 @@ import com.cagst.swkroa.user.User;
 			throw new OptimisticLockingFailureException("invalid update count of [" + cnt
 					+ "] possible update count mismatch");
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to update MembershipCounty: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return county;

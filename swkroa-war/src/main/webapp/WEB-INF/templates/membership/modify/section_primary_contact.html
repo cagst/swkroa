@@ -19,12 +19,14 @@
 					     data-ng-form="addressForm"
 					     class="grouper">
 						<div class="row spacer-top">
-							<div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
-								<label class="control-label label-required"
-								       data-th-text="#{com.cagst.swkroa.membership.member.address.type}">
-									zzz Type
-								</label>
+<!--
+														<div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
+															<label class="control-label label-required"
+																		 data-th-text="#{com.cagst.swkroa.membership.member.address.type}">
+																zzz Type
+															</label>
 							</div>
+-->
 							<div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
 								<select class="form-control" name="addressType"
 								        data-ng-options="type.display for type in addressTypes"
@@ -164,12 +166,14 @@
 					     data-ng-form="phoneForm"
 					     class="grouper">
 						<div class="row spacer-top">
+<!--
 							<div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
 								<label class="control-label label-required"
 								       data-th-text="#{com.cagst.swkroa.membership.member.phone.type}">
 									zzz Type
 								</label>
 							</div>
+-->
 							<div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
 								<select class="form-control" name="phoneType"
 								        data-ng-options="type.display for type in phoneTypes"
@@ -215,12 +219,14 @@
 					     data-ng-form="emailForm"
 					     class="grouper">
 						<div class="row spacer-top">
+<!--
 							<div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
 								<label class="control-label label-required"
 								       data-th-text="#{com.cagst.swkroa.membership.member.email.type}">
 									zzz Type
 								</label>
 							</div>
+-->
 							<div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
 								<select class="form-control" name="emailType"
 								        data-ng-options="type.display for type in emailTypes"

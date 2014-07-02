@@ -172,7 +172,7 @@ import com.cagst.swkroa.user.User;
 		if (cnt == 1) {
 			membership.setMembershipUID(keyHolder.getKey().longValue());
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to insert Membership: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return membership;
@@ -193,7 +193,7 @@ import com.cagst.swkroa.user.User;
 			throw new OptimisticLockingFailureException("invalid update count of [" + cnt
 					+ "] possible update count mismatch");
 		} else {
-			throw new IncorrectResultSizeDataAccessException(1, cnt);
+			throw new IncorrectResultSizeDataAccessException("Failed to update Membership: expected 1, actual " + cnt, 1, cnt);
 		}
 
 		return membership;

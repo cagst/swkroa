@@ -252,7 +252,7 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 
 	$scope.save = function() {
 		$http.post("../svc/membership", $scope.membership).success(function(data) {
-			$window.location.href = "/swkroa-war/membership/home";
+			$window.location.href = data.replace(/"/g, "");
 		});
 	};
 

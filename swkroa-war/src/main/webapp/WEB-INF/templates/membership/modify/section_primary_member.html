@@ -108,7 +108,7 @@
 					<input type="text" class="form-control" name="primaryFirstName" maxlength="50"
 					       data-th-placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
 					       data-ng-model="membership.primaryMember.person.firstName"
-					       data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL' || membership.primaryMember.person"
+					       data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
 					       data-ng-blur="generateOwnerId(membership.primaryMember)" />
 				</div>
 				<div class="col-xs-2">
@@ -122,7 +122,7 @@
 					<input type="text" class="form-control" name="primaryLastName" maxlength="50"
 					       data-th-placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
 					       data-ng-model="membership.primaryMember.person.lastName"
-					       data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL' || membership.primaryMember.person"
+					       data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
 					       data-ng-blur="generateOwnerId(membership.primaryMember)" />
 				</div>
 				<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryOwnerIdent.$invalid}">

@@ -5,6 +5,7 @@ import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,13 +20,13 @@ import java.sql.SQLException;
  *
  */
 /* package */ class TransactionEntryMapper implements RowMapper<TransactionEntry> {
-	private static final String TRANSACTION_ENTRY_ID      = "transaction_entry_id";
+	/* package */ static final String TRANSACTION_ENTRY_ID      = "transaction_entry_id";
 	private static final String TRANSACTION_ID            = "transaction_id";
 	private static final String RELATED_TRANSACTION_ID    = "related_transaction_id";
 	private static final String MEMBER_ID                 = "member_id";
-	private static final String TRANSACTION_ENTRY_TYPE_CD = "transaction_type_flag";
-	private static final String TRANSACTION_ENTRY_AMOUNT  = "transaction_amount";
-	private static final String TRANSACTION_ENTRY_DESC    = "transaction_desc";
+	private static final String TRANSACTION_ENTRY_TYPE_CD = "transaction_entry_type_cd";
+	private static final String TRANSACTION_ENTRY_AMOUNT  = "transaction_entry_amount";
+	private static final String TRANSACTION_ENTRY_DESC    = "transaction_entry_desc";
 
 	// meta-data
 	private static final String ACTIVE_IND = "active_ind";
@@ -33,35 +34,50 @@ import java.sql.SQLException;
 	private static final String UPDT_ID    = "updt_id";
 	private static final String TRANSACTION_ENTRY_UPDT_CNT = "transaction_entry_updt_cnt";
 
-	private final Transaction transaction;
-	private final TransactionRepository transactionRepo;
 	private final CodeValueRepository codeValueRepo;
 	private final MemberRepository memberRepo;
 
 	/**
 	 * Primary Constructor used to create an instance of <i>TransactionEntryMapper</i>
 	 *
-	 * @param transaction
-	 * 				The {@link Transaction} to associate this entry to.
-	 * @param transactionRepo
-	 * 				The {@link TransactionRepository} to use to retrieve associated transaction information.
 	 * @param codeValueRepo
 	 * 				The {@link CodeValueRepository} to use to retrieve codified values associated with the transaction entry.
 	 * @param memberRepo
 	 * 				The {@link MemberRepository} to use to retrieve the Member associate with this transaction entry.
 	 */
-	public TransactionEntryMapper(final Transaction transaction,
-																final TransactionRepository transactionRepo,
-																final CodeValueRepository codeValueRepo,
+	public TransactionEntryMapper(final CodeValueRepository codeValueRepo,
 																final MemberRepository memberRepo) {
-		this.transaction = transaction;
-		this.transactionRepo = transactionRepo;
+
 		this.codeValueRepo = codeValueRepo;
 		this.memberRepo = memberRepo;
 	}
 
 	@Override
 	public TransactionEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
+		TransactionEntry entry = new TransactionEntry();
+		entry.setTransactionEntryUID(rs.getLong(TRANSACTION_ENTRY_ID));
+		entry.setMember(memberRepo.getMemberByUID(rs.getLong(MEMBER_ID)));
+		entry.setTransactionEntryType(codeValueRepo.getCodeValueByUID(rs.getLong(TRANSACTION_ENTRY_TYPE_CD)));
+		entry.setTransactionEntryAmount(rs.getBigDecimal(TRANSACTION_ENTRY_AMOUNT));
+		entry.setTransactionEntryDescription(rs.getString(TRANSACTION_ENTRY_DESC));
+
+//		long relatedTransactionUID = rs.getLong(RELATED_TRANSACTION_ID);
+//		if (relatedTransactionUID > 0L) {
+//			entry.setRelatedTransaction(transactionRepo.getTransactionByUID(relatedTransactionUID));
+//		}
+
+		entry.setActive(rs.getBoolean(ACTIVE_IND));
+		entry.setTransactionEntryUpdateCount(rs.getLong(TRANSACTION_ENTRY_UPDT_CNT));
+
+		return entry;
+	}
+
+	public static TransactionEntry mapRow(final SqlRowSet rs,
+																				final Transaction transaction,
+																				final CodeValueRepository codeValueRepo,
+																				final MemberRepository memberRepo,
+																				final TransactionRepository transactionRepo) {
+
 		TransactionEntry entry = new TransactionEntry();
 		entry.setTransactionEntryUID(rs.getLong(TRANSACTION_ENTRY_ID));
 		entry.setTransaction(transaction);
@@ -76,7 +92,7 @@ import java.sql.SQLException;
 		}
 
 		entry.setActive(rs.getBoolean(ACTIVE_IND));
-		entry.setTransactionEntryUpdateCount(rs.getLong(TRANSACTION_ENTRY_UPDT_CNT));
+		entry.setTransactionEntryUpdateCount(rs.getLong(18));
 
 		return entry;
 	}

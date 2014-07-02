@@ -117,9 +117,9 @@ INSERT INTO comment (comment_id, comment_dt, comment_txt, parent_entity_id, pare
 INSERT INTO comment (comment_id, comment_dt, comment_txt, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, CURRENT_TIMESTAMP, 'TEST COMMENT 2', 1, 'MEMBERSHIP', CURRENT_TIMESTAMP, 11, CURRENT_TIMESTAMP, 11);
 INSERT INTO comment (comment_id, comment_dt, comment_txt, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, CURRENT_TIMESTAMP, 'TEST COMMENT 3', 1, 'TRANSACTION', CURRENT_TIMESTAMP, 11, CURRENT_TIMESTAMP, 11);
 
-INSERT INTO transaction (transaction_id, membership_id, transaction_dt, transaction_type_flag, transaction_amount, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 2, '2014-03-01', 0, 90, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 2, 70, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 3, 20, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO transaction (transaction_id, membership_id, transaction_dt, transaction_type_flag, transaction_amount, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 2, '2014-03-01', 0, -90, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 2, -70, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 3, -20, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
 INSERT INTO transaction (transaction_id, membership_id, transaction_dt, transaction_type_flag, transaction_amount, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, '2014-04-01', 1, 100, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO transaction_entry (transaction_id, related_transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, 1, 90, 2, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
