@@ -2,16 +2,30 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main" >
+      layout:decorator="layouts/main">
 
-	<head>
-	</head>
-	
-	<body data-ng-app="csApp">
-		<div data-layout-fragment="content" data-ng-controller="csListController">
-			<div class="page-header">
-				<h3 data-th-text="#{com.cagst.swkroa.maintain.user.title}">zzz Maintain Users</h3>
-			</div>
-		</div>
-	</body>
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/maintain/user.js}"></script>
+</head>
+
+<body data-ng-app="userApp">
+
+<div data-layout-fragment="content" data-ng-controller="userListController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.maintain.user.title}">zzz Maintain Users</h3>
+  </div>
+
+  <div class="container-outline">
+    <div class="row row-inner">
+      <div class="col-xs-5 stretch">
+        <div data-th-replace="maintain/user/list_listing"></div>
+      </div>
+      <div class="col-xs-7 divider-left stretch pull-right">
+        <div data-th-include="maintain/user/list_detail"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>

@@ -2,29 +2,31 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main" >
-	
-	<head>
-		<script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
-		<script type="text/javascript" data-th-src="@{/static/js/membership/membership_list.js}"></script>
-		<script type="text/javascript" data-th-src="@{/static/ui-bootstrap-0.10.0/ui-bootstrap-tpls-0.10.0.min.js}"></script>
-	</head>
-	
-	<body data-ng-app="swkroaApp">
-		<div data-layout-fragment="content" data-ng-controller="swkroaController">
-			<div class="page-header">
-				<h3 data-th-text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
-			</div>
-			<div class="container-outline">
-				<div class="row row-inner">
-					<div class="col-xs-5 stretch">
-						<div data-th-replace="membership/list/list_listing"></div>
-					</div>
-					<div class="col-xs-7 divider-left stretch pull-right">
-						<div data-th-include="membership/list/list_detail"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/js/membership/membership_list.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/ui-bootstrap-0.10.0/ui-bootstrap-tpls-0.10.0.min.js}"></script>
+</head>
+
+<body data-ng-app="swkroaApp">
+
+<div data-layout-fragment="content" data-ng-controller="swkroaController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
+  </div>
+  <div class="container-outline">
+    <div class="row row-inner">
+      <div class="col-xs-5 stretch">
+        <div data-th-replace="membership/list/list_listing"></div>
+      </div>
+      <div class="col-xs-7 divider-left stretch pull-right">
+        <div data-th-include="membership/list/list_detail"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>

@@ -202,7 +202,7 @@ public class CSVImportTest {
 	 * @throws IOException
 	 */
 	@Test
-//	@Ignore
+	@Ignore
 	public void testCVSImport() throws IOException {
 		LOGGER.info("BEGIN IMPORT");
 
@@ -482,150 +482,143 @@ public class CSVImportTest {
 				membership.addComment(comment);
 			}
 
-			if (!MemberType.FAMILY_MEMBER.equals(member.getMemberType().getMemberTypeMeaning())
-					&& !MemberType.SPOUSE.equals(member.getMemberType().getMemberTypeMeaning())) {
+			// Calculate Invoice
+			BigDecimal duesAmount = new BigDecimal(0.0);
+			Transaction invoice = null;
+			boolean existing = false;
+			// attempt to find invoice
+			for (Transaction trans : membership.getTransactions()) {
+				if (trans.getTransactionType() == TransactionType.INVOICE) {
+					invoice = trans;
+					duesAmount = invoice.getTransactionAmount();
+					existing = true;
+					break;
+				}
+			}
 
-				// Calculate Invoice
-				BigDecimal duesAmount = new BigDecimal(0.0);
-
-				Transaction invoice = new Transaction();
+			if (invoice == null) {
+				invoice = new Transaction();
 				invoice.setTransactionDescription(INVOICE);
 				invoice.setTransactionDate(currentDueDt);
 				invoice.setTransactionType(TransactionType.INVOICE);
-
-				if (StringUtils.isNotBlank(fld2015base)) {
-					try {
-						BigDecimal transAmount = new BigDecimal(fld2015base);
-						if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-							TransactionEntry entry = new TransactionEntry();
-							entry.setTransactionEntryAmount(transAmount.negate());
-							entry.setTransactionEntryType(transEntryType_Base);
-
-							entry.setMember(member);
-							invoice.addEntry(entry);
-						}
-
-						// Add the Base to our Dues Amount
-						duesAmount = duesAmount.add(transAmount.negate());
-					} catch (NumberFormatException ex) {
-						LOGGER.warn("Failed to convert base amount [{}].", fld2015base);
-					}
-				}
-
-				if (StringUtils.isNotBlank(fld2015inc)) {
-					try {
-						BigDecimal transAmount = new BigDecimal(fld2015inc);
-						if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-							TransactionEntry entry = new TransactionEntry();
-							entry.setTransactionEntryAmount(transAmount.negate());
-							entry.setTransactionEntryType(transEntryType_Inc);
-
-							entry.setMember(member);
-							invoice.addEntry(entry);
-						}
-
-						// Add the Incremental to our Dues Amount
-						duesAmount = duesAmount.add(transAmount.negate());
-					} catch (NumberFormatException ex) {
-						LOGGER.warn("Failed to convert incremental due [{}].", fld2015inc);
-					}
-				}
-
-				if (StringUtils.isNotBlank(fld2015family)) {
-					try {
-						BigDecimal transAmount = new BigDecimal(fld2015family);
-						if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-							TransactionEntry entry = new TransactionEntry();
-							entry.setTransactionEntryAmount(transAmount.negate());
-							entry.setTransactionEntryType(transEntryType_Family);
-
-							entry.setMember(member);
-							invoice.addEntry(entry);
-						}
-
-						// Add the Family Dues to our Dues Amount
-						duesAmount = duesAmount.add(transAmount.negate());
-					} catch (NumberFormatException ex) {
-						LOGGER.warn("Failed to convert family dues [{}].", fld2015family);
-					}
-				}
-
-				if (duesAmount.doubleValue() != 0.0) {
-					invoice.setTransactionAmount(duesAmount);
-					membership.addTransaction(invoice);
-				}
-
-				if (StringUtils.isNotBlank(fldDatePaid)) {
-					// Calculate Payment
-					BigDecimal paymentAmount = duesAmount.negate();
-					BigDecimal totalAmount = duesAmount.negate();
-
-					Transaction payment = new Transaction();
-					payment.setTransactionType(TransactionType.PAYMENT);
-					payment.setTransactionDescription(PAYMENT);
-
-					if (StringUtils.isNotBlank(fldCheckNo)) {
-						payment.setReferenceNumber(fldCheckNo);
-					}
-
-					try {
-						payment.setTransactionDate(new DateTime(dateFormat.parse(fldDatePaid)));
-					} catch (ParseException ex) {
-						LOGGER.warn("Unable to parse date [{}]", fldDatePaid);
-						payment.setTransactionDate(currentDueDt);
-					}
-
-					membership.addTransaction(payment);
-
-					if (StringUtils.isNotBlank(fld2015specialFunds)) {
-						try {
-							BigDecimal transAmount = new BigDecimal(fld2015specialFunds);
-							if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-								TransactionEntry entry = new TransactionEntry();
-								entry.setTransactionEntryAmount(transAmount);
-								entry.setTransactionEntryType(transEntryType_Special);
-								entry.setMember(member);
-								payment.addEntry(entry);
-
-								// Add the Special Funds to our Total Payment Amount
-								totalAmount = totalAmount.add(transAmount);
-								paymentAmount = paymentAmount.add(transAmount);
-							}
-						} catch (NumberFormatException ex) {
-							LOGGER.warn("Failed to convert special fund [{}].", fld2015specialFunds);
-						}
-					}
-
-					if (StringUtils.isNotBlank(fld2015credit)) {
-						try {
-							BigDecimal transAmount = new BigDecimal(fld2015credit);
-							if (transAmount.compareTo(new BigDecimal(0)) != 0) {
-								TransactionEntry entry = new TransactionEntry();
-								entry.setTransactionEntryAmount(transAmount);
-								entry.setTransactionEntryType(transEntryType_Credit);
-								entry.setMember(member);
-								payment.addEntry(entry);
-
-								// Add the Credit to our Payment Amount
-								totalAmount = totalAmount.add(transAmount);
-								paymentAmount = paymentAmount.add(transAmount);
-							}
-						} catch (NumberFormatException ex) {
-							LOGGER.warn("Failed to convert credit [{}].", fld2015credit);
-						}
-					}
-
-					TransactionEntry entry = new TransactionEntry();
-					entry.setTransactionEntryType(transEntryType_Payment);
-					entry.setTransactionEntryAmount(paymentAmount);
-					entry.setMember(member);
-					entry.setRelatedTransaction(invoice);
-					payment.addEntry(entry);
-				}
-
-				membership.setDuesAmount(duesAmount);
 			}
 
+			if (StringUtils.isNotBlank(fld2015base)) {
+				try {
+					BigDecimal transAmount = new BigDecimal(fld2015base);
+					if (transAmount.compareTo(new BigDecimal(0)) != 0) {
+						TransactionEntry entry = new TransactionEntry();
+						entry.setTransactionEntryAmount(transAmount.negate());
+
+						if (MemberType.FAMILY_MEMBER.equals(member.getMemberType().getMemberTypeMeaning())) {
+							entry.setTransactionEntryType(transEntryType_Family);
+						} else {
+							entry.setTransactionEntryType(transEntryType_Base);
+						}
+
+						entry.setMember(member);
+						invoice.addEntry(entry);
+					}
+
+					// Add the Base to our Dues Amount
+					duesAmount = duesAmount.add(transAmount.negate());
+				} catch (NumberFormatException ex) {
+					LOGGER.warn("Failed to convert base amount [{}].", fld2015base);
+				}
+			}
+
+			if (StringUtils.isNotBlank(fld2015inc)) {
+				try {
+					BigDecimal transAmount = new BigDecimal(fld2015inc);
+					if (transAmount.compareTo(new BigDecimal(0)) != 0) {
+						TransactionEntry entry = new TransactionEntry();
+						entry.setTransactionEntryAmount(transAmount.negate());
+						entry.setTransactionEntryType(transEntryType_Inc);
+
+						entry.setMember(member);
+						invoice.addEntry(entry);
+					}
+
+					// Add the Incremental to our Dues Amount
+					duesAmount = duesAmount.add(transAmount.negate());
+				} catch (NumberFormatException ex) {
+					LOGGER.warn("Failed to convert incremental due [{}].", fld2015inc);
+				}
+			}
+
+			if (duesAmount.doubleValue() != 0.0) {
+				invoice.setTransactionAmount(duesAmount);
+
+				if (!existing) {
+					membership.addTransaction(invoice);
+				}
+			}
+
+			if (!MemberType.FAMILY_MEMBER.equals(member.getMemberType().getMemberTypeMeaning()) &&
+					!MemberType.SPOUSE.equals(member.getMemberType().getMemberTypeMeaning()) &&
+					StringUtils.isNotBlank(fldDatePaid)) {
+
+				// Calculate Payment
+				BigDecimal paymentAmount = duesAmount.negate();
+				BigDecimal totalAmount = duesAmount.negate();
+
+				Transaction payment = new Transaction();
+				payment.setTransactionType(TransactionType.PAYMENT);
+				payment.setTransactionDescription(PAYMENT);
+
+				if (StringUtils.isNotBlank(fldCheckNo)) {
+					payment.setReferenceNumber(fldCheckNo);
+				}
+
+				try {
+					payment.setTransactionDate(new DateTime(dateFormat.parse(fldDatePaid)));
+				} catch (ParseException ex) {
+					LOGGER.warn("Unable to parse date [{}]", fldDatePaid);
+					payment.setTransactionDate(currentDueDt);
+				}
+
+				membership.addTransaction(payment);
+
+				if (StringUtils.isNotBlank(fld2015specialFunds)) {
+					try {
+						BigDecimal transAmount = new BigDecimal(fld2015specialFunds);
+						if (transAmount.compareTo(new BigDecimal(0)) != 0) {
+							TransactionEntry entry = new TransactionEntry();
+							entry.setTransactionEntryAmount(transAmount);
+							entry.setTransactionEntryType(transEntryType_Special);
+							entry.setMember(member);
+							payment.addEntry(entry);
+
+							// Add the Special Funds to our Total Payment Amount
+							totalAmount = totalAmount.add(transAmount);
+							paymentAmount = paymentAmount.add(transAmount);
+						}
+					} catch (NumberFormatException ex) {
+						LOGGER.warn("Failed to convert special fund [{}].", fld2015specialFunds);
+					}
+				}
+
+				if (StringUtils.isNotBlank(fld2015credit)) {
+					try {
+						BigDecimal transAmount = new BigDecimal(fld2015credit);
+						if (transAmount.compareTo(new BigDecimal(0)) != 0) {
+							TransactionEntry entry = new TransactionEntry();
+							entry.setTransactionEntryAmount(transAmount);
+							entry.setTransactionEntryType(transEntryType_Credit);
+							entry.setMember(member);
+							payment.addEntry(entry);
+
+							// Add the Credit to our Payment Amount
+							totalAmount = totalAmount.add(transAmount);
+							paymentAmount = paymentAmount.add(transAmount);
+						}
+					} catch (NumberFormatException ex) {
+						LOGGER.warn("Failed to convert credit [{}].", fld2015credit);
+					}
+				}
+			}
+
+			membership.setDuesAmount(duesAmount);
 			membership.addMember(member);
 		}
 
@@ -686,6 +679,27 @@ public class CSVImportTest {
 
 			if (checkMembership.getDueOn() == null) {
 				checkMembership.setDueOn(unknownDueDt);
+			}
+
+			// check to see if there was a payment and if so, calculate the total payment
+			Transaction pymt = null;
+			Transaction inv  = null;
+			for (Transaction trans : checkMembership.getTransactions()) {
+				if (trans.getTransactionType() == TransactionType.PAYMENT) {
+					pymt = trans;
+				} else if (trans.getTransactionType() == TransactionType.INVOICE) {
+					inv = trans;
+				}
+			}
+
+			if (pymt != null) {
+				TransactionEntry entry = new TransactionEntry();
+				entry.setTransactionEntryType(transEntryType_Payment);
+				entry.setTransactionEntryAmount(checkMembership.getDuesAmount().negate());
+				entry.setMember(primary);
+				entry.setRelatedTransaction(inv);
+				pymt.addEntry(entry);
+
 			}
 
 			try {

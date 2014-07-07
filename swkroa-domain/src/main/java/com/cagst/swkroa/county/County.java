@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @version 1.0.0
  * 
  */
-public class County implements Serializable, Comparable<County> {
+public final class County implements Serializable, Comparable<County> {
 	private static final long serialVersionUID = 6048112429446895825L;
 
 	private static final String VOTING_COUNTY = "Voting County";

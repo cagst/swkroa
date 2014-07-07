@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+
+<div data-th-fragment="userListing">
+  <div class="split-header">
+    <div class="split-header-content form-group expand">
+      <div>
+        <a data-th-href="@{/user/add}" class="add-btn">
+          <i class="fa fa-plus"></i>
+        </a>
+        <!--
+        <input type="text" class="form-control" autofocus
+               data-th-placeholder="#{com.cagst.swkroa.user.search.prompt}"
+               data-ng-model="query"
+               data-ng-keydown="queryKeydown($event)" />
+        <a class="input-group-addon btn btn-primary"
+           data-ng-click="getMemberships()"
+           data-th-text="#{com.cagst.swkroa.membership.search.button}">
+          zzz Search
+        </a>
+        -->
+      </div>
+    </div>
+  </div>
+  <div class="list-group listing divider-right">
+    <div>
+      <div class="panel-body text-muted" data-ng-show="!users.length">
+        <em data-th-text="#{com.cagst.swkroa.maintain.user.nousers}">zzz No users</em>
+      </div>
+      <div data-ng-show="users.length">
+        <div class="list-group-item alt-list-group-item sel-list-group-item"
+             data-ng-repeat="user in users">
+          <div>
+            {{user.fullName}}
+            <small class="text-muted">
+              (<span data-ng-bind="user.username"></span>)
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

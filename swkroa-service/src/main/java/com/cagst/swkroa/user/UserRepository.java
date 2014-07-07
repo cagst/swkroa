@@ -6,6 +6,8 @@ import org.springframework.dao.OptimisticLockingFailureException;
 
 import com.cagst.swkroa.security.SecurityPolicy;
 
+import java.util.List;
+
 /**
  * Definition of a repository that retrieves and persists {@link User} objects.
  * 
@@ -167,4 +169,11 @@ public interface UserRepository {
 	 */
 	public User saveUser(final User builder, final User user) throws OptimisticLockingFailureException,
 			IncorrectResultSizeDataAccessException, UsernameTakenException, DataAccessException;
+
+	/**
+	 * Retrieves a {@link List} of all {@link User Users} that are in the system.
+	 *
+	 * @return A {@link List} of {@link User Users} defined in the system.
+	 */
+	public List<User> getAllUsers();
 }

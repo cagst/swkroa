@@ -38,6 +38,16 @@
 										</span>
 									</div>
 								</div>
+								<div class="col-xs-4" data-ng-class="{'has-error': member.$invalid}">
+									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.member}">
+										zzz Member
+									</label>
+									<select class="form-control" name="member"
+													data-ng-model="transaction.member"
+													data-ng-required="true"
+													data-ng-options="member.effectiveMemberName for member in membership.allMembers">
+									</select>
+								</div>
 								<div class="col-xs-4">
 									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.refno}">
 										zzz Ref No
@@ -49,16 +59,6 @@
 							</div>
 							
 							<div class="row spacer-top">
-								<div class="col-xs-4" data-ng-class="{'has-error': member.$invalid}">
-									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.member}">
-										zzz Member
-									</label>
-									<select class="form-control" name="member"
-									        data-ng-model="transaction.member"
-									        data-ng-required="true"
-									        data-ng-options="member.effectiveMemberName for member in membership.allMembers">
-									</select>
-								</div>
 								<div class="col-xs-4" data-ng-class="{'has-error': type.$invalid}">
 									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.type}">
 										zzz Type
@@ -69,6 +69,17 @@
 									        data-ng-options="type.display for type in transactionTypes">
 									</select>
 								</div>
+
+								<div class="col-xs-4">
+									<label class="form-label" data-th-text="#{com.cagst.swkroa.desc}">
+										zzz Desc
+									</label>
+									<input type="text" class="form-control" name="desc"
+												 data-ng-model="transaction.transactionDescription"
+												 data-ng-required="true"
+												 data-ng-options="type.display for type in transactionTypes"/>
+								</div>
+
 								<div class="col-xs-2" data-ng-class="{'has-error': debitAmount.$invalid}">
 									<label class="form-label"data-th-text="#{com.cagst.swkroa.membership.transaction.debit}">
 										zzz Debit

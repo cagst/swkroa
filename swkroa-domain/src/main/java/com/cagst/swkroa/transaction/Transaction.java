@@ -51,7 +51,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		return transaction_id;
 	}
 
-	public void setTransactionUID(final long uid) {
+	/* package */ void setTransactionUID(final long uid) {
 		this.transaction_id = uid;
 	}
 

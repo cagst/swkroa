@@ -2,6 +2,7 @@ package com.cagst.swkroa.transaction;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -39,6 +40,7 @@ public final class TransactionEntry implements Serializable {
 		this.transaction_entry_id = uid;
 	}
 
+	@JsonIgnore
 	public Transaction getTransaction() {
 		return transaction;
 	}

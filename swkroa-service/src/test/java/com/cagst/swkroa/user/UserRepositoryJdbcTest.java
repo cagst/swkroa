@@ -19,6 +19,8 @@ import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 
+import java.util.List;
+
 /**
  * Test class for UserRepositoryJdbc class.
  * 
@@ -350,4 +352,16 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
 
 		repo.saveUser(existingUser, editingUser);
 	}
+
+  /**
+   * Test the getAllUsers method.
+   */
+  @Test
+  public void testGetAllUsers() {
+    List<User> users = repo.getAllUsers();
+
+    assertNotNull("Ensure we have a valid non-null user list", users);
+    assertFalse("Ensure we have users", users.isEmpty());
+    assertEquals("Ensure we found the correct number of users", 5, users.size());
+  }
 }

@@ -9,9 +9,9 @@
 var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
                        .controller('swkroaController', ['$scope', '$http', function($scope, $http) {
 
-	$http.get('../svc/codeset/TRANSACTION_TYPE/').success(function(data) {
-		$scope.transactionTypes = data;
-	});
+//	$http.get('../svc/codeset/TRANSACTION_TYPE/').success(function(data) {
+//		$scope.transactionTypes = data;
+//	});
 
 	$scope.queryKeydown = function($event) {
 		if ($event.keyCode == 13) {
@@ -116,7 +116,7 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 		$scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
 		$scope.transaction = angular.copy(transaction);
 		
-		syncTransactionType($scope);
+//		syncTransactionType($scope);
 		syncMember($scope);
 		
 		$("#modifyTransaction").modal('toggle');
@@ -190,14 +190,14 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 	};
 }]);
 
-var syncTransactionType = function(scope) {
-	for (var idx1 = 0; idx1 < scope.transactionTypes.length; idx1++) {
-		if (scope.transaction.transactionType.codeValueUID == scope.transactionTypes[idx1].codeValueUID) {
-			scope.transaction.transactionType = scope.transactionTypes[idx1];
-			break;
-		}
-	}
-}
+//var syncTransactionType = function(scope) {
+//	for (var idx1 = 0; idx1 < scope.transactionTypes.length; idx1++) {
+//		if (scope.transaction.transactionType.codeValueUID == scope.transactionTypes[idx1].codeValueUID) {
+//			scope.transaction.transactionType = scope.transactionTypes[idx1];
+//			break;
+//		}
+//	}
+//}
 
 var syncMember = function(scope) {
 	for (var idx1 = 0; idx1 < scope.membership.allMembers.length; idx1++) {
