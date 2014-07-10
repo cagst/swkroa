@@ -21,6 +21,7 @@ import java.sql.SQLException;
  */
 /* package */ class TransactionEntryMapper implements RowMapper<TransactionEntry> {
 	/* package */ static final String TRANSACTION_ENTRY_ID      = "transaction_entry_id";
+
 	private static final String TRANSACTION_ID            = "transaction_id";
 	private static final String RELATED_TRANSACTION_ID    = "related_transaction_id";
 	private static final String MEMBER_ID                 = "member_id";
@@ -60,11 +61,7 @@ import java.sql.SQLException;
 		entry.setTransactionEntryType(codeValueRepo.getCodeValueByUID(rs.getLong(TRANSACTION_ENTRY_TYPE_CD)));
 		entry.setTransactionEntryAmount(rs.getBigDecimal(TRANSACTION_ENTRY_AMOUNT));
 		entry.setTransactionEntryDescription(rs.getString(TRANSACTION_ENTRY_DESC));
-
-//		long relatedTransactionUID = rs.getLong(RELATED_TRANSACTION_ID);
-//		if (relatedTransactionUID > 0L) {
-//			entry.setRelatedTransaction(transactionRepo.getTransactionByUID(relatedTransactionUID));
-//		}
+		entry.setRelatedTransactionUID(rs.getLong(RELATED_TRANSACTION_ID));
 
 		entry.setActive(rs.getBoolean(ACTIVE_IND));
 		entry.setTransactionEntryUpdateCount(rs.getLong(TRANSACTION_ENTRY_UPDT_CNT));
@@ -85,11 +82,7 @@ import java.sql.SQLException;
 		entry.setTransactionEntryType(codeValueRepo.getCodeValueByUID(rs.getLong(TRANSACTION_ENTRY_TYPE_CD)));
 		entry.setTransactionEntryAmount(rs.getBigDecimal(TRANSACTION_ENTRY_AMOUNT));
 		entry.setTransactionEntryDescription(rs.getString(TRANSACTION_ENTRY_DESC));
-
-		long relatedTransactionUID = rs.getLong(RELATED_TRANSACTION_ID);
-		if (relatedTransactionUID > 0L) {
-			entry.setRelatedTransaction(transactionRepo.getTransactionByUID(relatedTransactionUID));
-		}
+		entry.setRelatedTransactionUID(rs.getLong(RELATED_TRANSACTION_ID));
 
 		entry.setActive(rs.getBoolean(ACTIVE_IND));
 		entry.setTransactionEntryUpdateCount(rs.getLong(18));
@@ -137,11 +130,16 @@ import java.sql.SQLException;
 	private static void mapCommonParameters(final MapSqlParameterSource params, final TransactionEntry entry, final User user) {
 		params.addValue(MEMBER_ID, entry.getMember() != null ? entry.getMember().getMemberUID() : null);
 		params.addValue(TRANSACTION_ID, entry.getTransaction().getTransactionUID());
-		params.addValue(RELATED_TRANSACTION_ID, entry.getRelatedTransaction() != null ? entry.getRelatedTransaction().getTransactionUID() : null);
 		params.addValue(TRANSACTION_ENTRY_TYPE_CD, entry.getTransactionEntryType().getCodeValueUID());
 		params.addValue(TRANSACTION_ENTRY_AMOUNT, entry.getTransactionEntryAmount());
 		params.addValue(TRANSACTION_ENTRY_DESC, entry.getTransactionEntryDescription());
 		params.addValue(ACTIVE_IND, entry.isActive());
 		params.addValue(UPDT_ID, user.getUserUID());
+
+    if (entry.getRelatedTransaction() != null) {
+      params.addValue(RELATED_TRANSACTION_ID, entry.getRelatedTransaction().getTransactionUID());
+    } else {
+      params.addValue(RELATED_TRANSACTION_ID, entry.getRelatedTransactionUID() != 0l ? entry.getRelatedTransactionUID() : null);
+    }
 	}
 }

@@ -143,7 +143,7 @@ public class MembershipRepositoryJdbcTest {
 		DateTime now = new DateTime();
 
 		Membership builder = new Membership();
-		builder.setDueOn(new DateTime(now.plusYears(1).toDate()));
+		builder.setNextDueDate(new DateTime(now.plusYears(1).toDate()));
 		builder.setEntityType(codeValueRepo.getCodeValueByUID(1L));
 
 		Membership membership = repo.saveMembership(builder, user);

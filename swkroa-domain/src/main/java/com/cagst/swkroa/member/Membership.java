@@ -30,7 +30,7 @@ public final class Membership implements Serializable {
 
 	private long membership_id;
 	private CodeValue entity_type;
-	private DateTime due_on;
+	private DateTime next_due_dt;
 	private BigDecimal dues_amount;
 	private BigDecimal amount_due;
 
@@ -67,12 +67,12 @@ public final class Membership implements Serializable {
 	}
 
 	@NotNull
-	public DateTime getDueOn() {
-		return due_on;
+	public DateTime getNextDueDate() {
+		return next_due_dt;
 	}
 
-	public void setDueOn(final DateTime dueOn) {
-		this.due_on = dueOn;
+	public void setNextDueDate(final DateTime dueDate) {
+		this.next_due_dt = dueDate;
 	}
 
 	public BigDecimal getDuesAmount() {

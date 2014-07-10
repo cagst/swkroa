@@ -163,7 +163,7 @@ CREATE TABLE user (
 CREATE TABLE membership (
   membership_id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   entity_type_cd         BIGINT UNSIGNED NOT NULL,
-  due_on_dt              DATE NOT NULL,
+  next_due_dt            DATE NOT NULL,
   dues_amount            NUMERIC(10,2) NULL,
   active_ind             BOOLEAN DEFAULT 1 NOT NULL,
   create_dt_tm           DATETIME NOT NULL,
@@ -261,7 +261,6 @@ CREATE TABLE transaction (
   membership_id          BIGINT UNSIGNED NOT NULL,
   transaction_dt         DATE NOT NULL,
   transaction_type_flag  INT NOT NULL COMMENT '0 = Invoice, 1 = Payment',
-  transaction_amount     NUMERIC(10, 2) NOT NULL,
   transaction_desc       VARCHAR(50) NULL,
   ref_num                VARCHAR(25) NULL,
   memo_txt               VARCHAR(250) NULL,

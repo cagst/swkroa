@@ -1,7 +1,6 @@
 INSERT INTO transaction (membership_id
                         ,transaction_dt
                         ,transaction_type_flag
-                        ,transaction_amount
                         ,transaction_desc
                         ,ref_num
                         ,memo_txt
@@ -13,7 +12,6 @@ INSERT INTO transaction (membership_id
                 VALUES (:membership_id
                        ,:transaction_dt
                        ,:transaction_type_flag
-                       ,:transaction_amount
                        ,:transaction_desc
                        ,:ref_num
                        ,:memo_txt

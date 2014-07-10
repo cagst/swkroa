@@ -149,7 +149,7 @@ public class TransactionRepositoryJdbcTest {
 
 		Transaction newTrans = new Transaction();
 		newTrans.setTransactionDate(new DateTime());
-		newTrans.setTransactionAmount(new BigDecimal(25));
+//		newTrans.setTransactionAmount(new BigDecimal(25));
 		newTrans.setTransactionType(TransactionType.INVOICE);
 		newTrans.setMembershipUID(membership.getMembershipUID());
 
@@ -210,7 +210,7 @@ public class TransactionRepositoryJdbcTest {
 		assertNotNull("Ensure we found a transaction.", trans);
 		assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 
-		trans.setTransactionAmount(new BigDecimal(-100));
+//		trans.setTransactionAmount(new BigDecimal(-100));
 		for (TransactionEntry entry : trans.getTransactionEntries()) {
 			if (entry.getMember() == null) {
 				entry.setTransactionEntryAmount(new BigDecimal(-35));
@@ -236,7 +236,7 @@ public class TransactionRepositoryJdbcTest {
 		assertNotNull("Ensure we found a transaction.", trans);
 		assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 
-		trans.setTransactionAmount(new BigDecimal(-100));
+//		trans.setTransactionAmount(new BigDecimal(-100));
 		for (TransactionEntry entry : trans.getTransactionEntries()) {
 			if (entry.getMember() == null) {
 				entry.setTransactionEntryAmount(new BigDecimal(-35));

@@ -2,7 +2,6 @@ SELECT t.transaction_id
       ,t.membership_id
       ,t.transaction_dt
       ,t.transaction_type_flag
-      ,t.transaction_amount
       ,t.transaction_desc
       ,t.ref_num
       ,t.memo_txt

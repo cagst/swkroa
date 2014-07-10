@@ -100,12 +100,12 @@ public final class MembershipModel implements Comparable<MembershipModel> {
 	}
 
 	@NotNull
-	public DateTime getDueOn() {
-		return membership.getDueOn();
+	public DateTime getNextDueDate() {
+		return membership.getNextDueDate();
 	}
 
-	public void setDueOn(final DateTime dueOn) {
-		this.membership.setDueOn(dueOn);
+	public void setNextDueDate(final DateTime dueOn) {
+		this.membership.setNextDueDate(dueOn);
 	}
 
 	public BigDecimal getDuesAmount() {

@@ -36,7 +36,6 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 	private long membership_id;
 	private DateTime transaction_dt;
 	private TransactionType transaction_type;
-	private BigDecimal transaction_amount;
 	private String transaction_desc;
 	private String ref_num;
 	private String memo_txt;
@@ -81,14 +80,40 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		this.transaction_type = transactionType;
 	}
 
-	@NotNull
 	public BigDecimal getTransactionAmount() {
-		return transaction_amount;
+    BigDecimal amount = new BigDecimal(0d);
+    for (TransactionEntry entry : entries) {
+      amount = amount.add(entry.getTransactionEntryAmount());
+    }
+
+		return amount;
 	}
 
-	public void setTransactionAmount(final BigDecimal transactionAmount) {
-		this.transaction_amount = transactionAmount;
-	}
+  public BigDecimal getUnrelatedAmount() {
+    BigDecimal amount = new BigDecimal(0d);
+    if (transaction_type == TransactionType.PAYMENT) {
+      for (TransactionEntry entry : entries) {
+        if (entry.getRelatedTransactionUID() == 0l) {
+          amount = amount.add(entry.getTransactionEntryAmount());
+        }
+      }
+    }
+
+    return amount;
+  }
+
+  public BigDecimal getBalance() {
+    BigDecimal balance = getTransactionAmount();
+    if (transaction_type == TransactionType.PAYMENT) {
+      for (TransactionEntry entry : entries) {
+        if (entry.getRelatedTransactionUID() != 0l) {
+          balance = balance.add(entry.getTransactionEntryAmount());
+        }
+      }
+    }
+
+    return balance;
+  }
 
 	@Size(max = 50)
 	public String getTransactionDescription() {
@@ -164,7 +189,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
 		builder.append("transaction_dt", transaction_dt);
 		builder.append("transaction_type", transaction_type);
-		builder.append("transaction_amount", transaction_amount);
+		builder.append("transaction_amount", getTransactionAmount());
 		builder.append("transaction_desc", transaction_desc);
 		builder.append("ref_num", ref_num);
 		builder.append("memo", memo_txt);
@@ -183,7 +208,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		builder.append(membership_id);
 		builder.append(transaction_dt);
 		builder.append(transaction_type);
-		builder.append(transaction_amount);
+		builder.append(getTransactionAmount());
 
 		return builder.build();
 	}
@@ -211,7 +236,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 		builder.append(membership_id, rhs.getMembershipUID());
 		builder.append(transaction_dt, rhs.getTransactionDate());
 		builder.append(transaction_type, rhs.getTransactionType());
-		builder.append(transaction_amount, rhs.getTransactionAmount());
+		builder.append(getTransactionAmount(), rhs.getTransactionAmount());
 
 		return builder.build();
 	}

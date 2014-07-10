@@ -101,7 +101,7 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 		var balance = 0;
 		var selectedTransactions = $scope.membership.transactions.slice(0, index + 1);
 		angular.forEach(selectedTransactions, function(transaction, idx) {
-			balance += transaction.transactionAmount;
+			balance += (transaction.transactionAmount - transaction.unrelatedAmount);
 		});
 
 		return balance;

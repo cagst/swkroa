@@ -1,7 +1,6 @@
 UPDATE transaction
    SET transaction_dt        = :transaction_dt
       ,transaction_type_flag = :transaction_type_flag
-      ,transaction_amount    = :transaction_amount
       ,transaction_desc      = :transaction_desc
       ,ref_num               = :ref_num
       ,memo_txt              = :memo_txt

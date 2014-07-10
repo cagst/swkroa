@@ -22,7 +22,8 @@ public final class TransactionEntry implements Serializable {
 
 	private long transaction_entry_id;
 	private Transaction transaction;
-	private Transaction related_transaction;
+	private long related_transaction_id;
+  private Transaction related_transaction;
 	private Member member;
 	private BigDecimal transaction_entry_amount;
 	private CodeValue transaction_entry_type;
@@ -49,13 +50,21 @@ public final class TransactionEntry implements Serializable {
 		this.transaction = transaction;
 	}
 
-	public Transaction getRelatedTransaction() {
-		return related_transaction;
+	public long getRelatedTransactionUID() {
+		return related_transaction_id;
 	}
 
-	public void setRelatedTransaction(final Transaction transaction) {
-		this.related_transaction = transaction;
+	public void setRelatedTransactionUID(final long uid) {
+		this.related_transaction_id = uid;
 	}
+
+  public Transaction getRelatedTransaction() {
+    return related_transaction;
+  }
+
+  public void setRelatedTransaction(final Transaction trans) {
+    this.related_transaction = trans;
+  }
 
 	public Member getMember() {
 		return member;
