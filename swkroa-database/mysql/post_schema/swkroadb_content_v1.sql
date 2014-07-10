@@ -156,7 +156,7 @@ INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_
 INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Family Dues', 'TRANS_DUES_FAMILY', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Special Funds', 'TRANS_SPECIAL_FUNDS', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Credit', 'TRANS_CREDIT', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Payment', 'TRANS_PAYMENT', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (8, 'Dues Payment', 'TRANS_PAYMENT', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
 -- Insert Member Types
 INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, primary_ind, allow_spouse_ind, allow_member_ind, beg_eff_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 1, 'Associate', 'ASSOCIATE', 70.00, 1, 0, 0, '2011-01-01 00:00:00', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);

@@ -207,6 +207,25 @@ var syncMember = function(scope) {
 	}
 }
 
+var toggleTransactionDetails = function(transaction) {
+  var img       = $(transaction).children()[0];
+  var collapsed = $(img).hasClass("fa-plus");
+
+  var parentDiv = $(transaction).parent();
+  var parentCol = $(parentDiv).parent();
+  var parentRow = $(parentCol).parent();
+
+  if (collapsed) {
+    $(parentRow).siblings().removeClass("hide");
+    $(img).removeClass("fa-plus");
+    $(img).addClass("fa-minus");
+  } else {
+    $(parentRow).siblings().addClass("hide");
+    $(img).addClass("fa-plus");
+    $(img).removeClass("fa-minus");
+  }
+};
+
 $(document).on('shown.bs.modal', function (event) {
 	$('[autofocus]', this).focus();
 });
