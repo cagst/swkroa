@@ -8,7 +8,8 @@
         <span class="pull-right">
           <button type="button" class="btn btn-success btn-xs"
                   data-toggle="modal" data-target="#modifyTransaction"
-                  data-ng-click="addTransaction()">
+                  data-ng-click="addTransaction()"
+                  data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.create}">
             <i class="fa fa-plus"></i>
           </button>
         </span>
@@ -64,12 +65,14 @@
           <td style="width:75px">
             <div class="pull-right">
               <button type="button" class="btn btn-primary btn-xs"
-                      data-ng-click="editTransaction(transaction)">
+                      data-ng-click="editTransaction(transaction)"
+                      data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.update}">
                 <i class="fa fa-edit"></i>
               </button>
               <button type="button" class="btn btn-danger btn-xs"
                       data-toggle="modal" data-target="#deleteTransaction"
-                      data-ng-click="deleteTransaction(transaction)">
+                      data-ng-click="deleteTransaction(transaction)"
+                      data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.delete.title}">
                 <i class="fa fa-trash-o"></i>
               </button>
             </div>
