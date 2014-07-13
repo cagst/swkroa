@@ -2,7 +2,6 @@ UPDATE transaction_entry
    SET transaction_id            = :transaction_id
       ,transaction_entry_type_cd = :transaction_entry_type_cd
       ,transaction_entry_amount  = :transaction_entry_amount
-      ,transaction_entry_desc    = :transaction_entry_desc
       ,related_transaction_id    = :related_transaction_id
       ,active_ind                = :active_ind
       ,updt_id                   = :updt_id

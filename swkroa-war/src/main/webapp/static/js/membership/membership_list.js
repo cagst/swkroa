@@ -117,7 +117,7 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 		$scope.transaction = angular.copy(transaction);
 		
 //		syncTransactionType($scope);
-		syncMember($scope);
+//		syncMember($scope);
 		
 		$("#modifyTransaction").modal('toggle');
 		
@@ -199,13 +199,13 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 //	}
 //}
 
-var syncMember = function(scope) {
-	for (var idx1 = 0; idx1 < scope.membership.allMembers.length; idx1++) {
-		if (scope.transaction.member.memberUID == scope.membership.allMembers[idx1].memberUID) {
-			scope.transaction.member = scope.membership.allMembers[idx1];
-		}
-	}
-}
+//var syncMember = function(scope) {
+//	for (var idx1 = 0; idx1 < scope.membership.allMembers.length; idx1++) {
+//		if (scope.transaction.member.memberUID == scope.membership.allMembers[idx1].memberUID) {
+//			scope.transaction.member = scope.membership.allMembers[idx1];
+//		}
+//	}
+//}
 
 var toggleTransactionDetails = function(transaction) {
   var img       = $(transaction).children()[0];

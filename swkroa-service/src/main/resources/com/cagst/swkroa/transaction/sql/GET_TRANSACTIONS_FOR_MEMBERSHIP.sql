@@ -12,7 +12,6 @@ SELECT t.transaction_id
       ,te.member_id
       ,te.transaction_entry_amount
       ,te.transaction_entry_type_cd
-      ,te.transaction_entry_desc
       ,te.updt_cnt AS transaction_entry_updt_cnt
   FROM transaction t
       ,transaction_entry te

@@ -37,7 +37,14 @@
               {{transaction.transactionDate | date:'mediumDate'}}
             </div>
           </td>
-          <td>{{transaction.transactionType}}</td>
+          <td>
+            <span data-ng-show="transaction.transactionType == 'INVOICE'"
+                  data-th-text="#{com.cagst.swkroa.membership.transaction.invoice}">
+            </span>
+            <span data-ng-show="transaction.transactionType == 'PAYMENT'"
+                  data-th-text="#{com.cagst.swkroa.membership.transaction.payment}">
+            </span>
+          </td>
           <td>{{transaction.transactionDescription}}</td>
           <td style="width:100px">
             <div class="pull-right">

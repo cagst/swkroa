@@ -318,7 +318,6 @@ CREATE TABLE transaction_entry (
   member_id                 BIGINT NULL,
   transaction_entry_amount  NUMERIC(10, 2) NOT NULL,
   transaction_entry_type_cd BIGINT NOT NULL,
-  transaction_entry_desc    VARCHAR(50) NULL,
   active_ind                BOOLEAN DEFAULT 1 NOT NULL,
   create_dt_tm              DATETIME NOT NULL,
   create_id                 BIGINT NOT NULL,

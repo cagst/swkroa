@@ -6,6 +6,6 @@ package com.cagst.swkroa.transaction;
  * @author Craig Gaskill
  */
 public enum TransactionType {
-	INVOICE,
-	PAYMENT;
+  INVOICE,
+  PAYMENT;
 }
