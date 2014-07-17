@@ -9,12 +9,14 @@
 var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
                        .controller('swkroaController', ['$scope', '$http', '$filter', function($scope, $http, $filter, currencyFilter) {
 
+  $scope.query = "";
+
   $http.get('../svc/codeset/TRANSACTION_ENTRY_TYPE/').success(function(data) {
     $scope.transactionEntryTypes = data;
   });
 
   $scope.queryKeydown = function($event) {
-    if ($event.keyCode == 13) {
+    if ($event.keyCode == 13 && $scope.query.length >= 2) {
       $scope.getMemberships();
     }
   };
@@ -112,9 +114,18 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
     $scope.transaction = angular.copy(transaction);
   };
 
+  $scope.getUnpaidInvoices = function(membershipUID) {
+    var url = '../svc/transaction/unpaid/' + membershipUID;
+    $http.get(url).success(function(data) {
+      syncRelatedTransactions(data);
+    });
+  }
+
   $scope.editTransaction = function(transaction) {
     $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
     $scope.transaction = angular.copy(transaction);
+
+    $scope.getUnpaidInvoices($scope.membership.membershipUID);
 
     syncTransactionEntryType($scope);
     syncMember($scope);
@@ -137,6 +148,8 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
   $scope.addTransaction = function() {
     $scope.transactionIdx = -1;
     $scope.transaction = {active: true, transactionDate: new Date()};
+
+    $scope.getUnpaidInvoices($scope.membership.membershipUID);
   };
 
   $scope.removeTransaction = function() {
@@ -168,12 +181,19 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
   };
 
   $scope.addTransactionEntry = function() {
-    var entry = {active: true};
+    var entry = {transactionEntryUID: 0, active: true};
     $scope.transaction.transactionEntries[$scope.transaction.transactionEntries.length] = entry;
   };
 
   $scope.deleteTransactionEntry = function(entry) {
-    entry.active = false;
+    var idx = $scope.transaction.transactionEntries.indexOf(entry);
+    if (entry.transactionEntryUID == 0) {
+      $scope.transaction.transactionEntries.splice(idx, 1);
+    } else {
+      entry.active = false;
+      $scope.transaction.transactionEntries[idx] = entry;
+    }
+
     $scope.calculateTransactionAmount();
   };
 }]);
@@ -195,6 +215,19 @@ var syncMember = function(scope) {
       if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.membership.allMembers[idx2].memberUID) {
         scope.transaction.transactionEntries[idx1].member = scope.membership.allMembers[idx2];
         break;
+      }
+    }
+  }
+}
+
+var syncRelatedTransactions = function(unpaidInvoices) {
+  for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
+    if (scope.transaction.transactionEntries[idx1].relatedTransactionUID > 0) {
+      for (var idx2 = 0; idx2 < unpaidInvoices.length; idx2++) {
+        if (scope.transaction.transactionEntries[idx1].relatedTransactionUID == unpaidInvoices[idx2].transactionUID) {
+          scope.transaction.transactionEntries[idx1].relatedTransaction = unpaidInvoices[idx2];
+          break;
+        }
       }
     }
   }

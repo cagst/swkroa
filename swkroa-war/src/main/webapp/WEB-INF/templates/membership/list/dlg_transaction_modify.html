@@ -116,9 +116,9 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <tr data-ng-repeat="entry in transaction.transactionEntries"
-                  data-ng-show="entry.active">
+            <tbody data-ng-repeat="entry in transaction.transactionEntries"
+                   data-ng-show="entry.active">
+              <tr>
                 <td class="col-xs-4">
                   <select class="form-control" name="entryType"
                           data-ng-model="entry.transactionEntryType"
@@ -144,6 +144,17 @@
                           data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
                     <i class="fa fa-trash-o"></i>
                   </button>
+                </td>
+              </tr>
+              <tr data-ng-show="entry.relatedTransactionUID > 0 ||
+                                entry.transactionEntryType.meaning == 'TRANS_CREDIT' ||
+                                entry.transactionEntryType.meaning == 'TRANS_PAYMENT'">
+                <td></td>
+                <td colspan="2">
+                  <select class="form-control" name="relatedTransaction"
+                          data-ng-model="entry.relatedTransaction"
+                          data-ng-options="invoice.transactionDescription for invoice in unpaidInvoices">
+                  </select>
                 </td>
               </tr>
             </tbody>

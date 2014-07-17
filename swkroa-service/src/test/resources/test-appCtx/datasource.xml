@@ -5,17 +5,17 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-	<jdbc:embedded-database id="datasource">
-		<jdbc:script location="classpath:testDb/schema.sql"/>
-		<jdbc:script location="classpath:testDb/test_data.sql"/>
-	</jdbc:embedded-database>
+  <jdbc:embedded-database id="datasource">
+    <jdbc:script location="classpath:testDb/schema.sql"/>
+    <jdbc:script location="classpath:testDb/test_data.sql"/>
+  </jdbc:embedded-database>
 
-	<!--
-	<bean name="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/swkroadb" />
-		<property name="username" value="swkroauser" />
-		<property name="password" value="cagst23824" />
-	</bean>
-	-->
+  <!--
+  <bean name="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/swkroadb"/>
+    <property name="username" value="swkroauser"/>
+    <property name="password" value="cagst23824"/>
+  </bean>
+  -->
 </beans>

@@ -95,7 +95,7 @@ public class TransactionRepositoryJdbcTest {
    * Test the getTransactionsForMember method and not finding any Transactions
    */
   @Test
-  public void testGetTransactionsForMember_NoneFound() {
+  public void testGetTransactionsForMembership_NoneFound() {
     Membership membership = new Membership();
     membership.setMembershipUID(99L);
 
@@ -108,7 +108,7 @@ public class TransactionRepositoryJdbcTest {
    * Test the getTransactionsForMember method and finding Transactions
    */
   @Test
-  public void testGetTransactionsForMember_Found() {
+  public void testGetTransactionsForMembership_Found() {
     Membership membership = new Membership();
     membership.setMembershipUID(2L);
 
@@ -121,6 +121,17 @@ public class TransactionRepositoryJdbcTest {
       assertFalse("Ensure the transaction entries are not empty", trans.getTransactionEntries().isEmpty());
       assertEquals("Ensure each transaction has 2 entries", 2, trans.getTransactionEntries().size());
     }
+  }
+
+  /**
+   * Test the getTransactionsForMember method and finding Transactions
+   */
+  @Test
+  public void testGetUnpaidInvoicesForMembership_Found() {
+    List<UnpaidInvoice> transactions = repo.getUnpaidInvoicesForMembership(2L);
+    assertNotNull("Ensure the transaction list exists.", transactions);
+    assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
+    assertEquals("Ensure we found the correct number of transactions.", 1, transactions.size());
   }
 
   /**

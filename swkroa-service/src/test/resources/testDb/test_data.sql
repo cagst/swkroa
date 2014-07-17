@@ -122,5 +122,5 @@ INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amou
 INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 3, -20, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
 INSERT INTO transaction (transaction_id, membership_id, transaction_dt, transaction_type_flag, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, '2014-04-01', 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO transaction_entry (transaction_id, related_transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, 1, 90, 2, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO transaction_entry (transaction_id, related_transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, 1, 80, 2, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, 10, 3, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);

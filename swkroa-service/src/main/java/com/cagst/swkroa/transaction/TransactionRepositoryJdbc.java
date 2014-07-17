@@ -33,8 +33,9 @@ import java.util.Map;
 /* package */ final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implements TransactionRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(TransactionRepositoryJdbc.class);
 
-  private static final String GET_TRANSACTION_BY_UID = "GET_TRANSACTION_BY_UID";
-  private static final String GET_TRANSACTIONS_FOR_MEMBERSHIP = "GET_TRANSACTIONS_FOR_MEMBERSHIP";
+  private static final String GET_TRANSACTION_BY_UID             = "GET_TRANSACTION_BY_UID";
+  private static final String GET_TRANSACTIONS_FOR_MEMBERSHIP    = "GET_TRANSACTIONS_FOR_MEMBERSHIP";
+  private static final String GET_UNPAID_INVOICES_FOR_MEMBERSHIP = "GET_UNPAID_INVOICES_FOR_MEMBERSHIP";
 
   private static final String INSERT_TRANSACTION = "INSERT_TRANSACTION";
   private static final String UPDATE_TRANSACTION = "UPDATE_TRANSACTION";
@@ -95,6 +96,19 @@ import java.util.Map;
     params.put("membership_id", membership.getMembershipUID());
 
     return (List<Transaction>) getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP), params, new TransactionListExtractor(codeValueRepo, memberRepo));
+  }
+
+  @Override
+  public List<UnpaidInvoice> getUnpaidInvoicesForMembership(final long id) {
+    Assert.isTrue(id > 0L, "Assertion Failed - argument [id] must be greater than 0");
+
+    LOGGER.info("Calling getUnpaidInvoicesForMembership [{}].", id);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Long> params = new HashMap<String, Long>();
+    params.put("membership_id", id);
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_UNPAID_INVOICES_FOR_MEMBERSHIP), params, new UnpaidInvoiceMapper());
   }
 
   @Override

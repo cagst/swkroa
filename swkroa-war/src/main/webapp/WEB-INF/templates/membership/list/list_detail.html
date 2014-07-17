@@ -55,7 +55,7 @@
 								zzz Counties
 							</div>
 							<div data-ng-repeat="membershipCounty in membership.membershipCounties">
-								<span data-ng-class="{text_bold: membershipCounty.votingCounty===true}">
+								<span data-ng-class="{text_bold: membershipCounty.votingCounty === true}">
 									{{membershipCounty.county.countyName}}
 									<small class="text-muted text_normal" data-th-text="#{com.cagst.swkroa.membership.member.detail.county}">
 										zzz County Details

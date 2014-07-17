@@ -200,7 +200,7 @@ public class CSVImportTest {
 
     Map<String, Membership> memberships = new HashMap<String, Membership>();
 
-    ClassPathResource res = new ClassPathResource("swkroa_memberships_20140629.csv");
+    ClassPathResource res = new ClassPathResource("swkroa_memberships_20140714.csv");
     FileReader reader = new FileReader(res.getFile());
     BufferedReader stringReader = new BufferedReader(reader);
 
@@ -443,7 +443,7 @@ public class CSVImportTest {
         if (fldResCounty.length() > 2) {
           String[] fldCounties = fldResCounty.split(" ");
           for (String fldCounty : fldCounties) {
-            MembershipCounty memCounty = createMembershipCounty(fldCounty);
+            MembershipCounty memCounty = createMembershipCounty(fldCounty, fldMembershipId);
             if (memCounty != null) {
               memCounty.setNetMineralAcres(mineralAcres);
               memCounty.setSurfaceAcres(surfaceAcres);
@@ -454,7 +454,7 @@ public class CSVImportTest {
             }
           }
         } else {
-          MembershipCounty memCounty = createMembershipCounty(fldResCounty);
+          MembershipCounty memCounty = createMembershipCounty(fldResCounty, fldMembershipId);
           if (memCounty != null) {
             memCounty.setNetMineralAcres(mineralAcres);
             memCounty.setSurfaceAcres(surfaceAcres);
@@ -638,9 +638,13 @@ public class CSVImportTest {
 
         // remove Addresses from Spouse and associate with Primary
         if (MemberType.SPOUSE.equalsIgnoreCase(checkMember.getMemberType().getMemberTypeMeaning())) {
-          spouse = checkMember;
+          if (spouse == null) {
+            spouse = checkMember;
+          }
         } else if (!MemberType.FAMILY_MEMBER.equalsIgnoreCase(checkMember.getMemberType().getMemberTypeMeaning())) {
-          primary = checkMember;
+          if (primary == null) {
+            primary = checkMember;
+          }
         }
 
         if (primary != null && spouse != null) {
@@ -717,7 +721,7 @@ public class CSVImportTest {
     }
   }
 
-  private MembershipCounty createMembershipCounty(String fldCounty) {
+  private MembershipCounty createMembershipCounty(String fldCounty, final String fldMembershipId) {
     if (StringUtils.isBlank(fldCounty)) {
       return null;
     }
@@ -734,7 +738,7 @@ public class CSVImportTest {
 
     County county = countyRepo.getCountyByStateAndCode("KS", fldCounty);
     if (county == null) {
-      LOGGER.error("Unable to find county [{}]", fldCounty);
+      LOGGER.error("Unable to find county [{}] membership [{}]", fldCounty, fldMembershipId);
       return null;
     }
 

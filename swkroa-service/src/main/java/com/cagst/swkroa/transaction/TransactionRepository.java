@@ -46,6 +46,17 @@ public interface TransactionRepository {
 	 */
 	public List<Transaction> getTransactionsForMembership(final Membership membership);
 
+  /**
+   * Retrieves a {@link List} of {@link Transaction Transactions} that have not been paid in full for the specified
+   * Membership that is identified by the specified id.
+   *
+   * @param id
+   *          A {@link long} that uniquely identifies the Membership to retrieve the unpaid invoices for.
+   *
+   * @return A {@link List} of {@link Transaction Transactions} that have not been paid in null for the specified membership.
+   */
+  public List<UnpaidInvoice> getUnpaidInvoicesForMembership(final long id);
+
 	/**
 	 * Persists the specified {@link Transaction}.
 	 * 

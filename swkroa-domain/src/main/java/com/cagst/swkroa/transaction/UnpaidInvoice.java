@@ -7,23 +7,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
- * Representation of a Transaction within the system.
+ * Representation of an invoice Transaction that has not been fully paid.
  *
  * @author Craig Gaskill
  * @version 1.0.0
  */
-public final class Transaction implements Serializable, Comparable<Transaction> {
-  private static final long serialVersionUID = -5519051342330445823L;
-
+public final class UnpaidInvoice implements Serializable, Comparable<UnpaidInvoice> {
   private long transaction_id;
   private long membership_id;
   private DateTime transaction_dt;
@@ -31,12 +24,9 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
   private String transaction_desc;
   private String ref_num;
   private String memo_txt;
-
-  private List<TransactionEntry> entries = new ArrayList<TransactionEntry>();
-
-  // meta-data
-  private boolean active_ind = true;
-  private long updt_cnt;
+  private BigDecimal transaction_amount;
+  private BigDecimal amount_paid;
+  private BigDecimal amount_remaining;
 
   public long getTransactionUID() {
     return transaction_id;
@@ -54,7 +44,6 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
     this.membership_id = uid;
   }
 
-  @NotNull
   public DateTime getTransactionDate() {
     return transaction_dt;
   }
@@ -63,7 +52,6 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
     this.transaction_dt = transactionDate;
   }
 
-  @NotNull
   public TransactionType getTransactionType() {
     return transaction_type;
   }
@@ -72,42 +60,6 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
     this.transaction_type = transactionType;
   }
 
-  public BigDecimal getTransactionAmount() {
-    BigDecimal amount = new BigDecimal(0d);
-    for (TransactionEntry entry : entries) {
-      amount = amount.add(entry.getTransactionEntryAmount());
-    }
-
-    return amount;
-  }
-
-  public BigDecimal getUnrelatedAmount() {
-    BigDecimal amount = new BigDecimal(0d);
-    if (transaction_type == TransactionType.PAYMENT) {
-      for (TransactionEntry entry : entries) {
-        if (entry.getRelatedTransactionUID() == 0l) {
-          amount = amount.add(entry.getTransactionEntryAmount());
-        }
-      }
-    }
-
-    return amount;
-  }
-
-  public BigDecimal getBalance() {
-    BigDecimal balance = getTransactionAmount();
-    if (transaction_type == TransactionType.PAYMENT) {
-      for (TransactionEntry entry : entries) {
-        if (entry.getRelatedTransactionUID() != 0l) {
-          balance = balance.add(entry.getTransactionEntryAmount());
-        }
-      }
-    }
-
-    return balance;
-  }
-
-  @Size(max = 50)
   public String getTransactionDescription() {
     return transaction_desc;
   }
@@ -116,7 +68,6 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
     this.transaction_desc = desc;
   }
 
-  @Size(max = 50)
   public String getReferenceNumber() {
     return ref_num;
   }
@@ -125,7 +76,6 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
     this.ref_num = refNum;
   }
 
-  @Size(max = 250)
   public String getMemo() {
     return memo_txt;
   }
@@ -134,41 +84,28 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
     this.memo_txt = memo;
   }
 
-  public void clearEntries() {
-    entries.clear();
+  public BigDecimal getTransactionAmount() {
+    return transaction_amount;
   }
 
-  public void addEntry(final TransactionEntry entry) {
-    entries.add(entry);
+  public void setTransactionAmount(final BigDecimal amount) {
+    this.transaction_amount = amount;
   }
 
-  public void removeEntry(final TransactionEntry entry) {
-    entries.remove(entry);
+  public BigDecimal getAmountPaid() {
+    return amount_paid;
   }
 
-  @Size(min = 1)
-  public List<TransactionEntry> getTransactionEntries() {
-    return Collections.unmodifiableList(entries);
+  public void setAmountPaid(final BigDecimal amount) {
+    this.amount_paid = amount;
   }
 
-  public void setTransactionEntries(final List<TransactionEntry> entries) {
-    this.entries = entries;
+  public BigDecimal getAmountRemaining() {
+    return amount_remaining;
   }
 
-  public boolean isActive() {
-    return active_ind;
-  }
-
-  public void setActive(final boolean active) {
-    this.active_ind = active;
-  }
-
-  public long getTransactionUpdateCount() {
-    return updt_cnt;
-  }
-
-  public void setTransactionUpdateCount(final long updateCount) {
-    this.updt_cnt = updateCount;
+  public void setAmountRemaining(final BigDecimal amount) {
+    this.amount_remaining = amount;
   }
 
   @Override
@@ -176,7 +113,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
     builder.append("transaction_dt", transaction_dt);
     builder.append("transaction_type", transaction_type);
-    builder.append("transaction_amount", getTransactionAmount());
+    builder.append("transaction_amount", transaction_amount);
     builder.append("transaction_desc", transaction_desc);
     builder.append("ref_num", ref_num);
     builder.append("memo", memo_txt);
@@ -190,7 +127,7 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
     builder.append(membership_id);
     builder.append(transaction_dt);
     builder.append(transaction_type);
-    builder.append(getTransactionAmount());
+    builder.append(transaction_amount);
 
     return builder.build();
   }
@@ -207,19 +144,19 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
       return false;
     }
 
-    Transaction rhs = (Transaction) obj;
+    UnpaidInvoice rhs = (UnpaidInvoice) obj;
 
     EqualsBuilder builder = new EqualsBuilder();
     builder.append(membership_id, rhs.getMembershipUID());
     builder.append(transaction_dt, rhs.getTransactionDate());
     builder.append(transaction_type, rhs.getTransactionType());
-    builder.append(getTransactionAmount(), rhs.getTransactionAmount());
+    builder.append(transaction_amount, rhs.getTransactionAmount());
 
     return builder.build();
   }
 
   @Override
-  public int compareTo(final Transaction rhs) {
+  public int compareTo(final UnpaidInvoice rhs) {
     if (rhs == null) {
       return 0;
     }

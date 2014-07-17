@@ -16,6 +16,7 @@
                data-ng-keydown="queryKeydown($event)" />
         <a class="input-group-addon btn btn-primary"
            data-ng-click="getMemberships()"
+           data-ng-disabled="query.length < 2"
            data-th-text="#{com.cagst.swkroa.membership.search.button}">
           zzz Search
         </a>
