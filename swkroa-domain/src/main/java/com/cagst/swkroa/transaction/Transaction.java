@@ -1,11 +1,14 @@
 package com.cagst.swkroa.transaction;
 
 import com.cagst.common.util.CGTCollatorBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -21,8 +24,10 @@ import java.util.List;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-public final class Transaction implements Serializable, Comparable<Transaction> {
+public class Transaction implements Serializable, Comparable<Transaction> {
   private static final long serialVersionUID = -5519051342330445823L;
+
+  private static final DateTimeFormatter dateFormatter = DateTimeFormat.mediumDate();
 
   private long transaction_id;
   private long membership_id;
@@ -114,6 +119,14 @@ public final class Transaction implements Serializable, Comparable<Transaction> 
 
   public void setTransactionDescription(final String desc) {
     this.transaction_desc = desc;
+  }
+
+  public String getRelatedDescription() {
+    if (StringUtils.isNotEmpty(getTransactionDescription())) {
+      return dateFormatter.print(getTransactionDate()) + " " + getTransactionDescription() + " " + getTransactionAmount();
+    } else {
+      return dateFormatter.print(getTransactionDate()) + " " + getTransactionAmount();
+    }
   }
 
   @Size(max = 50)

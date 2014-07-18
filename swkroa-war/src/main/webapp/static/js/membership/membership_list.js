@@ -114,21 +114,13 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
     $scope.transaction = angular.copy(transaction);
   };
 
-  $scope.getUnpaidInvoices = function(membershipUID) {
-    var url = '../svc/transaction/unpaid/' + membershipUID;
-    $http.get(url).success(function(data) {
-      syncRelatedTransactions(data);
-    });
-  }
-
   $scope.editTransaction = function(transaction) {
     $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
     $scope.transaction = angular.copy(transaction);
 
-    $scope.getUnpaidInvoices($scope.membership.membershipUID);
-
     syncTransactionEntryType($scope);
     syncMember($scope);
+    syncRelatedTransactions($scope);
 
     $("#modifyTransaction").modal('toggle');
     $scope.calculateTransactionAmount();
@@ -147,9 +139,7 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 
   $scope.addTransaction = function() {
     $scope.transactionIdx = -1;
-    $scope.transaction = {active: true, transactionDate: new Date()};
-
-    $scope.getUnpaidInvoices($scope.membership.membershipUID);
+    $scope.transaction = {active: true, transactionDate: new Date(), transactionEntries: new Array()};
   };
 
   $scope.removeTransaction = function() {
@@ -181,8 +171,8 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
   };
 
   $scope.addTransactionEntry = function() {
-    var entry = {transactionEntryUID: 0, active: true};
-    $scope.transaction.transactionEntries[$scope.transaction.transactionEntries.length] = entry;
+    var entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0};
+    $scope.transaction.transactionEntries.push(entry);
   };
 
   $scope.deleteTransactionEntry = function(entry) {
@@ -220,12 +210,12 @@ var syncMember = function(scope) {
   }
 }
 
-var syncRelatedTransactions = function(unpaidInvoices) {
+var syncRelatedTransactions = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
     if (scope.transaction.transactionEntries[idx1].relatedTransactionUID > 0) {
-      for (var idx2 = 0; idx2 < unpaidInvoices.length; idx2++) {
-        if (scope.transaction.transactionEntries[idx1].relatedTransactionUID == unpaidInvoices[idx2].transactionUID) {
-          scope.transaction.transactionEntries[idx1].relatedTransaction = unpaidInvoices[idx2];
+      for (var idx2 = 0; idx2 < scope.membership.transactions.length; idx2++) {
+        if (scope.transaction.transactionEntries[idx1].relatedTransactionUID == scope.membership.transactions[idx2].transactionUID) {
+          scope.transaction.transactionEntries[idx1].relatedTransaction = scope.membership.transactions[idx2];
           break;
         }
       }

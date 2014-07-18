@@ -153,7 +153,7 @@
                 <td colspan="2">
                   <select class="form-control" name="relatedTransaction"
                           data-ng-model="entry.relatedTransaction"
-                          data-ng-options="invoice.transactionDescription for invoice in unpaidInvoices">
+                          data-ng-options="tran.relatedDescription for tran in membership.transactions | filter:{transactionType:'INVOICE'}">
                   </select>
                 </td>
               </tr>

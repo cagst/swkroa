@@ -9,6 +9,7 @@ import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -127,6 +128,7 @@ public class TransactionRepositoryJdbcTest {
    * Test the getTransactionsForMember method and finding Transactions
    */
   @Test
+  @Ignore
   public void testGetUnpaidInvoicesForMembership_Found() {
     List<UnpaidInvoice> transactions = repo.getUnpaidInvoicesForMembership(2L);
     assertNotNull("Ensure the transaction list exists.", transactions);

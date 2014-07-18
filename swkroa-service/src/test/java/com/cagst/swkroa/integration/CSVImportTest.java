@@ -200,7 +200,7 @@ public class CSVImportTest {
 
     Map<String, Membership> memberships = new HashMap<String, Membership>();
 
-    ClassPathResource res = new ClassPathResource("swkroa_memberships_20140714.csv");
+    ClassPathResource res = new ClassPathResource("swkroa_memberships_20140716_b.csv");
     FileReader reader = new FileReader(res.getFile());
     BufferedReader stringReader = new BufferedReader(reader);
 
