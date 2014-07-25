@@ -10,195 +10,204 @@
 var msModifyApp = angular.module('msModifyApp', ['ui.bootstrap', 'ui.utils']);
 
 msModifyApp.controller('modifyController', ['$scope', '$http', '$window', function($scope, $http, $window) {
-	var membershipId = $("#membershipId").val();
-	var original     = null;
-	var syncItems    = 0;
-	var syncCount    = 0;
+  var membershipId = $("#membershipId").val();
+  var original     = null;
+  var syncItems    = 0;
+  var syncCount    = 0;
 
-	syncItems++;
-	$http.get('../svc/codeset/ENTITY_TYPE/').success(function(data) {
-		$scope.entityTypes = data;
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
+  syncItems++;
+  $http.get('../svc/codeset/ENTITY_TYPE/').success(function(data) {
+    $scope.entityTypes = data;
 
-	syncItems++;
-	$http.get('../svc/codeset/TITLE/').success(function(data) {
-		$scope.titles = data;
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope);
+    }
+  });
 
-	syncItems++;
-	$http.get('../svc/codeset/ADDRESS_TYPE').success(function(data) {
-		$scope.addressTypes = data;
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
+  syncItems++;
+  $http.get('../svc/codeset/TITLE/').success(function(data) {
+    $scope.titles = data;
 
-	syncItems++;
-	$http.get('../svc/codeset/PHONE_TYPE').success(function(data) {
-		$scope.phoneTypes = data;
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope);
+    }
+  });
 
-	syncItems++;
-	$http.get('../svc/codeset/EMAIL_TYPE').success(function(data) {
-		$scope.emailTypes = data;
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
+  syncItems++;
+  $http.get('../svc/codeset/ADDRESS_TYPE').success(function(data) {
+    $scope.addressTypes = data;
 
-	syncItems++;
-	$http.get('../svc/membertype').success(function(data) {
-		$scope.memberTypes = data;
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope);
+    }
+  });
 
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
+  syncItems++;
+  $http.get('../svc/codeset/PHONE_TYPE').success(function(data) {
+    $scope.phoneTypes = data;
 
-	syncItems++;
-	$http.get('../svc/counties/').success(function(data) {
-		$scope.counties = data;
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope);
+    }
+  });
 
-	syncItems++;
-	$http.get('../svc/membership/' + membershipId).success(function(data) {
-		$scope.membership = data;
-		$scope.fixedDuesAmount = ($scope.membership.duesAmount > 0);
-		
-		original = angular.copy(data);
-		
-		syncCount++;
-		if (syncCount == syncItems) {
-			syncAllItems($scope);
-		}
-	});
-	
-	$scope.dateOptions = {
-		'year-format': "'yy'",
-		'starting-day': 1,
-		'show-weeks': false
-	};
+  syncItems++;
+  $http.get('../svc/codeset/EMAIL_TYPE').success(function(data) {
+    $scope.emailTypes = data;
 
-	$scope.openDateControl = function($event) {
-		$event.preventDefault();
-		$event.stopPropagation();
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope);
+    }
+  });
 
-		$scope.opened = true;
-	};
+  syncItems++;
+  $http.get('../svc/membertype').success(function(data) {
+    $scope.memberTypes = data;
 
-	$scope.toggleDuesAmount = function(fixed) {
-		$scope.fixedDuesAmount = fixed;
-		
-		if ($scope.fixedDuesAmount == false) {
-			$scope.membership.duesAmount = null;
-		}
-	};
-	
-	$scope.addPrimaryPerson = function(member) {
-		member.person = {
-			active: true
-		};
-	}
-	
-	$scope.removePrimaryPerson = function(member) {
-		member.person = null;
-	}
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope);
+    }
+  });
 
-	$scope.addSpouse = function() {
-		$scope.membership.primarySpouse = {
-			active: true
-		};
-	};
+  syncItems++;
+  $http.get('../svc/counties/').success(function(data) {
+    $scope.counties = data;
 
-	$scope.removeSpouse = function() {
-		if ($scope.membership.primarySpouse.memberUID > 0) {
-			$scope.membership.primarySpouse.active = false;
-		} else {
-			$scope.membership.primarySpouse = null;
-		}
-	};
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope);
+    }
+  });
 
-	$scope.addCounty = function() {
-		$scope.membership.membershipCounties.push({
-			netMineralAcres: 0,
-			surfaceAcres: 0,
-			active: true
-		});
-	};
+  syncItems++;
+  $http.get('../svc/membership/' + membershipId).success(function(data) {
+    $scope.membership = data;
+    $scope.fixedDuesAmount = ($scope.membership.duesAmount > 0);
 
-	$scope.removeCounty = function(county) {
-		if (county.membershipCountyUID > 0) {
-			county.active = false;
-		} else {
-			var idx = $scope.membership.membershipCounties.indexOf(county);
-			$scope.membership.membershipCounties.splice(idx, 1);
-		}
-	};
+    original = angular.copy(data);
 
-	$scope.addMember = function() {
-		$scope.membership.additionalMembers.push({
-			active: true,
-		});
-	};
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope);
+    }
+  });
 
-	$scope.removeMember = function(member) {
-		if (member.memberUID > 0) {
-			member.active = false;
-		} else {
-			var idx = $scope.membership.additionalMembers.indexOf(member);
-			$scope.membership.additionalMembers.splice(idx, 1);
-		}
-	};
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'show-weeks': false
+  };
 
-	$scope.generateOwnerId = function(member) {
-		var firstName  = member.person.firstName;
-		var lastName   = member.person.lastName;
-		var ownerIdent = member.ownerIdent;
+  $scope.openDateControl = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
 
-		if (firstName  && firstName.length > 2 &&
-				lastName   && lastName.length > 2 &
-				(!ownerIdent || ownerIdent.length == 0)) {
-			$.get("../svc/generateOwnerId/" + firstName + "/" + lastName, function(data) {
-				member.ownerIdent = data;
-				$scope.$digest();
-			});
-		};
-	};
+    $scope.opened = true;
+  };
 
-	$scope.addAddress = function(member) {
-		if (!member.addresses) {
-			member.addresses = new Array();
-		}
-		
-		member.addresses.push({
-			active: true
-		});
-	};
+  $scope.toggleDuesAmount = function(fixed) {
+    $scope.fixedDuesAmount = fixed;
+
+    if ($scope.fixedDuesAmount == false) {
+      $scope.membership.duesAmount = null;
+    }
+  };
+
+  $scope.addPrimaryPerson = function(member) {
+    member.person = {
+      active: true
+    };
+  }
+
+  $scope.removePrimaryPerson = function(member) {
+    member.person = null;
+  }
+
+  $scope.addSpouse = function() {
+    $scope.membership.primarySpouse = {
+      active: true
+    };
+  };
+
+  $scope.removeSpouse = function() {
+    if ($scope.membership.primarySpouse.memberUID > 0) {
+      $scope.membership.primarySpouse.active = false;
+    } else {
+      $scope.membership.primarySpouse = null;
+    }
+  };
+
+  $scope.addCounty = function() {
+    $scope.membership.membershipCounties.push({
+      netMineralAcres: 0,
+      surfaceAcres: 0,
+      active: true
+    });
+  };
+
+  $scope.removeCounty = function(county) {
+    if (county.membershipCountyUID > 0) {
+      county.active = false;
+    } else {
+      var idx = $scope.membership.membershipCounties.indexOf(county);
+      $scope.membership.membershipCounties.splice(idx, 1);
+    }
+  };
+
+  $scope.addMember = function() {
+    var familyMember = null;
+    for (idx = 0; idx < $scope.memberTypes.length; idx++) {
+      if ($scope.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
+        familyMember = $scope.memberTypes[idx];
+        break;
+      }
+    }
+
+    $scope.membership.additionalMembers.push({
+      active: true,
+      memberType: familyMember
+    });
+  };
+
+  $scope.removeMember = function(member) {
+    if (member.memberUID > 0) {
+      member.active = false;
+    } else {
+      var idx = $scope.membership.additionalMembers.indexOf(member);
+      $scope.membership.additionalMembers.splice(idx, 1);
+    }
+  };
+
+  $scope.generateOwnerId = function(member) {
+    var firstName  = member.person.firstName;
+    var lastName   = member.person.lastName;
+    var ownerIdent = member.ownerIdent;
+
+    if (firstName  && firstName.length > 2 &&
+        lastName   && lastName.length > 2 &
+        (!ownerIdent || ownerIdent.length == 0)) {
+      $.get("../svc/generateOwnerId/" + firstName + "/" + lastName, function(data) {
+        member.ownerIdent = data;
+        $scope.$digest();
+      });
+    };
+  };
+
+  $scope.addAddress = function(member) {
+    if (!member.addresses) {
+      member.addresses = new Array();
+    }
+
+    member.addresses.push({
+      active: true
+    });
+  };
 
 	$scope.removeAddress = function(member, address) {
 		if (address.addressUID > 0) {
