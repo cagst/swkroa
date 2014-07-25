@@ -56,7 +56,7 @@
               <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.type}">
                 zzz Type
               </label>
-              <select class="form-control" name="type"
+              <select class="form-control select2" name="type"
                       data-ng-model="transaction.transactionType"
                       data-ng-required="true"
                       data-ng-show="transactionIdx == -1">
@@ -69,7 +69,7 @@
                   zzz Payment
                 </option>
               </select>
-              <input class="form-control" name="type" readonly
+              <input class="form-control select2" name="type" readonly
                      data-th-value="#{com.cagst.swkroa.membership.transaction.invoice}"
                      data-ng-show="transactionIdx > -1 && transaction.transactionType == 'INVOICE'"/>
               <input class="form-control" name="type" readonly
@@ -120,7 +120,7 @@
                    data-ng-show="entry.active">
               <tr>
                 <td class="col-xs-4">
-                  <select class="form-control" name="entryType"
+                  <select class="form-control select2" name="entryType"
                           data-ng-model="entry.transactionEntryType"
                           data-ng-required="true"
                           data-ng-options="type.display for type in transactionEntryTypes">

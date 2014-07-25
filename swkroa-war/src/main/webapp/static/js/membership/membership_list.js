@@ -99,15 +99,15 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
     $('#deleteComment').modal('hide');
   };
 
-  $scope.runningBalance = function(index) {
-    var balance = 0;
-    var selectedTransactions = $scope.membership.transactions.slice(0, index + 1);
-    angular.forEach(selectedTransactions, function(transaction, idx) {
-      balance += (transaction.transactionAmount - transaction.unrelatedAmount);
-    });
-
-    return balance;
-  }
+//  $scope.runningBalance = function(index) {
+//    var balance = 0;
+//    var selectedTransactions = $scope.membership.transactions.slice(0, index + 1);
+//    angular.forEach(selectedTransactions, function(transaction, idx) {
+//      balance += (transaction.transactionAmount - transaction.unrelatedAmount);
+//    });
+//
+//    return balance;
+//  }
 
   $scope.deleteTransaction = function(transaction) {
     $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);

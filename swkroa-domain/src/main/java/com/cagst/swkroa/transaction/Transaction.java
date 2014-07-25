@@ -86,31 +86,31 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return amount;
   }
 
-  public BigDecimal getUnrelatedAmount() {
-    BigDecimal amount = new BigDecimal(0d);
-    if (transaction_type == TransactionType.PAYMENT) {
-      for (TransactionEntry entry : entries) {
-        if (entry.getRelatedTransactionUID() == 0l) {
-          amount = amount.add(entry.getTransactionEntryAmount());
-        }
-      }
-    }
+//  public BigDecimal getUnrelatedAmount() {
+//    BigDecimal amount = new BigDecimal(0d);
+//    if (transaction_type == TransactionType.PAYMENT) {
+//      for (TransactionEntry entry : entries) {
+//        if (entry.getRelatedTransactionUID() == 0l) {
+//          amount = amount.add(entry.getTransactionEntryAmount());
+//        }
+//      }
+//    }
+//
+//    return amount;
+//  }
 
-    return amount;
-  }
-
-  public BigDecimal getBalance() {
-    BigDecimal balance = getTransactionAmount();
-    if (transaction_type == TransactionType.PAYMENT) {
-      for (TransactionEntry entry : entries) {
-        if (entry.getRelatedTransactionUID() != 0l) {
-          balance = balance.add(entry.getTransactionEntryAmount());
-        }
-      }
-    }
-
-    return balance;
-  }
+//  public BigDecimal getBalance() {
+//    BigDecimal balance = getTransactionAmount();
+//    if (transaction_type == TransactionType.PAYMENT) {
+//      for (TransactionEntry entry : entries) {
+//        if (entry.getRelatedTransactionUID() != 0l) {
+//          balance = balance.add(entry.getTransactionEntryAmount());
+//        }
+//      }
+//    }
+//
+//    return balance;
+//  }
 
   @Size(max = 50)
   public String getTransactionDescription() {

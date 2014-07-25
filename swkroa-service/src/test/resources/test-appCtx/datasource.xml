@@ -15,7 +15,7 @@
     <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
     <property name="url" value="jdbc:mysql://localhost:3306/swkroadb"/>
     <property name="username" value="swkroauser"/>
-    <property name="password" value="cagst23824"/>
+    <property name="password" value="swkroadbuser"/>
   </bean>
   -->
 </beans>

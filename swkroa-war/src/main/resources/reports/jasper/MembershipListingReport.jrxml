@@ -4,10 +4,6 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="membership_type" class="java.lang.Long">
-		<parameterDescription><![CDATA[]]></parameterDescription>
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
 	<queryString>
 		<![CDATA[SELECT iq3.membership_id
       ,iq3.fixed_dues_amount
@@ -17,7 +13,6 @@
       ,iq3.company_name
       ,iq3.full_name
       ,iq3.membership_name
-      ,iq3.membership_type_display
       ,iq3.owner_ident
       ,iq3.member_type_display
       ,iq3.dues_amount
@@ -37,13 +32,11 @@
               ,iq2.company_name
               ,iq2.full_name
               ,COALESCE(iq2.company_name, iq2.full_name) AS membership_name
-              ,cv1.codevalue_display AS membership_type_display
               ,iq2.owner_ident
               ,mt.member_type_display
               ,mt.dues_amount
               ,iq2.address_id
          FROM (SELECT iq1.membership_id
-                     ,iq1.membership_type_cd
                      ,iq1.fixed_dues_amount
                      ,iq1.calculated_dues_amount
                      ,iq1.member_count
@@ -54,7 +47,6 @@
                      ,m.owner_ident
                      ,MIN(a.address_id) AS address_id
                 FROM (SELECT ms.membership_id
-                            ,ms.membership_type_cd
                             ,ms.dues_amount AS fixed_dues_amount
                             ,SUM(mt.dues_amount) AS calculated_dues_amount
                             ,COUNT(m.member_id) AS member_count
@@ -62,7 +54,6 @@
                             ,member m
                             ,member_type mt
                        WHERE ms.active_ind = 1
-                         AND (ms.membership_type_cd = $P{membership_type} OR $P{membership_type} = 0)
                          AND m.membership_id = ms.membership_id
                          AND m.active_ind = 1
                          AND mt.prev_member_type_id = m.member_type_id
@@ -75,7 +66,6 @@
                WHERE m.membership_id = iq1.membership_id
                  AND m.active_ind = 1
                GROUP BY membership_id
-                       ,membership_type_cd
                        ,fixed_dues_amount
                        ,calculated_dues_amount
                        ,member_count
@@ -86,10 +76,8 @@
                        ,owner_ident
              )iq2
              ,member_type mt
-             ,codevalue cv1
        WHERE mt.prev_member_type_id = iq2.member_type_id
          AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
-         AND cv1.codevalue_id = iq2.membership_type_cd
        )iq3
   LEFT OUTER JOIN address a ON (a.address_id = iq3.address_id)
 ORDER BY iq3.membership_name]]>
@@ -108,7 +96,6 @@ ORDER BY iq3.membership_name]]>
 	</field>
 	<field name="full_name" class="java.lang.String"/>
 	<field name="membership_name" class="java.lang.String"/>
-	<field name="membership_type_display" class="java.lang.String"/>
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -169,11 +156,11 @@ ORDER BY iq3.membership_name]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="23">
+			<band height="22">
 				<textField>
 					<reportElement x="219" y="0" width="353" height="20" uuid="7ec13e06-7a06-4f62-8ee3-ed555d9ecd04"/>
 					<textElement textAlignment="Right">
-						<font fontName="Helvetica Neue" size="14"/>
+						<font fontName="Helvetica Neue" size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{total_dues}]]></textFieldExpression>
 				</textField>
