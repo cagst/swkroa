@@ -13,7 +13,7 @@
 			<div data-ng-show="membership">
 				<div class="container-inner">
 					<h2 class="lead">
-						<span>{{membership.primaryMember.effectiveMemberName}}</span>
+						<span data-ng-bind="membership.primaryMember.effectiveMemberName" />
 						<small data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
 						       data-ng-show="membership.primaryMember.joinDate">
 							zzz Since

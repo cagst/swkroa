@@ -240,4 +240,10 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   public List<User> getAllUsers() {
     return userRepo.getAllUsers();
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public User getUserByUID(final long uid) {
+    return userRepo.getUserByUID(uid);
+  }
 }

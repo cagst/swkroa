@@ -290,7 +290,7 @@ var syncAllItems = function(scope) {
 		}
 	}
 
-	if (scope.membership.primaryMember.person) {
+	if (scope.membership.primaryMember) {
 		if (scope.membership.primaryMember.memberType) {
 			for (var idx = 0; idx < scope.memberTypes.length; idx++) {
 				if (scope.membership.primaryMember.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
@@ -300,7 +300,7 @@ var syncAllItems = function(scope) {
 			}
 		}
 
-		if (scope.membership.primaryMember.person.title) {
+		if (scope.membership.primaryMember.person && scope.membership.primaryMember.person.title) {
 			for (var idx = 0; idx < scope.titles.length; idx++) {
 				if (scope.membership.primaryMember.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
 					scope.membership.primaryMember.person.title = scope.titles[idx];
@@ -309,7 +309,7 @@ var syncAllItems = function(scope) {
 			}
 		}
 
-		if (scope.membership.primaryMember.person.gender) {
+		if (scope.membership.primaryMember.person && scope.membership.primaryMember.person.gender) {
 			for (var idx = 0; idx < scope.genders.length; idx++) {
 				if (scope.membership.primaryMember.person.gender.codeValueUID == scope.genders[idx].codeValueUID) {
 					scope.membership.primaryMember.person.gender = scope.genders[idx];

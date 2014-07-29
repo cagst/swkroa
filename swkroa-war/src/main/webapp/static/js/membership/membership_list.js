@@ -201,10 +201,12 @@ var syncTransactionEntryType = function(scope) {
 
 var syncMember = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
-    for (var idx2 = 0; idx2 < scope.membership.allMembers.length; idx2++) {
-      if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.membership.allMembers[idx2].memberUID) {
-        scope.transaction.transactionEntries[idx1].member = scope.membership.allMembers[idx2];
-        break;
+    if (scope.transaction.transactionEntries[idx1].member) {
+      for (var idx2 = 0; idx2 < scope.membership.allMembers.length; idx2++) {
+        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.membership.allMembers[idx2].memberUID) {
+          scope.transaction.transactionEntries[idx1].member = scope.membership.allMembers[idx2];
+          break;
+        }
       }
     }
   }

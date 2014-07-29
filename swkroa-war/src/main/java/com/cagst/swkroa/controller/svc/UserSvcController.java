@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,4 +54,20 @@ public final class UserSvcController {
 
     return users;
 	}
+
+  /**
+   * Handles the request and retrieves the {@link User} associated with the specified id.
+   *
+   * @param userUID
+   *          A {@link long} that uniquely identifies the user to retrieve.
+   *
+   * @return A JSON representation of the {@link User} associated with the specified id.
+   */
+  @RequestMapping(value = "/svc/user/{userUID}", method = RequestMethod.GET)
+  @ResponseBody
+  public User getUser(final @PathVariable long userUID) {
+    LOGGER.info("Received request to retrieve the user [{}].", userUID);
+
+    return userService.getUserByUID(userUID);
+  }
 }

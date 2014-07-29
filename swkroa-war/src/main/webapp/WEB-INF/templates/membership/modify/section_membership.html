@@ -3,15 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<body>
 		<div data-th-fragment="sectionMembership">
-			<div class="panel panel-default" data-ng-show="membership.primaryMember.person">
+			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-xs-2">
-<!--
-							<label class="control-label" data-th-text="#{com.cagst.swkroa.membership.member.type}">
-								zzz Member Type
-							</label>
--->
 							<select class="form-control"
 											data-ng-model="membership.primaryMember.memberType"
 											data-ng-options="type.memberTypeDisplay for type in memberTypes | filter:{primary:!false}">

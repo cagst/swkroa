@@ -52,7 +52,12 @@ import java.sql.SQLException;
   public TransactionEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
     TransactionEntry entry = new TransactionEntry();
     entry.setTransactionEntryUID(rs.getLong(TRANSACTION_ENTRY_ID));
-    entry.setMember(memberRepo.getMemberByUID(rs.getLong(MEMBER_ID)));
+
+    long membershipId = rs.getLong(MEMBER_ID);
+    if (membershipId > 0L) {
+      entry.setMember(memberRepo.getMemberByUID(rs.getLong(MEMBER_ID)));
+    }
+
     entry.setTransactionEntryType(codeValueRepo.getCodeValueByUID(rs.getLong(TRANSACTION_ENTRY_TYPE_CD)));
     entry.setTransactionEntryAmount(rs.getBigDecimal(TRANSACTION_ENTRY_AMOUNT));
     entry.setRelatedTransactionUID(rs.getLong(RELATED_TRANSACTION_ID));

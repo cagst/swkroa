@@ -31,12 +31,19 @@
       </div>
       <div data-ng-show="users.length">
         <div class="list-group-item alt-list-group-item sel-list-group-item"
-             data-ng-repeat="user in users">
+             data-ng-repeat="user in users"
+             data-ng-click="getUser(user.userUID)">
           <div>
-            {{user.fullName}}
-            <small class="text-muted">
-              (<span data-ng-bind="user.username"></span>)
-            </small>
+            <span>
+              {{user.fullName}}
+              <small class="text-muted">
+                (<span data-ng-bind="user.username"></span>)
+              </small>
+            </span>
+            <span class="pull-right"
+                  data-ng-show="user.accountLockedDate">
+              <i class="fa fa-lock"></i>
+            </span>
           </div>
         </div>
       </div>

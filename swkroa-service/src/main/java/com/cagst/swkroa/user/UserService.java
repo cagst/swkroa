@@ -96,4 +96,14 @@ public interface UserService extends UserDetailsService {
    * @return A {@link List} of {@link User Users} defined in the system.
    */
   public List<User> getAllUsers();
+
+  /**
+   * Retrieves a {@link User} that is associated with the specified id.
+   *
+   * @param uid
+   *        A {@link long} that uniquely identifies the {@link User} to retrieve.
+   *
+   * @return The {@link User} associated with the specified id.
+   */
+  public User getUserByUID(final long uid);
 }

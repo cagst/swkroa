@@ -9,31 +9,37 @@
 var userApp = angular.module('userApp', []);
 
 userApp.controller('userListController', ['$scope', '$http', function($scope, $http) {
-	$http.get('../svc/user').success(function(data) {
-		$scope.users = data;
-	});
+  $http.get('../svc/user').success(function(data) {
+    $scope.users = data;
+  });
 
-	$scope.addUser = function(codeValue) {
-		$http:post('../svc/codevalue', codeValue).success(function(data) {
-		});
-	};
+  $scope.getUser = function(userUID) {
+    $http.get('../svc/user/' + userUID).success(function(data) {
+      $scope.user = data;
+    });
+  };
 
-	$scope.editUser = function(codeValue) {
-		$http.put('../svc/codevalue', codeValue).success(function(data) {
-		});
-	};
+  $scope.addUser = function(codeValue) {
+    $http.post('../svc/codevalue', codeValue).success(function(data) {
+    });
+  };
 
-	$scope.removeUser = function() {
-		$scope.codevalue.active = false;
-		$http.put('../svc/codevalue', $scope.codevalue).success(function(data) {
-			$scope.codevalue = data;
-		})
-		.error(function(data) {
-			// if we failed to save (remove the codevalue)
-			// set it back to active
-			// TODO: Need to add a message
-			$scope.codevalue.active = true;
-		});
-		$('#confirmDeletion').modal('hide');
-	};
+  $scope.editUser = function(codeValue) {
+    $http.put('../svc/codevalue', codeValue).success(function(data) {
+    });
+  };
+
+  $scope.removeUser = function() {
+    $scope.codevalue.active = false;
+    $http.put('../svc/codevalue', $scope.codevalue).success(function(data) {
+      $scope.codevalue = data;
+    })
+    .error(function(data) {
+      // if we failed to save (remove the codevalue)
+      // set it back to active
+      // TODO: Need to add a message
+      $scope.codevalue.active = true;
+    });
+    $('#confirmDeletion').modal('hide');
+  };
 }]);

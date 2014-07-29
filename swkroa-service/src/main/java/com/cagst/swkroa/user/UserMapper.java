@@ -90,11 +90,11 @@ import com.cagst.swkroa.person.BasePersonMapper;
 			}
 		}
 
-		user.setLastSigninDate(CGTDateTimeUtils.getUTCDateTime(rs, LAST_SIGNIN_DATE));
+		user.setLastSigninDate(CGTDateTimeUtils.getDateTime(rs, LAST_SIGNIN_DATE));
 		user.setLastSigninIp(rs.getString(LAST_SIGNIN_IP));
-		user.setAccountedLockedDate(CGTDateTimeUtils.getUTCDateTime(rs, ACCOUNT_LOCKED_DATE));
-		user.setAccountExpiredDate(CGTDateTimeUtils.getUTCDateTime(rs, ACCOUNT_EXPIRED_DATE));
-		user.setPasswordChangedDate(CGTDateTimeUtils.getUTCDateTime(rs, PASSWORD_CHANGED_DATE));
+		user.setAccountedLockedDate(CGTDateTimeUtils.getDateTime(rs, ACCOUNT_LOCKED_DATE));
+		user.setAccountExpiredDate(CGTDateTimeUtils.getDateTime(rs, ACCOUNT_EXPIRED_DATE));
+		user.setPasswordChangedDate(CGTDateTimeUtils.getDateTime(rs, PASSWORD_CHANGED_DATE));
 
 		// meta-data
 		user.setActive(rs.getBoolean(ACTIVE_IND));
