@@ -36,7 +36,7 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 
   $scope.getMembership = function(membershipUID) {
     $http.get('../svc/membership/' + membershipUID).success(function(data) {
-      $scope.membership = data;
+      $scope.selectedMembership = data;
     });
   };
 
@@ -47,21 +47,21 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
   };
 
   $scope.removeMembership = function() {
-    $scope.membership.active = false;
-    $http.put("../svc/membership", $scope.membership).success(function(data) {
-      $scope.membership = null;
+    $scope.selectedMembership.active = false;
+    $http.put("../svc/membership", $scope.selectedMembership).success(function(data) {
+      $scope.selectedMembership = null;
     })
     .error(function(data) {
       // if we failed to save (remove) the membership
       // set it back to active
       // TODO: Need to add a message for the user
-      $scope.membership.active = true;
+      $scope.selectedMembership.active = true;
     });
     $('#deleteMembership').modal('hide');
   };
 
   $scope.selectComment = function(comment) {
-    $scope.commentIdx = $scope.membership.comments.indexOf(comment);
+    $scope.commentIdx = $scope.selectedMembership.comments.indexOf(comment);
     $scope.comment = angular.copy(comment);
   };
 
@@ -72,13 +72,13 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 
   $scope.saveComment = function() {
     $scope.comment.parentEntityName = "MEMBERSHIP";
-    $scope.comment.parentEntityUID  = $scope.membership.membershipUID;
+    $scope.comment.parentEntityUID  = $scope.selectedMembership.membershipUID;
 
     $http.put("../svc/comments", $scope.comment).success(function(data) {
       if ($scope.commentIdx == -1) {
-        $scope.membership.comments.push(data);
+        $scope.selectedMembership.comments.push(data);
       } else {
-        $scope.membership.comments[$scope.commentIdx] = data;
+        $scope.selectedMembership.comments[$scope.commentIdx] = data;
       }
     });
     $scope.comment = null;
@@ -88,12 +88,12 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
   $scope.removeComment = function() {
     $scope.comment.active = false;
     $http.put("../svc/comments", $scope.comment).success(function(data) {
-      $scope.membership.comments.splice($scope.commentIdx, 1);
+      $scope.selectedMembership.comments.splice($scope.commentIdx, 1);
     })
     .error(function(data) {
       // TODO: Need to add a message for the user
       $scope.comment.active = true;
-      $scope.membership.comments[$scope.commentIdx] = $scope.comment;
+      $scope.selectedMembership.comments[$scope.commentIdx] = $scope.comment;
     });
     $scope.comment = null;
     $('#deleteComment').modal('hide');
@@ -101,7 +101,7 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 
 //  $scope.runningBalance = function(index) {
 //    var balance = 0;
-//    var selectedTransactions = $scope.membership.transactions.slice(0, index + 1);
+//    var selectedTransactions = $scope.selectedMembership.transactions.slice(0, index + 1);
 //    angular.forEach(selectedTransactions, function(transaction, idx) {
 //      balance += (transaction.transactionAmount - transaction.unrelatedAmount);
 //    });
@@ -110,12 +110,12 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
 //  }
 
   $scope.deleteTransaction = function(transaction) {
-    $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
+    $scope.transactionIdx = $scope.selectedMembership.transactions.indexOf(transaction);
     $scope.transaction = angular.copy(transaction);
   };
 
   $scope.editTransaction = function(transaction) {
-    $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
+    $scope.transactionIdx = $scope.selectedMembership.transactions.indexOf(transaction);
     $scope.transaction = angular.copy(transaction);
 
     syncTransactionEntryType($scope);
@@ -145,25 +145,25 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
   $scope.removeTransaction = function() {
     $scope.transaction.active = false;
     $http.put("../svc/transaction", $scope.transaction).success(function(data) {
-      $scope.membership.transactions.splice($scope.transactionIdx, 1);
+      $scope.selectedMembership.transactions.splice($scope.transactionIdx, 1);
     })
     .error(function(data) {
       // TODO: Need to add a message for the user
       $scope.transaction.active = true;
-      $scope.membership.transactions[$scope.transactionIdx] = $scope.transaction;
+      $scope.selectedMembership.transactions[$scope.transactionIdx] = $scope.transaction;
     });
     $scope.transaction = null;
     $('#deleteTransaction').modal('hide');
   };
 
   $scope.saveTransaction = function() {
-    $scope.transaction.membershipUID  = $scope.membership.membershipUID;
+    $scope.transaction.membershipUID  = $scope.selectedMembership.membershipUID;
 
     $http.put("../svc/transaction", $scope.transaction).success(function(data) {
       if ($scope.transactionIdx == -1) {
-        $scope.membership.transactions.push(data);
+        $scope.selectedMembership.transactions.push(data);
       } else {
-        $scope.membership.transactions[$scope.transactionIdx] = data;
+        $scope.selectedMembership.transactions[$scope.transactionIdx] = data;
       }
     });
     $scope.transaction = null;
@@ -202,9 +202,9 @@ var syncTransactionEntryType = function(scope) {
 var syncMember = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
     if (scope.transaction.transactionEntries[idx1].member) {
-      for (var idx2 = 0; idx2 < scope.membership.allMembers.length; idx2++) {
-        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.membership.allMembers[idx2].memberUID) {
-          scope.transaction.transactionEntries[idx1].member = scope.membership.allMembers[idx2];
+      for (var idx2 = 0; idx2 < scope.selectedMembership.allMembers.length; idx2++) {
+        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.selectedMembership.allMembers[idx2].memberUID) {
+          scope.transaction.transactionEntries[idx1].member = scope.selectedMembership.allMembers[idx2];
           break;
         }
       }
@@ -215,9 +215,9 @@ var syncMember = function(scope) {
 var syncRelatedTransactions = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
     if (scope.transaction.transactionEntries[idx1].relatedTransactionUID > 0) {
-      for (var idx2 = 0; idx2 < scope.membership.transactions.length; idx2++) {
-        if (scope.transaction.transactionEntries[idx1].relatedTransactionUID == scope.membership.transactions[idx2].transactionUID) {
-          scope.transaction.transactionEntries[idx1].relatedTransaction = scope.membership.transactions[idx2];
+      for (var idx2 = 0; idx2 < scope.selectedMembership.transactions.length; idx2++) {
+        if (scope.transaction.transactionEntries[idx1].relatedTransactionUID == scope.selectedMembership.transactions[idx2].transactionUID) {
+          scope.transaction.transactionEntries[idx1].relatedTransaction = scope.selectedMembership.transactions[idx2];
           break;
         }
       }

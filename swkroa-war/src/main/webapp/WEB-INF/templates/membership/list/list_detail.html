@@ -3,19 +3,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<body>
 		<div data-th-fragment="membershipDetail">
-			<div data-ng-show="!membership">
+			<div data-ng-show="!selectedMembership">
 				<em>
 					<label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.membership.notselected}">
 						zzz No membership selected.
 					</label>
 				</em>
 			</div>
-			<div data-ng-show="membership">
+			<div data-ng-show="selectedMembership">
 				<div class="container-inner">
 					<h2 class="lead">
-						<span data-ng-bind="membership.primaryMember.effectiveMemberName" />
+						<span data-ng-bind="selectedMembership.primaryMember.effectiveMemberName" />
 						<small data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
-						       data-ng-show="membership.primaryMember.joinDate">
+						       data-ng-show="selectedMembership.primaryMember.joinDate">
 							zzz Since
 						</small>
 					</h2>
@@ -24,24 +24,24 @@
 							<div class="text-muted divider-bottom" data-th-text="#{com.cagst.swkroa.membership.members}">
 								zzz Members
 							</div>
-							<div data-ng-show="membership.primaryMember">
+							<div data-ng-show="selectedMembership.primaryMember">
 								<span>
-									<strong>{{membership.primaryMember.effectiveMemberName}}</strong>
+									<strong>{{selectedMembership.primaryMember.effectiveMemberName}}</strong>
 								</span>
-								<small class="text-muted">({{membership.primaryMember.ownerIdent}})</small>
+								<small class="text-muted">({{selectedMembership.primaryMember.ownerIdent}})</small>
 								<small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
-								       data-ng-show="membership.primaryMember.joinDate">
+								       data-ng-show="selectedMembership.primaryMember.joinDate">
 									zzz Since
 								</small>
 							</div>
-							<div data-ng-show="membership.primarySpouse">
-								<span>{{membership.primarySpouse.effectiveMemberName}}</span>
-								<small class="text-muted">({{membership.primarySpouse.ownerIdent}})</small>
+							<div data-ng-show="selectedMembership.primarySpouse">
+								<span>{{selectedMembership.primarySpouse.effectiveMemberName}}</span>
+								<small class="text-muted">({{selectedMembership.primarySpouse.ownerIdent}})</small>
 								<small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.spouse.since}">
 									zzz Since
 								</small>
 							</div>
-							<div data-ng-repeat="member in membership.additionalMembers">
+							<div data-ng-repeat="member in selectedMembership.additionalMembers">
 								<span>{{member.effectiveMemberName}}</span>
 								<small class="text-muted">({{member.ownerIdent}})</small>
 								<small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.since}">
@@ -54,7 +54,7 @@
 							<div class="text-muted divider-bottom" data-th-text="#{com.cagst.swkroa.membership.counties}">
 								zzz Counties
 							</div>
-							<div data-ng-repeat="membershipCounty in membership.membershipCounties">
+							<div data-ng-repeat="membershipCounty in selectedMembership.membershipCounties">
 								<span data-ng-class="{text_bold: membershipCounty.votingCounty === true}">
 									{{membershipCounty.county.countyName}}
 									<small class="text-muted text_normal" data-th-text="#{com.cagst.swkroa.membership.member.detail.county}">
@@ -71,7 +71,7 @@
 				<div class="divider-top split-footer">
 					<div class="split-footer-content">
 						<a class="btn btn-primary btn-xs"
-						        data-ng-href="../membership/edit/{{membership.membershipUID}}">
+						        data-ng-href="../membership/edit/{{selectedMembership.membershipUID}}">
 							<i class="fa fa-edit"></i>
 							<span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
 						</a>

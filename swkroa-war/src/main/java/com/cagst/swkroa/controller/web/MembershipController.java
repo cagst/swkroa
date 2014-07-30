@@ -36,7 +36,7 @@ public final class MembershipController {
 	public ModelAndView getMembershipListingPage() {
 		LOGGER.info("Received request to show membership listing page.");
 
-		ModelAndView mav = new ModelAndView("membership/index");
+		ModelAndView mav = new ModelAndView("membership/list");
 
 		return mav;
 	}
