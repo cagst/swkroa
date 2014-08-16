@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
       if (securityPolicy.getMaxSigninAttempts() > 0 && user.getSigninAttempts() > securityPolicy.getMaxSigninAttempts()) {
         String msg = messages.getMessage("com.cagst.swkroa.signin.message.attempts.exceeded",
             "The number of allowed sign-in attempts has been exceeded.  Account has been locked.");
-        user = userRepo.lockUserAccount(user, msg);
+        user = userRepo.lockUserAccount(user, msg, user);
       }
     }
 
@@ -206,17 +206,43 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(unlockUser, "[Assertion Failed] - argument [unlockUser] cannot be null.");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
 
-    String msg = null;
-
+    String msg;
     if (unlockUser.equals(user)) {
       msg = messages.getMessage("com.cagst.swkroa.unlock.auto.audit.message",
-          new Object[]{unlockUser.getUsername()}, "Account was automatically unlocked for user [{0}].");
+            new Object[]{unlockUser.getUsername()}, "Account was automatically unlocked for user [{0}].");
     } else {
-      msg = messages.getMessage("com.cagst.swkroa.unlock.manual.audit.message", new Object[]{user.getUsername(),
-          unlockUser.getUsername()}, "Account was manually unlocked by user [{0}] for user [{1}].");
+      msg = messages.getMessage("com.cagst.swkroa.unlock.manual.audit.message",
+            new Object[]{user.getUsername(), unlockUser.getUsername()},
+            "Account was manually unlocked by user [{0}] for user [{1}].");
     }
 
     return userRepo.unlockUserAccount(unlockUser, msg, user);
+  }
+
+  @Override
+  @Transactional
+  public User enableAccount(final User enableUser, final User user) {
+    Assert.notNull(enableUser, "[Assertion Failed] - argument [enableUser] cannot be null.");
+    Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
+
+    String msg = messages.getMessage("com.cagst.swkroa.enable.audit.message",
+           new Object[]{user.getUsername(), enableUser.getUsername()},
+           "Account was enabled by user [{0}] for user [{1}].");
+
+    return userRepo.enableUserAccount(enableUser, msg, user);
+  }
+
+  @Override
+  @Transactional
+  public User disableAccount(final User disableUser, final User user) {
+    Assert.notNull(disableUser, "[Assertion Failed] - argument [disableUser] cannot be null.");
+    Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
+
+    String msg = messages.getMessage("com.cagst.swkroa.disable.audit.message",
+        new Object[]{user.getUsername(), disableUser.getUsername()},
+        "Account was disabled by user [{0}] for user [{1}].");
+
+    return userRepo.disableUserAccount(disableUser, msg, user);
   }
 
   @Override

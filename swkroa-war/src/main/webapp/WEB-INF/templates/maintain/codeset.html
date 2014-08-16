@@ -2,148 +2,153 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main" >
+      layout:decorator="layouts/main">
 
-	<head>
-		<link type="text/css" data-th-href="@{/static/angular-xeditable-0.1.8/css/xeditable.css}" rel="stylesheet"/>
-		
-		<script type="text/javascript" data-th-src="@{/static/js/maintain/codeset.js}"></script>
-		<script type="text/javascript" data-th-src="@{/static/angular-xeditable-0.1.8/js/xeditable.min.js}"></script>
-		<script type="text/javascript" data-th-src="@{/static/ui-bootstrap-0.10.0/ui-bootstrap-tpls-0.10.0.min.js}"></script>
-	</head>
-	
-	<body data-ng-app="csApp">
-		<div data-layout-fragment="content" data-ng-controller="csListController">
-			<div class="page-header">
-				<h3 data-th-text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
-			</div>
-			<div class="container container-outline">
-				<div class="row container-split">
-					<div class="col-xs-5 pull-left clear-left clear-right">
-						<div class="split-header divider-right">
-							<div class="split-header-content">
-								<label class="control-label" data-th-text="#{com.cagst.swkroa.maintain.codeset.codesets}">
-									zzz Code Sets
-								</label>
-							</div>
-						</div>
-						<table class="table table-bordered table-hover">
-							<tr data-ng-repeat="codeset in codesets"
-							    data-ng-click="getCodeValues(codeset)"
-							    data-ng-class="{active: codeset.codeSetUID == selectedCodeSet.codeSetUID}">
-								<td>{{codeset.display}}</td>
-							</tr>
-						</table>
-					</div>
-					<div class="col-xs-7 pull-right clear-left clear-right">
-						<div class="split-header divider-bottom">
-							<div class="split-header-content">
-								<label class="control-label" data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalues}">
-									zzz Coded Values
-								</label>
-							</div>
-						</div>
-						<div class="list-group">
-							<div data-ng-show="!codevalues.length">
-								<em>
-									<label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.maintain.notselected}">
-										zzz No records found!
-									</label>
-								</em>
-							</div>
-							<div data-ng-show="codevalues.length">
-								<table class="table table-bordered table-hover table-inner">
-									<thead>
-										<tr>
-											<th data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.display}" style="width:36%">zzz Display</th>
-											<th data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.meaning}" style="width:36%">zzz Meaning</th>
-											<th style="width: 24%">
-												<a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="addCodeValue()">
-													<i class="fa fa-plus"></i>
-													<span data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.add}">zzz Add</span>
-												</a>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr class="hover-buttons"
-										    data-ng-repeat="codevalue in codevalues"
-										    data-ng-show="codevalue.active">
-											<td>
+<head>
+  <link type="text/css" data-th-href="@{/static/angular-xeditable-0.1.8/css/xeditable.css}" rel="stylesheet" />
+
+  <script type="text/javascript" data-th-src="@{/static/js/maintain/codeset.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/angular-xeditable-0.1.8/js/xeditable.min.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-controller="csListController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
+  </div>
+  <div class="container container-outline">
+    <div class="row container-split">
+      <div class="col-xs-5 pull-left clear-left clear-right">
+        <div class="split-header divider-right">
+          <div class="split-header-content">
+            <label class="control-label" data-th-text="#{com.cagst.swkroa.maintain.codeset.codesets}">
+              zzz Code Sets
+            </label>
+          </div>
+        </div>
+        <table class="table table-bordered table-hover">
+          <tr data-ng-repeat="codeset in codesets"
+              data-ng-click="getCodeValues(codeset)"
+              data-ng-class="{active: codeset.codeSetUID == selectedCodeSet.codeSetUID}">
+            <td>{{codeset.display}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-xs-7 pull-right clear-left clear-right">
+        <div class="split-header divider-bottom">
+          <div class="split-header-content">
+            <label class="control-label" data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalues}">
+              zzz Coded Values
+            </label>
+          </div>
+        </div>
+        <div class="list-group">
+          <div data-ng-show="!codevalues.length">
+            <em>
+              <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.maintain.notselected}">
+                zzz No records found!
+              </label>
+            </em>
+          </div>
+          <div data-ng-show="codevalues.length">
+            <table class="table table-bordered table-hover table-inner">
+              <thead>
+              <tr>
+                <th data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.display}" style="width:36%">zzz
+                                                                                                            Display
+                </th>
+                <th data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.meaning}" style="width:36%">zzz
+                                                                                                            Meaning
+                </th>
+                <th style="width: 24%">
+                  <a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="addCodeValue()">
+                    <i class="fa fa-plus"></i>
+                    <span data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.add}">zzz Add</span>
+                  </a>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="hover-buttons"
+                  data-ng-repeat="codevalue in codevalues"
+                  data-ng-show="codevalue.active">
+                <td>
 												<span data-editable-text="codevalue.display"
-												      data-e-name="display"
-												      data-e-form="rowform"
-												      onbeforesave="validate($data)">
+                              data-e-name="display"
+                              data-e-form="rowform"
+                              onbeforesave="validate($data)">
 													{{codevalue.display}}
 												</span>
-											</td>
-											<td>
+                </td>
+                <td>
 												<span data-editable-text="codevalue.meaning"
-												      data-e-name="meaning"
-												      data-e-form="rowform">
+                              data-e-name="meaning"
+                              data-e-form="rowform">
 													{{codevalue.meaning}}
 												</span>
-											</td>
-											<td>
-												<form class="form-buttons form-inline"
-												      data-editable-form name="rowform"
-												      data-ng-show="rowform.$visible"
-												      data-shown="inserted == codevalue"
-												      onaftersave="saveCodeValue(codevalue)">
-													<div class="form-group btn-group pull-right">
-														<button type="submit" class="btn btn-success btn-xs" data-ng-disabled="rowform.$waiting">
-															<i class="fa fa-save"></i>
-															<span data-th-text="#{com.cagst.swkroa.save}">zzz Save</span>
-														</button>
-														<a href="#" class="btn btn-warning btn-xs" data-ng-disabled="rowform.$waiting" data-ng-click="rowform.$cancel()">
-															<i class="fa fa-ban"></i>
-															<span data-th-text="#{com.cagst.swkroa.discard}">zzz Discard</span>
-														</a>
-													</div>
-												</form>
-												<div class="btn-group pull-right" data-ng-show="!rowform.$visible">
-													<button type="button" class="btn btn-primary btn-xs" data-ng-click="rowform.$show()">
-														<i class="fa fa-edit"></i>
-														<span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
-													</button>
-													<button type="button" class="btn btn-danger btn-xs"
-													        data-ng-click="selectedCodeValue(codevalue)"
-													        data-toggle="modal" data-target="#confirmDeletion">
-														<i class="fa fa-trash-o"></i>
-														<span data-th-text="#{com.cagst.swkroa.delete}">zzz Delete</span>
-													</button>
-												</div>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="modal fade" id="confirmDeletion" tabindex="-1">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title" data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.title}">
-								zzz Please confirm
-							</h4>
-						</div>
-						<div class="modal-body">
-							<span data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.message}">
-								zzz Delete this?
-							</span>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-ng-click="removeCodeValue()">Delete</button>
-							<button type="button" class="btn btn-primary" data-dismiss="modal">Keep</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		
-		</div>
-	</body>
+                </td>
+                <td>
+                  <form class="form-buttons form-inline"
+                        data-editable-form name="rowform"
+                        data-ng-show="rowform.$visible"
+                        data-shown="inserted == codevalue"
+                        onaftersave="saveCodeValue(codevalue)">
+                    <div class="form-group btn-group pull-right">
+                      <button type="submit" class="btn btn-success btn-xs" data-ng-disabled="rowform.$waiting">
+                        <i class="fa fa-save"></i>
+                        <span data-th-text="#{com.cagst.swkroa.save}">zzz Save</span>
+                      </button>
+                      <a href="#" class="btn btn-warning btn-xs" data-ng-disabled="rowform.$waiting"
+                         data-ng-click="rowform.$cancel()">
+                        <i class="fa fa-ban"></i>
+                        <span data-th-text="#{com.cagst.swkroa.discard}">zzz Discard</span>
+                      </a>
+                    </div>
+                  </form>
+                  <div class="btn-group pull-right" data-ng-show="!rowform.$visible">
+                    <button type="button" class="btn btn-primary btn-xs" data-ng-click="rowform.$show()">
+                      <i class="fa fa-edit"></i>
+                      <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-xs"
+                            data-ng-click="selectedCodeValue(codevalue)"
+                            data-toggle="modal" data-target="#confirmDeletion">
+                      <i class="fa fa-trash-o"></i>
+                      <span data-th-text="#{com.cagst.swkroa.delete}">zzz Delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirmDeletion" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.title}">
+            zzz Please confirm
+          </h4>
+        </div>
+        <div class="modal-body">
+          <span data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.message}">
+            zzz Delete this?
+          </span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-ng-click="removeCodeValue()">Delete</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Keep</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>

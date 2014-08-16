@@ -10,7 +10,8 @@
           <button type="button" class="btn btn-success btn-xs"
                   data-toggle="modal" data-target="#modifyComment"
                   data-ng-click="addComment()"
-                  data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.create}">
+                  data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.create}"
+                  tooltip-placement="left">
             <i class="fa fa-plus"></i>
           </button>
         </span>
@@ -26,13 +27,15 @@
             <button type="button" class="btn btn-primary btn-xs"
                     data-toggle="modal" data-target="#modifyComment"
                     data-ng-click="selectComment(comment)"
-                    data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.update}">
+                    data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.update}"
+                    tooltip-placement="left">
               <i class="fa fa-edit"></i>
             </button>
             <button type="button" class="btn btn-danger btn-xs"
                     data-toggle="modal" data-target="#deleteComment"
                     data-ng-click="selectComment(comment)"
-                    data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.delete.title}">
+                    data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.delete.title}"
+                    tooltip-placement="left">
               <i class="fa fa-trash-o"></i>
             </button>
           </div>

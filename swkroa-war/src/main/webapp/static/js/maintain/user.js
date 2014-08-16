@@ -6,39 +6,50 @@
  * Version: 1.0.0
  */
 
-var userApp = angular.module('userApp', []);
+var userModule = angular.module('swkroaApp', ['restangular']);
 
-userApp.controller('userListController', ['$scope', '$http', function($scope, $http) {
-  $http.get('../svc/user').success(function(data) {
-    $scope.users = data;
-  });
+userModule.controller('userListController', ['$scope', '$http', 'Restangular', function($scope, $http, Restangular) {
+  var userService = Restangular.all('../swkroa-war/svc/users');
+
+  $scope.users = userService.getList().$object;
 
   $scope.getUser = function(userUID) {
-    $http.get('../svc/user/' + userUID).success(function(data) {
-      $scope.user = data;
+    $scope.selectedUser = userService.get(userUID).$object;
+  };
+
+  $scope.addUser = function(user) {
+    $http.post('../svc/users', user).success(function(data) {
     });
   };
 
-  $scope.addUser = function(codeValue) {
-    $http.post('../svc/codevalue', codeValue).success(function(data) {
+  $scope.editUser = function(user) {
+    $http.put('../svc/users', user).success(function(data) {
     });
   };
 
-  $scope.editUser = function(codeValue) {
-    $http.put('../svc/codevalue', codeValue).success(function(data) {
+  $scope.unlockUser = function() {
+    $http.put('../svc/users/unlock', $scope.selectedUser).success(function(data) {
+      for (idx = 0; idx < $scope.users.length; idx++) {
+        if ($scope.selectedUser.userUID == $scope.users[idx].userUID) {
+          $scope.users.slice(idx, 1);
+        }
+      }
+
+      $scope.selectedUser = data;
+      $scope.users.add($scope.selectedUser);
     });
   };
 
   $scope.removeUser = function() {
-    $scope.codevalue.active = false;
-    $http.put('../svc/codevalue', $scope.codevalue).success(function(data) {
-      $scope.codevalue = data;
+    $scope.selectedUser.active = false;
+    $http.put('../svc/user', $scope.selectedUser).success(function(data) {
+      $scope.selectedUser = data;
     })
     .error(function(data) {
       // if we failed to save (remove the codevalue)
       // set it back to active
       // TODO: Need to add a message
-      $scope.codevalue.active = true;
+      $scope.selectedUser.active = true;
     });
     $('#confirmDeletion').modal('hide');
   };

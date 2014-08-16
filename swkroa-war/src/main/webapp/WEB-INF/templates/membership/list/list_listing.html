@@ -7,7 +7,10 @@
   <div class="split-header">
     <div class="split-header-content form-group expand">
       <div class="input-group">
-        <a data-th-href="@{/membership/add}" class="input-group-addon add-btn">
+        <a class="input-group-addon add-btn"
+           data-th-href="@{/membership/add}"
+           data-th-attr="tooltip=#{com.cagst.swkroa.membership.add}"
+           tooltip-placement="right">
           <i class="fa fa-plus"></i>
         </a>
         <input type="text" class="form-control" autofocus
@@ -23,7 +26,7 @@
       </div>
     </div>
   </div>
-  <div class="list-group listing divider-right">
+  <div class="list-group constrain-view divider-right">
     <div>
       <div class="panel-body text-muted" data-ng-show="!memberships.length">
         <em data-th-text="#{com.cagst.swkroa.membership.nomemberships}">zzz No memberships</em>
@@ -35,11 +38,17 @@
              data-ng-click="getMembership(membership.membershipUID)">
           <div class="lead lead-in">
             <span data-ng-bind="membership.safePrimaryMember.effectiveMemberName">zzz Membership Name</span>
-            <span data-ng-show="membership.membershipType.memberTypeMeaning == 'REGULAR'">
-              <i class="fa fa-user pull-right"></i>
+            <span data-ng-show="membership.membershipType.memberTypeMeaning == 'REGULAR'"
+                  data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.regular}"
+                  tooltip-placement="left"
+                  class="pull-right">
+              <i class="fa fa-user"></i>
             </span>
-            <span data-ng-show="membership.membershipType.memberTypeMeaning == 'FAMILY'">
-              <i class="fa fa-users pull-right"></i>
+            <span data-ng-show="membership.membershipType.memberTypeMeaning == 'FAMILY'"
+                  data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.family}"
+                  tooltip-placement="left"
+                  class="pull-right">
+              <i class="fa fa-users"></i>
             </span>
           </div>
           <div data-ng-if="membership.safePrimaryMember.joinDate != null">

@@ -10,21 +10,10 @@
         <a data-th-href="@{/user/add}" class="add-btn">
           <i class="fa fa-plus"></i>
         </a>
-        <!--
-        <input type="text" class="form-control" autofocus
-               data-th-placeholder="#{com.cagst.swkroa.user.search.prompt}"
-               data-ng-model="query"
-               data-ng-keydown="queryKeydown($event)" />
-        <a class="input-group-addon btn btn-primary"
-           data-ng-click="getMemberships()"
-           data-th-text="#{com.cagst.swkroa.membership.search.button}">
-          zzz Search
-        </a>
-        -->
       </div>
     </div>
   </div>
-  <div class="list-group listing divider-right">
+  <div class="list-group constrain-view divider-right">
     <div>
       <div class="panel-body text-muted" data-ng-show="!users.length">
         <em data-th-text="#{com.cagst.swkroa.maintain.user.nousers}">zzz No users</em>
@@ -32,6 +21,7 @@
       <div data-ng-show="users.length">
         <div class="list-group-item alt-list-group-item sel-list-group-item"
              data-ng-repeat="user in users"
+             data-ng-class="{active: user.userUID === selectedUser.userUID}"
              data-ng-click="getUser(user.userUID)">
           <div>
             <span>
@@ -40,9 +30,11 @@
                 (<span data-ng-bind="user.username"></span>)
               </small>
             </span>
-            <span class="pull-right"
-                  data-ng-show="user.accountLockedDate">
+            <span class="pull-right" data-ng-show="user.accountNonLocked == false">
               <i class="fa fa-lock"></i>
+            </span>
+            <span class="pull-right" data-ng-show="user.enabled == false">
+              <i class="fa fa-ban"></i>
             </span>
           </div>
         </div>

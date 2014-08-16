@@ -1,66 +1,68 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<body>
-		<div data-th-fragment="dlgModifyComment">
-			<div class="modal fade" id="modifyComment">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title"
-							    data-th-text="#{com.cagst.swkroa.membership.comment.update}"
-							    data-ng-show="commentIdx > -1">
-								zzz Modify comment
-							</h4>
-							<h4 class="modal-title"
-							    data-th-text="#{com.cagst.swkroa.membership.comment.create}"
-							    data-ng-show="commentIdx == -1">
-								zzz Create comment
-							</h4>
-						</div>
-						<div class="modal-body">
-							<div class="form-group">
-								<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.comment.modify.date}">
-									zzz Date
-								</label>
-								<div class="input-group">
-									<input type="text" class="form-control" name="commentDate"
-									       data-datepicker-popup="MM/dd/yyyy"
-									       data-show-button-bar="false"
-									       data-datepicker-options="dateOptions"
-									       data-ng-model="comment.commentDate" />
-									<span class="input-group-btn">
-										<button type="button" class="btn btn-default" data-ng-click="open($event)">
-											<i class="fa fa-calendar"></i>
-										</button>
-									</span>
-								</div>
-							</div>
-							<p data-th-text="#{com.cagst.swkroa.membership.comment.modify.message}">zzz Comment</p>
-							<textarea class="form-control" rows="3" data-ng-model="comment.commentText" autofocus></textarea>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-success"
-							        data-ng-click="saveComment()"
-							        data-ng-show="commentIdx > -1"
-							        data-th-text="#{com.cagst.swkroa.update}">
-								zzz Update
-							</button>
-							<button type="button" class="btn btn-success"
-							        data-ng-click="saveComment()"
-							        data-ng-show="commentIdx == -1"
-							        data-th-text="#{com.cagst.swkroa.create}">
-								zzz Create
-							</button>
-							<button type="button" class="btn btn-warning"
-							        data-dismiss="modal"
-							        data-th-text="#{com.cagst.swkroa.discard}">
-								zzz Discard
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+<body>
+<div data-th-fragment="dlgModifyComment">
+  <div class="modal fade" id="modifyComment">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"
+              data-th-text="#{com.cagst.swkroa.membership.comment.update}"
+              data-ng-show="commentIdx > -1">
+            zzz Modify comment
+          </h4>
+          <h4 class="modal-title"
+              data-th-text="#{com.cagst.swkroa.membership.comment.create}"
+              data-ng-show="commentIdx == -1">
+            zzz Create comment
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.comment.modify.date}">
+              zzz Date
+            </label>
+
+            <div class="input-group">
+              <input type="text" class="form-control" name="commentDate"
+                     data-datepicker-popup="MM/dd/yyyy"
+                     data-is-open="opened"
+                     data-show-button-bar="false"
+                     data-show-weeks="false"
+                     data-ng-model="comment.commentDate" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" data-ng-click="open($event)">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </span>
+            </div>
+          </div>
+          <p data-th-text="#{com.cagst.swkroa.membership.comment.modify.message}">zzz Comment</p>
+          <textarea class="form-control" rows="3" data-ng-model="comment.commentText" autofocus></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success"
+                  data-ng-click="saveComment()"
+                  data-ng-show="commentIdx > -1"
+                  data-th-text="#{com.cagst.swkroa.update}">
+            zzz Update
+          </button>
+          <button type="button" class="btn btn-success"
+                  data-ng-click="saveComment()"
+                  data-ng-show="commentIdx == -1"
+                  data-th-text="#{com.cagst.swkroa.create}">
+            zzz Create
+          </button>
+          <button type="button" class="btn btn-warning"
+                  data-dismiss="modal"
+                  data-th-text="#{com.cagst.swkroa.discard}">
+            zzz Discard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
 </html>

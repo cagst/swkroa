@@ -1,177 +1,192 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<body>
-		<div data-th-fragment="primaryMember">
-			<div class="row">
-				<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.entityType.$invalid}">
-					<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.entity}">
-						zzz Entity Type
-					</label>
-					<select class="form-control" name="entityType"
-									data-ng-options="entityType.display for entityType in entityTypes"
-									data-ng-model="membership.entityType"
-									data-ng-required="true">
-					</select>
-				</div>
-				<div class="col-xs-4" data-ng-class="{'has-error': membershipForm.companyName.$invalid}">
-					<label class="control-label"
-								 data-ng-class="{'label-required': membership.entityType.meaning != 'ENTITY_INDIVIDUAL'}"
-								 data-th-text="#{com.cagst.swkroa.membership.name.label}">
-						zzz Membership Name
-					</label>
-					<input type="text" class="form-control" name="companyName" maxlength="250"
-								 data-th-placeholder="#{com.cagst.swkroa.membership.name.prompt}"
-								 data-ng-model="membership.primaryMember.companyName"
-								 data-ng-disabled="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
-								 data-ng-required="membership.entityType.meaning != 'ENTITY_INDIVIDUAL'" />
-				</div>
-				<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.dueDate.$invalid}">
-					<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.dueon}">
-						zzz Due On
-					</label>
-					<div class="input-group">
-						<input type="text" class="form-control" name="dueDate"
-									 data-datepicker-popup="MM/dd/yyyy"
-									 data-show-button-bar="false"
-									 data-datepicker-options="dateOptions"
-									 data-ng-model="membership.nextDueDate"
-									 data-ng-required="true" />
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-default" data-ng-click="openDateControl($event)">
-										<i class="fa fa-calendar"></i>
-									</button>
-								</span>
-					</div>
-				</div>
-				<div class="col-xs-2">
-					<div data-ng-show="!fixedDuesAmount">
-						<label>
-							<span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
-							<span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
-						</label>
-						<div class="input-group">
-							<input type="number" class="form-control"
-										 data-ng-model="membership.calculatedDuesAmount"
-										 disabled />
-									<span class="input-group-btn">
-										<button type="button" class="btn btn-default"
-														data-ng-click="toggleDuesAmount(true);"
-														data-th-tooltip="#{com.cagst.swkroa.membership.amountdue.calculated.tooltip}">
-											<i class="fa fa-cogs muted"></i>
-										</button>
-									</span>
-						</div>
-					</div>
-					<div data-ng-show="fixedDuesAmount">
-						<label>
-							<span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
-							<span data-th-text="#{com.cagst.swkroa.membership.dues.fixed}">(zzz Fixed)</span>
-						</label>
-						<div class="input-group">
-							<input type="number" class="form-control"
-										 data-ng-model="membership.duesAmount"
-										 data-ng-show="!customizeDuesAmount"/>
-									<span class="input-group-btn">
-										<button type="button" class="btn btn-default"
-														data-ng-click="toggleDuesAmount(false);"
-														data-th-tooltip="#{com.cagst.swkroa.membership.amountdue.calculated.tooltip}">
-											<i class="fa fa-cogs muted"></i>
-										</button>
-									</span>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-2">
-					<div data-ng-show="fixedDuesAmount">
-						<label>
-							<span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
-							<span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
-						</label>
-						<div>
-							{{membership.calculatedDuesAmount | currency}}
-						</div>
-					</div>
-				</div>
-			</div>
+<body>
 
-			<div class="row spacer-top">
-				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
-					<select class="form-control"
-					        data-ng-model="membership.primaryMember.person.title"
-					        data-ng-options="title.display for title in titles">
-					</select>
-				</div>
-				<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryFirstName.$invalid}">
-					<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.firstname.label}">zzz First Name</label>
-					<input type="text" class="form-control" name="primaryFirstName" maxlength="50"
-					       data-th-placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
-					       data-ng-model="membership.primaryMember.person.firstName"
-					       data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
-					       data-ng-blur="generateOwnerId(membership.primaryMember)" />
-				</div>
-				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.middlename.label}">zzz Middle Name</label>
-					<input type="text" class="form-control" maxlength="50"
-					       data-th-placeholder="#{com.cagst.swkroa.membership.member.middlename.prompt}"
-					       data-ng-model="membership.primaryMember.person.middleName" />
-				</div>
-				<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryLastName.$invalid}">
-					<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.lastname.label}">zzz Last Name</label>
-					<input type="text" class="form-control" name="primaryLastName" maxlength="50"
-					       data-th-placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
-					       data-ng-model="membership.primaryMember.person.lastName"
-					       data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
-					       data-ng-blur="generateOwnerId(membership.primaryMember)" />
-				</div>
-				<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryOwnerIdent.$invalid}">
-					<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.ownerid.label}">zzz Owner ID</label>
-					<input type="text" class="form-control" name="primaryOwnerIdent" maxlength="15"
-					       data-th-placeholder="#{com.cagst.swkroa.membership.member.ownerid.prompt}"
-					       data-ng-model="membership.primaryMember.ownerIdent"
-					       data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL' || membership.primaryMember.person" />
-				</div>
-			</div>
-			
-			<div class="row spacer-top">
-				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
-					<div class="input-group">
-						<input type="text" class="form-control"
-						       data-datepicker-popup="MM/dd/yyyy"
-						       data-show-button-bar="false"
-						       data-datepicker-options="dateOptions"
-						       data-ng-model="membership.primaryMember.joinDate"/>
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" data-ng-click="open($event)">
-								<i class="fa fa-calendar"></i>
-							</button>
-						</span>
-					</div>
-				</div>
-				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
-					<input type="text" class="form-control" maxlength="25"
-								 data-th-placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
-								 data-ng-model="membership.primaryMember.greeting" />
-				</div>
-				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz Greeting</label>
-					<input type="text" class="form-control" maxlength="50"
-					       data-ng-model="membership.primaryMember.inCareOf" />
-				</div>
-				<div class="col-xs-2">
-					<div>&nbsp;</div>
-					<input id="primaryMailNewsletter" type="checkbox" data-ng-model="membership.primaryMember.mailNewsletter" />
-					<label for="primaryMailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.mail}">zzz Mail</label>
-				</div>
-				<div class="col-xs-2">
-					<div>&nbsp;</div>
-					<input id="primaryEmailNewsletter" type="checkbox" data-ng-model="membership.primaryMember.emailNewsletter" />
-					<label for="primaryEmailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.email}">zzz Email</label>
-				</div>
-			</div>
-		</div>
-	</body>
+<div data-th-fragment="primaryMember">
+  <div class="row">
+    <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.entityType.$invalid}">
+      <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.entity}">
+        zzz Entity Type
+      </label>
+      <select class="form-control" name="entityType"
+              data-ng-options="entityType.display for entityType in entityTypes"
+              data-ng-model="membership.entityType"
+              data-ng-required="true">
+      </select>
+    </div>
+    <div class="col-xs-4" data-ng-class="{'has-error': membershipForm.companyName.$invalid}">
+      <label class="control-label"
+             data-ng-class="{'label-required': membership.entityType.meaning != 'ENTITY_INDIVIDUAL'}"
+             data-th-text="#{com.cagst.swkroa.membership.name.label}">
+        zzz Membership Name
+      </label>
+      <input type="text" class="form-control" name="companyName" maxlength="250"
+             data-th-placeholder="#{com.cagst.swkroa.membership.name.prompt}"
+             data-ng-model="membership.primaryMember.companyName"
+             data-ng-disabled="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
+             data-ng-required="membership.entityType.meaning != 'ENTITY_INDIVIDUAL'" />
+    </div>
+    <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.dueDate.$invalid}">
+      <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.dueon}">
+        zzz Due On
+      </label>
+
+      <p class="input-group">
+        <input type="text" class="form-control" id="dueDate" name="dueDate"
+               data-datepicker-popup="MM/dd/yyyy"
+               data-is-open="openedDueDate"
+               data-show-button-bar="false"
+               data-show-weeks="false"
+               data-ng-model="membership.nextDueDate"
+               data-ng-required="true" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" data-ng-click="openDueDate($event)">
+            <i class="fa fa-calendar"></i>
+          </button>
+        </span>
+      </p>
+    </div>
+    <div class="col-xs-2">
+      <div data-ng-show="!fixedDuesAmount">
+        <label>
+          <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
+          <span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
+        </label>
+
+        <div class="input-group">
+          <input type="number" class="form-control"
+                 data-ng-model="membership.calculatedDuesAmount"
+                 disabled />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default"
+                      data-ng-click="toggleDuesAmount(true);"
+                      data-th-tooltip="#{com.cagst.swkroa.membership.amountdue.calculated.tooltip}">
+                <i class="fa fa-cogs muted"></i>
+              </button>
+            </span>
+        </div>
+      </div>
+      <div data-ng-show="fixedDuesAmount">
+        <label>
+          <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
+          <span data-th-text="#{com.cagst.swkroa.membership.dues.fixed}">(zzz Fixed)</span>
+        </label>
+
+        <div class="input-group">
+          <input type="number" class="form-control"
+                 data-ng-model="membership.duesAmount"
+                 data-ng-show="!customizeDuesAmount" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default"
+                      data-ng-click="toggleDuesAmount(false);"
+                      data-th-tooltip="#{com.cagst.swkroa.membership.amountdue.calculated.tooltip}">
+                <i class="fa fa-cogs muted"></i>
+              </button>
+            </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <div data-ng-show="fixedDuesAmount">
+        <label>
+          <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
+          <span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
+        </label>
+
+        <div>
+          {{membership.calculatedDuesAmount | currency}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row spacer-top">
+    <div class="col-xs-2">
+      <label data-th-text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
+      <select class="form-control"
+              data-ng-model="membership.primaryMember.person.title"
+              data-ng-options="title.display for title in titles">
+      </select>
+    </div>
+    <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryFirstName.$invalid}">
+      <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.firstname.label}">
+        zzz First Name
+      </label>
+      <input type="text" class="form-control" name="primaryFirstName" maxlength="50"
+             data-th-placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
+             data-ng-model="membership.primaryMember.person.firstName"
+             data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
+             data-ng-blur="generateOwnerId(membership.primaryMember)" />
+    </div>
+    <div class="col-xs-2">
+      <label data-th-text="#{com.cagst.swkroa.membership.member.middlename.label}">zzz Middle Name</label>
+      <input type="text" class="form-control" maxlength="50"
+             data-th-placeholder="#{com.cagst.swkroa.membership.member.middlename.prompt}"
+             data-ng-model="membership.primaryMember.person.middleName" />
+    </div>
+    <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryLastName.$invalid}">
+      <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.lastname.label}">
+        zzz Last Name
+      </label>
+      <input type="text" class="form-control" name="primaryLastName" maxlength="50"
+             data-th-placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
+             data-ng-model="membership.primaryMember.person.lastName"
+             data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
+             data-ng-blur="generateOwnerId(membership.primaryMember)" />
+    </div>
+    <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryOwnerIdent.$invalid}">
+      <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.ownerid.label}">
+        zzz Owner ID
+      </label>
+      <input type="text" class="form-control" name="primaryOwnerIdent" maxlength="15"
+             data-th-placeholder="#{com.cagst.swkroa.membership.member.ownerid.prompt}"
+             data-ng-model="membership.primaryMember.ownerIdent"
+             data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL' || membership.primaryMember.person" />
+    </div>
+  </div>
+
+  <div class="row spacer-top">
+    <div class="col-xs-2">
+      <label data-th-text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
+
+      <div class="input-group">
+        <input type="text" class="form-control" id="primaryJoinDate" name="primaryJoinDate"
+               data-datepicker-popup="MM/dd/yyyy"
+               data-is-open="openedPrimaryJoinDate"
+               data-show-button-bar="false"
+               data-show-weeks="false"
+               data-ng-model="membership.primaryMember.joinDate" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" data-ng-click="openPrimaryJoinDate($event)">
+            <i class="fa fa-calendar"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <label data-th-text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
+      <input type="text" class="form-control" maxlength="25"
+             data-th-placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
+             data-ng-model="membership.primaryMember.greeting" />
+    </div>
+    <div class="col-xs-2">
+      <label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz Greeting</label>
+      <input type="text" class="form-control" maxlength="50"
+             data-ng-model="membership.primaryMember.inCareOf" />
+    </div>
+    <div class="col-xs-2">
+      <div>&nbsp;</div>
+      <input id="primaryMailNewsletter" type="checkbox" data-ng-model="membership.primaryMember.mailNewsletter" />
+      <label for="primaryMailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.mail}">zzz Mail</label>
+    </div>
+    <div class="col-xs-2">
+      <div>&nbsp;</div>
+      <input id="primaryEmailNewsletter" type="checkbox" data-ng-model="membership.primaryMember.emailNewsletter" />
+      <label for="primaryEmailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.email}">zzz Email</label>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>

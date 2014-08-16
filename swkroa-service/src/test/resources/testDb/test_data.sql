@@ -58,12 +58,16 @@ INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_
 INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_key, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (3, 'Expired', 'EXPIRED', 'User', 'USER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_key, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (4, 'Locked', 'LOCKED', 'User', 'USER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_key, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (5, 'Locked', 'LOCKED', 'User', 'USER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_key, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (6, 'Enabled', 'ENABLED', 'User', 'USER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_key, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (7, 'Disabled', 'DISABLED', 'User', 'USER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (11, 1, 'cgaskill', 'password1', 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, account_expired_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (12, 2, 'temp', 'password1', 1, '2014-12-25 15:00:00.0000', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, account_expired_dt_tm, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (13, 3, 'expire', 'password1', 1, '2011-12-25 15:00:00.0000', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, account_locked_dt_tm, signin_attempts, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (14, 4, 'locked', 'password1', 1, '2012-10-31 15:00:00.0000', 5, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, account_locked_dt_tm, signin_attempts, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (15, 5, 'newlylocked', 'password1', 1, CURRENT_TIMESTAMP, 5, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (16, 6, 'enabled', 'password1', 0, 1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (17, 7, 'disabled', 'password1', 0, 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 
 INSERT INTO user_role (user_id, role_id, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (11, 1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO user_role (user_id, role_id, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (12, 2, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);

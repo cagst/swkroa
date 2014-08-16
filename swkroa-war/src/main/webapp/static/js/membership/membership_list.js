@@ -40,12 +40,6 @@ var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
     });
   };
 
-  $scope.dateOptions = {
-    'year-format': "'yy'",
-    'starting-day': 1,
-    'show-weeks': false
-  };
-
   $scope.removeMembership = function() {
     $scope.selectedMembership.active = false;
     $http.put("../svc/membership", $scope.selectedMembership).success(function(data) {

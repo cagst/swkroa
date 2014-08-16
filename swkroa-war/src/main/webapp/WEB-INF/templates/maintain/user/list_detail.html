@@ -3,26 +3,75 @@
 <html>
 <body>
 
-<div data-ng-show="!user">
+<div data-ng-show="!selectedUser">
   <em>
     <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.maintain.user.notselected}">
       zzz No user selected.
     </label>
   </em>
 </div>
-<div data-ng-show="user">
-  <div class="container-inner">
-    <h2 class="lead">
-      {{user.fullName}}
-      <small class="text-muted">
-        ({{user.username}})
-      </small>
-    </h2>
-    <div>
-      <span data-th-text="#{com.cagst.swkroa.maintain.user.last.signin.date}">
-        zzz Last signin
-      </span>
-      <span data-ng-bind="user.lastSigninDate | date:'medium'" />
+<div data-ng-show="selectedUser">
+  <div class="container-inner constrain-view">
+    <div class="pull-left">
+      <h2 class="lead">
+        {{selectedUser.fullName}}
+        <small class="text-muted">
+          ({{selectedUser.username}})
+        </small>
+      </h2>
+      <div>
+        <span data-th-text="#{com.cagst.swkroa.maintain.user.last.signin.date}">
+          zzz Last signin
+        </span>
+          <span data-ng-bind="selectedUser.lastSigninDate | date:'medium'" />
+      </div>
+    </div>
+    <div class="container-small container-outline container-inner pull-right">
+      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.title}" class="text_bold">zzz Status</div>
+      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.expired}" class="indent-left"
+           data-ng-show="selectedUser.accountNonExpired == false">
+        zzz Expired
+      </div>
+      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.locked}" class="indent-left"
+           data-ng-show="selectedUser.accountNonLocked == false">
+        zzz Locked
+      </div>
+      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.disabled}" class="indent-left"
+           data-ng-show="selectedUser.enabled == false">
+        zzz Disabled
+      </div>
+      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.enabled}" class="indent-left"
+           data-ng-show="selectedUser.enabled == true && selectedUser.accountNonExpired == true && selectedUser.accountNonLocked == true">
+        zzz Enabled
+      </div>
+    </div>
+  </div>
+
+  <div class="divider-top split-footer">
+    <div class="split-footer-content pull-left">
+      <button type="button" class="btn btn-warning btn-xs"
+              data-ng-click="unlockUser()"
+              data-ng-show="selectedUser.accountNonLocked == false">
+        <i class="fa fa-unlock"></i>
+        <span data-th-text="#{com.cagst.swkroa.user.details.account.action.unlock}">zzz Unlock</span>
+      </button>
+      <button type="button" class="btn btn-warning btn-xs"
+              data-ng-click="enableUser()"
+              data-ng-show="selectedUser.enabled == false">
+        <span data-th-text="#{com.cagst.swkroa.user.details.account.action.enable}">zzz Unlock</span>
+      </button>
+    </div>
+    <div class="split-footer-content pull-right">
+      <a class="btn btn-primary btn-xs"
+         data-ng-href="../user/edit/{{selectedUser.userUID}}">
+        <i class="fa fa-edit"></i>
+        <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+      </a>
+      <button type="button" class="btn btn-danger btn-xs"
+              data-toggle="modal" data-target="#deleteUser">
+        <i class="fa fa-trash-o"></i>
+        <span data-th-text="#{com.cagst.swkroa.delete}">zzz Delete</span>
+      </button>
     </div>
   </div>
 </div>

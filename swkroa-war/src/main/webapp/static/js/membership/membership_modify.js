@@ -98,17 +98,25 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
     }
   });
 
-  $scope.dateOptions = {
-    'year-format': "'yy'",
-    'starting-day': 1,
-    'show-weeks': false
-  };
-
-  $scope.openDateControl = function($event) {
+  $scope.openDueDate = function($event) {
     $event.preventDefault();
     $event.stopPropagation();
 
-    $scope.opened = true;
+    $scope.openedDueDate = true;
+  };
+
+  $scope.openPrimaryJoinDate = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.openedPrimaryJoinDate = true;
+  };
+
+  $scope.openSpouseJoinDate = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.openedSpouseJoinDate = true;
   };
 
   $scope.toggleDuesAmount = function(fixed) {

@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -39,12 +40,14 @@ import java.util.Map;
   private static final String GET_USER_BY_USERNAME    = "GET_USER_BY_USERNAME";
   private static final String GET_USER_BY_UID         = "GET_USER_BY_UID";
   private static final String SIGNIN_ATTEMPT          = "SIGNIN_ATTEMPT";
-  private static final String LOCK_USER_ACCOUNT       = "LOCK_USER_ACCOUNT";
-  private static final String UNLOCK_USER_ACCOUNT     = "UNLOCK_USER_ACCOUNT";
   private static final String SIGNIN_SUCCESSFUL       = "SIGNIN_SUCCESSFUL";
   private static final String CHANGE_USER_PASSWORD    = "CHANGE_USER_PASSWORD";
   private static final String CHECK_USERNAME_NEW      = "CHECK_USERNAME_NEW";
   private static final String CHECK_USERNAME_EXISTING = "CHECK_USERNAME_EXISTING";
+  private static final String USER_LOCK               = "USER_LOCK";
+  private static final String USER_UNLOCK             = "USER_UNLOCK";
+  private static final String USER_ENABLE             = "USER_ENABLE";
+  private static final String USER_DISABLE            = "USER_DISABLE";
 
   private static final String GET_ALL_USERS = "GET_ALL_USERS";
 
@@ -153,32 +156,35 @@ import java.util.Map;
   }
 
   @Override
+  @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_LOCKED)
-  public User lockUserAccount(final @AuditInstigator User user, final @AuditMessage String message)
+  public User lockUserAccount(final @AuditInstigator User lockUser, final @AuditMessage String message, final @AuditInstigator User user)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(lockUser, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calliong lockUserAccount for User [{}].", user.getUsername());
+    LOGGER.info("Calling lockUserAccount for User [{}].", lockUser.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
-    params.put("user_id", user.getUserUID());
+    Map<String, Long> params = new HashMap<String, Long>(2);
+    params.put("user_id", lockUser.getUserUID());
+    params.put("updt_id", lockUser.getUserUID());
 
-    int cnt = getJdbcTemplate().update(stmtLoader.load(LOCK_USER_ACCOUNT), params);
+    int cnt = getJdbcTemplate().update(stmtLoader.load(USER_LOCK), params);
     if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    user.setAccountedLockedDate(new DateTime(DateTimeZone.UTC));
+    user.setAccountedLockedDate(new DateTime());
 
     return user;
   }
 
   @Override
+  @CacheEvict(value = "users", key = "#unlockUser.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_UNLOCKED)
-  public User unlockUserAccount(final User unlockUser, final @AuditMessage String message,
-                                final @AuditInstigator User user) throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
+  public User unlockUserAccount(final User unlockUser, final @AuditMessage String message, final @AuditInstigator User user)
+      throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
     Assert.notNull(unlockUser, "Assertion Failed - argument [unlockUser] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -186,24 +192,74 @@ import java.util.Map;
     LOGGER.info("Calling unlockUserAccount for User [{}] by User [{}].", unlockUser.getUsername(), user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(3);
+    Map<String, Long> params = new HashMap<String, Long>(2);
     params.put("updt_id", user.getUserUID());
     params.put("user_id", unlockUser.getUserUID());
-    params.put("updt_cnt", unlockUser.getUserUpdateCount());
 
-    int cnt = getJdbcTemplate().update(stmtLoader.load(UNLOCK_USER_ACCOUNT), params);
+    int cnt = getJdbcTemplate().update(stmtLoader.load(USER_UNLOCK), params);
     if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
     user.setAccountedLockedDate(null);
     user.setSigninAttempts(0);
-    user.setUserUpdateCount(user.getUserUpdateCount() + 1);
 
     return user;
   }
 
   @Override
+  @CacheEvict(value = "users", key = "#user.getUserUID()")
+  @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_ENABLED)
+  public User enableUserAccount(final @AuditInstigator User enableUser, final @AuditMessage String message, final @AuditInstigator User user)
+      throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
+
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+
+    LOGGER.info("Calling enableUserAccount for User [{}].", user.getUsername());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Long> params = new HashMap<String, Long>(2);
+    params.put("user_id", enableUser.getUserUID());
+    params.put("updt_id", enableUser.getUserUID());
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(USER_ENABLE), params);
+    if (cnt != 1) {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+
+    user.setActive(true);
+
+    return user;
+  }
+
+  @Override
+  @CacheEvict(value = "users", key = "#unlockUser.getUserUID()")
+  @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_DISABLED)
+  public User disableUserAccount(final User unlockUser, final @AuditMessage String message, final @AuditInstigator User user)
+      throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
+
+    Assert.notNull(unlockUser, "Assertion Failed - argument [unlockUser] cannot be null");
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+
+    LOGGER.info("Calling disableUserAccount for User [{}] by User [{}].", unlockUser.getUsername(), user.getUsername());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Long> params = new HashMap<String, Long>(2);
+    params.put("updt_id", user.getUserUID());
+    params.put("user_id", unlockUser.getUserUID());
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(USER_DISABLE), params);
+    if (cnt != 1) {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+
+    user.setActive(false);
+
+    return user;
+  }
+
+  @Override
+  @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_PASSWORD_CHANGED)
   public User changeUserPassword(final @AuditInstigator User user, final String newPassword,
                                  final @AuditMessage String message) throws IllegalArgumentException {
@@ -261,8 +317,10 @@ import java.util.Map;
   }
 
   @Override
-  public User saveUser(final User builder, final User user) throws OptimisticLockingFailureException,
-      IncorrectResultSizeDataAccessException, DataAccessException {
+  @CacheEvict(value = "users", key = "#builder.getUserUID()")
+  public User saveUser(final User builder, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+
     Assert.notNull(builder, "Assertion Failed - argument [builder] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
