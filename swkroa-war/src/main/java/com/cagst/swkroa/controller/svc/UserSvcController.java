@@ -16,7 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +58,9 @@ public final class UserSvcController {
   /**
    * Handles the request and retrieves the {@link User} associated with the specified id.
    *
-   * @param userUID A {@link long} that uniquely identifies the user to retrieve.
+   * @param userUID
+   *     A {@link long} that uniquely identifies the user to retrieve.
+   *
    * @return A JSON representation of the {@link User} associated with the specified id.
    */
   @RequestMapping(value = "/api/users/{userUID}", method = RequestMethod.GET)
@@ -67,16 +72,50 @@ public final class UserSvcController {
   }
 
   /**
-   * Handles the request and unlocks the {@link User} specified.
+   * Handles the request and unlocks the User associated with the specified id.
    *
-   * @param unlockUser The {@link User} to unlock.
+   * @param userUID
+   *     The unique identifier of the user to unlock.
+   *
    * @return A JSON representation of the {@link User} after it has been unlocked.
    */
-  @RequestMapping(value = "/api/users/unlock", method = RequestMethod.PUT)
+  @RequestMapping(value = "/api/users/{userUID}/unlock", method = RequestMethod.PUT)
   @ResponseBody
-  public User unlockUser(final @RequestBody User unlockUser) {
-    LOGGER.info("Received request to unlock user [{}]", unlockUser.getUsername());
+  public User unlockUser(final @PathVariable long userUID) {
+    LOGGER.info("Received request to unlock user [{}]", userUID);
 
-    return userService.unlockAccount(unlockUser, WebAppUtils.getUser());
+    return userService.unlockAccount(userUID, WebAppUtils.getUser());
+  }
+
+  /**
+   * Handles the request and enables the User associated with the specified id.
+   *
+   * @param userUID
+   *     The unique identifier of the user to enable.
+   *
+   * @return A JSON representation of the {@link User} after it has been enabled.
+   */
+  @RequestMapping(value = "/api/users/{userUID}/enable", method = RequestMethod.PUT)
+  @ResponseBody
+  public User enableUser(final @PathVariable long userUID) {
+    LOGGER.info("Received request to enable user [{}]", userUID);
+
+    return userService.enableAccount(userUID, WebAppUtils.getUser());
+  }
+
+  /**
+   * Handles the request and disables the User associated with the specified id.
+   *
+   * @param userUID
+   *     The unique identifier of the user to disable.
+   *
+   * @return A JSON representation of the {@link User} after it has been disable.
+   */
+  @RequestMapping(value = "/api/users/{userUID}/disable", method = RequestMethod.PUT)
+  @ResponseBody
+  public User disableUser(final @PathVariable long userUID) {
+    LOGGER.info("Received request to disable user [{}]", userUID);
+
+    return userService.disableAccount(userUID, WebAppUtils.getUser());
   }
 }

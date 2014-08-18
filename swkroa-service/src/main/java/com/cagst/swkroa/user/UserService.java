@@ -86,38 +86,38 @@ public interface UserService extends UserDetailsService {
   /**
    * Updates the user's record by clearing the locked date (unlocking) on the user's account.
    *
-   * @param unlockUser
-   *     The {@link User} to unlock.
+   * @param unlockUserUID
+   *     The unique identifier of the user to unlock.
    * @param user
    *     The {@link User} that is performing the unlock.
    *
    * @return A {@link User} that has been updated accordingly.
    */
-  public User unlockAccount(final User unlockUser, final User user);
+  public User unlockAccount(final long unlockUserUID, final User user);
 
   /**
    * Enables the user's account.
    *
-   * @param enableUser
-   *      The {@link User} to enable.
+   * @param enableUserUID
+   *      The unique identifier of the user to enable.
    * @param user
    *      The {@link User} that is performing the action.
    *
    * @return The {@link User} that has been updated accordingly.
    */
-  public User enableAccount(final User enableUser, final User user);
+  public User enableAccount(final long enableUserUID, final User user);
 
   /**
    * Disables the user's account.
    *
-   * @param disableUser
-   *      The {@link User} to disable.
+   * @param disableUserUID
+   *      The unique identifier of the user to disable.
    * @param user
    *      The {@link User} that is performing the action.
    *
    * @return The {@link User} that has been updated accordingly.
    */
-  public User disableAccount(final User disableUser, final User user);
+  public User disableAccount(final long disableUserUID, final User user);
 
   public boolean doesUsernameExist(final String username);
 

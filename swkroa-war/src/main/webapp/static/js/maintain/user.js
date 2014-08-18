@@ -6,51 +6,69 @@
  * Version: 1.0.0
  */
 
-var userModule = angular.module('swkroaApp', ['restangular']);
+var swkroaApp = angular.module('swkroaApp', []);
 
-userModule.controller('userListController', ['$scope', '$http', 'Restangular', function($scope, $http, Restangular) {
-  var userService = Restangular.all('../swkroa-war/svc/users');
-
-  $scope.users = userService.getList().$object;
+swkroaApp.controller('userListController', ['$scope', '$http', function($scope, $http) {
+  $http.get('../api/users').success(function(data) {
+    $scope.users = data;
+  });
 
   $scope.getUser = function(userUID) {
-    $scope.selectedUser = userService.get(userUID).$object;
+    var url = '../api/users/' + userUID;
+    $http.get(url).success(function(data) {
+      $scope.selectedUser = data;
+    });
   };
 
   $scope.addUser = function(user) {
-    $http.post('../svc/users', user).success(function(data) {
+    $http.post('../api/users', user).success(function(data) {
     });
   };
 
   $scope.editUser = function(user) {
-    $http.put('../svc/users', user).success(function(data) {
+    $http.put('../api/users', user).success(function(data) {
     });
   };
 
   $scope.unlockUser = function() {
-    $http.put('../svc/users/unlock', $scope.selectedUser).success(function(data) {
+    var url = "../api/users/" + $scope.selectedUser.userUID + "/unlock";
+
+    $http.put(url).success(function(data) {
       for (idx = 0; idx < $scope.users.length; idx++) {
         if ($scope.selectedUser.userUID == $scope.users[idx].userUID) {
-          $scope.users.slice(idx, 1);
+          $scope.users[idx] = data;
+          $scope.selectedUser = data;
+          break;
         }
       }
-
-      $scope.selectedUser = data;
-      $scope.users.add($scope.selectedUser);
     });
   };
 
-  $scope.removeUser = function() {
-    $scope.selectedUser.active = false;
-    $http.put('../svc/user', $scope.selectedUser).success(function(data) {
-      $scope.selectedUser = data;
-    })
-    .error(function(data) {
-      // if we failed to save (remove the codevalue)
-      // set it back to active
-      // TODO: Need to add a message
-      $scope.selectedUser.active = true;
+  $scope.disableUser = function() {
+    var url = "../api/users/" + $scope.selectedUser.userUID + "/disable";
+
+    $http.put(url).success(function(data) {
+      for (idx = 0; idx < $scope.users.length; idx++) {
+        if ($scope.selectedUser.userUID == $scope.users[idx].userUID) {
+          $scope.users[idx] = data;
+          $scope.selectedUser = data;
+          break;
+        }
+      }
     });
-    $('#confirmDeletion').modal('hide');
+  };
+
+  $scope.enableUser = function() {
+    var url = "../api/users/" + $scope.selectedUser.userUID + "/enable";
+
+    $http.put(url).success(function(data) {
+      for (idx = 0; idx < $scope.users.length; idx++) {
+        if ($scope.selectedUser.userUID == $scope.users[idx].userUID) {
+          $scope.users[idx] = data;
+          $scope.selectedUser = data;
+          break;
+        }
+      }
+    });
   };
 }]);

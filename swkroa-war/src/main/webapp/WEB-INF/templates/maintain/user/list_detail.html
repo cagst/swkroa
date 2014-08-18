@@ -58,7 +58,13 @@
       <button type="button" class="btn btn-warning btn-xs"
               data-ng-click="enableUser()"
               data-ng-show="selectedUser.enabled == false">
-        <span data-th-text="#{com.cagst.swkroa.user.details.account.action.enable}">zzz Unlock</span>
+        <span data-th-text="#{com.cagst.swkroa.user.details.account.action.enable}">zzz Enable</span>
+      </button>
+      <button type="button" class="btn btn-warning btn-xs"
+              data-ng-click="disableUser()"
+              data-ng-show="selectedUser.enabled == true && selectedUser.accountNonLocked == true">
+        <i class="fa fa-ban"></i>
+        <span data-th-text="#{com.cagst.swkroa.user.details.account.action.disable}">zzz Disable</span>
       </button>
     </div>
     <div class="split-footer-content pull-right">
@@ -67,11 +73,6 @@
         <i class="fa fa-edit"></i>
         <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
       </a>
-      <button type="button" class="btn btn-danger btn-xs"
-              data-toggle="modal" data-target="#deleteUser">
-        <i class="fa fa-trash-o"></i>
-        <span data-th-text="#{com.cagst.swkroa.delete}">zzz Delete</span>
-      </button>
     </div>
   </div>
 </div>

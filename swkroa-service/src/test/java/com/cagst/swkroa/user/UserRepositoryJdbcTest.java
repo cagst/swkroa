@@ -151,7 +151,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertTrue("Ensure user account is not locked.", user1.isAccountNonLocked());
     assertEquals("Ensure the user account has not been updated.", 0, user1.getUserUpdateCount());
 
-    User user2 = repo.lockUserAccount(user1, null, user1);
+    User user2 = repo.lockUserAccount(user1.getUserUID(), null, user1);
     assertNotNull("Ensure user is valid.", user2);
     assertFalse("Ensure user account is locked.", user2.isAccountNonLocked());
 
@@ -169,7 +169,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure user was found.", user1);
     assertFalse("Ensure user account is locked.", user1.isAccountNonLocked());
 
-    User user2 = repo.unlockUserAccount(user1, "Manually unlocked", user1);
+    User user2 = repo.unlockUserAccount(user1.getUserUID(), "Manually unlocked", user1);
     assertNotNull("Ensure user was found.", user2);
     assertTrue("Ensure user account is not locked.", user2.isAccountNonLocked());
 
@@ -188,7 +188,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertFalse("Ensure user account is disabled.", user1.isActive());
     assertFalse("Ensure user account is disabled.", user1.isEnabled());
 
-    User user2 = repo.enableUserAccount(user1, "Enable account", user1);
+    User user2 = repo.enableUserAccount(user1.getUserUID(), "Enable account", user1);
     assertNotNull("Ensure user was found.", user2);
     assertTrue("Ensure user account is enabled.", user2.isActive());
     assertTrue("Ensure user account is enabled.", user2.isEnabled());
@@ -209,7 +209,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertTrue("Ensure user account is enabled.", user1.isActive());
     assertTrue("Ensure user account is enabled.", user1.isEnabled());
 
-    User user2 = repo.disableUserAccount(user1, "Enable account", user1);
+    User user2 = repo.disableUserAccount(user1.getUserUID(), "Enable account", user1);
     assertNotNull("Ensure user was found.", user2);
     assertFalse("Ensure user account is disabled.", user2.isActive());
     assertFalse("Ensure user account is disabled.", user2.isEnabled());

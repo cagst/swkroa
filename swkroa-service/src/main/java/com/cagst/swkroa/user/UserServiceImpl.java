@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
       DateTime unlockAfter = lockedDate.plusDays(accountLockedDays);
 
       if (unlockAfter.isBeforeNow()) {
-        user = unlockAccount(user, user);
+        user = unlockAccount(user.getUserUID(), user);
       }
     }
 
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
       if (securityPolicy.getMaxSigninAttempts() > 0 && user.getSigninAttempts() > securityPolicy.getMaxSigninAttempts()) {
         String msg = messages.getMessage("com.cagst.swkroa.signin.message.attempts.exceeded",
             "The number of allowed sign-in attempts has been exceeded.  Account has been locked.");
-        user = userRepo.lockUserAccount(user, msg, user);
+        user = userRepo.lockUserAccount(user.getUserUID(), msg, user);
       }
     }
 
@@ -202,47 +202,47 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User unlockAccount(final User unlockUser, final User user) {
-    Assert.notNull(unlockUser, "[Assertion Failed] - argument [unlockUser] cannot be null.");
+  public User unlockAccount(final long unlockUserUID, final User user) {
+    Assert.isTrue(unlockUserUID > 0, "Assertion Failed - argument [unlockUserUID] must be greater than zero");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
 
     String msg;
-    if (unlockUser.equals(user)) {
+    if (unlockUserUID == user.getUserUID()) {
       msg = messages.getMessage("com.cagst.swkroa.unlock.auto.audit.message",
-            new Object[]{unlockUser.getUsername()}, "Account was automatically unlocked for user [{0}].");
+            new Object[]{unlockUserUID}, "Account was automatically unlocked for user [{0}].");
     } else {
       msg = messages.getMessage("com.cagst.swkroa.unlock.manual.audit.message",
-            new Object[]{user.getUsername(), unlockUser.getUsername()},
+            new Object[]{user.getUsername(), unlockUserUID},
             "Account was manually unlocked by user [{0}] for user [{1}].");
     }
 
-    return userRepo.unlockUserAccount(unlockUser, msg, user);
+    return userRepo.unlockUserAccount(unlockUserUID, msg, user);
   }
 
   @Override
   @Transactional
-  public User enableAccount(final User enableUser, final User user) {
-    Assert.notNull(enableUser, "[Assertion Failed] - argument [enableUser] cannot be null.");
+  public User enableAccount(final long enableUserUID, final User user) {
+    Assert.isTrue(enableUserUID > 0, "Assertion Failed - argument [enableUserUID] must be greater than zero");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
 
     String msg = messages.getMessage("com.cagst.swkroa.enable.audit.message",
-           new Object[]{user.getUsername(), enableUser.getUsername()},
+           new Object[]{user.getUsername(), enableUserUID},
            "Account was enabled by user [{0}] for user [{1}].");
 
-    return userRepo.enableUserAccount(enableUser, msg, user);
+    return userRepo.enableUserAccount(enableUserUID, msg, user);
   }
 
   @Override
   @Transactional
-  public User disableAccount(final User disableUser, final User user) {
-    Assert.notNull(disableUser, "[Assertion Failed] - argument [disableUser] cannot be null.");
+  public User disableAccount(final long disableUserUID, final User user) {
+    Assert.isTrue(disableUserUID > 0, "Assertion Failed - argument [disableUserUID] must be greater than zero");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
 
     String msg = messages.getMessage("com.cagst.swkroa.disable.audit.message",
-        new Object[]{user.getUsername(), disableUser.getUsername()},
+        new Object[]{user.getUsername(), disableUserUID},
         "Account was disabled by user [{0}] for user [{1}].");
 
-    return userRepo.disableUserAccount(disableUser, msg, user);
+    return userRepo.disableUserAccount(disableUserUID, msg, user);
   }
 
   @Override

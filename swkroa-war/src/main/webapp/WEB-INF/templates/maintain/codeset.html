@@ -13,7 +13,7 @@
 
 <body>
 
-<div data-layout-fragment="content" data-ng-controller="csListController">
+<div data-layout-fragment="content" data-ng-controller="codesetListController">
   <div class="page-header">
     <h3 data-th-text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
   </div>
@@ -74,19 +74,19 @@
                   data-ng-repeat="codevalue in codevalues"
                   data-ng-show="codevalue.active">
                 <td>
-												<span data-editable-text="codevalue.display"
-                              data-e-name="display"
-                              data-e-form="rowform"
-                              onbeforesave="validate($data)">
-													{{codevalue.display}}
-												</span>
+                  <span data-editable-text="codevalue.display"
+                        data-e-name="display"
+                        data-e-form="rowform"
+                        onbeforesave="validate($data)">
+                    {{codevalue.display}}
+                  </span>
                 </td>
                 <td>
-												<span data-editable-text="codevalue.meaning"
-                              data-e-name="meaning"
-                              data-e-form="rowform">
-													{{codevalue.meaning}}
-												</span>
+                  <span data-editable-text="codevalue.meaning"
+                        data-e-name="meaning"
+                        data-e-form="rowform">
+                    {{codevalue.meaning}}
+                  </span>
                 </td>
                 <td>
                   <form class="form-buttons form-inline"

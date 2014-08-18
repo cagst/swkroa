@@ -156,106 +156,99 @@ import java.util.Map;
   }
 
   @Override
-  @CacheEvict(value = "users", key = "#user.getUserUID()")
+  @CacheEvict(value = "users", key = "#lockUserUID")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_LOCKED)
-  public User lockUserAccount(final @AuditInstigator User lockUser, final @AuditMessage String message, final @AuditInstigator User user)
+  public User lockUserAccount(final long lockUserUID, final @AuditMessage String message, final @AuditInstigator User user)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
-    Assert.notNull(lockUser, "Assertion Failed - argument [user] cannot be null");
+    Assert.isTrue(lockUserUID > 0, "Assertion Failed - argument[lockUserUID] must be greater than zero");
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling lockUserAccount for User [{}].", lockUser.getUsername());
+    LOGGER.info("Calling lockUserAccount for User [{}].", lockUserUID);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     Map<String, Long> params = new HashMap<String, Long>(2);
-    params.put("user_id", lockUser.getUserUID());
-    params.put("updt_id", lockUser.getUserUID());
+    params.put("user_id", lockUserUID);
+    params.put("updt_id", user.getUserUID());
 
     int cnt = getJdbcTemplate().update(stmtLoader.load(USER_LOCK), params);
     if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    user.setAccountedLockedDate(new DateTime());
-
-    return user;
+    return getUserByUID(lockUserUID);
   }
 
   @Override
-  @CacheEvict(value = "users", key = "#unlockUser.getUserUID()")
+  @CacheEvict(value = "users", key = "#unlockUserUID")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_UNLOCKED)
-  public User unlockUserAccount(final User unlockUser, final @AuditMessage String message, final @AuditInstigator User user)
+  public User unlockUserAccount(final long unlockUserUID, final @AuditMessage String message, final @AuditInstigator User user)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
-    Assert.notNull(unlockUser, "Assertion Failed - argument [unlockUser] cannot be null");
+    Assert.isTrue(unlockUserUID > 0, "Assertion Failed - argument [unlockUserUID] must be greater than zero");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling unlockUserAccount for User [{}] by User [{}].", unlockUser.getUsername(), user.getUsername());
+    LOGGER.info("Calling unlockUserAccount for User [{}] by User [{}].", unlockUserUID, user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     Map<String, Long> params = new HashMap<String, Long>(2);
+    params.put("user_id", unlockUserUID);
     params.put("updt_id", user.getUserUID());
-    params.put("user_id", unlockUser.getUserUID());
 
     int cnt = getJdbcTemplate().update(stmtLoader.load(USER_UNLOCK), params);
     if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    user.setAccountedLockedDate(null);
-    user.setSigninAttempts(0);
-
-    return user;
+    return getUserByUID(unlockUserUID);
   }
 
   @Override
-  @CacheEvict(value = "users", key = "#user.getUserUID()")
+  @CacheEvict(value = "users", key = "#enableUserUID")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_ENABLED)
-  public User enableUserAccount(final @AuditInstigator User enableUser, final @AuditMessage String message, final @AuditInstigator User user)
+  public User enableUserAccount(final long enableUserUID, final @AuditMessage String message, final @AuditInstigator User user)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
+    Assert.isTrue(enableUserUID > 0, "Assertion Failed - argument [enableUserUID] must be greater than zero");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
     LOGGER.info("Calling enableUserAccount for User [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     Map<String, Long> params = new HashMap<String, Long>(2);
-    params.put("user_id", enableUser.getUserUID());
-    params.put("updt_id", enableUser.getUserUID());
+    params.put("user_id", enableUserUID);
+    params.put("updt_id", user.getUserUID());
 
     int cnt = getJdbcTemplate().update(stmtLoader.load(USER_ENABLE), params);
     if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    user.setActive(true);
-
-    return user;
+    return getUserByUID(enableUserUID);
   }
 
   @Override
-  @CacheEvict(value = "users", key = "#unlockUser.getUserUID()")
+  @CacheEvict(value = "users", key = "#disableUserUID")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_DISABLED)
-  public User disableUserAccount(final User unlockUser, final @AuditMessage String message, final @AuditInstigator User user)
+  public User disableUserAccount(final long disableUserUID, final @AuditMessage String message, final @AuditInstigator User user)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
-    Assert.notNull(unlockUser, "Assertion Failed - argument [unlockUser] cannot be null");
+    Assert.isTrue(disableUserUID > 0, "Assertion Failed - argument [disableUserUID] must be greater than zero");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling disableUserAccount for User [{}] by User [{}].", unlockUser.getUsername(), user.getUsername());
+    LOGGER.info("Calling disableUserAccount for User [{}]", disableUserUID);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     Map<String, Long> params = new HashMap<String, Long>(2);
+    params.put("user_id", disableUserUID);
     params.put("updt_id", user.getUserUID());
-    params.put("user_id", unlockUser.getUserUID());
 
     int cnt = getJdbcTemplate().update(stmtLoader.load(USER_DISABLE), params);
     if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    user.setActive(false);
-
-    return user;
+    return getUserByUID(disableUserUID);
   }
 
   @Override
