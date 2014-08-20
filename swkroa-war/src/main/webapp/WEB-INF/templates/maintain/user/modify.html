@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+</head>
+<body>
+
+<div data-layout-fragment="content">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.user.modify.add}" data-ng-show="selectedUser.userUID == 0">
+      zzz Add User
+    </h3>
+
+    <h3 data-th-text="#{com.cagst.swkroa.user.modify.edit}" data-ng-show="selectedUser.userUID > 0">
+      zzz Edit User
+    </h3>
+  </div>
+
+</div>
+
+</body>
+</html>

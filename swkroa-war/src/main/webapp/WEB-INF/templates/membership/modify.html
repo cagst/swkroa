@@ -13,14 +13,12 @@
 
 <div data-layout-fragment="content" data-ng-controller="modifyController">
   <div class="page-header">
-    <h3 data-th-text="#{com.cagst.swkroa.membership.add}"
-        data-ng-show="membership.membershipUID == 0">
+    <h3 data-th-text="#{com.cagst.swkroa.membership.add}" data-ng-show="membership.membershipUID == 0">
       zzz Add Membership
     </h3>
     <input id="membershipId" type="hidden" data-th-value="${membershipId}" />
 
-    <h3 data-th-text="#{com.cagst.swkroa.membership.edit}"
-        data-ng-show="membership.membershipUID > 0">
+    <h3 data-th-text="#{com.cagst.swkroa.membership.edit}" data-ng-show="membership.membershipUID > 0">
       zzz Edit Membership
     </h3>
   </div>

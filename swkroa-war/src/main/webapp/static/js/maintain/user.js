@@ -6,7 +6,8 @@
  * Version: 1.0.0
  */
 
-var swkroaApp = angular.module('swkroaApp', []);
+swkroaApp.service('userService', ['$scope', '$http'], function($scope, $http) {
+});
 
 swkroaApp.controller('userListController', ['$scope', '$http', function($scope, $http) {
   $http.get('../api/users').success(function(data) {
