@@ -6,19 +6,38 @@
  * Version: 1.0.0
  */
 
-swkroaApp.service('userService', ['$scope', '$http'], function($scope, $http) {
+var maintainUserApp = angular.module('maintainUserApp', ['ui.router']);
+
+maintainUserApp.config(function($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise("/home");
+
+  $stateProvider
+    .state('home', {
+      url: "/home",
+      views: {
+        '': {
+          templateUrl: "../partials/maintain/user/partial_main.html",
+          controller: "userListController"
+        },
+
+        'list@home': {
+          templateUrl: "../partials/maintain/user/partial_list.html"
+        },
+
+        'detail@home': {
+          templateUrl: "../partials/maintain/user/partial_detail.html"
+        }
+      }
+    });
 });
 
-swkroaApp.controller('userListController', ['$scope', '$http', function($scope, $http) {
+maintainUserApp.controller('userListController', ['$scope', '$http', function($scope, $http) {
   $http.get('../api/users').success(function(data) {
     $scope.users = data;
   });
 
-  $scope.getUser = function(userUID) {
-    var url = '../api/users/' + userUID;
-    $http.get(url).success(function(data) {
-      $scope.selectedUser = data;
-    });
+  $scope.getUser = function(user) {
+    $scope.selectedUser = user;
   };
 
   $scope.addUser = function(user) {

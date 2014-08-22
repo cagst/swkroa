@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-
-<html>
-<body>
-
 <div data-ng-show="!selectedUser">
   <em>
-    <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.maintain.user.notselected}">
-      zzz No user selected.
+    <label class="panel-body text-muted text-center">
+      Select a user to view their details.
     </label>
   </em>
 </div>
@@ -20,29 +15,27 @@
         </small>
       </h2>
       <div>
-        <span data-th-text="#{com.cagst.swkroa.maintain.user.last.signin.date}">
-          zzz Last signin
-        </span>
-          <span data-ng-bind="selectedUser.lastSigninDate | date:'medium'" />
+        <span>Last signed in:</span>
+        <span data-ng-bind="selectedUser.lastSigninDate | date:'medium'" />
       </div>
     </div>
     <div class="container-small container-outline container-inner pull-right">
-      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.title}" class="text_bold">zzz Status</div>
-      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.expired}" class="indent-left"
+      <div class="text_bold">Account Status</div>
+      <div class="indent-left"
            data-ng-show="selectedUser.accountNonExpired == false">
-        zzz Expired
+        Expired
       </div>
-      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.locked}" class="indent-left"
+      <div class="indent-left"
            data-ng-show="selectedUser.accountNonLocked == false">
-        zzz Locked
+        Locked
       </div>
-      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.disabled}" class="indent-left"
+      <div class="indent-left"
            data-ng-show="selectedUser.enabled == false">
-        zzz Disabled
+        Disabled
       </div>
-      <div data-th-text="#{com.cagst.swkroa.user.details.account.status.enabled}" class="indent-left"
+      <div class="indent-left"
            data-ng-show="selectedUser.enabled == true && selectedUser.accountNonExpired == true && selectedUser.accountNonLocked == true">
-        zzz Enabled
+        Enabled
       </div>
     </div>
   </div>
@@ -53,29 +46,26 @@
               data-ng-click="unlockUser()"
               data-ng-show="selectedUser.accountNonLocked == false">
         <i class="fa fa-unlock"></i>
-        <span data-th-text="#{com.cagst.swkroa.user.details.account.action.unlock}">zzz Unlock</span>
+        <span>Unlock User</span>
       </button>
       <button type="button" class="btn btn-warning btn-xs"
               data-ng-click="enableUser()"
               data-ng-show="selectedUser.enabled == false">
-        <span data-th-text="#{com.cagst.swkroa.user.details.account.action.enable}">zzz Enable</span>
+        <span>Enable User</span>
       </button>
       <button type="button" class="btn btn-warning btn-xs"
               data-ng-click="disableUser()"
               data-ng-show="selectedUser.enabled == true && selectedUser.accountNonLocked == true">
         <i class="fa fa-ban"></i>
-        <span data-th-text="#{com.cagst.swkroa.user.details.account.action.disable}">zzz Disable</span>
+        <span>Disable User</span>
       </button>
     </div>
     <div class="split-footer-content pull-right">
       <a class="btn btn-primary btn-xs"
          data-ng-href="../maintain/users/{{selectedUser.userUID}}">
         <i class="fa fa-edit"></i>
-        <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+        <span>Edit User</span>
       </a>
     </div>
   </div>
 </div>
-
-</body>
-</html>

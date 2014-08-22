@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-
-<html>
-<body>
-
-<div data-th-fragment="userListing">
+<div>
   <div class="split-header">
     <div class="split-header-content form-group expand">
       <div>
@@ -16,13 +11,13 @@
   <div class="list-group constrain-view divider-right">
     <div>
       <div class="panel-body text-muted" data-ng-show="!users.length">
-        <em data-th-text="#{com.cagst.swkroa.maintain.user.nousers}">zzz No users</em>
+        <em>No users have been found, please narrow your search criteria.</em>
       </div>
       <div data-ng-show="users.length">
         <div class="list-group-item alt-list-group-item sel-list-group-item"
              data-ng-repeat="user in users"
              data-ng-class="{active: user.userUID === selectedUser.userUID}"
-             data-ng-click="getUser(user.userUID)">
+             data-ng-click="getUser(user)">
           <div>
             <span>
               {{user.fullName}}
@@ -42,6 +37,3 @@
     </div>
   </div>
 </div>
-
-</body>
-</html>

@@ -6,8 +6,10 @@
  * Version: 1.0.0
  */
 
-var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils'])
-                       .controller('swkroaController', ['$scope', '$http', '$filter', function($scope, $http, $filter, currencyFilter) {
+var msListingApp = angular.module('msListingApp', ['ui.bootstrap', 'ui.utils']);
+
+
+msListingApp.controller('swkroaController', ['$scope', '$http', '$filter', function($scope, $http, $filter, currencyFilter) {
 
   $scope.query = "";
 
