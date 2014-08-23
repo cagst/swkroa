@@ -16,8 +16,7 @@ maintainUserApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/home",
       views: {
         '': {
-          templateUrl: "../partials/maintain/user/partial_main.html",
-          controller: "userListController"
+          templateUrl: "../partials/maintain/user/partial_main.html"
         },
 
         'list@home': {
@@ -28,10 +27,14 @@ maintainUserApp.config(function($stateProvider, $urlRouterProvider) {
           templateUrl: "../partials/maintain/user/partial_detail.html"
         }
       }
+    })
+    .state('edit', {
+      url: "/edit",
+      templateUrl: "../partials/maintain/user/partial_modify.html"
     });
 });
 
-maintainUserApp.controller('userListController', ['$scope', '$http', function($scope, $http) {
+maintainUserApp.controller('userController', ['$scope', '$http', function($scope, $http) {
   $http.get('../api/users').success(function(data) {
     $scope.users = data;
   });
