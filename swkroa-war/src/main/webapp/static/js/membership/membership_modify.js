@@ -217,51 +217,51 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
     });
   };
 
-	$scope.removeAddress = function(member, address) {
-		if (address.addressUID > 0) {
-			address.active = false;
-		} else {
-			var idx = member.addresses.indexOf(address);
-			member.addresses.splice(idx, 1);
-		}
-	};
+  $scope.removeAddress = function(member, address) {
+    if (address.addressUID > 0) {
+      address.active = false;
+    } else {
+      var idx = member.addresses.indexOf(address);
+      member.addresses.splice(idx, 1);
+    }
+  };
 
-	$scope.addPhone = function(member) {
-		if (!member.phoneNumbers) {
-			member.phoneNumbers = new Array();
-		}
-		
-		member.phoneNumbers.push({
-			active: true
-		});
-	};
+  $scope.addPhone = function(member) {
+    if (!member.phoneNumbers) {
+      member.phoneNumbers = new Array();
+    }
 
-	$scope.removePhone = function(member, phone) {
-		if (phone.phoneUID > 0) {
-			phone.active = false;
-		} else {
-			var idx = member.phoneNumbers.indexOf(phone);
-			member.phoneNumbers.splice(idx, 1);
-		}
-	};
+    member.phoneNumbers.push({
+      active: true
+    });
+  };
 
-	$scope.addEmail = function(member) {
-		if (!member.emailAddresses) {
-			member.emailAddresses = new Array();
-		}
-		member.emailAddresses.push({
-			active: true
-		});
-	};
+  $scope.removePhone = function(member, phone) {
+    if (phone.phoneUID > 0) {
+      phone.active = false;
+    } else {
+      var idx = member.phoneNumbers.indexOf(phone);
+      member.phoneNumbers.splice(idx, 1);
+    }
+  };
 
-	$scope.removeEmail = function(member, email) {
-		if (email.emailAddressUID > 0) {
-			email.active = false;
-		} else {
-			var idx = member.emailAddresses.indexOf(email);
-			member.emailAddresses.splice(idx, 1);
-		}
-	};
+  $scope.addEmail = function(member) {
+    if (!member.emailAddresses) {
+      member.emailAddresses = new Array();
+    }
+    member.emailAddresses.push({
+      active: true
+    });
+  };
+
+  $scope.removeEmail = function(member, email) {
+    if (email.emailAddressUID > 0) {
+      email.active = false;
+    } else {
+      var idx = member.emailAddresses.indexOf(email);
+      member.emailAddresses.splice(idx, 1);
+    }
+  };
 
 	$scope.hasChanges = function(membership) {
 		return angular.equals(membership, original);

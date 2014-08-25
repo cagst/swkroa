@@ -2,6 +2,7 @@ package com.cagst.swkroa.user;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
@@ -29,8 +30,9 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
   @Before
   public void setUp() {
     CodeValueRepository codeValueRepo = Mockito.mock(CodeValueRepository.class);
+    ContactRepository contactRepo = Mockito.mock(ContactRepository.class);
 
-    repo = new UserRepositoryJdbc(createTestDataSource(), codeValueRepo);
+    repo = new UserRepositoryJdbc(createTestDataSource(), codeValueRepo, contactRepo);
     repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
   }
 

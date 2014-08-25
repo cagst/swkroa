@@ -6,6 +6,7 @@ import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.person.PersonRepositoryJdbc;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -57,11 +58,15 @@ import java.util.Map;
   /**
    * Primary constructor used to create an instance of <i>UserRepositoryJdbc</i>.
    *
-   * @param dataSource    The {@link DataSource} used to retrieve / persist data objects.
-   * @param codeValueRepo The {@link CodeValueRepository} to use to retrieve codified information.
+   * @param dataSource
+   *      The {@link DataSource} used to retrieve / persist data objects.
+   * @param codeValueRepo
+   *      The {@link CodeValueRepository} to use to retrieve codified information.
+   * @param contactRepo
+   *      The {@link ContactRepository} to use to populate contact objects.
    */
-  public UserRepositoryJdbc(final DataSource dataSource, final CodeValueRepository codeValueRepo) {
-    super(dataSource, codeValueRepo);
+  public UserRepositoryJdbc(final DataSource dataSource, final CodeValueRepository codeValueRepo, final ContactRepository contactRepo) {
+    super(dataSource, codeValueRepo, contactRepo);
   }
 
   @Override

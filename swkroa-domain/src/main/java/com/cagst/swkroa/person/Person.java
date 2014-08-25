@@ -1,13 +1,19 @@
 package com.cagst.swkroa.person;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import com.cagst.swkroa.contact.Address;
+import com.cagst.swkroa.contact.EmailAddress;
+import com.cagst.swkroa.contact.PhoneNumber;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -41,6 +47,10 @@ public class Person implements Serializable, Comparable<Person> {
 	private String name_middle;
 	private Locale locale;
 	private DateTimeZone time_zone;
+
+  private List<Address> addresses = new ArrayList<Address>();
+  private List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
+  private List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
 
 	// meta-data
 	private boolean active_ind = true;
@@ -188,6 +198,69 @@ public class Person implements Serializable, Comparable<Person> {
 	public void setTimeZone(final DateTimeZone time_zone) {
 		this.time_zone = time_zone;
 	}
+
+  public void clearAddresses() {
+    addresses.clear();
+  }
+
+  public void addAddress(final Address address) {
+    addresses.add(address);
+  }
+
+  public void removeAddress(final Address address) {
+    addresses.remove(address);
+  }
+
+  @Valid
+  public List<Address> getAddresses() {
+    return addresses;
+  }
+
+  public void setAddresses(final List<Address> addresses) {
+    this.addresses = addresses;
+  }
+
+  public void clearEmailAddresses() {
+    emailAddresses.clear();
+  }
+
+  public void addEmailAddress(final EmailAddress email) {
+    emailAddresses.add(email);
+  }
+
+  public void removeEmailAddress(final EmailAddress email) {
+    emailAddresses.remove(email);
+  }
+
+  @Valid
+  public List<EmailAddress> getEmailAddresses() {
+    return emailAddresses;
+  }
+
+  public void setEmailAddresses(final List<EmailAddress> emailAddresses) {
+    this.emailAddresses = emailAddresses;
+  }
+
+  public void clearPhoneNumbers() {
+    phoneNumbers.clear();
+  }
+
+  public void addPhoneNumber(final PhoneNumber phone) {
+    phoneNumbers.add(phone);
+  }
+
+  public void removePhoneNumber(final PhoneNumber phone) {
+    phoneNumbers.remove(phone);
+  }
+
+  @Valid
+  public List<PhoneNumber> getPhoneNumbers() {
+    return phoneNumbers;
+  }
+
+  public void setPhoneNumbers(final List<PhoneNumber> phoneNumbers) {
+    this.phoneNumbers = phoneNumbers;
+  }
 
 	/**
 	 * Gets the active status of the Person.

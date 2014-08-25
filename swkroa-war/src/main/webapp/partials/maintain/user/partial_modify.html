@@ -1,10 +1,10 @@
-<div>
+<div data-ng-controller="modifyUserController">
   <div class="page-header">
     <h3 data-ng-show="selectedUser.userUID == 0">Add User</h3>
     <h3 data-ng-show="selectedUser.userUID > 0">Edit User</h3>
   </div>
 
-  <div class="container-outline">
+  <form method="POST" name="userForm" novalidate data-ng-submit="save()" class="css-form">
     <div class="row row-inner spacer-top">
       <div class="col-xs-2">
         <label>Title</label>
@@ -28,7 +28,60 @@
         <input type="text" class="form-control" name="lastName" maxlength="50" placeholder="Enter Last Name"
                data-ng-model="selectedUser.lastName" />
       </div>
-
     </div>
-  </div>
+
+    <div data-ui-view="contact"/>
+
+    <div class="row row-inner spacer-top">
+      <div class="col-xs-12">
+        <div class="divider-inner-row">
+          <span>Account Information</span>
+        </div>
+      </div>
+    </div>
+    <div class="row row-inner spacer-top">
+      <div class="col-xs-2">
+        <label class="label-required">Username</label>
+        <input type="text" class="form-control" name="username" maxlength="50" placeholder="Enter Username"
+               data-ng-model="selectedUser.username"
+               data-ng-disabled="selectedUser.userUID > 0"/>
+      </div>
+      <div class="col-xs-2">
+        <label>Expires On</label>
+        <div class="input-group">
+          <input type="text" class="form-control"
+                 data-datepicker-popup="MM/dd/yyyy"
+                 data-is-open="opened"
+                 data-show-button-bar="false"
+                 data-show-weeks="false"
+                 data-ng-model="selectedUser.accountExpiredDate" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-ng-click="open($event)">
+              <i class="fa fa-calendar"></i>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="spacer-top">
+      <div class="divider-top">
+        <div class="spacer-top">
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-ng-show="selectedUser.userUID == 0"
+                  data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
+            <span>Create User</span>
+          </button>
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-ng-show="selectedUser.userUID > 0"
+                  data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
+            <span>Update User</span>
+          </button>
+          <a class="btn btn-default" ui-sref="home">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
