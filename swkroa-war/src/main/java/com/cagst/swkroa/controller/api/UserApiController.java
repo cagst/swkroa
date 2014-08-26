@@ -1,4 +1,4 @@
-package com.cagst.swkroa.controller.svc;
+package com.cagst.swkroa.controller.api;
 
 /**
  * Handles and retrieves {@link User} objects depending upon the URI template.
@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Controller
-public final class UserSvcController {
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserSvcController.class);
+public final class UserApiController {
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserApiController.class);
 
   @Autowired
   private UserService userService;

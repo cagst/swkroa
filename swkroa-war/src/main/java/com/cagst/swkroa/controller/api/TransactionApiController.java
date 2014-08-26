@@ -1,4 +1,4 @@
-package com.cagst.swkroa.controller.svc;
+package com.cagst.swkroa.controller.api;
 
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.transaction.Transaction;
@@ -20,8 +20,8 @@ import java.util.List;
  * @version 1.0.0
  */
 @Controller
-public final class TransactionSVCController {
-  private static final Logger LOGGER = LoggerFactory.getLogger(TransactionSVCController.class);
+public final class TransactionApiController {
+  private static final Logger LOGGER = LoggerFactory.getLogger(TransactionApiController.class);
 
   @Autowired
   private TransactionRepository transactionRepo;
@@ -32,7 +32,7 @@ public final class TransactionSVCController {
    * @param transaction The {@link Transaction} to persist.
    * @return The {@link Transaction} after it has been persisted.
    */
-  @RequestMapping(value = "/svc/transaction", method = RequestMethod.PUT)
+  @RequestMapping(value = "/api/transaction", method = RequestMethod.PUT)
   @ResponseBody
   public Transaction saveTransaction(final @RequestBody Transaction transaction) {
     LOGGER.info("Received request to save transaction.");
@@ -40,7 +40,7 @@ public final class TransactionSVCController {
     return transactionRepo.saveTransaction(transaction, WebAppUtils.getUser());
   }
 
-  @RequestMapping(value = "/svc/transaction/unpaid/{membershipId}", method = RequestMethod.GET)
+  @RequestMapping(value = "/api/transaction/unpaid/{membershipId}", method = RequestMethod.GET)
   @ResponseBody
   public List<UnpaidInvoice> getUnpaidTransactionsForMember(final @PathVariable long membershipId) {
     LOGGER.info("Received request to get unpaid transactions");

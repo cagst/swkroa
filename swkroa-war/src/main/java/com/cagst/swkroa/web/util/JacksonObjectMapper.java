@@ -1,8 +1,10 @@
 package com.cagst.swkroa.web.util;
 
+import com.cagst.swkroa.codevalue.CodeValue;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
@@ -25,5 +27,12 @@ public final class JacksonObjectMapper extends ObjectMapper {
 
     // Adds support for read-only properties (getters with no setters).
     this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    // Create a module to contain our custom serializer / deserializers.
+//    SimpleModule module = new SimpleModule();
+//    module.addSerializer(CodeValue.class, new CodeValueSerializer());
+//    module.addDeserializer(CodeValue.class, new CodeValueDeserializer());
+//
+//    this.registerModule(module);
   }
 }

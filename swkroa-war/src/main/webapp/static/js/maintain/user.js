@@ -6,9 +6,9 @@
  * Version: 1.0.0
  */
 
-var maintainUserApp = angular.module('maintainUserApp', ['ui.router']);
+//var maintainUserApp = angular.module('maintainUserApp', ['ui.router']);
 
-maintainUserApp.config(function($stateProvider, $urlRouterProvider) {
+swkroaApp.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise("/home");
 
   $stateProvider
@@ -39,7 +39,7 @@ maintainUserApp.config(function($stateProvider, $urlRouterProvider) {
     });
 });
 
-maintainUserApp.controller('userController', ['$scope', '$http', function($scope, $http) {
+swkroaApp.controller('userController', ['$scope', '$http', function($scope, $http) {
   $http.get('../api/users').success(function(data) {
     $scope.users = data;
   });
@@ -102,71 +102,38 @@ maintainUserApp.controller('userController', ['$scope', '$http', function($scope
 
 }]);
 
-maintainUserApp.controller('modifyUserController', ['$scope', '$http', function($scope, $http) {
-  $scope.addUser = function(user) {
-    $http.post('../api/users', user).success(function(data) {
-    });
-  };
+swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService', function($scope, $http, contactService) {
+  $scope.contactService = contactService;
 
-  $scope.editUser = function(user) {
-    $http.put('../api/users', user).success(function(data) {
-    });
-  };
+  $scope.states = contactService.getStates();
 
-  $scope.addAddress = function(user) {
-    if (!user.addresses) {
-      user.addresses = new Array();
-    }
+  contactService.getAddressTypes().then(function(data) {
+    $scope.addressTypes = data;
+  });
 
-    user.addresses.push({
-      active: true
-    });
-  };
+  contactService.getPhoneTypes().then(function(data) {
+    $scope.phoneTypes = data;
+  });
 
-  $scope.removeAddress = function(user, address) {
-    if (address.addressUID > 0) {
-      address.active = false;
-    } else {
-      var idx = user.addresses.indexOf(address);
-      user.addresses.splice(idx, 1);
-    }
-  };
+  contactService.getEmailTypes().then(function(data) {
+    $scope.emailTypes = data;
+  });
 
-  $scope.addPhone = function(user) {
-    if (!user.phoneNumbers) {
-      user.phoneNumbers = new Array();
-    }
+  $http.get('../svc/codeset/TITLE/').success(function(data) {
+    $scope.titles = data;
 
-    user.phoneNumbers.push({
-      active: true
-    });
-  };
-
-  $scope.removePhone = function(user, phone) {
-    if (phone.phoneUID > 0) {
-      phone.active = false;
-    } else {
-      var idx = user.phoneNumbers.indexOf(phone);
-      user.phoneNumbers.splice(idx, 1);
-    }
-  };
-
-  $scope.addEmail = function(user) {
-    if (!user.emailAddresses) {
-      user.emailAddresses = new Array();
-    }
-    user.emailAddresses.push({
-      active: true
-    });
-  };
-
-  $scope.removeEmail = function(user, email) {
-    if (email.emailAddressUID > 0) {
-      email.active = false;
-    } else {
-      var idx = user.emailAddresses.indexOf(email);
-      user.emailAddresses.splice(idx, 1);
-    }
-  };
+    syncAllItems($scope);
+  });
 
 }]);
+
+var syncAllItems = function(scope) {
+  if (scope.selectedUser.title) {
+    for (var idx = 0; idx < scope.titles.length; idx++) {
+      if (scope.selectedUser.title.codeValueUID == scope.titles[idx].codeValueUID) {
+        scope.selectedUser.title = scope.titles[idx];
+        break;
+      }
+    }
+  }
+}
