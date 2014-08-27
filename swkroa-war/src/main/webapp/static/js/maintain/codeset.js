@@ -6,31 +6,29 @@
  * Version: 1.0.0
  */
 
-var swkroaApp = angular.module('swkroaApp', ['xeditable']);
-
 swkroaApp.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
 
 swkroaApp.controller('codesetListController', function($scope, $http) {
-  $http.get('../svc/codeset').success(function(data) {
+  $http.get('/api/codeset').success(function(data) {
     $scope.codesets = data;
   });
 
   $scope.getCodeValues = function(codeSet) {
     $scope.selectedCodeSet = codeSet;
-    $http.get('../svc/codeset/' + codeSet.meaning).success(function(data) {
+    $http.get('/api/codeset/' + codeSet.meaning).success(function(data) {
       $scope.codevalues = data;
     });
   };
 
   $scope.addCodeValue = function(codeValue) {
-    $http:post('../svc/codevalue', codeValue).success(function(data) {
+    $http:post('/api/codevalue', codeValue).success(function(data) {
     });
   };
 
   $scope.editCodeValue = function(codeValue) {
-    $http.put('../svc/codevalue', codeValue).success(function(data) {
+    $http.put('/api/codevalue', codeValue).success(function(data) {
     });
   };
 
@@ -40,7 +38,7 @@ swkroaApp.controller('codesetListController', function($scope, $http) {
 
   $scope.removeCodeValue = function() {
     $scope.codevalue.active = false;
-    $http.put('../svc/codevalue', $scope.codevalue).success(function(data) {
+    $http.put('/api/codevalue', $scope.codevalue).success(function(data) {
       $scope.codevalue = data;
     })
     .error(function(data) {
@@ -61,7 +59,7 @@ swkroaApp.controller('codesetListController', function($scope, $http) {
   };
 
   $scope.saveCodeValue = function(codeValue) {
-    $http.put("../svc/codevalue", codeValue).success(function(data) {
+    $http.put("/api/codevalue", codeValue).success(function(data) {
       codeValue.codeValueUID = data.codeValueUID;
       codeValue.meaning = data.meaning;
       codeValue.codeValueUpdateCount = data.codeValueUpdateCount;

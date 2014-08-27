@@ -6,14 +6,11 @@
  * Version: 1.0.0
  */
 
-var msListingApp = angular.module('msListingApp', ['ui.bootstrap', 'ui.utils']);
-
-
-msListingApp.controller('swkroaController', ['$scope', '$http', '$filter', function($scope, $http, $filter, currencyFilter) {
+swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', function($scope, $http, $filter, currencyFilter) {
 
   $scope.query = "";
 
-  $http.get('../svc/codeset/TRANSACTION_ENTRY_TYPE/').success(function(data) {
+  $http.get('/api/codeset/TRANSACTION_ENTRY_TYPE/').success(function(data) {
     $scope.transactionEntryTypes = data;
   });
 
@@ -26,7 +23,7 @@ msListingApp.controller('swkroaController', ['$scope', '$http', '$filter', funct
   $scope.getMemberships = function() {
     $scope.membership = null;
 
-    var url = "../svc/memberships?q=";
+    var url = "/api/memberships?q=";
     if ($scope.query && $scope.query.length > 0) {
       url = url + $scope.query;
     }
@@ -37,14 +34,14 @@ msListingApp.controller('swkroaController', ['$scope', '$http', '$filter', funct
   };
 
   $scope.getMembership = function(membershipUID) {
-    $http.get('../svc/membership/' + membershipUID).success(function(data) {
+    $http.get('/api/membership/' + membershipUID).success(function(data) {
       $scope.selectedMembership = data;
     });
   };
 
   $scope.removeMembership = function() {
     $scope.selectedMembership.active = false;
-    $http.put("../svc/membership", $scope.selectedMembership).success(function(data) {
+    $http.put("/api/membership", $scope.selectedMembership).success(function(data) {
       $scope.selectedMembership = null;
     })
     .error(function(data) {
@@ -70,7 +67,7 @@ msListingApp.controller('swkroaController', ['$scope', '$http', '$filter', funct
     $scope.comment.parentEntityName = "MEMBERSHIP";
     $scope.comment.parentEntityUID  = $scope.selectedMembership.membershipUID;
 
-    $http.put("../svc/comments", $scope.comment).success(function(data) {
+    $http.put("/api/comments", $scope.comment).success(function(data) {
       if ($scope.commentIdx == -1) {
         $scope.selectedMembership.comments.push(data);
       } else {
@@ -83,7 +80,7 @@ msListingApp.controller('swkroaController', ['$scope', '$http', '$filter', funct
 
   $scope.removeComment = function() {
     $scope.comment.active = false;
-    $http.put("../svc/comments", $scope.comment).success(function(data) {
+    $http.put("/api/comments", $scope.comment).success(function(data) {
       $scope.selectedMembership.comments.splice($scope.commentIdx, 1);
     })
     .error(function(data) {
@@ -140,7 +137,7 @@ msListingApp.controller('swkroaController', ['$scope', '$http', '$filter', funct
 
   $scope.removeTransaction = function() {
     $scope.transaction.active = false;
-    $http.put("../svc/transaction", $scope.transaction).success(function(data) {
+    $http.put("/api/transaction", $scope.transaction).success(function(data) {
       $scope.selectedMembership.transactions.splice($scope.transactionIdx, 1);
     })
     .error(function(data) {
@@ -155,7 +152,7 @@ msListingApp.controller('swkroaController', ['$scope', '$http', '$filter', funct
   $scope.saveTransaction = function() {
     $scope.transaction.membershipUID  = $scope.selectedMembership.membershipUID;
 
-    $http.put("../svc/transaction", $scope.transaction).success(function(data) {
+    $http.put("/api/transaction", $scope.transaction).success(function(data) {
       if ($scope.transactionIdx == -1) {
         $scope.selectedMembership.transactions.push(data);
       } else {

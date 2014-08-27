@@ -7,86 +7,87 @@
  * 
  */
 
-var msModifyApp = angular.module('msModifyApp', ['ui.bootstrap', 'ui.utils']);
-
-msModifyApp.controller('modifyController', ['$scope', '$http', '$window', function($scope, $http, $window) {
+swkroaApp.controller('modifyMembershipController', ['$scope', '$http', '$window', 'contactService', function($scope, $http, $window, contactService) {
   var membershipId = $("#membershipId").val();
   var original     = null;
   var syncItems    = 0;
   var syncCount    = 0;
 
+  $scope.contactService = contactService;
+  $scope.states = contactService.getStates();
+
   syncItems++;
-  $http.get('../svc/codeset/ENTITY_TYPE/').success(function(data) {
+  $http.get('/api/codeset/ENTITY_TYPE/').success(function(data) {
     $scope.entityTypes = data;
 
     syncCount++;
     if (syncCount == syncItems) {
-      syncAllItems($scope);
+      syncAllItems($scope, contactService);
     }
   });
 
   syncItems++;
-  $http.get('../svc/codeset/TITLE/').success(function(data) {
+  $http.get('/api/codeset/TITLE/').success(function(data) {
     $scope.titles = data;
 
     syncCount++;
     if (syncCount == syncItems) {
-      syncAllItems($scope);
+      syncAllItems($scope, contactService);
     }
   });
 
   syncItems++;
-  $http.get('../svc/codeset/ADDRESS_TYPE').success(function(data) {
+  contactService.getAddressTypes().then(function(data) {
     $scope.addressTypes = data;
 
     syncCount++;
     if (syncCount == syncItems) {
-      syncAllItems($scope);
+      syncAllItems($scope, contactService);
     }
   });
 
   syncItems++;
-  $http.get('../svc/codeset/PHONE_TYPE').success(function(data) {
+  contactService.getPhoneTypes().then(function(data) {
     $scope.phoneTypes = data;
 
     syncCount++;
     if (syncCount == syncItems) {
-      syncAllItems($scope);
+      syncAllItems($scope, contactService);
     }
   });
 
   syncItems++;
-  $http.get('../svc/codeset/EMAIL_TYPE').success(function(data) {
+  contactService.getEmailTypes().then(function(data) {
     $scope.emailTypes = data;
 
     syncCount++;
     if (syncCount == syncItems) {
-      syncAllItems($scope);
+      syncAllItems($scope, contactService);
     }
   });
 
   syncItems++;
-  $http.get('../svc/membertype').success(function(data) {
+  $http.get('/api/membertype').success(function(data) {
     $scope.memberTypes = data;
 
     syncCount++;
     if (syncCount == syncItems) {
-      syncAllItems($scope);
+      syncAllItems($scope, contactService);
     }
   });
 
   syncItems++;
-  $http.get('../svc/counties/').success(function(data) {
+  $http.get('/api/counties/').success(function(data) {
     $scope.counties = data;
 
     syncCount++;
     if (syncCount == syncItems) {
-      syncAllItems($scope);
+      syncAllItems($scope, contactService);
     }
   });
 
   syncItems++;
-  $http.get('../svc/membership/' + membershipId).success(function(data) {
+  $http.get('/api/membership/' + membershipId).success(function(data) {
     $scope.membership = data;
     $scope.fixedDuesAmount = ($scope.membership.duesAmount > 0);
 
@@ -94,7 +95,7 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
 
     syncCount++;
     if (syncCount == syncItems) {
-      syncAllItems($scope);
+      syncAllItems($scope, contactService);
     }
   });
 
@@ -200,242 +201,139 @@ msModifyApp.controller('modifyController', ['$scope', '$http', '$window', functi
     if (firstName  && firstName.length > 2 &&
         lastName   && lastName.length > 2 &
         (!ownerIdent || ownerIdent.length == 0)) {
-      $.get("../svc/generateOwnerId/" + firstName + "/" + lastName, function(data) {
+      $.get("/api/generateOwnerId/" + firstName + "/" + lastName, function(data) {
         member.ownerIdent = data;
         $scope.$digest();
       });
     };
   };
 
-  $scope.addAddress = function(member) {
-    if (!member.addresses) {
-      member.addresses = new Array();
-    }
+  $scope.hasChanges = function(membership) {
+    return angular.equals(membership, original);
+  };
 
-    member.addresses.push({
-      active: true
+  $scope.save = function() {
+    $http.post("/api/membership", $scope.membership).success(function(data) {
+      $window.location.href = data.replace(/"/g, "");
     });
   };
 
-  $scope.removeAddress = function(member, address) {
-    if (address.addressUID > 0) {
-      address.active = false;
+  $scope.validateVotingCounty = function(membership, membershipCounty) {
+    if (membershipCounty.votingCounty) {
+      angular.forEach(membership.membershipCounties, function(cnty) {
+        cnty.votingCounty = false;
+      });
+
+      membershipCounty.votingCounty = true;
     } else {
-      var idx = member.addresses.indexOf(address);
-      member.addresses.splice(idx, 1);
+      membershipCounty.votingCounty = false;
     }
-  };
-
-  $scope.addPhone = function(member) {
-    if (!member.phoneNumbers) {
-      member.phoneNumbers = new Array();
-    }
-
-    member.phoneNumbers.push({
-      active: true
-    });
-  };
-
-  $scope.removePhone = function(member, phone) {
-    if (phone.phoneUID > 0) {
-      phone.active = false;
-    } else {
-      var idx = member.phoneNumbers.indexOf(phone);
-      member.phoneNumbers.splice(idx, 1);
-    }
-  };
-
-  $scope.addEmail = function(member) {
-    if (!member.emailAddresses) {
-      member.emailAddresses = new Array();
-    }
-    member.emailAddresses.push({
-      active: true
-    });
-  };
-
-  $scope.removeEmail = function(member, email) {
-    if (email.emailAddressUID > 0) {
-      email.active = false;
-    } else {
-      var idx = member.emailAddresses.indexOf(email);
-      member.emailAddresses.splice(idx, 1);
-    }
-  };
-
-	$scope.hasChanges = function(membership) {
-		return angular.equals(membership, original);
-	};
-
-	$scope.save = function() {
-		$http.post("../svc/membership", $scope.membership).success(function(data) {
-			$window.location.href = data.replace(/"/g, "");
-		});
-	};
-
-	$scope.validateVotingCounty = function(membership, membershipCounty) {
-  	if (membershipCounty.votingCounty) {
-  		angular.forEach(membership.membershipCounties, function(cnty) {
-  			cnty.votingCounty = false;
-  		});
-
-  		membershipCounty.votingCounty = true;
-  	} else {
-  		membershipCounty.votingCounty = false;
-  	}
   }
-
 }]);
 
-var syncAllItems = function(scope) {
-	// sync up our code lists
-	if (scope.membership.entityType) {
-		for (var idx = 0; idx < scope.entityTypes.length; idx++) {
-			if (scope.membership.entityType.codeValueUID == scope.entityTypes[idx].codeValueUID) {
-				scope.membership.entityType = scope.entityTypes[idx];
-				break;
-			}
-		}
-	}
+var syncAllItems = function(scope, contactService) {
+  // sync up our code lists
+  if (scope.membership.entityType) {
+    for (var idx = 0; idx < scope.entityTypes.length; idx++) {
+      if (scope.membership.entityType.codeValueUID == scope.entityTypes[idx].codeValueUID) {
+        scope.membership.entityType = scope.entityTypes[idx];
+        break;
+      }
+    }
+  }
 
-	if (scope.membership.primaryMember) {
-		if (scope.membership.primaryMember.memberType) {
-			for (var idx = 0; idx < scope.memberTypes.length; idx++) {
-				if (scope.membership.primaryMember.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
-					scope.membership.primaryMember.memberType = scope.memberTypes[idx];
-					break;
-				}
-			}
-		}
+  if (scope.membership.primaryMember) {
+    if (scope.membership.primaryMember.memberType) {
+      for (var idx = 0; idx < scope.memberTypes.length; idx++) {
+        if (scope.membership.primaryMember.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
+          scope.membership.primaryMember.memberType = scope.memberTypes[idx];
+          break;
+        }
+      }
+    }
 
-		if (scope.membership.primaryMember.person && scope.membership.primaryMember.person.title) {
-			for (var idx = 0; idx < scope.titles.length; idx++) {
-				if (scope.membership.primaryMember.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
-					scope.membership.primaryMember.person.title = scope.titles[idx];
-					break;
-				}
-			}
-		}
+    if (scope.membership.primaryMember.person && scope.membership.primaryMember.person.title) {
+      for (var idx = 0; idx < scope.titles.length; idx++) {
+        if (scope.membership.primaryMember.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
+          scope.membership.primaryMember.person.title = scope.titles[idx];
+          break;
+        }
+      }
+    }
 
-		if (scope.membership.primaryMember.person && scope.membership.primaryMember.person.gender) {
-			for (var idx = 0; idx < scope.genders.length; idx++) {
-				if (scope.membership.primaryMember.person.gender.codeValueUID == scope.genders[idx].codeValueUID) {
-					scope.membership.primaryMember.person.gender = scope.genders[idx];
-					break;
-				}
-			}
-		}
-	}
+    if (scope.membership.primaryMember.person && scope.membership.primaryMember.person.gender) {
+      for (var idx = 0; idx < scope.genders.length; idx++) {
+        if (scope.membership.primaryMember.person.gender.codeValueUID == scope.genders[idx].codeValueUID) {
+          scope.membership.primaryMember.person.gender = scope.genders[idx];
+          break;
+        }
+      }
+    }
+  }
 
-	for (var idx1 = 0; idx1 < scope.membership.primaryMember.addresses.length; idx1++) {
-		for (var idx2 = 0; idx2 < scope.addressTypes.length; idx2++) {
-			if (scope.membership.primaryMember.addresses[idx1].addressType.codeValueUID == scope.addressTypes[idx2].codeValueUID) {
-				scope.membership.primaryMember.addresses[idx1].addressType = scope.addressTypes[idx2];
-				break;
-			}
-		}
-	}
+  contactService.syncAddressTypes(scope.membership.primaryMember.addresses, scope.addressTypes);
+  contactService.syncPhoneTypes(scope.membership.primaryMember.phoneNumbers, scope.phoneTypes);
+  contactService.syncEmailTypes(scope.membership.primaryMember.emailAddresses, scope.emailTypes);
 
-	for (var idx1 = 0; idx1 < scope.membership.primaryMember.phoneNumbers.length; idx1++) {
-		for (var idx2 = 0; idx2 < scope.phoneTypes.length; idx2++) {
-			if (scope.membership.primaryMember.phoneNumbers[idx1].phoneType.codeValueUID == scope.phoneTypes[idx2].codeValueUID) {
-				scope.membership.primaryMember.phoneNumbers[idx1].phoneType = scope.phoneTypes[idx2];
-				break;
-			}
-		}
-	}
+  if (scope.membership.primarySpouse && scope.membership.primarySpouse.person) {
+    if (scope.membership.primarySpouse.memberType) {
+      for (var idx = 0; idx < scope.memberTypes.length; idx++) {
+        if (scope.membership.primarySpouse.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
+          scope.membership.primarySpouse.memberType = scope.memberTypes[idx];
+          break;
+        }
+      }
+    }
 
-	for (var idx1 = 0; idx1 < scope.membership.primaryMember.emailAddresses.length; idx1++) {
-		for (var idx2 = 0; idx2 < scope.emailTypes.length; idx2++) {
-			if (scope.membership.primaryMember.emailAddresses[idx1].emailType.codeValueUID == scope.emailTypes[idx2].codeValueUID) {
-				scope.membership.primaryMember.emailAddresses[idx1].emailType = scope.emailTypes[idx2];
-				break;
-			}
-		}
-	}
+    if (scope.membership.primarySpouse.person.title) {
+      for (var idx = 0; idx < scope.titles.length; idx++) {
+        if (scope.membership.primarySpouse.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
+          scope.membership.primarySpouse.person.title = scope.titles[idx];
+          break;
+        }
+      }
+    }
 
-	if (scope.membership.primarySpouse && scope.membership.primarySpouse.person) {
-		if (scope.membership.primarySpouse.memberType) {
-			for (var idx = 0; idx < scope.memberTypes.length; idx++) {
-				if (scope.membership.primarySpouse.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
-					scope.membership.primarySpouse.memberType = scope.memberTypes[idx];
-					break;
-				}
-			}
-		}
+    if (scope.membership.primarySpouse.person.gender) {
+      for (var idx = 0; idx < scope.genders.length; idx++) {
+        if (scope.membership.primarySpouse.person.gender.codeValueUID == scope.genders[idx].codeValueUID) {
+          scope.membership.primarySpouse.person.gender = scope.genders[idx];
+          break;
+        }
+      }
+    }
+  }
 
-		if (scope.membership.primarySpouse.person.title) {
-			for (var idx = 0; idx < scope.titles.length; idx++) {
-				if (scope.membership.primarySpouse.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
-					scope.membership.primarySpouse.person.title = scope.titles[idx];
-					break;
-				}
-			}
-		}
-		
-		if (scope.membership.primarySpouse.person.gender) {
-			for (var idx = 0; idx < scope.genders.length; idx++) {
-				if (scope.membership.primarySpouse.person.gender.codeValueUID == scope.genders[idx].codeValueUID) {
-					scope.membership.primarySpouse.person.gender = scope.genders[idx];
-					break;
-				}
-			}
-		}
-	}
+  for (var idx1 = 0; idx1 < scope.membership.membershipCounties.length; idx1++) {
+    for (var idx2 = 0; idx2 < scope.counties.length; idx2++) {
+      if (scope.membership.membershipCounties[idx1].county.countyUID == scope.counties[idx2].countyUID) {
+        scope.membership.membershipCounties[idx1].county = scope.counties[idx2];
+        break;
+      }
+    }
+  }
 
-	for (var idx1 = 0; idx1 < scope.membership.membershipCounties.length; idx1++) {
-		for (var idx2 = 0; idx2 < scope.counties.length; idx2++) {
-			if (scope.membership.membershipCounties[idx1].county.countyUID == scope.counties[idx2].countyUID) {
-				scope.membership.membershipCounties[idx1].county = scope.counties[idx2];
-				break;
-			}
-		}
-	}
+  for (var idx1 = 0; idx1 < scope.membership.additionalMembers.length; idx1++) {
+    if (scope.membership.additionalMembers[idx1].person && scope.membership.additionalMembers[idx1].person.title) {
+      for (var idx2 = 0; idx2 < scope.titles.length; idx2++) {
+        if (scope.membership.additionalMembers[idx1].person.title.codeValueUID == scope.titles[idx2].codeValueUID) {
+          scope.membership.additionalMembers[idx1].person.title = scope.titles[idx2];
+          break;
+        }
+      }
+    }
 
-	for (var idx1 = 0; idx1 < scope.membership.additionalMembers.length; idx1++) {
-		if (scope.membership.additionalMembers[idx1].person && scope.membership.additionalMembers[idx1].person.title) {
-			for (var idx2 = 0; idx2 < scope.titles.length; idx2++) {
-				if (scope.membership.additionalMembers[idx1].person.title.codeValueUID == scope.titles[idx2].codeValueUID) {
-					scope.membership.additionalMembers[idx1].person.title = scope.titles[idx2];
-					break;
-				}
-			}
-		}
-		
-		if (scope.membership.additionalMembers[idx1].person && scope.membership.additionalMembers[idx1].person.gender) {
-			for (var idx2 = 0; idx2 < scope.genders.length; idx2++) {
-				if (scope.membership.additionalMembers[idx1].person.gender.codeValueUID == scope.genders[idx2].codeValueUID) {
-					scope.membership.additionalMembers[idx1].person.gender = scope.genders[idx2];
-					break;
-				}
-			}
-		}
+    if (scope.membership.additionalMembers[idx1].person && scope.membership.additionalMembers[idx1].person.gender) {
+      for (var idx2 = 0; idx2 < scope.genders.length; idx2++) {
+        if (scope.membership.additionalMembers[idx1].person.gender.codeValueUID == scope.genders[idx2].codeValueUID) {
+          scope.membership.additionalMembers[idx1].person.gender = scope.genders[idx2];
+          break;
+        }
+      }
+    }
 
-		for (var idx2 = 0; idx2 < scope.membership.additionalMembers[idx1].addresses.length; idx2++) {
-			for (var idx3 = 0; idx3 < scope.addressTypes.length; idx3++) {
-				if (scope.membership.additionalMembers[idx1].addresses[idx2].addressType.codeValueUID == scope.addressTypes[idx3].codeValueUID) {
-					scope.membership.additionalMembers[idx1].addresses[idx2].addressType = scope.addressTypes[idx3];
-					break;
-				}
-			}
-		}
-
-		for (var idx2 = 0; idx2 < scope.membership.additionalMembers[idx1].phoneNumbers.length; idx2++) {
-			for (var idx3 = 0; idx3 < scope.phoneTypes.length; idx3++) {
-				if (scope.membership.additionalMembers[idx1].phoneNumbers[idx2].phoneType.codeValueUID == scope.phoneTypes[idx3].codeValueUID) {
-					scope.membership.additionalMembers[idx1].phoneNumbers[idx2].phoneType = scope.phoneTypes[idx3];
-					break;
-				}
-			}
-		}
-
-		for (var idx2 = 0; idx2 < scope.membership.additionalMembers[idx1].emailAddresses.length; idx2++) {
-			for (var idx3 = 0; idx3 < scope.emailTypes.length; idx3++) {
-				if (scope.membership.additionalMembers[idx1].emailAddresses[idx2].emailType.codeValueUID == scope.emailTypes[idx3].codeValueUID) {
-					scope.membership.additionalMembers[idx1].emailAddresses[idx2].emailType = scope.emailTypes[idx3];
-					break;
-				}
-			}
-		}
-	}
+    contactService.syncAddressTypes(scope.membership.additionalMembers[idx1].addresses, scope.addressTypes);
+    contactService.syncPhoneTypes(scope.membership.additionalMembers[idx1].phoneNumbers, scope.phoneTypes);
+    contactService.syncEmailTypes(scope.membership.additionalMembers[idx1].emailAddresses, scope.emailTypes);
+  }
 }

@@ -6,8 +6,33 @@
  * Version: 1.0.0
  */
 
-var swkroaApp = angular.module('swkroaApp', ['ui.router']);
+var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils', 'ui.router', 'xeditable']);
 
+// add a 'startsWith' method to the String class
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function(str) {
+    return this.slice(0, str.length) === str;
+  };
+}
+
+// add an interceptor to our http service to inject the context root for our requests
+swkroaApp.factory('contextRootInterceptor', function($location) {
+  return {
+    'request': function(config) {
+      if (config.url.startsWith("/")) {
+        config.url = "/swkroa-war" + config.url;
+      }
+
+      return config;
+    }
+  };
+});
+
+swkroaApp.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('contextRootInterceptor');
+}]);
+
+// define a service for Contacts
 swkroaApp.service('contactService', ['$http', function($http) {
   this.getStates = function() {
     return [
@@ -80,7 +105,7 @@ swkroaApp.service('contactService', ['$http', function($http) {
   };
 
   this.getAddressTypes = function() {
-    var promise = $http.get('../svc/codeset/ADDRESS_TYPE').then(function(response) {
+    var promise = $http.get('/api/codeset/ADDRESS_TYPE').then(function(response) {
       return response.data;
     });
 
@@ -88,15 +113,15 @@ swkroaApp.service('contactService', ['$http', function($http) {
   };
 
   this.getPhoneTypes = function() {
-    var promise = $http.get('../svc/codeset/PHONE_TYPE').then(function(response) {
-      return reponse.data;
+    var promise = $http.get('/api/codeset/PHONE_TYPE').then(function(response) {
+      return response.data;
     });
 
     return promise;
   };
 
   this.getEmailTypes = function() {
-    var promise = $http.get('../svc/codeset/EMAIL_TYPE').then(function(response) {
+    var promise = $http.get('/api/codeset/EMAIL_TYPE').then(function(response) {
       return response.data;
     });
 
@@ -160,6 +185,8 @@ swkroaApp.service('contactService', ['$http', function($http) {
   };
 
   this.syncAddressTypes = function(addresses, types) {
+    var states = this.getStates();
+
     for (var idx1 = 0; idx1 < addresses.length; idx1++) {
       for (var idx2 = 0; idx2 < types.length; idx2++) {
         if (addresses[idx1].addressType.codeValueUID == types[idx2].codeValueUID) {

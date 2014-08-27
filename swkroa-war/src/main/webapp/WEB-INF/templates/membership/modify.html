@@ -5,13 +5,12 @@
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
   <script type="text/javascript" data-th-src="@{/static/js/membership/membership_modify.js}"></script>
 </head>
 
-<body data-ng-app="msModifyApp">
+<body>
 
-<div data-layout-fragment="content" data-ng-controller="modifyController">
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="modifyMembershipController">
   <div class="page-header">
     <h3 data-th-text="#{com.cagst.swkroa.membership.add}" data-ng-show="membership.membershipUID == 0">
       zzz Add Membership

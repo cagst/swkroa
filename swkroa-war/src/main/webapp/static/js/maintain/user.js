@@ -6,8 +6,6 @@
  * Version: 1.0.0
  */
 
-//var maintainUserApp = angular.module('maintainUserApp', ['ui.router']);
-
 swkroaApp.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise("/home");
 
@@ -16,13 +14,13 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/home",
       views: {
         '': {
-          templateUrl: "../partials/maintain/user/partial_main.html"
+          templateUrl: "/partials/maintain/user/partial_main.html"
         },
         'list@home': {
-          templateUrl: "../partials/maintain/user/partial_list.html"
+          templateUrl: "/partials/maintain/user/partial_list.html"
         },
         'detail@home': {
-          templateUrl: "../partials/maintain/user/partial_detail.html"
+          templateUrl: "/partials/maintain/user/partial_detail.html"
         }
       }
     })
@@ -30,17 +28,17 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/edit",
       views: {
         '': {
-          templateUrl: "../partials/maintain/user/partial_modify.html"
+          templateUrl: "/partials/maintain/user/partial_modify.html"
         },
         'contact@edit': {
-          templateUrl: "../partials/maintain/user/partial_contact.html"
+          templateUrl: "/partials/maintain/user/partial_contact.html"
         }
       }
     });
 });
 
 swkroaApp.controller('userController', ['$scope', '$http', function($scope, $http) {
-  $http.get('../api/users').success(function(data) {
+  $http.get('/api/users').success(function(data) {
     $scope.users = data;
   });
 
@@ -49,7 +47,7 @@ swkroaApp.controller('userController', ['$scope', '$http', function($scope, $htt
   };
 
   $scope.unlockUser = function() {
-    var url = "../api/users/" + $scope.selectedUser.userUID + "/unlock";
+    var url = "/api/users/" + $scope.selectedUser.userUID + "/unlock";
 
     $http.put(url).success(function(data) {
       for (idx = 0; idx < $scope.users.length; idx++) {
@@ -63,7 +61,7 @@ swkroaApp.controller('userController', ['$scope', '$http', function($scope, $htt
   };
 
   $scope.disableUser = function() {
-    var url = "../api/users/" + $scope.selectedUser.userUID + "/disable";
+    var url = "/api/users/" + $scope.selectedUser.userUID + "/disable";
 
     $http.put(url).success(function(data) {
       for (idx = 0; idx < $scope.users.length; idx++) {
@@ -77,7 +75,7 @@ swkroaApp.controller('userController', ['$scope', '$http', function($scope, $htt
   };
 
   $scope.enableUser = function() {
-    var url = "../api/users/" + $scope.selectedUser.userUID + "/enable";
+    var url = "/api/users/" + $scope.selectedUser.userUID + "/enable";
 
     $http.put(url).success(function(data) {
       for (idx = 0; idx < $scope.users.length; idx++) {
@@ -91,12 +89,12 @@ swkroaApp.controller('userController', ['$scope', '$http', function($scope, $htt
   };
 
   $scope.addUser = function(user) {
-    $http.post('../api/users', user).success(function(data) {
+    $http.post('/api/users', user).success(function(data) {
     });
   };
 
   $scope.editUser = function(user) {
-    $http.put('../api/users', user).success(function(data) {
+    $http.put('/api/users', user).success(function(data) {
     });
   };
 
@@ -119,7 +117,7 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService
     $scope.emailTypes = data;
   });
 
-  $http.get('../svc/codeset/TITLE/').success(function(data) {
+  $http.get('/api/codeset/TITLE/').success(function(data) {
     $scope.titles = data;
 
     syncAllItems($scope);

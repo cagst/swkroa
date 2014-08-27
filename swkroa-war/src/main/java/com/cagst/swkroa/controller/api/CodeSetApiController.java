@@ -52,7 +52,7 @@ public final class CodeSetApiController {
    *
    * @return A JSON representation of the CodeValues associated to the specified CodeSet.
    */
-  @RequestMapping(value = {"/api/codeset/{codeSetMeaning}"}, method = RequestMethod.GET)
+  @RequestMapping(value = "/api/codeset/{codeSetMeaning}", method = RequestMethod.GET)
   @ResponseBody
   public List<CodeValue> getCodeValuesForCodeSet(final @PathVariable String codeSetMeaning) {
     LOGGER.info("Received request to retrieve codevalues for codeset [{}].", codeSetMeaning);

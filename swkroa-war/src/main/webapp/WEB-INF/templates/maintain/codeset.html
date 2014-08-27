@@ -5,15 +5,12 @@
       layout:decorator="layouts/main">
 
 <head>
-  <link type="text/css" data-th-href="@{/static/angular-xeditable-0.1.8/css/xeditable.css}" rel="stylesheet" />
-
   <script type="text/javascript" data-th-src="@{/static/js/maintain/codeset.js}"></script>
-  <script type="text/javascript" data-th-src="@{/static/angular-xeditable-0.1.8/js/xeditable.min.js}"></script>
 </head>
 
 <body>
 
-<div data-layout-fragment="content" data-ng-controller="codesetListController">
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="codesetListController">
   <div class="page-header">
     <h3 data-th-text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
   </div>
