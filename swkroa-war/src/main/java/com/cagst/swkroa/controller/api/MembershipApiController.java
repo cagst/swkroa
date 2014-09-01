@@ -143,8 +143,8 @@ public final class MembershipApiController {
   }
 
   /**
-   * Handles the request and persists the {@link Membership} to persistent storage. Called from the Membership Details
-   * page when deleting a membership.
+   * Handles the request and persists the {@link Membership} to persistent storage. Called from the Add/Edit Membership
+   * page when adding/editing a membership.
    *
    * @param membership
    *     The {@link Membership} to persist.
@@ -154,7 +154,7 @@ public final class MembershipApiController {
   @RequestMapping(value = {"/api/membership"}, method = RequestMethod.PUT)
   @ResponseBody
   public Membership saveMembership(final @RequestBody Membership membership) {
-    LOGGER.info("Received request to remove membership [{}]", membership.getMembershipUID());
+    LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
     return membershipService.saveMembership(membership, WebAppUtils.getUser());
   }

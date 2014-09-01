@@ -6,7 +6,11 @@
  * Version: 1.0.0
  */
 
-var swkroaApp = angular.module('swkroaApp', ['ui.bootstrap', 'ui.utils', 'ui.router', 'xeditable']);
+var swkroaApp = angular.module('swkroaApp',
+  ['ui.bootstrap',
+   'ui.utils',
+   'ui.router',
+   'xeditable']);
 
 // add a 'startsWith' method to the String class
 if (typeof String.prototype.startsWith != 'function') {

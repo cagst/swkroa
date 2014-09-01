@@ -4,13 +4,13 @@
       <div class="divider-inner-row">
         <span>Addresses</span>
         <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
-                data-ng-click="contactService.addAddress(selectedUser)">
+                data-ng-click="contactService.addAddress(user)">
           <i class="fa fa-plus"></i>
           <span>Add Address</span>
         </button>
       </div>
 
-      <div data-ng-repeat="address in selectedUser.addresses"
+      <div data-ng-repeat="address in user.addresses"
            data-ng-show="address.active"
            data-ng-form="addressForm"
            class="grouper">
@@ -24,7 +24,7 @@
           </div>
           <div class="col-xs-4 col-xs-offset-4">
             <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
-                   data-ng-click="contactService.removeAddress(selectedUser, address)">
+                   data-ng-click="contactService.removeAddress(user, address)">
               <i class="fa fa-trash-o"></i>
               <span>Remove Address</span>
             </button>
@@ -76,12 +76,12 @@
       <div class="divider-inner-row">
         <span>Phone Numbers</span>
         <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
-                data-ng-click="contactService.addPhone(selectedUser)">
+                data-ng-click="contactService.addPhone(user)">
           <i class="fa fa-plus"></i>
           <span>Add Phone</span>
         </button>
       </div>
-      <div data-ng-repeat="phone in selectedUser.phoneNumbers"
+      <div data-ng-repeat="phone in user.phoneNumbers"
            data-ng-show="phone.active"
            data-ng-form="phoneForm"
            class="grouper">
@@ -95,7 +95,7 @@
           </div>
           <div class="col-xs-4 col-xs-offset-4">
             <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
-                    data-ng-click="contactService.removePhone(selectedUser, phone)">
+                    data-ng-click="contactService.removePhone(user, phone)">
               <i class="fa fa-trash-o"></i>
               <span>Remove Phone</span>
             </button>
@@ -120,12 +120,12 @@
       <div class="divider-inner-row">
         <span>Email Addresses</span>
         <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
-                data-ng-click="contactService.addEmail(selectedUser)">
+                data-ng-click="contactService.addEmail(user)">
           <i class="fa fa-plus"></i>
           <span>Add Email</span>
         </button>
       </div>
-      <div data-ng-repeat="email in selectedUser.emailAddresses"
+      <div data-ng-repeat="email in user.emailAddresses"
            data-ng-show="email.active"
            data-ng-form="emailForm"
            class="grouper">
@@ -139,7 +139,7 @@
           </div>
           <div class="col-xs-4 col-xs-offset-4">
             <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
-                    data-ng-click="contactService.removeEmail(selectedUser, email)">
+                    data-ng-click="contactService.removeEmail(user, email)">
               <i class="fa fa-trash-o"></i>
               <span>Remove Email</span>
             </button>

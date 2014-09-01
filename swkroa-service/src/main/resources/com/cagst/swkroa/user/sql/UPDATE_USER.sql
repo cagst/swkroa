@@ -1,6 +1,5 @@
 UPDATE user
    SET username              = :username
-      ,password              = :password
       ,temporary_pwd_ind     = :temporary_pwd_ind
       ,account_locked_dt_tm  = :account_locked_dt_tm
       ,account_expired_dt_tm = :account_expired_dt_tm

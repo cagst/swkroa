@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  // @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_SIGNIN_ATTEMP)
   public UserDetails loadUserByUsername(final @AuditInstigator String userName) throws UsernameNotFoundException,
       DataAccessException {
 

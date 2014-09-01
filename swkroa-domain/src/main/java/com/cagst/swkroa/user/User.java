@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.LocalDateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -87,7 +86,6 @@ public final class User extends Person implements UserDetails {
    * @return The {@link String} password for the User.
    */
   @Override
-  @JsonIgnore
   public String getPassword() {
     return password;
   }

@@ -24,6 +24,17 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
+    .state('add', {
+      url: "/add",
+      views: {
+        '': {
+          templateUrl: "/partials/maintain/user/partial_modify.html"
+        },
+        'contact@add': {
+          templateUrl: "/partials/maintain/user/partial_contact.html"
+        }
+      }
+    })
     .state('edit', {
       url: "/edit",
       views: {
@@ -37,23 +48,28 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
     });
 });
 
-swkroaApp.controller('userController', ['$scope', '$http', function($scope, $http) {
+swkroaApp.controller('userController', ['$scope', '$http', '$state', function($scope, $http, $state) {
   $http.get('/api/users').success(function(data) {
     $scope.users = data;
+    $("#successMessage").hide();
   });
 
   $scope.getUser = function(user) {
-    $scope.selectedUser = user;
+//    $scope.user = user;
+    $scope.share = {
+      user: user,
+      successMessage: ""
+    }
   };
 
   $scope.unlockUser = function() {
-    var url = "/api/users/" + $scope.selectedUser.userUID + "/unlock";
+    var url = "/api/users/" + $scope.user.userUID + "/unlock";
 
     $http.put(url).success(function(data) {
       for (idx = 0; idx < $scope.users.length; idx++) {
-        if ($scope.selectedUser.userUID == $scope.users[idx].userUID) {
+        if ($scope.user.userUID == $scope.users[idx].userUID) {
           $scope.users[idx] = data;
-          $scope.selectedUser = data;
+          $scope.share.user = data;
           break;
         }
       }
@@ -61,13 +77,13 @@ swkroaApp.controller('userController', ['$scope', '$http', function($scope, $htt
   };
 
   $scope.disableUser = function() {
-    var url = "/api/users/" + $scope.selectedUser.userUID + "/disable";
+    var url = "/api/users/" + $scope.user.userUID + "/disable";
 
     $http.put(url).success(function(data) {
       for (idx = 0; idx < $scope.users.length; idx++) {
-        if ($scope.selectedUser.userUID == $scope.users[idx].userUID) {
+        if ($scope.user.userUID == $scope.users[idx].userUID) {
           $scope.users[idx] = data;
-          $scope.selectedUser = data;
+          $scope.share.user = data;
           break;
         }
       }
@@ -75,32 +91,35 @@ swkroaApp.controller('userController', ['$scope', '$http', function($scope, $htt
   };
 
   $scope.enableUser = function() {
-    var url = "/api/users/" + $scope.selectedUser.userUID + "/enable";
+    var url = "/api/users/" + $scope.user.userUID + "/enable";
 
     $http.put(url).success(function(data) {
       for (idx = 0; idx < $scope.users.length; idx++) {
-        if ($scope.selectedUser.userUID == $scope.users[idx].userUID) {
+        if ($scope.user.userUID == $scope.users[idx].userUID) {
           $scope.users[idx] = data;
-          $scope.selectedUser = data;
+          $scope.share.user = data;
           break;
         }
       }
     });
   };
 
-  $scope.addUser = function(user) {
-    $http.post('/api/users', user).success(function(data) {
-    });
-  };
+  $scope.newUser = function() {
+    $scope.share = {
+      user: {
+        userUID: 0,
+        passwordTemporary: true,
+        active: true
+      },
+      successMessage: ""
+    };
 
-  $scope.editUser = function(user) {
-    $http.put('/api/users', user).success(function(data) {
-    });
+    $state.go("add");
   };
-
 }]);
 
-swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService', function($scope, $http, contactService) {
+swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService', '$state', function($scope, $http, contactService, $state) {
+  var original          = angular.copy($scope.user);
   $scope.contactService = contactService;
 
   $scope.states = contactService.getStates();
@@ -123,13 +142,38 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService
     syncAllItems($scope);
   });
 
+  $scope.hasChanges = function(user) {
+    return angular.equals(user, original);
+  };
+
+  $scope.save = function() {
+    $http.put('/api/users', $scope.share.user).
+      success(function(data) {
+        if ($scope.share.user.userUID == 0) {
+          $scope.users.push(data);
+          $scope.share.user = data;
+          $scope.share.successMessage = "User " + data.fullName + " was created successfully!";
+        } else {
+          var idx = $scope.users.indexOf($scope.user);
+
+          $scope.users[idx] = data;
+          $scope.share.user = data;
+          $scope.share.successMessage = "User " + data.fullName + " was updated successfully!";
+        }
+
+        $state.go("home");
+      }).
+      error(function(data, status,headers, config) {
+        $scope.errorMessage = "Unknown Exception, unable to save user.";
+      })
+  };
 }]);
 
 var syncAllItems = function(scope) {
-  if (scope.selectedUser.title) {
+  if (scope.share.user.title) {
     for (var idx = 0; idx < scope.titles.length; idx++) {
-      if (scope.selectedUser.title.codeValueUID == scope.titles[idx].codeValueUID) {
-        scope.selectedUser.title = scope.titles[idx];
+      if (scope.share.user.title.codeValueUID == scope.titles[idx].codeValueUID) {
+        scope.share.user.title = scope.titles[idx];
         break;
       }
     }
