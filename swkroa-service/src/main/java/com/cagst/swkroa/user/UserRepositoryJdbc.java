@@ -57,8 +57,6 @@ import java.util.Map;
   private static final String INSERT_USER = "INSERT_USER";
   private static final String UPDATE_USER = "UPDATE_USER";
 
-  private final PasswordEncoder passwordEncoder;
-
   /**
    * Primary constructor used to create an instance of <i>UserRepositoryJdbc</i>.
    *
@@ -71,7 +69,6 @@ import java.util.Map;
    */
   public UserRepositoryJdbc(final DataSource dataSource, final CodeValueRepository codeValueRepo, final ContactRepository contactRepo) {
     super(dataSource, codeValueRepo, contactRepo);
-    passwordEncoder = new BCryptPasswordEncoder(12);
   }
 
   @Override
@@ -358,8 +355,6 @@ import java.util.Map;
     if (doesUsernameExist(newUser.getUsername())) {
       throw new UsernameTakenException(newUser.getUsername());
     }
-
-    newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -257,6 +257,10 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(builder, "[Assertion Failed] - argument [builder] cannot be null");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
 
+    if (user.getUserUID() == 0) {
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+
     return userRepo.saveUser(builder, user);
   }
 
@@ -269,6 +273,12 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   @Override
   @Transactional(readOnly = true)
   public User getUserByUID(final long uid) {
-    return userRepo.getUserByUID(uid);
+    User user = userRepo.getUserByUID(uid);
+
+    // retrieve SecurityPolicy for user
+    SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
+    user.setSecurityPolicy(securityPolicy);
+
+    return user;
   }
 }

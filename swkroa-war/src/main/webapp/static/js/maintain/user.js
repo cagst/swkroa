@@ -55,23 +55,25 @@ swkroaApp.controller('userController', ['$scope', '$http', '$state', function($s
   });
 
   $scope.getUser = function(user) {
-    $scope.share = {
-      user: user,
-      successMessage: null
-    }
+    var url = "/api/users/" + user.userUID;
+
+    $http.get(url).success(function(data) {
+      var idx = $scope.users.indexOf(user);
+      $scope.users[idx] = data;
+      $scope.share = {
+        user: data,
+        successMessage: null
+      }
+    });
   };
 
   $scope.unlockUser = function() {
     var url = "/api/users/" + $scope.user.userUID + "/unlock";
 
     $http.put(url).success(function(data) {
-      for (idx = 0; idx < $scope.users.length; idx++) {
-        if ($scope.user.userUID == $scope.users[idx].userUID) {
-          $scope.users[idx] = data;
-          $scope.share.user = data;
-          break;
-        }
-      }
+      var idx = $scope.users.indexOf($scope.share.user);
+      $scope.users[idx] = data;
+      $scope.share.user = data;
     });
   };
 
@@ -79,13 +81,9 @@ swkroaApp.controller('userController', ['$scope', '$http', '$state', function($s
     var url = "/api/users/" + $scope.user.userUID + "/disable";
 
     $http.put(url).success(function(data) {
-      for (idx = 0; idx < $scope.users.length; idx++) {
-        if ($scope.user.userUID == $scope.users[idx].userUID) {
-          $scope.users[idx] = data;
-          $scope.share.user = data;
-          break;
-        }
-      }
+      var idx = $scope.users.indexOf($scope.share.user);
+      $scope.users[idx] = data;
+      $scope.share.user = data;
     });
   };
 
@@ -93,13 +91,9 @@ swkroaApp.controller('userController', ['$scope', '$http', '$state', function($s
     var url = "/api/users/" + $scope.user.userUID + "/enable";
 
     $http.put(url).success(function(data) {
-      for (idx = 0; idx < $scope.users.length; idx++) {
-        if ($scope.user.userUID == $scope.users[idx].userUID) {
-          $scope.users[idx] = data;
-          $scope.share.user = data;
-          break;
-        }
-      }
+      var idx = $scope.users.indexOf($scope.share.user);
+      $scope.users[idx] = data;
+      $scope.share.user = data;
     });
   };
 
@@ -145,6 +139,28 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService
 
   $scope.hasChanges = function(user) {
     return angular.equals(user, original);
+  };
+
+  $scope.doesUsernameExist = function() {
+    if ($scope.share.user.username && $scope.share.user.username.length > 0) {
+      var url = "/api/users/" + $scope.share.user.username + "/exists";
+
+      $http.get(url).success(function(data) {
+        $scope.usernameExists = data;
+      });
+    }
+  };
+
+  $scope.validatePasswordFields = function() {
+    $scope.passwordError = null;
+
+    if ($scope.share.user.password && $scope.share.user.password.length > 0 &&
+        $scope.confirmPassword && $scope.confirmPassword.length > 0) {
+
+      if ($scope.share.user.password != $scope.confirmPassword) {
+        $scope.passwordError = "The confirmation password does not match the password!";
+      }
+    }
   };
 
   $scope.save = function() {

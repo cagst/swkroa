@@ -121,6 +121,22 @@ public final class UserApiController {
   }
 
   /**
+   * Handles the request and checks if the specified username is already being used.
+   *
+   * @param username
+   *      The username to check to see if it already exists.
+   *
+   * @return {@code true} if the username is being used, {@code false} otherwise.
+   */
+  @RequestMapping(value = "/api/users/{username}/exists", method = RequestMethod.GET)
+  @ResponseBody
+  public boolean usernameExists(final @PathVariable String username) {
+    LOGGER.info("Received request to check if username [{}] already exists", username);
+
+    return userService.doesUsernameExist(username);
+  }
+
+  /**
    * Handles the request and persists the {@link User} to persistent storage. Called from the Add/Edit User
    * page when adding/editing a user.
    *
