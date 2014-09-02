@@ -20,6 +20,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -55,6 +57,8 @@ import java.util.Map;
   private static final String INSERT_USER = "INSERT_USER";
   private static final String UPDATE_USER = "UPDATE_USER";
 
+  private final PasswordEncoder passwordEncoder;
+
   /**
    * Primary constructor used to create an instance of <i>UserRepositoryJdbc</i>.
    *
@@ -67,6 +71,7 @@ import java.util.Map;
    */
   public UserRepositoryJdbc(final DataSource dataSource, final CodeValueRepository codeValueRepo, final ContactRepository contactRepo) {
     super(dataSource, codeValueRepo, contactRepo);
+    passwordEncoder = new BCryptPasswordEncoder(12);
   }
 
   @Override
@@ -345,14 +350,16 @@ import java.util.Map;
 
   /** Place helper methods below this line. **/
 
-  private User insertUser(final User newUser, final User user) throws IncorrectResultSizeDataAccessException,
-      DataAccessException {
+  private User insertUser(final User newUser, final User user)
+      throws IncorrectResultSizeDataAccessException, DataAccessException, UsernameTakenException {
 
     LOGGER.info("Calling insertUser for [{}]", newUser.getUsername());
 
     if (doesUsernameExist(newUser.getUsername())) {
       throw new UsernameTakenException(newUser.getUsername());
     }
+
+    newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     KeyHolder keyHolder = new GeneratedKeyHolder();

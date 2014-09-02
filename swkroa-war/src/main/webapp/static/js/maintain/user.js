@@ -55,10 +55,9 @@ swkroaApp.controller('userController', ['$scope', '$http', '$state', function($s
   });
 
   $scope.getUser = function(user) {
-//    $scope.user = user;
     $scope.share = {
       user: user,
-      successMessage: ""
+      successMessage: null
     }
   };
 
@@ -111,7 +110,7 @@ swkroaApp.controller('userController', ['$scope', '$http', '$state', function($s
         passwordTemporary: true,
         active: true
       },
-      successMessage: ""
+      successMessage: null
     };
 
     $state.go("add");
@@ -119,8 +118,10 @@ swkroaApp.controller('userController', ['$scope', '$http', '$state', function($s
 }]);
 
 swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService', '$state', function($scope, $http, contactService, $state) {
-  var original          = angular.copy($scope.user);
+  var original          = angular.copy($scope.share.user);
   $scope.contactService = contactService;
+
+  $("#errorMessage").hide();
 
   $scope.states = contactService.getStates();
 
@@ -163,9 +164,20 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService
 
         $state.go("home");
       }).
-      error(function(data, status,headers, config) {
-        $scope.errorMessage = "Unknown Exception, unable to save user.";
-      })
+      error(function(data, status) {
+        switch (status) {
+        case 400: // bad request
+          $scope.errorMessage = "Username " + data.username + " is already in use!";
+          break;
+        case 409: // conflict
+          $scope.errorMessage = "User " + data.fullName + " has been updated by another user!";
+          break;
+        default:
+          $scope.errorMessage = "Unknown Exception, unable to save user!";
+          break;
+        }
+        $("#errorMessage").show();
+      });
   };
 }]);
 

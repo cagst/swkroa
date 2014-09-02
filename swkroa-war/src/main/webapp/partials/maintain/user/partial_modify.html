@@ -3,7 +3,8 @@
     <h3 data-ng-show="share.user.userUID == 0">Add User</h3>
     <h3 data-ng-show="share.user.userUID > 0">Edit User</h3>
 
-    <div id="errorMessage" class="alert alert-danger alert-dismissible" role="alert">
+    <div id="errorMessage" class="alert alert-danger alert-dismissible" role="alert"
+         data-ng-show="errorMessage">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
       <strong>Warning!</strong>
       <div data-ng-bind="errorMessage"></div>

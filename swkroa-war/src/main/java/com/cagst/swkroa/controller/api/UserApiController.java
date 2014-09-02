@@ -11,10 +11,14 @@ package com.cagst.swkroa.controller.api;
 
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserService;
+import com.cagst.swkroa.user.UsernameTakenException;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -127,9 +131,17 @@ public final class UserApiController {
    */
   @RequestMapping(value = {"/api/users"}, method = RequestMethod.PUT)
   @ResponseBody
-  public User saveUser(final @RequestBody User user) {
+  public ResponseEntity<User> saveUser(final @RequestBody User user) {
     LOGGER.info("Received request to save membership [{}]", user.getUserUID());
 
-    return userService.saveUser(user, WebAppUtils.getUser());
+    try {
+      return new ResponseEntity<User>(userService.saveUser(user, WebAppUtils.getUser()), HttpStatus.OK);
+    } catch (UsernameTakenException ex) {
+      return new ResponseEntity<User>(user, HttpStatus.BAD_REQUEST);
+    } catch (OptimisticLockingFailureException ex) {
+      return new ResponseEntity<User>(user, HttpStatus.CONFLICT);
+    } catch (Exception ex) {
+      return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
