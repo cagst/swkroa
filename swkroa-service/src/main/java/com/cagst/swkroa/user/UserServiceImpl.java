@@ -4,6 +4,7 @@ import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
+import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.role.RoleRepository;
 import com.cagst.swkroa.security.SecurityPolicy;
 import com.cagst.swkroa.security.SecurityService;
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   private final UserRepository userRepo;
   private final RoleRepository roleRepo;
   private final SecurityService securityService;
+  private final ContactRepository contactRepo;
   private final PasswordEncoder passwordEncoder;
 
   private MessageSourceAccessor messages;
@@ -47,18 +49,27 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   /**
    * Primary Constructor used to create an instance of <i>UserServiceImpl</i>.
    *
-   * @param userRepo        The {@link UserRepository} to use to retrieve / update {@link User Users}.
-   * @param roleRepo        The {@link RoleRepository} to use to retrieve the roles / privileges for the {@link User}.
-   * @param securityService The {@link SecurityService} to use.
-   * @param passwordEncoder The {@link PasswordEncoder} to use to check / encode user passwords.
+   * @param userRepo
+   *     The {@link UserRepository} to use to retrieve / update {@link User Users}.
+   * @param roleRepo
+   *     The {@link RoleRepository} to use to retrieve the roles / privileges for the {@link User}.
+   * @param securityService
+   *     The {@link SecurityService} to use.
+   * @param contactRepo
+   *     The {@link ContactRepository} to use to retrieve contact information of the {@link User}.
+   * @param passwordEncoder
+   *     The {@link PasswordEncoder} to use to check / encode user passwords.
    */
   public UserServiceImpl(final UserRepository userRepo,
                          final RoleRepository roleRepo,
                          final SecurityService securityService,
+                         final ContactRepository contactRepo,
                          final PasswordEncoder passwordEncoder) {
+
     this.userRepo = userRepo;
     this.roleRepo = roleRepo;
     this.securityService = securityService;
+    this.contactRepo = contactRepo;
     this.passwordEncoder = passwordEncoder;
   }
 
@@ -165,8 +176,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
     Assert.hasText(oldPassword, "[Assertion Failed] - argument [oldPassword] must not be null, empty, or blank.");
     Assert.hasText(newPassword, "[Assertion Failed] - argument [newPassword] must not be null, empty, or blank.");
-    Assert.hasText(confirmPassword,
-        "[Assertion Failed] - argument [confirmPassword] must not be null, empty, or blank.");
+    Assert.hasText(confirmPassword, "[Assertion Failed] - argument [confirmPassword] must not be null, empty, or blank.");
 
     if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
       LOGGER.warn("Old password is not valid!");
@@ -196,6 +206,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     String msg = messages.getMessage("com.cagst.swkroa.changepwd.audit.message", new Object[]{user.getUsername()},
         "Password changed for user [{0}].");
 
+    user.setPassword(checkNewPassword);
     return userRepo.changeUserPassword(user, checkNewPassword, msg);
   }
 
@@ -208,11 +219,11 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     String msg;
     if (unlockUserUID == user.getUserUID()) {
       msg = messages.getMessage("com.cagst.swkroa.unlock.auto.audit.message",
-            new Object[]{unlockUserUID}, "Account was automatically unlocked for user [{0}].");
+          new Object[]{unlockUserUID}, "Account was automatically unlocked for user [{0}].");
     } else {
       msg = messages.getMessage("com.cagst.swkroa.unlock.manual.audit.message",
-            new Object[]{user.getUsername(), unlockUserUID},
-            "Account was manually unlocked by user [{0}] for user [{1}].");
+          new Object[]{user.getUsername(), unlockUserUID},
+          "Account was manually unlocked by user [{0}] for user [{1}].");
     }
 
     return userRepo.unlockUserAccount(unlockUserUID, msg, user);
@@ -225,8 +236,8 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
 
     String msg = messages.getMessage("com.cagst.swkroa.enable.audit.message",
-           new Object[]{user.getUsername(), enableUserUID},
-           "Account was enabled by user [{0}] for user [{1}].");
+        new Object[]{user.getUsername(), enableUserUID},
+        "Account was enabled by user [{0}] for user [{1}].");
 
     return userRepo.enableUserAccount(enableUserUID, msg, user);
   }
@@ -257,8 +268,8 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(builder, "[Assertion Failed] - argument [builder] cannot be null");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
 
-    if (user.getUserUID() == 0) {
-      user.setPassword(passwordEncoder.encode(user.getPassword()));
+    if (builder.getUserUID() == 0) {
+      builder.setPassword(passwordEncoder.encode(builder.getPassword()));
     }
 
     return userRepo.saveUser(builder, user);
@@ -278,6 +289,10 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     // retrieve SecurityPolicy for user
     SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
     user.setSecurityPolicy(securityPolicy);
+
+    user.setAddresses(contactRepo.getAddressesForPerson(user));
+    user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
+    user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
 
     return user;
   }

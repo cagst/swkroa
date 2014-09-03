@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-											http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean name="roleRepo" class="com.cagst.swkroa.role.RoleRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-	</bean>
-	
-	<bean name="codeValueRepo" class="com.cagst.swkroa.codevalue.CodeValueRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-	</bean>
-	
-	<bean name="countyRepo" class="com.cagst.swkroa.county.CountyRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-	</bean>
-	
-	<bean name="auditRepo" class="com.cagst.swkroa.audit.AuditEventRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-	</bean>
-	
-	<bean name="userRepo" class="com.cagst.swkroa.user.UserRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-		<constructor-arg ref="codeValueRepo" />
-    <constructor-arg ref="contactRepo" />
-	</bean>
-	
-	<bean name="memberTypeRepo" class="com.cagst.swkroa.member.MemberTypeRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-	</bean>
-	
-	<bean name="contactRepo" class="com.cagst.swkroa.contact.ContactRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-		<constructor-arg ref="codeValueRepo" />
-	</bean>
-	
-	<bean name="personRepo" class="com.cagst.swkroa.person.PersonRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-		<constructor-arg ref="codeValueRepo" />
-    <constructor-arg ref="contactRepo" />
-	</bean>
-	
-	<bean name="memberRepo" class="com.cagst.swkroa.member.MemberRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-		<constructor-arg ref="personRepo" />
-		<constructor-arg ref="codeValueRepo" />
-		<constructor-arg ref="memberTypeRepo" />
-		<constructor-arg ref="countyRepo" />
-		<constructor-arg ref="contactRepo" />
-	</bean>
-	
-	<bean name="membershipRepo" class="com.cagst.swkroa.member.MembershipRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-		<constructor-arg ref="memberRepo" />
-		<constructor-arg ref="codeValueRepo" />
-	</bean>
-	
-	<bean name="commentRepo" class="com.cagst.swkroa.comment.CommentRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-	</bean>
-	
-	<bean name="transactionRepo" class="com.cagst.swkroa.transaction.TransactionRepositoryJdbc">
-		<constructor-arg ref="datasource" />
-		<constructor-arg ref="codeValueRepo" />
-		<constructor-arg ref="memberRepo" />
-	</bean>
+  <bean name="roleRepo" class="com.cagst.swkroa.role.RoleRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+  </bean>
+
+  <bean name="codeValueRepo" class="com.cagst.swkroa.codevalue.CodeValueRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+  </bean>
+
+  <bean name="countyRepo" class="com.cagst.swkroa.county.CountyRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+  </bean>
+
+  <bean name="auditRepo" class="com.cagst.swkroa.audit.AuditEventRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+  </bean>
+
+  <bean name="userRepo" class="com.cagst.swkroa.user.UserRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+    <constructor-arg ref="codeValueRepo"/>
+    <constructor-arg ref="contactRepo"/>
+  </bean>
+
+  <bean name="memberTypeRepo" class="com.cagst.swkroa.member.MemberTypeRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+  </bean>
+
+  <bean name="contactRepo" class="com.cagst.swkroa.contact.ContactRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+    <constructor-arg ref="codeValueRepo"/>
+  </bean>
+
+  <bean name="personRepo" class="com.cagst.swkroa.person.PersonRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+    <constructor-arg ref="codeValueRepo"/>
+    <constructor-arg ref="contactRepo"/>
+  </bean>
+
+  <bean name="memberRepo" class="com.cagst.swkroa.member.MemberRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+    <constructor-arg ref="personRepo"/>
+    <constructor-arg ref="codeValueRepo"/>
+    <constructor-arg ref="memberTypeRepo"/>
+    <constructor-arg ref="countyRepo"/>
+    <constructor-arg ref="contactRepo"/>
+  </bean>
+
+  <bean name="membershipRepo" class="com.cagst.swkroa.member.MembershipRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+    <constructor-arg ref="memberRepo"/>
+    <constructor-arg ref="codeValueRepo"/>
+  </bean>
+
+  <bean name="commentRepo" class="com.cagst.swkroa.comment.CommentRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+  </bean>
+
+  <bean name="transactionRepo" class="com.cagst.swkroa.transaction.TransactionRepositoryJdbc">
+    <constructor-arg ref="datasource"/>
+    <constructor-arg ref="codeValueRepo"/>
+    <constructor-arg ref="memberRepo"/>
+  </bean>
 </beans>

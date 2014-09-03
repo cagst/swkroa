@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-											http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean name="securityService" class="com.cagst.swkroa.security.SecurityServiceImpl">
-		<property name="maximumSigninAttempts" value="${security.max.signin.attempts}" />
-		<property name="timeoutPeriodInMinutes" value="${security.timeout.period.mins}" />
-		<property name="passwordExpiryInDays" value="${security.password.expiry.days}" />
-		<property name="accountLockedDays" value="${security.account.locked.days}" />
-	</bean>
-	
-	<bean name="userService" class="com.cagst.swkroa.user.UserServiceImpl">
-		<constructor-arg ref="userRepo" />
-		<constructor-arg ref="roleRepo" />
-		<constructor-arg ref="securityService" />
-		<constructor-arg ref="passwordEncoder" />
-	</bean>
-	
-	<bean name="membershipService" class="com.cagst.swkroa.member.MembershipServiceImpl">
-		<constructor-arg ref="membershipRepo" />
-		<constructor-arg ref="contactRepo" />
-		<constructor-arg ref="commentRepo" />
-		<constructor-arg ref="transactionRepo" />
-	</bean>
-	
-	<bean name="userUtils" class="com.cagst.swkroa.utils.UserUtilitiesImpl">
-		<constructor-arg ref="userRepo" />
-	</bean>
+  <bean name="securityService" class="com.cagst.swkroa.security.SecurityServiceImpl">
+    <property name="maximumSigninAttempts" value="${security.max.signin.attempts}"/>
+    <property name="timeoutPeriodInMinutes" value="${security.timeout.period.mins}"/>
+    <property name="passwordExpiryInDays" value="${security.password.expiry.days}"/>
+    <property name="accountLockedDays" value="${security.account.locked.days}"/>
+  </bean>
+
+  <bean name="userService" class="com.cagst.swkroa.user.UserServiceImpl">
+    <constructor-arg ref="userRepo"/>
+    <constructor-arg ref="roleRepo"/>
+    <constructor-arg ref="securityService"/>
+    <constructor-arg ref="contactRepo"/>
+    <constructor-arg ref="passwordEncoder"/>
+  </bean>
+
+  <bean name="membershipService" class="com.cagst.swkroa.member.MembershipServiceImpl">
+    <constructor-arg ref="membershipRepo"/>
+    <constructor-arg ref="contactRepo"/>
+    <constructor-arg ref="commentRepo"/>
+    <constructor-arg ref="transactionRepo"/>
+  </bean>
+
+  <bean name="userUtils" class="com.cagst.swkroa.utils.UserUtilitiesImpl">
+    <constructor-arg ref="userRepo"/>
+  </bean>
 </beans>

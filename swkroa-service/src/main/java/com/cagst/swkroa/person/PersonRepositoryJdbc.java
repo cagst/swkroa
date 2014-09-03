@@ -101,19 +101,19 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
 
     for (Address address : person.getAddresses()) {
       address.setParentEntityUID(savedPerson.getPersonUID());
-      address.setParentEntityName(ContactRepository.ENTITY_MEMBER);
+      address.setParentEntityName(ContactRepository.ENTITY_PERSON);
       contactRepo.saveAddress(address, user);
     }
 
     for (PhoneNumber phone : person.getPhoneNumbers()) {
       phone.setParentEntityUID(savedPerson.getPersonUID());
-      phone.setParentEntityName(ContactRepository.ENTITY_MEMBER);
+      phone.setParentEntityName(ContactRepository.ENTITY_PERSON);
       contactRepo.savePhoneNumber(phone, user);
     }
 
     for (EmailAddress email : person.getEmailAddresses()) {
       email.setParentEntityUID(savedPerson.getPersonUID());
-      email.setParentEntityName(ContactRepository.ENTITY_MEMBER);
+      email.setParentEntityName(ContactRepository.ENTITY_PERSON);
       contactRepo.saveEmailAddress(email, user);
     }
 

@@ -113,28 +113,52 @@ swkroaApp.controller('userController', ['$scope', '$http', '$state', function($s
 
 swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService', '$state', function($scope, $http, contactService, $state) {
   var original          = angular.copy($scope.share.user);
+  var syncItems         = 0;
+  var syncCount         = 0;
   $scope.contactService = contactService;
 
   $("#errorMessage").hide();
 
   $scope.states = contactService.getStates();
 
+  syncItems++;
   contactService.getAddressTypes().then(function(data) {
     $scope.addressTypes = data;
+
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope, contactService);
+    }
   });
 
+  syncItems++;
   contactService.getPhoneTypes().then(function(data) {
     $scope.phoneTypes = data;
+
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope, contactService);
+    }
   });
 
+  syncItems++;
   contactService.getEmailTypes().then(function(data) {
     $scope.emailTypes = data;
+
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope, contactService);
+    }
   });
 
+  syncItems++;
   $http.get('/api/codeset/TITLE/').success(function(data) {
     $scope.titles = data;
 
-    syncAllItems($scope);
+    syncCount++;
+    if (syncCount == syncItems) {
+      syncAllItems($scope, contactService);
+    }
   });
 
   $scope.hasChanges = function(user) {
@@ -142,7 +166,7 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService
   };
 
   $scope.doesUsernameExist = function() {
-    if ($scope.share.user.username && $scope.share.user.username.length > 0) {
+    if ($scope.share.user.userUID == 0 &&  $scope.share.user.username && $scope.share.user.username.length > 0) {
       var url = "/api/users/" + $scope.share.user.username + "/exists";
 
       $http.get(url).success(function(data) {
@@ -197,7 +221,7 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService
   };
 }]);
 
-var syncAllItems = function(scope) {
+var syncAllItems = function(scope, contactService) {
   if (scope.share.user.title) {
     for (var idx = 0; idx < scope.titles.length; idx++) {
       if (scope.share.user.title.codeValueUID == scope.titles[idx].codeValueUID) {
@@ -206,4 +230,8 @@ var syncAllItems = function(scope) {
       }
     }
   }
+
+  contactService.syncAddressTypes(scope.share.user.addresses, scope.addressTypes);
+  contactService.syncPhoneTypes(scope.share.user.phoneNumbers, scope.phoneTypes);
+  contactService.syncEmailTypes(scope.share.user.emailAddresses, scope.emailTypes);
 }

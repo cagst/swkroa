@@ -145,7 +145,7 @@ public final class UserApiController {
    *
    * @return The {@link User} after it has been persisted.
    */
-  @RequestMapping(value = {"/api/users"}, method = RequestMethod.PUT)
+  @RequestMapping(value = "/api/users", method = RequestMethod.PUT)
   @ResponseBody
   public ResponseEntity<User> saveUser(final @RequestBody User user) {
     LOGGER.info("Received request to save membership [{}]", user.getUserUID());

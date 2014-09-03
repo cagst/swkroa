@@ -8,7 +8,7 @@
 <div data-ng-show="share.user">
   <div class="container-inner constrain-view">
     <div class="pull-left">
-      <h2 class="lead">
+      <h2 class="clear-bottom">
         {{share.user.fullName}}
         <small class="text-muted">
           ({{share.user.username}})
@@ -17,6 +17,52 @@
       <div>
         <span>Last signed in:</span>
         <span data-ng-bind="share.user.lastSigninDate | date:'medium'" />
+      </div>
+
+      <div data-ng-show="share.user.addresses.length > 0">
+        <h4>Addresses</h4>
+        <div data-ng-repeat="address in share.user.addresses" class="row">
+          <div class="col-xs-4">
+            <strong data-ng-bind="address.addressType.display" />
+          </div>
+          <div class="col-xs-8">
+            <div data-ng-bind="address.addressLine1" />
+            <div data-ng-bind="address.addressLine2" />
+            <div data-ng-bind="address.addressLine3" />
+            <div>
+              {{address.city}}, {{address.state}} {{address.postalCode | zip}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-ng-show="share.user.phoneNumbers.length > 0">
+        <h4>Phone Numbers</h4>
+        <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
+          <div class="col-xs-4">
+            <strong data-ng-bind="phone.phoneType.display" />
+          </div>
+          <div class="col-xs=8">
+            <span>
+              {{phone.phoneNumber | tel}}
+            </span>
+            <span data-ng-show="phone.phoneExtension">
+              Ext. {{phone.phoneExtension}}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div data-ng-show="share.user.emailAddresses.length > 0">
+        <h4>Email Addresses</h4>
+        <div data-ng-repeat="email in share.user.emailAddresses" class="row">
+          <div class="col-xs-4">
+            <strong data-ng-bind="email.emailType.display" />
+          </div>
+          <div class="col-xs=8">
+            <span data-ng-bind="email.emailAddress"/>
+          </div>
+        </div>
       </div>
     </div>
     <div class="container-small container-outline container-inner pull-right">

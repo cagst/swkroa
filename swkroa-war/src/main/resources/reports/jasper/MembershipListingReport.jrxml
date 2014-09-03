@@ -149,7 +149,7 @@ ORDER BY iq3.membership_name]]>
 				<textField>
 					<reportElement x="0" y="0" width="286" height="20" uuid="72d49b3c-f7af-4b4f-b795-e798c32ae6da"/>
 					<textElement>
-						<font fontName="Helvetica Neue" size="14"/>
+						<font fontName="Verdana" size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
 				</textField>
@@ -160,7 +160,7 @@ ORDER BY iq3.membership_name]]>
 				<textField>
 					<reportElement x="219" y="0" width="353" height="20" uuid="7ec13e06-7a06-4f62-8ee3-ed555d9ecd04"/>
 					<textElement textAlignment="Right">
-						<font fontName="Helvetica Neue" size="12"/>
+						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{total_dues}]]></textFieldExpression>
 				</textField>
@@ -178,7 +178,7 @@ ORDER BY iq3.membership_name]]>
 			<staticText>
 				<reportElement x="-20" y="-1" width="613" height="30" uuid="ccff0a75-d35f-4f5a-b922-25e24c7033fd"/>
 				<textElement textAlignment="Center">
-					<font fontName="Helvetica Neue" size="18"/>
+					<font fontName="Verdana" size="18"/>
 				</textElement>
 				<text><![CDATA[Membership Listing]]></text>
 			</staticText>
@@ -192,28 +192,28 @@ ORDER BY iq3.membership_name]]>
 			<textField>
 				<reportElement x="472" y="0" width="100" height="20" uuid="9747d626-d157-493a-84d0-533f248ef730"/>
 				<textElement textAlignment="Right">
-					<font fontName="Helvetica Neue" size="12"/>
+					<font fontName="Verdana" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dues_amount}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="11" y="2" width="59" height="20" forecolor="#999999" uuid="a46c03f8-40a7-41ca-96f7-1416787e860c"/>
 				<textElement>
-					<font fontName="Helvetica Neue" size="10"/>
+					<font fontName="Verdana" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["(" + $F{owner_ident} + ")"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="70" y="2" width="179" height="20" uuid="33181344-8d31-4cb1-9aac-82a6315c659e"/>
 				<textElement>
-					<font fontName="Helvetica Neue" size="12"/>
+					<font fontName="Verdana" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="70" y="20" width="402" height="20" isRemoveLineWhenBlank="true" uuid="3bba7e15-94ee-4339-9f7d-3bf35595bf9a"/>
 				<textElement>
-					<font fontName="Helvetica Neue"/>
+					<font fontName="Verdana"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{address}]]></textFieldExpression>
 			</textField>
@@ -227,28 +227,28 @@ ORDER BY iq3.membership_name]]>
 			<textField>
 				<reportElement x="452" y="1" width="80" height="20" uuid="e4255344-85da-40d3-b972-efad84653233"/>
 				<textElement textAlignment="Right">
-					<font fontName="Helvetica Neue"/>
+					<font fontName="Verdana"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="532" y="1" width="40" height="20" uuid="b3bffb09-4b85-419c-b1a0-af6ae571c964"/>
 				<textElement>
-					<font fontName="Helvetica Neue"/>
+					<font fontName="Verdana"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="EEE, MMM d, yyyy h:mm a">
 				<reportElement x="70" y="1" width="286" height="20" uuid="191f7e67-4f61-4200-9b6f-0b790c7b57a6"/>
 				<textElement>
-					<font fontName="Helvetica Neue"/>
+					<font fontName="Verdana"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="1" width="70" height="20" uuid="32ab96e5-105b-4bc4-9d90-74c64f756d67"/>
 				<textElement>
-					<font fontName="Helvetica Neue"/>
+					<font fontName="Verdana"/>
 				</textElement>
 				<text><![CDATA[Generated on:]]></text>
 			</staticText>
