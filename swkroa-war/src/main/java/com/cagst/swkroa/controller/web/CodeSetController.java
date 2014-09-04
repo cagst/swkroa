@@ -23,7 +23,7 @@ public final class CodeSetController {
 	 * 
 	 * @return The name of the page.
 	 */
-	@RequestMapping(value = "/maintain/codesets", method = RequestMethod.GET)
+	@RequestMapping(value = "/maintain/codeset", method = RequestMethod.GET)
 	public String getMaintainCodeSetListingPage() {
 		LOGGER.info("Received request to show codeset listing page.");
 

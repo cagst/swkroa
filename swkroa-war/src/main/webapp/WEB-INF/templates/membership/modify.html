@@ -2,56 +2,56 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main" >
+      layout:decorator="layouts/main">
 
-	<head>
-		<script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
-		<script type="text/javascript" data-th-src="@{/static/js/membership/membership_modify.js}"></script>
-		<script type="text/javascript" data-th-src="@{/static/ui-bootstrap-0.10.0/ui-bootstrap-tpls-0.10.0.min.js}"></script>
-	</head>
-	
-	<body data-ng-app="msModifyApp">
-		<div data-layout-fragment="content" data-ng-controller="modifyController">
-			<div class="page-header">
-				<h3 data-th-text="#{com.cagst.swkroa.membership.add}"
-				    data-ng-show="membership.membershipUID == 0">
-					zzz Add Membership
-				</h3>
-				<input id="membershipId" type="hidden" data-th-value="${membershipId}"/>
-				<h3 data-th-text="#{com.cagst.swkroa.membership.edit}"
-				    data-ng-show="membership.membershipUID > 0">
-					zzz Edit Membership
-				</h3>
-			</div>
-			
-			<form method="POST" name="membershipForm" novalidate data-ng-submit="save()" class="css-form">
-				<div data-th-include="membership/modify/section_membership"></div>
-				<div data-th-include="membership/modify/section_counties"></div>
-				<div data-th-include="membership/modify/section_members" data-ng-show="membership.membershipType.meaning == 'MEMBERSHIP_FAMILY'"></div>
-				
-				<div class="spacer-top">
-					<div class="divider-top">
-						<div class="spacer-top">
-							<button type="submit"
-							        class="btn btn-primary"
-							        data-th-text="#{com.cagst.swkroa.membership.create}"
-							        data-ng-show="membership.membershipUID == 0"
-							        data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
-							</button>
-							<button type="submit"
-							        class="btn btn-primary"
-							        data-th-text="#{com.cagst.swkroa.membership.update}"
-							        data-ng-show="membership.membershipUID > 0"
-							        data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
-							</button>
-							<a class="btn btn-default"
-							   data-th-href="@{/membership/home}"
-							   data-th-text="#{com.cagst.swkroa.membership.cancel}">
-							</a>
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-	</body>
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/membership/membership_modify.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="modifyMembershipController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.membership.add}" data-ng-show="membership.membershipUID == 0">
+      zzz Add Membership
+    </h3>
+    <input id="membershipId" type="hidden" data-th-value="${membershipId}" />
+
+    <h3 data-th-text="#{com.cagst.swkroa.membership.edit}" data-ng-show="membership.membershipUID > 0">
+      zzz Edit Membership
+    </h3>
+  </div>
+
+  <form method="POST" name="membershipForm" novalidate data-ng-submit="save()" class="css-form">
+    <div data-th-include="membership/modify/section_membership"></div>
+    <div data-th-include="membership/modify/section_counties"></div>
+    <div data-th-include="membership/modify/section_members"
+         data-ng-show="membership.primaryMember.memberType.allowMember"></div>
+
+    <div class="spacer-top">
+      <div class="divider-top">
+        <div class="spacer-top">
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-th-text="#{com.cagst.swkroa.membership.create}"
+                  data-ng-show="membership.membershipUID == 0"
+                  data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
+          </button>
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-th-text="#{com.cagst.swkroa.membership.update}"
+                  data-ng-show="membership.membershipUID > 0"
+                  data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
+          </button>
+          <a class="btn btn-default"
+             data-th-href="@{/membership/home}"
+             data-th-text="#{com.cagst.swkroa.membership.cancel}">
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+</body>
 </html>

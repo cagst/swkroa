@@ -87,7 +87,7 @@ public class MemberTypeRepositoryJdbcTest {
 	 */
 	@Test(expected = IncorrectResultSizeDataAccessException.class)
 	public void testGetMemberTypeByMeaning_FoundTooMany() {
-		repo.getMemberTypeByMeaning(MemberType.MEMBER_FAMILY_MEMBER);
+		repo.getMemberTypeByMeaning(MemberType.FAMILY_MEMBER);
 	}
 
 	/**
@@ -95,9 +95,9 @@ public class MemberTypeRepositoryJdbcTest {
 	 */
 	@Test
 	public void testGetMemberTypeByMeaning_FoundOne() {
-		MemberType type = repo.getMemberTypeByMeaning(MemberType.MEMBER_FAMILY_HEAD);
+		MemberType type = repo.getMemberTypeByMeaning(MemberType.FAMILY_HEAD);
 		assertNotNull("Ensure we found a MemberType.", type);
-		assertEquals("Ensure we found the correct MemberType.", MemberType.MEMBER_FAMILY_HEAD, type.getMemberTypeMeaning());
+		assertEquals("Ensure we found the correct MemberType.", MemberType.FAMILY_HEAD, type.getMemberTypeMeaning());
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class MemberTypeRepositoryJdbcTest {
 	public void testGetMemberTypeByMeaningAsOf_FoundTooMany() {
 		DateTime dt = new DateTime(2005, 04, 19, 13, 15);
 
-		repo.getMemberTypeByMeaningAsOf(MemberType.MEMBER_FAMILY_MEMBER, dt);
+		repo.getMemberTypeByMeaningAsOf(MemberType.FAMILY_MEMBER, dt);
 	}
 
 	/**
@@ -125,9 +125,9 @@ public class MemberTypeRepositoryJdbcTest {
 	public void testGetMemberTypeByMeaningAsOf_FoundOne() {
 		DateTime dt = new DateTime(2005, 04, 19, 13, 15);
 
-		MemberType type = repo.getMemberTypeByMeaningAsOf(MemberType.MEMBER_ASSOCIATE, dt);
+		MemberType type = repo.getMemberTypeByMeaningAsOf(MemberType.ASSOCIATE, dt);
 		assertNotNull("Ensure we found a MemberType.", type);
-		assertEquals("Ensure we found the correct MemberType.", MemberType.MEMBER_ASSOCIATE, type.getMemberTypeMeaning());
+		assertEquals("Ensure we found the correct MemberType.", MemberType.ASSOCIATE, type.getMemberTypeMeaning());
 	}
 
 	/**

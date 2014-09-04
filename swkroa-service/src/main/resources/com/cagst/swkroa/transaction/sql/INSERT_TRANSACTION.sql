@@ -1,8 +1,7 @@
 INSERT INTO transaction (membership_id
-                        ,member_id
                         ,transaction_dt
-                        ,transaction_type_cd
-                        ,transaction_amount
+                        ,transaction_type_flag
+                        ,transaction_desc
                         ,ref_num
                         ,memo_txt
                         ,active_ind
@@ -11,10 +10,9 @@ INSERT INTO transaction (membership_id
                         ,updt_id
                         ,updt_dt_tm)
                 VALUES (:membership_id
-                       ,:member_id
                        ,:transaction_dt
-                       ,:transaction_type_cd
-                       ,:transaction_amount
+                       ,:transaction_type_flag
+                       ,:transaction_desc
                        ,:ref_num
                        ,:memo_txt
                        ,:active_ind

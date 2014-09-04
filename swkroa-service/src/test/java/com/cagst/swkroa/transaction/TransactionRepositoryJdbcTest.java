@@ -1,26 +1,5 @@
 package com.cagst.swkroa.transaction;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.OptimisticLockingFailureException;
-
 import com.cagst.common.db.DataSourceFactory;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
@@ -28,184 +7,254 @@ import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.mockito.Mockito;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Test class for the TransactionRepositoryJdbc class.
- * 
+ *
  * @author Craig Gaskill
- * 
  * @version 1.0.0
- * 
  */
 @RunWith(JUnit4.class)
 public class TransactionRepositoryJdbcTest {
-	private TransactionRepositoryJdbc repo;
-	private CodeValueRepository codeValueRepo;
+  private TransactionRepositoryJdbc repo;
+  private CodeValueRepository codeValueRepo;
 
-	private Member member;
+  private CodeValue typeDues = new CodeValue();
+  private CodeValue typePayment = new CodeValue();
+  private CodeValue typeSpecial = new CodeValue();
 
-	@Before
-	public void setUp() {
-		codeValueRepo = Mockito.mock(CodeValueRepository.class);
+  private Member member;
 
-		CodeValue typeDues = new CodeValue();
-		typeDues.setCodeValueUID(1L);
-		typeDues.setDisplay("Annual Dues");
-		typeDues.setMeaning("ANNUAL DUES");
+  @Before
+  public void setUp() {
+    codeValueRepo = Mockito.mock(CodeValueRepository.class);
 
-		CodeValue typePayment = new CodeValue();
-		typePayment.setCodeValueUID(2L);
-		typePayment.setDisplay("Payment");
-		typePayment.setMeaning("PAYMENT");
+    typeDues.setCodeValueUID(1L);
+    typeDues.setDisplay("Annual Dues");
+    typeDues.setMeaning("ANNUAL DUES");
 
-		CodeValue typeSpecial = new CodeValue();
-		typeSpecial.setCodeValueUID(3L);
-		typeSpecial.setDisplay("Special Funds");
-		typeSpecial.setMeaning("SPECIAL FUNDS");
+    typePayment.setCodeValueUID(2L);
+    typePayment.setDisplay("Payment");
+    typePayment.setMeaning("PAYMENT");
 
-		Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(typeDues);
-		Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(typePayment);
-		Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(typeSpecial);
+    typeSpecial.setCodeValueUID(3L);
+    typeSpecial.setDisplay("Special Funds");
+    typeSpecial.setMeaning("SPECIAL FUNDS");
 
-		MemberRepository memberRepo = Mockito.mock(MemberRepository.class);
+    Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(typeDues);
+    Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(typePayment);
+    Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(typeSpecial);
 
-		member = new Member();
-		member.setMemberUID(2L);
+    MemberRepository memberRepo = Mockito.mock(MemberRepository.class);
 
-		Mockito.when(memberRepo.getMemberByUID(2L)).thenReturn(member);
+    member = new Member();
+    member.setMemberUID(2L);
 
-		repo = new TransactionRepositoryJdbc(createTestDataSource(), codeValueRepo, memberRepo);
-	}
+    Mockito.when(memberRepo.getMemberByUID(2L)).thenReturn(member);
 
-	/**
-	 * Test the getTransactionByUID method and not finding the Transaction
-	 */
-	@Test(expected = EmptyResultDataAccessException.class)
-	public void testGetTransactionByUID_NotFound() {
-		repo.getTransactionByUID(999L);
-	}
+    repo = new TransactionRepositoryJdbc(createTestDataSource(), codeValueRepo, memberRepo);
+  }
 
-	/**
-	 * Test the getTransactionByUID method and finding the Transaction
-	 */
-	@Test
-	public void testGetTransactionByUID_Found() {
-		Transaction trans = repo.getTransactionByUID(1L);
+  /**
+   * Test the getTransactionByUID method and not finding the Transaction
+   */
+  @Test(expected = EmptyResultDataAccessException.class)
+  public void testGetTransactionByUID_NotFound() {
+    repo.getTransactionByUID(999L);
+  }
 
-		assertNotNull("Ensure we found a transaction.", trans);
-		assertEquals("Ensure it is the correct transaction (amount).", 70.00, trans.getTransactionAmount().doubleValue(),
-				0.001);
-	}
+  /**
+   * Test the getTransactionByUID method and finding the Transaction
+   */
+  @Test
+  public void testGetTransactionByUID_Found() {
+    Transaction trans = repo.getTransactionByUID(1L);
 
-	/**
-	 * Test the getTransactionsForMember method and not finding any Transactions
-	 */
-	@Test
-	public void testGetTransactionsForMember_NoneFound() {
-		Membership membership = new Membership();
-		membership.setMembershipUID(99L);
+    assertNotNull("Ensure we found a transaction.", trans);
+    assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
+  }
 
-		List<Transaction> transactions = repo.getTransactionsForMembership(membership);
-		assertNotNull("Ensure the transaction list exists.", transactions);
-		assertTrue("Ensure the transaction list is empty.", transactions.isEmpty());
-	}
+  /**
+   * Test the getTransactionsForMember method and not finding any Transactions
+   */
+  @Test
+  public void testGetTransactionsForMembership_NoneFound() {
+    Membership membership = new Membership();
+    membership.setMembershipUID(99L);
 
-	/**
-	 * Test the getTransactionsForMember method and finding Transactions
-	 */
-	@Test
-	public void testGetTransactionsForMember_Found() {
-		Membership membership = new Membership();
-		membership.setMembershipUID(2L);
+    List<Transaction> transactions = repo.getTransactionsForMembership(membership);
+    assertNotNull("Ensure the transaction list exists.", transactions);
+    assertTrue("Ensure the transaction list is empty.", transactions.isEmpty());
+  }
 
-		List<Transaction> transactions = repo.getTransactionsForMembership(membership);
-		assertNotNull("Ensure the transaction list exists.", transactions);
-		assertFalse("Ensure the transaction list is empty.", transactions.isEmpty());
-		assertEquals("Ensure we found the correct number of transactions.", 3, transactions.size());
-	}
+  /**
+   * Test the getTransactionsForMember method and finding Transactions
+   */
+  @Test
+  public void testGetTransactionsForMembership_Found() {
+    Membership membership = new Membership();
+    membership.setMembershipUID(2L);
 
-	/**
-	 * Test the saveTransaction method by inserting a Transaction
-	 */
-	@Test
-	public void testSaveTransaction_Insert() {
-		User user = new User();
-		user.setUserUID(1L);
+    List<Transaction> transactions = repo.getTransactionsForMembership(membership);
+    assertNotNull("Ensure the transaction list exists.", transactions);
+    assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
+    assertEquals("Ensure we found the correct number of transactions.", 2, transactions.size());
 
-		Membership membership = new Membership();
-		membership.setMembershipUID(2L);
+    for (Transaction trans : transactions) {
+      assertFalse("Ensure the transaction entries are not empty", trans.getTransactionEntries().isEmpty());
+      assertEquals("Ensure each transaction has 2 entries", 2, trans.getTransactionEntries().size());
+    }
+  }
 
-		List<Transaction> transactions1 = repo.getTransactionsForMembership(membership);
-		assertNotNull("Ensure the transaction list exists.", transactions1);
-		assertFalse("Ensure the transaction list is empty.", transactions1.isEmpty());
-		assertEquals("Ensure we found the correct number of transactions.", 3, transactions1.size());
+  /**
+   * Test the getTransactionsForMember method and finding Transactions
+   */
+  @Test
+  @Ignore
+  public void testGetUnpaidInvoicesForMembership_Found() {
+    List<UnpaidInvoice> transactions = repo.getUnpaidInvoicesForMembership(2L);
+    assertNotNull("Ensure the transaction list exists.", transactions);
+    assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
+    assertEquals("Ensure we found the correct number of transactions.", 1, transactions.size());
+  }
 
-		Transaction newTrans = new Transaction();
-		newTrans.setTransactionDate(new DateTime());
-		newTrans.setTransactionAmount(new BigDecimal(25));
-		newTrans.setTransactionType(codeValueRepo.getCodeValueByUID(1L));
-		newTrans.setMembershipUID(membership.getMembershipUID());
-		newTrans.setMember(member);
+  /**
+   * Test the saveTransaction method by inserting a Transaction with no entries.
+   */
+  @Test(expected = IncorrectResultSizeDataAccessException.class)
+  public void testSaveTransaction_Insert_NoEntries() {
+    User user = new User();
+    user.setUserUID(1L);
 
-		Transaction insertedTrans = repo.saveTransaction(newTrans, user);
-		assertNotNull("Ensure we have a valid transaction", insertedTrans);
-		assertTrue("Ensure the transaction has a valid ID.", insertedTrans.getTransactionUID() > 0L);
-		assertEquals("Ensure it is the same transaction (amount).", newTrans.getTransactionAmount(),
-				insertedTrans.getTransactionAmount());
+    Membership membership = new Membership();
+    membership.setMembershipUID(2L);
 
-		List<Transaction> transactions2 = repo.getTransactionsForMembership(membership);
-		assertNotNull("Ensure the transaction list exists.", transactions2);
-		assertFalse("Ensure the transaction list is empty.", transactions2.isEmpty());
-		assertEquals("Ensure we found the correct number of transactions.", 4, transactions2.size());
-	}
+    List<Transaction> transactions1 = repo.getTransactionsForMembership(membership);
+    assertNotNull("Ensure the transaction list exists.", transactions1);
+    assertFalse("Ensure the transaction list is empty.", transactions1.isEmpty());
+    assertEquals("Ensure we found the correct number of transactions.", 2, transactions1.size());
 
-	/**
-	 * Test the saveTransaction method by updating a Transaction
-	 */
-	@Test
-	public void testSaveTransaction_Update() {
-		User user = new User();
-		user.setUserUID(1L);
+    Transaction newTrans = new Transaction();
+    newTrans.setTransactionDate(new DateTime());
+    newTrans.setTransactionType(TransactionType.INVOICE);
+    newTrans.setMembershipUID(membership.getMembershipUID());
 
-		Transaction trans = repo.getTransactionByUID(1L);
+    repo.saveTransaction(newTrans, user);
+  }
 
-		assertNotNull("Ensure we found a transaction.", trans);
-		assertEquals("Ensure it is the correct transaction (amount).", 70.00, trans.getTransactionAmount().doubleValue(),
-				0.001);
+  /**
+   * Test the saveTransaction method by inserting a Transaction
+   */
+  @Test
+  public void testSaveTransaction_Insert() {
+    User user = new User();
+    user.setUserUID(1L);
 
-		trans.setTransactionAmount(new BigDecimal(100));
+    Membership membership = new Membership();
+    membership.setMembershipUID(2L);
 
-		Transaction updatedTrans = repo.saveTransaction(trans, user);
-		assertNotNull("Ensure we have a valid transaction", updatedTrans);
-		assertEquals("Ensure it has been updated.", 1, updatedTrans.getTransactionUpdateCount());
-		assertEquals("Ensure it is still updated.", 100.00, updatedTrans.getTransactionAmount().doubleValue(), 0.001);
-	}
+    List<Transaction> transactions1 = repo.getTransactionsForMembership(membership);
+    assertNotNull("Ensure the transaction list exists.", transactions1);
+    assertFalse("Ensure the transaction list is empty.", transactions1.isEmpty());
+    assertEquals("Ensure we found the correct number of transactions.", 2, transactions1.size());
 
-	/**
-	 * Test the saveTransaction method by updating a Transaction but failing due to updt_cnt.
-	 */
-	@Test(expected = OptimisticLockingFailureException.class)
-	public void testSaveTransaction_Update_Failed() {
-		User user = new User();
-		user.setUserUID(1L);
+    Transaction newTrans = new Transaction();
+    newTrans.setTransactionDate(new DateTime());
+    newTrans.setTransactionType(TransactionType.INVOICE);
+    newTrans.setMembershipUID(membership.getMembershipUID());
 
-		Transaction trans = repo.getTransactionByUID(1L);
+    TransactionEntry newEntry = new TransactionEntry();
+    newEntry.setTransactionEntryAmount(new BigDecimal(-25));
+    newEntry.setTransactionEntryType(typeDues);
+    newEntry.setTransaction(newTrans);
 
-		assertNotNull("Ensure we found a transaction.", trans);
-		assertEquals("Ensure it is the correct transaction (amount).", 70.00, trans.getTransactionAmount().doubleValue(),
-				0.001);
+    newTrans.addEntry(newEntry);
 
-		trans.setTransactionAmount(new BigDecimal(100));
-		trans.setTransactionUpdateCount(trans.getTransactionUpdateCount() + 1);
+    Transaction insertedTrans = repo.saveTransaction(newTrans, user);
+    assertNotNull("Ensure we have a valid transaction", insertedTrans);
+    assertTrue("Ensure the transaction has a valid ID.", insertedTrans.getTransactionUID() > 0L);
+    assertEquals("Ensure it is the same transaction (amount).", newTrans.getTransactionAmount(),
+        insertedTrans.getTransactionAmount());
 
-		repo.saveTransaction(trans, user);
-	}
+    List<Transaction> transactions2 = repo.getTransactionsForMembership(membership);
+    assertNotNull("Ensure the transaction list exists.", transactions2);
+    assertFalse("Ensure the transaction list is empty.", transactions2.isEmpty());
+    assertEquals("Ensure we found the correct number of transactions.", 3, transactions2.size());
+  }
 
-	private DataSource createTestDataSource() {
-		Resource schemaLocation = new ClassPathResource("/testDb/schema.sql");
-		Resource testDataLocation = new ClassPathResource("/testDb/test_data.sql");
+  /**
+   * Test the saveTransaction method by updating a Transaction
+   */
+  @Test
+  public void testSaveTransaction_Update() {
+    User user = new User();
+    user.setUserUID(1L);
 
-		DataSourceFactory dsFactory = new DataSourceFactory("swkroadb", schemaLocation, testDataLocation);
-		return dsFactory.getDataSource();
-	}
+    Transaction trans = repo.getTransactionByUID(1L);
+
+    assertNotNull("Ensure we found a transaction.", trans);
+    assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
+
+//		trans.setTransactionAmount(new BigDecimal(-100));
+    for (TransactionEntry entry : trans.getTransactionEntries()) {
+      if (entry.getMember() == null) {
+        entry.setTransactionEntryAmount(new BigDecimal(-35));
+      }
+    }
+
+    Transaction updatedTrans = repo.saveTransaction(trans, user);
+    assertNotNull("Ensure we have a valid transaction", updatedTrans);
+    assertEquals("Ensure it has been updated.", 1, updatedTrans.getTransactionUpdateCount());
+    assertEquals("Ensure it is still updated.", -105.00, updatedTrans.getTransactionAmount().doubleValue(), 0.001);
+  }
+
+  /**
+   * Test the saveTransaction method by updating a Transaction but failing due to updt_cnt.
+   */
+  @Test(expected = OptimisticLockingFailureException.class)
+  public void testSaveTransaction_Update_Failed() {
+    User user = new User();
+    user.setUserUID(1L);
+
+    Transaction trans = repo.getTransactionByUID(1L);
+
+    assertNotNull("Ensure we found a transaction.", trans);
+    assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
+
+//		trans.setTransactionAmount(new BigDecimal(-100));
+    for (TransactionEntry entry : trans.getTransactionEntries()) {
+      if (entry.getMember() == null) {
+        entry.setTransactionEntryAmount(new BigDecimal(-35));
+        entry.setTransactionEntryUpdateCount(entry.getTransactionEntryUpdateCount() + 1);
+      }
+    }
+
+    repo.saveTransaction(trans, user);
+  }
+
+  private DataSource createTestDataSource() {
+    Resource schemaLocation = new ClassPathResource("/testDb/schema.sql");
+    Resource testDataLocation = new ClassPathResource("/testDb/test_data.sql");
+
+    DataSourceFactory dsFactory = new DataSourceFactory("swkroadb", schemaLocation, testDataLocation);
+    return dsFactory.getDataSource();
+  }
 }

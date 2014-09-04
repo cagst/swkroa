@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS deposit;
+DROP TABLE IF EXISTS transaction_entry;
 DROP TABLE IF EXISTS transaction;
 DROP TABLE IF EXISTS member;
 DROP TABLE IF EXISTS member_type;

@@ -1,0 +1,158 @@
+
+  <div class="row row-inner spacer-top">
+    <div class="col-xs-4">
+      <div class="divider-inner-row">
+        <span>Addresses</span>
+        <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
+                data-ng-click="contactService.addAddress(share.user)">
+          <i class="fa fa-plus"></i>
+          <span>Add Address</span>
+        </button>
+      </div>
+
+      <div data-ng-repeat="address in share.user.addresses"
+           data-ng-show="address.active"
+           data-ng-form="addressForm"
+           class="grouper">
+        <div class="row spacer-top">
+          <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
+            <select class="form-control" name="addressType"
+                    data-ng-options="type.display for type in addressTypes"
+                    data-ng-model="address.addressType"
+                    data-ng-required="true">
+            </select>
+          </div>
+          <div class="col-xs-4 col-xs-offset-4">
+            <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
+                   data-ng-click="contactService.removeAddress(share.user, address)">
+              <i class="fa fa-trash-o"></i>
+              <span>Remove Address</span>
+            </button>
+          </div>
+        </div>
+        <div class="row spacer-top">
+          <div class="col-xs-12" data-ng-class="{'has-error': addressForm.address1.$invalid}">
+            <input type="text" class="form-control" name="address1" maxlength="50" placeholder="Enter Address Line 1"
+                   data-ng-model="address.addressLine1"
+                   data-ng-required="true" />
+          </div>
+        </div>
+        <div class="row spacer-top">
+          <div class="col-xs-12">
+            <input type="text" class="form-control" maxlength="50" placeholder="Enter Address Line 2"
+                   data-ng-model="address.addressLine2" />
+          </div>
+        </div>
+        <div class="row spacer-top">
+          <div class="col-xs-12">
+            <input type="text" class="form-control" maxlength="50" placeholder="Enter Address Line 3"
+                   data-ng-model="address.addressLine3" />
+          </div>
+        </div>
+        <div class="row spacer-top">
+          <div class="col-xs-4" data-ng-class="{'has-error': addressForm.city.$invalid}">
+            <input type="text" class="form-control" name="city" maxlength="50" placeholder="Enter City"
+                   data-ng-model="address.city"
+                   data-ng-required="true" />
+          </div>
+          <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressState.$invalid}">
+            <select class="form-control" name="addressState"
+                    data-ng-model="address.state"
+                    data-ng-options="state.code as state.name for state in states"
+                    data-ng-required="true">
+            </select>
+          </div>
+          <div class="col-xs-4" data-ng-class="{'has-error': addressForm.postalCode.$invalid}">
+            <input type="text" class="form-control" name="postalCode" maxlength="15"
+                   data-ng-model="address.postalCode"
+                   data-ng-required="true" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="divider-inner-row">
+        <span>Phone Numbers</span>
+        <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
+                data-ng-click="contactService.addPhone(share.user)">
+          <i class="fa fa-plus"></i>
+          <span>Add Phone</span>
+        </button>
+      </div>
+      <div data-ng-repeat="phone in share.user.phoneNumbers"
+           data-ng-show="phone.active"
+           data-ng-form="phoneForm"
+           class="grouper">
+        <div class="row spacer-top">
+          <div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
+            <select class="form-control" name="phoneType"
+                    data-ng-options="type.display for type in phoneTypes"
+                    data-ng-model="phone.phoneType"
+                    data-ng-required="true">
+            </select>
+          </div>
+          <div class="col-xs-4 col-xs-offset-4">
+            <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
+                    data-ng-click="contactService.removePhone(share.user, phone)">
+              <i class="fa fa-trash-o"></i>
+              <span>Remove Phone</span>
+            </button>
+          </div>
+        </div>
+        <div class="row spacer-top">
+          <div class="col-xs-8" data-ng-class="{'has-error': phoneForm.number.$invalid}">
+            <input type="tel" class="form-control" name="number" maxlength="25"
+                   data-ng-model="phone.phoneNumber"
+                   data-ui-mask="(999) 999-9999"
+                   data-ng-required="true" />
+          </div>
+          <div class="col-xs-4">
+            <input type="text" class="form-control" maxlength="10" placeholder="Enter Extension"
+                   data-ng-model="phone.phoneExtension" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="divider-inner-row">
+        <span>Email Addresses</span>
+        <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
+                data-ng-click="contactService.addEmail(share.user)">
+          <i class="fa fa-plus"></i>
+          <span>Add Email</span>
+        </button>
+      </div>
+      <div data-ng-repeat="email in share.user.emailAddresses"
+           data-ng-show="email.active"
+           data-ng-form="emailForm"
+           class="grouper">
+        <div class="row spacer-top">
+          <div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
+            <select class="form-control" name="emailType"
+                    data-ng-options="type.display for type in emailTypes"
+                    data-ng-model="email.emailType"
+                    data-ng-required="true">
+            </select>
+          </div>
+          <div class="col-xs-4 col-xs-offset-4">
+            <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
+                    data-ng-click="contactService.removeEmail(share.user, email)">
+              <i class="fa fa-trash-o"></i>
+              <span>Remove Email</span>
+            </button>
+          </div>
+        </div>
+        <div class="row spacer-top">
+          <div class="col-xs-12" data-ng-class="{'has-error': emailForm.emailAddress.$invalid}">
+            <input type="email" class="form-control" name="emailAddress" maxlength="256"
+                   placeholder="Enter Email Address"
+                   data-ng-model="email.emailAddress"
+                   data-ng-required="true" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+

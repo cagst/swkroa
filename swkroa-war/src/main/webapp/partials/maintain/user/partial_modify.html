@@ -1,0 +1,128 @@
+<div data-ng-controller="modifyUserController">
+  <div class="page-header">
+    <h3 data-ng-show="share.user.userUID == 0">Add User</h3>
+    <h3 data-ng-show="share.user.userUID > 0">Edit User</h3>
+
+    <div id="errorMessage" class="alert alert-danger alert-dismissible" role="alert"
+         data-ng-show="errorMessage">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      <strong>Warning!</strong>
+      <div data-ng-bind="errorMessage"></div>
+    </div>
+  </div>
+
+  <form method="POST" name="userForm" novalidate data-ng-submit="save()" class="css-form">
+    <div class="row row-inner spacer-top">
+      <div class="col-xs-2">
+        <label>Title</label>
+        <select class="form-control"
+                data-ng-model="share.user.title"
+                data-ng-options="title.display for title in titles">
+        </select>
+      </div>
+      <div class="col-xs-2" data-ng-class="{'has-error': userForm.firstName.$invalid}">
+        <label class="control-label label-required">First Name</label>
+        <input type="text" class="form-control" name="firstName" maxlength="50" placeholder="Enter First Name"
+               data-ng-model="share.user.firstName" data-ng-required="true" />
+      </div>
+      <div class="col-xs-2">
+        <label>Middle Name</label>
+        <input type="text" class="form-control" maxlength="50" placeholder="Enter Middle Name"
+               data-ng-model="share.user.middleName" />
+      </div>
+      <div class="col-xs-2" data-ng-class="{'has-error': userForm.lastName.$invalid}">
+        <label class="control-label label-required">Last Name</label>
+        <input type="text" class="form-control" name="lastName" maxlength="50" placeholder="Enter Last Name"
+               data-ng-model="share.user.lastName" data-ng-required="true" />
+      </div>
+    </div>
+
+    <div data-ui-view="contact"/>
+
+    <div class="row row-inner spacer-top">
+      <div class="col-xs-12">
+        <div class="divider-inner-row">
+          <span>Account Information</span>
+        </div>
+      </div>
+    </div>
+    <div class="row row-inner spacer-top">
+      <div class="col-xs-2" data-ng-class="{'has-error': userForm.username.$invalid}">
+        <label class="label-required">Username</label>
+        <input type="text" class="form-control" name="username" maxlength="50" placeholder="Enter Username"
+               data-ng-model="share.user.username"
+               data-ng-disabled="share.user.userUID > 0"
+               data-ng-required="true"/>
+      </div>
+      <div class="col-xs-2">
+        <label>Expires On</label>
+        <div class="input-group">
+          <input type="text" class="form-control"
+                 data-datepicker-popup="MM/dd/yyyy"
+                 data-is-open="opened"
+                 data-show-button-bar="false"
+                 data-show-weeks="false"
+                 data-ng-model="share.user.accountExpiredDate"
+                 data-ng-blur="doesUsernameExist()" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-ng-click="open($event)">
+              <i class="fa fa-calendar"></i>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row row-inner" data-ng-show="usernameExists == 'true'">
+      <div class="col-xs-12">
+        <span class="label label-danger">Username already exists!</span>
+      </div>
+    </div>
+
+    <div class="row row-inner spacer-top" data-ng-show="share.user.userUID == 0">
+      <div class="col-xs-2" data-ng-class="{'has-error': userForm.password.$invalid}">
+        <label class="label-required">Password</label>
+        <input type="password" class="form-control" name="password" maxlength="50"
+               data-ng-model="share.user.password"
+               data-ng-blur="validatePasswordFields()"
+               data-ng-required="share.user.userUID == 0"/>
+      </div>
+      <div class="col-xs-2" data-ng-class="{'has-error': userForm.confirmPassword.$invalid}">
+        <label class="label-required">Confirm Password</label>
+        <input type="password" class="form-control" name="confirmPassword" maxlength="50"
+               data-ng-model="confirmPassword"
+               data-ng-blur="validatePasswordFields()"
+               data-ng-required="share.user.userUID == 0"/>
+      </div>
+      <div class="col-xs-2">
+        <div>&nbsp;</div>
+        <input id="tempPassword" type="checkbox" data-ng-model="share.user.passwordTemporary" />
+        <label for="tempPassword">Temporary Password</label>
+      </div>
+    </div>
+    <div class="row row-inner" data-ng-show="passwordError">
+      <div class="col-xs-12">
+        <span class="label label-danger" data-ng-bind="passwordError"></span>
+      </div>
+    </div>
+
+    <div class="spacer-top">
+      <div class="divider-top">
+        <div class="spacer-top">
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-ng-show="share.user.userUID == 0"
+                  data-ng-disabled="hasChanges(share.user) || userForm.$invalid">
+            <span>Create User</span>
+          </button>
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-ng-show="share.user.userUID > 0"
+                  data-ng-disabled="hasChanges(share.user) || userForm.$invalid">
+            <span>Update User</span>
+          </button>
+          <a class="btn btn-default" ui-sref="home">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

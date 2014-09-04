@@ -1,123 +1,200 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<body>
-		<div data-th-fragment="dlgModifyTransaction">
-			<div class="modal fade" id="modifyTransaction">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title"
-							    data-th-text="#{com.cagst.swkroa.membership.transaction.update}"
-							    data-ng-show="transactionIdx > -1">
-								zzz Modify transaction
-							</h4>
-							<h4 class="modal-title"
-							    data-th-text="#{com.cagst.swkroa.membership.transaction.create}"
-							    data-ng-show="transactionIdx == -1">
-								zzz Create transaction
-							</h4>
-						</div>
-						<div class="modal-body">
-							<div class="row">
-								<div class="col-xs-4">
-									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.date}">
-										zzz Date
-									</label>
-									<div class="input-group">
-										<input type="text" class="form-control" name="transactionDate"
-										       data-datepicker-popup="MM/dd/yyyy"
-										       data-show-button-bar="false"
-										       data-datepicker-options="dateOptions"
-										       data-ng-model="transaction.transactionDate"
-										       data-ng-required="true" />
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-default" data-ng-click="open($event)">
-												<i class="fa fa-calendar"></i>
-											</button>
-										</span>
-									</div>
-								</div>
-								<div class="col-xs-4">
-									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.refno}">
-										zzz Ref No
-									</label>
-									<input type="text" class="form-control" maxlength="25"
-									       data-ng-model="transaction.referenceNumber"
-									/>
-								</div>
-							</div>
-							
-							<div class="row spacer-top">
-								<div class="col-xs-4" data-ng-class="{'has-error': member.$invalid}">
-									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.member}">
-										zzz Member
-									</label>
-									<select class="form-control" name="member"
-									        data-ng-model="transaction.member"
-									        data-ng-required="true"
-									        data-ng-options="member.effectiveMemberName for member in membership.allMembers">
-									</select>
-								</div>
-								<div class="col-xs-4" data-ng-class="{'has-error': type.$invalid}">
-									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.type}">
-										zzz Type
-									</label>
-									<select class="form-control" name="type"
-									        data-ng-model="transaction.transactionType"
-									        data-ng-required="true"
-									        data-ng-options="type.display for type in transactionTypes">
-									</select>
-								</div>
-								<div class="col-xs-2" data-ng-class="{'has-error': debitAmount.$invalid}">
-									<label class="form-label"data-th-text="#{com.cagst.swkroa.membership.transaction.debit}">
-										zzz Debit
-									</label>
-									<input id="debitAmount" name="debitAmount" type="number" class="form-control"
-									       data-ng-blur="changedDebitAmount()" />
-								</div>
-								<div class="col-xs-2" data-ng-class="{'has-error': creditAmount.$invalid}">
-									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.credit}">
-										zzz Credit
-									</label>
-									<input id="creditAmount" name="creditAmount" type="number" class="form-control"
-									       data-ng-blur="changedCreditAmount()" />
-								</div>
-							</div>
-							
-							<div class="row spacer-top">
-								<div class="col-xs-12">
-									<label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.memo}">
-										zzz Memo
-									</label>
-									<textarea class="form-control" rows="3" data-ng-model="transaction.memo"></textarea>
-								</div>
-							</div>
-							
-						</div>
-						
-						<div class="modal-footer">
-							<button type="button" class="btn btn-success"
-							        data-ng-click="saveTransaction()"
-							        data-ng-show="transactionIdx > -1"
-							        data-th-text="#{com.cagst.swkroa.update}">
-								zzz Update
-							</button>
-							<button type="button" class="btn btn-success"
-							        data-ng-click="saveTransaction()"
-							        data-ng-show="transactionIdx == -1"
-							        data-th-text="#{com.cagst.swkroa.create}">
-								zzz Create
-							</button>
-							<button type="button" class="btn btn-warning"
-							        data-dismiss="modal"
-							        data-th-text="#{com.cagst.swkroa.discard}">
-								zzz Discard
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+<body>
+
+<div data-th-fragment="dlgModifyTransaction">
+  <div class="modal fade" id="modifyTransaction">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"
+              data-th-text="#{com.cagst.swkroa.membership.transaction.update}"
+              data-ng-show="transactionIdx > -1">
+            zzz Modify transaction
+          </h4>
+          <h4 class="modal-title"
+              data-th-text="#{com.cagst.swkroa.membership.transaction.create}"
+              data-ng-show="transactionIdx == -1">
+            zzz Create transaction
+          </h4>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-4">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.date}">
+                zzz Date
+              </label>
+              <div class="input-group">
+                <input type="text" class="form-control" name="transactionDate"
+                       data-datepicker-popup="MM/dd/yyyy"
+                       data-is-open="opened"
+                       data-show-button-bar="false"
+                       data-show-weeks="false"
+                       data-ng-model="transaction.transactionDate"
+                       data-ng-required="true" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" data-ng-click="open($event)">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+              </div>
+            </div>
+            <div class="col-xs-4 col-xs-offset-4">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.refno}">
+                zzz Ref No
+              </label>
+              <input type="text" class="form-control" maxlength="25"
+                     data-ng-model="transaction.referenceNumber"
+                  />
+            </div>
+          </div>
+
+          <div class="row spacer-top">
+            <div class="col-xs-4"
+                 data-ng-class="{'has-error': type.$invalid}">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.type}">
+                zzz Type
+              </label>
+              <select class="form-control select2" name="type"
+                      data-ng-model="transaction.transactionType"
+                      data-ng-required="true"
+                      data-ng-show="transactionIdx == -1">
+                <option value="INVOICE"
+                        data-th-text="#{com.cagst.swkroa.membership.transaction.invoice}">
+                  zzz Invoice
+                </option>
+                <option value="PAYMENT"
+                        data-th-text="#{com.cagst.swkroa.membership.transaction.payment}">
+                  zzz Payment
+                </option>
+              </select>
+              <input class="form-control select2" name="type" readonly
+                     data-th-value="#{com.cagst.swkroa.membership.transaction.invoice}"
+                     data-ng-show="transactionIdx > -1 && transaction.transactionType == 'INVOICE'"/>
+              <input class="form-control" name="type" readonly
+                     data-th-value="#{com.cagst.swkroa.membership.transaction.payment}"
+                     data-ng-show="transactionIdx > -1 && transaction.transactionType == 'PAYMENT'"/>
+            </div>
+
+            <div class="col-xs-4">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.desc}">
+                zzz Desc
+              </label>
+              <input type="text" class="form-control" name="desc"
+                     data-ng-model="transaction.transactionDescription"
+                     data-ng-required="true"
+                     data-ng-options="type.display for type in transactionTypes" />
+            </div>
+            <div class="col-xs-4" data-ng-class="{'has-error': amount.$invalid}">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.amount}">
+                zzz Amount
+              </label>
+              <input id="amount" name="amount" type="text" class="form-control" readonly
+                     data-ng-model="transactionAmount" />
+            </div>
+          </div>
+
+          <table class="table table-condensed spacer-top">
+            <thead>
+              <tr>
+                <th data-th-text="#{com.cagst.swkroa.membership.transaction.type}">
+                  zzz Type
+                </th>
+                <th data-th-text="#{com.cagst.swkroa.membership.transaction.member}">
+                  zzz Member
+                </th>
+                <th data-th-text="#{com.cagst.swkroa.membership.transaction.amount}">
+                  zzz Amount
+                </th>
+                <th>
+                  <button type="button" class="btn btn-success btn-xs"
+                          data-ng-click="addTransactionEntry()"
+                          data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.create}">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody data-ng-repeat="entry in transaction.transactionEntries"
+                   data-ng-show="entry.active">
+              <tr>
+                <td class="col-xs-4">
+                  <select class="form-control select2" name="entryType"
+                          data-ng-model="entry.transactionEntryType"
+                          data-ng-required="true"
+                          data-ng-options="type.display for type in transactionEntryTypes">
+                  </select>
+                </td>
+                <td class="col-xs-4">
+                  <select class="form-control" name="member"
+                          data-ng-model="entry.member"
+                          data-ng-required="true"
+                          data-ng-options="member.effectiveMemberName for member in membership.allMembers">
+                  </select>
+                </td>
+                <td class="col-xs-4">
+                  <input type="number" class="form-control"
+                         data-ng-model="entry.transactionEntryAmount"
+                         data-ng-change="calculateTransactionAmount()"/>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-danger btn-xs" tooltip="zzz Delete Entry"
+                          data-ng-click="deleteTransactionEntry(entry)"
+                          data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
+                    <i class="fa fa-trash-o"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr data-ng-show="entry.relatedTransactionUID > 0 ||
+                                entry.transactionEntryType.meaning == 'TRANS_CREDIT' ||
+                                entry.transactionEntryType.meaning == 'TRANS_PAYMENT'">
+                <td></td>
+                <td colspan="2">
+                  <select class="form-control" name="relatedTransaction"
+                          data-ng-model="entry.relatedTransaction"
+                          data-ng-options="tran.relatedDescription for tran in membership.transactions | filter:{transactionType:'INVOICE'}">
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="row spacer-top">
+            <div class="col-xs-12">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.memo}">
+                zzz Memo
+              </label>
+              <textarea class="form-control" rows="3" data-ng-model="transaction.memo"></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success"
+                  data-ng-click="saveTransaction()"
+                  data-ng-show="transactionIdx > -1"
+                  data-th-text="#{com.cagst.swkroa.update}">
+            zzz Update
+          </button>
+          <button type="button" class="btn btn-success"
+                  data-ng-click="saveTransaction()"
+                  data-ng-show="transactionIdx == -1"
+                  data-th-text="#{com.cagst.swkroa.create}">
+            zzz Create
+          </button>
+          <button type="button" class="btn btn-warning"
+                  data-dismiss="modal"
+                  data-th-text="#{com.cagst.swkroa.discard}">
+            zzz Discard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>

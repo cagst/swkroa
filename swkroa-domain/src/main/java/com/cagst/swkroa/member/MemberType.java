@@ -21,18 +21,21 @@ import org.joda.time.DateTime;
 public final class MemberType implements Serializable, Comparable<MemberType> {
 	private static final long serialVersionUID = -8799075313261854806L;
 
-	public static final String MEMBER_ASSOCIATE = "MEMBER_ASSOCIATE";
-	public static final String MEMBER_FAMILY_HEAD = "MEMBER_FAMILY_HEAD";
-	public static final String MEMBER_FAMILY_MEMBER = "MEMBER_FAMILY_MEMBER";
-	public static final String MEMBER_REGULAR = "MEMBER_REGULAR";
-	public static final String MEMBER_SPOUSE = "MEMBER_SPOUSE";
-	public static final String MEMBER_MAIL_LIST = "MEMBER_MAIL_LIST";
+	public static final String ASSOCIATE = "ASSOCIATE";
+	public static final String FAMILY_HEAD = "FAMILY_HEAD";
+	public static final String FAMILY_MEMBER = "FAMILY_MEMBER";
+	public static final String REGULAR = "REGULAR";
+	public static final String SPOUSE = "SPOUSE";
+	public static final String MAIL_LIST = "MAIL_LIST";
 
 	private long member_type_id;
 	private long prev_member_type_id;
 	private String member_type_display;
 	private String member_type_meaning;
 	private BigDecimal dues_amount;
+	private boolean primary;
+	private boolean allowSpouse;
+	private boolean allowMember;
 	private DateTime beg_eff_dt_tm;
 	private DateTime end_eff_dt_tm;
 	private boolean active_ind = true;
@@ -76,6 +79,30 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
 
 	public void setDuesAmount(final BigDecimal duesAmount) {
 		this.dues_amount = duesAmount;
+	}
+
+	public boolean isPrimary() {
+		return primary;
+	}
+
+	public void setPrimary(final boolean primary) {
+		this.primary = primary;
+	}
+
+	public boolean isAllowSpouse() {
+		return allowSpouse;
+	}
+
+	public void setAllowSpouse(final boolean allowSpouse) {
+		this.allowSpouse = allowSpouse;
+	}
+
+	public boolean isAllowMember() {
+		return allowMember;
+	}
+
+	public void setAllowMember(final boolean allowMember) {
+		this.allowMember = allowMember;
 	}
 
 	public DateTime getBeginEffectiveDateTime() {

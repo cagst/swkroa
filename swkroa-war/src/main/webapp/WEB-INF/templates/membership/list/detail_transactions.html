@@ -1,57 +1,88 @@
 <!DOCTYPE html>
 <html>
-	<body>
-		<div data-th-fragment="listTransactions">
-			<div class="spacer-top">
-				<div class="divider-inner-header sub-header">
-					<span data-th-text="#{com.cagst.swkroa.membership.transactions}">zzz Transactions</span>
-					<span class="pull-right">
-						<button type="button" class="btn btn-success btn-xs"
-								    data-toggle="modal" data-target="#modifyTransaction"
-								    data-ng-click="addTransaction()">
-							<i class="fa fa-plus"></i>
-						</button>
-					</span>
-				</div>
-				
-				<table class="table table-hover table-bordered">
-					<tr>
-						<th data-th-text="#{com.cagst.swkroa.date}" style="width:100px">zzz Date</th>
-						<th data-th-text="#{com.cagst.swkroa.membership.transaction.type}">zzz Type</th>
-						<th data-th-text="#{com.cagst.swkroa.membership.transaction.amount}" style="width:100px">zzz Amount</th>
-						<th data-th-text="#{com.cagst.swkroa.membership.transaction.balance}" style="width:100px">zzz Balance</th>
-						<th style="width:75px"></th>
-					</tr>
-					<tr data-ng-repeat="transaction in membership.transactions | orderBy: 'transactionDate': false"
-					    data-ng-show="transaction.active">
-						<td style="width:100px">{{transaction.transactionDate | date:'mediumDate'}}</td>
-						<td>{{transaction.transactionType.display}}</td>
-						<td style="width:100px">
-							<div class="pull-right">
-								{{transaction.transactionAmount | currency}}
-							</div>
-						</td>
-						<td style="width:100px">
-							<div class="pull-right">
-								{{runningBalance($index) | currency}}
-							</div>
-						</td>
-						<td style="width:75px">
-							<div class="pull-right">
-								<button type="button" class="btn btn-primary btn-xs"
-								        data-ng-click="editTransaction(transaction)">
-									<i class="fa fa-edit"></i>
-								</button>
-								<button type="button" class="btn btn-danger btn-xs"
-								        data-toggle="modal" data-target="#deleteTransaction"
-								        data-ng-click="deleteTransaction(transaction)">
-									<i class="fa fa-trash-o"></i>
-								</button>
-							</div>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-	</body>
+<body>
+
+<div data-th-fragment="listTransactions">
+  <div class="spacer-top">
+    <div class="divider-inner-header sub-header">
+      <span data-th-text="#{com.cagst.swkroa.membership.transactions}">zzz Transactions</span>
+        <span class="pull-right">
+          <button type="button" class="btn btn-success btn-xs"
+                  data-toggle="modal" data-target="#modifyTransaction"
+                  data-ng-click="addTransaction()"
+                  data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.create}"
+                  tooltip-placement="left">
+            <i class="fa fa-plus"></i>
+          </button>
+        </span>
+    </div>
+
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th data-th-text="#{com.cagst.swkroa.date}" style="width:100px">zzz Date</th>
+          <th data-th-text="#{com.cagst.swkroa.membership.transaction.type}">zzz Type</th>
+          <th data-th-text="#{com.cagst.swkroa.desc}">zzz Desc</th>
+          <th data-th-text="#{com.cagst.swkroa.membership.transaction.amount}" style="width:100px">zzz Amount</th>
+          <th style="width:75px"></th>
+        </tr>
+      </thead>
+      <tbody data-ng-repeat="transaction in selectedMembership.transactions | orderBy: 'transactionDate': true"
+             data-ng-show="transaction.active">
+        <tr>
+          <td style="width:125px">
+            <div>
+              <a href="#" onclick="toggleTransactionDetails(this)">
+                <i class="fa fa-plus fa-fw"></i>
+              </a>
+              {{transaction.transactionDate | date:'mediumDate'}}
+            </div>
+          </td>
+          <td>
+            <span data-ng-show="transaction.transactionType == 'INVOICE'"
+                  data-th-text="#{com.cagst.swkroa.membership.transaction.invoice}">
+            </span>
+            <span data-ng-show="transaction.transactionType == 'PAYMENT'"
+                  data-th-text="#{com.cagst.swkroa.membership.transaction.payment}">
+            </span>
+          </td>
+          <td>{{transaction.transactionDescription}}</td>
+          <td style="width:100px">
+            <div class="pull-right">
+              {{transaction.transactionAmount | currency}}
+            </div>
+          </td>
+          <td style="width:75px">
+            <div class="pull-right">
+              <button type="button" class="btn btn-primary btn-xs"
+                      data-ng-click="editTransaction(transaction)"
+                      data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.update}"
+                      tooltip-placement="left">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button type="button" class="btn btn-danger btn-xs"
+                      data-toggle="modal" data-target="#deleteTransaction"
+                      data-ng-click="deleteTransaction(transaction)"
+                      data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.delete.title}"
+                      tooltip-placement="left">
+                <i class="fa fa-trash-o"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="details hide" data-ng-repeat="entry in transaction.transactionEntries">
+          <td></td>
+          <td colspan="2">{{entry.transactionEntryType.display}}</td>
+          <td style="width:100px">
+            <div class="pull-right">
+              {{entry.transactionEntryAmount | currency}}
+            </div>
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
 </html>

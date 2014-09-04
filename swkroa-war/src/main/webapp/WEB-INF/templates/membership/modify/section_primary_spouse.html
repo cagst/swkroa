@@ -1,88 +1,92 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<body>
-		<div data-th-fragment="primarySpouse" class="spacer-top">
-			<div class="row spacer-top">
-				<div class="divider-inner">
-					<span>
-						<label data-th-text="#{com.cagst.swkroa.membership.member.spouse.divider}">
-							zzz SPOUSE
-						</label>
-						<select data-ng-model="membership.primarySpouse.memberType"
-						        data-ng-options="type.memberTypeDisplay for type in memberTypes">
-						</select>
-					</span>
-				</div>
-				<div>
-					<div class="col-xs-2">
-						<label data-th-text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
-						<select class="form-control"
-						        data-ng-model="membership.primarySpouse.person.title"
-						        data-ng-options="title.display for title in titles">
-						</select>
-					</div>
-					<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseFirstName.$invalid}">
-						<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.firstname.label}">zzz First Name</label>
-						<input type="text" class="form-control" name="spouseFirstName" maxlength="50"
-						       data-th-placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
-						       data-ng-model="membership.primarySpouse.person.firstName"
-						       data-ng-required="membership.primarySpouse"
-						       data-ng-blur="generateOwnerId(membership.primarySpouse)" />
-					</div>
-					<div class="col-xs-2">
-						<label data-th-text="#{com.cagst.swkroa.membership.member.middlename.label}">zzz Middle Name</label>
-						<input type="text" class="form-control" maxlength="50"
-						       data-th-placeholder="#{com.cagst.swkroa.membership.member.middlename.prompt}"
-						       data-ng-model="membership.primarySpouse.person.middleName" />
-					</div>
-					<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseLastName.$invalid}">
-						<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.lastname.label}">zzz Last Name</label>
-						<input type="text" class="form-control" name="spouseLastName" maxlength="50"
-						       data-th-placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
-						       data-ng-model="membership.primarySpouse.person.lastName"
-						       data-ng-required="membership.primarySpouse"
-						       data-ng-blur="generateOwnerId(membership.primarySpouse)" />
-					</div>
-					<div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseOwnerIdent.$invalid}">
-						<label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.ownerid.label}">zzz Owner ID</label>
-						<input type="text" class="form-control" name="spouseOwnerIdent" maxlength="15"
-						       data-th-placeholder="#{com.cagst.swkroa.membership.member.ownerid.prompt}"
-						       data-ng-model="membership.primarySpouse.ownerIdent"
-						       data-ng-required="membership.primarySpouse" />
-					</div>
-				</div>
-			</div>
-			
-			<div class="row spacer-top">
-				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
-					<div class="input-group">
-						<input type="text" class="form-control"
-						       data-datepicker-popup="MM/dd/yyyy"
-						       data-show-button-bar="false"
-						       data-datepicker-options="dateOptions"
-						       data-ng-model="membership.primarySpouse.joinDate"/>
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" data-ng-click="open($event)">
-								<i class="fa fa-calendar"></i>
-							</button>
-						</span>
-					</div>
-				</div>
-				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
-					<input type="text" class="form-control" maxlength="25"
-								 data-th-placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
-								 data-ng-model="membership.primarySpouse.greeting" />
-				</div>
-				<div class="col-xs-2">
-					<label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz Greeting</label>
-					<input type="text" class="form-control" maxlength="50"
-					       data-ng-model="membership.primarySpouse.inCareOf" />
-				</div>
-				
-			</div>
-		</div>
-	</body>
+<body>
+
+<div data-th-fragment="primarySpouse" class="spacer-top">
+  <div class="row spacer-top">
+    <div class="divider-inner">
+      <span>
+        <label data-th-text="#{com.cagst.swkroa.membership.member.spouse.divider}">zzz SPOUSE</label>
+      </span>
+    </div>
+    <div>
+      <div class="col-xs-2">
+        <label data-th-text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
+        <select class="form-control"
+                data-ng-model="membership.primarySpouse.person.title"
+                data-ng-options="title.display for title in titles">
+        </select>
+      </div>
+      <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseFirstName.$invalid}">
+        <label class="control-label label-required"
+               data-th-text="#{com.cagst.swkroa.membership.member.firstname.label}">zzz First Name</label>
+        <input type="text" class="form-control" name="spouseFirstName" maxlength="50"
+               data-th-placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
+               data-ng-model="membership.primarySpouse.person.firstName"
+               data-ng-required="membership.primarySpouse"
+               data-ng-blur="generateOwnerId(membership.primarySpouse)" />
+      </div>
+      <div class="col-xs-2">
+        <label data-th-text="#{com.cagst.swkroa.membership.member.middlename.label}">zzz Middle Name</label>
+        <input type="text" class="form-control" maxlength="50"
+               data-th-placeholder="#{com.cagst.swkroa.membership.member.middlename.prompt}"
+               data-ng-model="membership.primarySpouse.person.middleName" />
+      </div>
+      <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseLastName.$invalid}">
+        <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.lastname.label}">zzz
+                                                                                                                        Last
+                                                                                                                        Name</label>
+        <input type="text" class="form-control" name="spouseLastName" maxlength="50"
+               data-th-placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
+               data-ng-model="membership.primarySpouse.person.lastName"
+               data-ng-required="membership.primarySpouse"
+               data-ng-blur="generateOwnerId(membership.primarySpouse)" />
+      </div>
+      <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseOwnerIdent.$invalid}">
+        <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.member.ownerid.label}">zzz
+                                                                                                                       Owner
+                                                                                                                       ID</label>
+        <input type="text" class="form-control" name="spouseOwnerIdent" maxlength="15"
+               data-th-placeholder="#{com.cagst.swkroa.membership.member.ownerid.prompt}"
+               data-ng-model="membership.primarySpouse.ownerIdent"
+               data-ng-required="membership.primarySpouse" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row spacer-top">
+    <div class="col-xs-2">
+      <label data-th-text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
+
+      <div class="input-group">
+        <input type="text" class="form-control" id="spouseJoinDate" name="spouseJoinDate"
+               data-datepicker-popup="MM/dd/yyyy"
+               data-is-open="openedSpouseJoinDate"
+               data-show-button-bar="false"
+               data-show-weeks="false"
+               data-ng-model="membership.primarySpouse.joinDate" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" data-ng-click="openSpouseJoinDate($event)">
+            <i class="fa fa-calendar"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <label data-th-text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
+      <input type="text" class="form-control" maxlength="25"
+             data-th-placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
+             data-ng-model="membership.primarySpouse.greeting" />
+    </div>
+    <div class="col-xs-2">
+      <label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz Greeting</label>
+      <input type="text" class="form-control" maxlength="50"
+             data-ng-model="membership.primarySpouse.inCareOf" />
+    </div>
+
+  </div>
+</div>
+
+</body>
 </html>

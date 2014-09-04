@@ -5,22 +5,22 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<!--
-	<bean id="datasource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName" value="java:comp/env/jdbc/SWKROADataSource" />
-	</bean>
-	-->
+  <!--
+  <bean id="datasource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="java:comp/env/jdbc/SWKROADataSource" />
+  </bean>
+  -->
 
-	<bean name="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/swkroadb" />
-		<property name="username" value="swkroauser" />
-		<property name="password" value="cagst23824" />
-	</bean>
+  <bean name="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/swkroadb"/>
+    <property name="username" value="swkroauser"/>
+    <property name="password" value="swkroadbuser"/>
+  </bean>
 
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="datasource" />
-	</bean>
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="datasource"/>
+  </bean>
 
-	<tx:annotation-driven  transaction-manager="transactionManager"/>
+  <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>
