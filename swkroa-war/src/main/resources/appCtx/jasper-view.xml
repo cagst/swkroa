@@ -16,4 +16,9 @@
     <property name="jdbcDataSource" ref="datasource"/>
   </bean>
 
+  <bean id="membershipPastDueReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView">
+    <property name="url" value="classpath:reports/jasper/MembershipPastDueReport.jasper"/>
+    <property name="jdbcDataSource" ref="datasource"/>
+  </bean>
+
 </beans>

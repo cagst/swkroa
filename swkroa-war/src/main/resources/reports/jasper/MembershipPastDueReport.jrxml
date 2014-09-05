@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipPastDueReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="154edfef-2cab-4b00-9282-814fdab4faf4">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
+	<style name="Text Body" fontName="Verdana" fontSize="12"/>
+	<style name="ColumnHeader" fontName="Verdana" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="PageFooter" fontName="Verdana" fontSize="10"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT ms.membership_id
+--      ,ms.entity_type_cd
+      ,ms.next_due_dt
+      ,ms.dues_amount
+      ,SUM(te.transaction_entry_amount) AS amount_due
+      ,m.owner_ident
+      ,CASE WHEN m.company_name IS NOT NULL THEN m.company_name ELSE CONCAT(p.name_last, ", ", p.name_first) END AS member_name
+  FROM membership ms
+ INNER JOIN member m
+         ON (m.membership_id = ms.membership_id AND m.active_ind = 1)
+ INNER JOIN member_type mt
+         ON (mt.member_type_id = m.member_type_id AND mt.primary_ind = 1 AND mt.active_ind = 1
+        AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW()))
+  LEFT OUTER JOIN transaction t
+               ON (t.membership_id = ms.membership_id AND t.active_ind = 1)
+  LEFT OUTER JOIN transaction_entry te
+               ON (te.transaction_id = t.transaction_id AND te.active_ind = 1
+              AND te.transaction_entry_type_cd NOT IN (SELECT cv.codevalue_id FROM codevalue cv WHERE cv.codeset_id = 8 AND cv.codevalue_meaning = 'TRANS_SPECIAL_FUNDS'))
+  LEFT OUTER JOIN person p
+               ON (p.person_id = m.person_id AND p.active_ind = 1)
+ WHERE ms.active_ind   = 1
+GROUP BY ms.membership_id
+HAVING amount_due < 0.0
+ORDER BY member_name]]>
+	</queryString>
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_name" class="java.lang.String"/>
+	<field name="dues_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amount_due" class="java.math.BigDecimal"/>
+	<field name="membership_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="TotalAmountDue" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount_due}]]></variableExpression>
+	</variable>
+	<group name="membership_id">
+		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement style="ReportTitle" x="74" y="0" width="430" height="35" uuid="1d00faa8-c46e-4662-a229-d43f2c71c016"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="18"/>
+				</textElement>
+				<text><![CDATA[Membership Past Due Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement style="ColumnHeader" x="0" y="0" width="100" height="20" uuid="aaba9a5e-cfaf-45ef-a67c-15d093a3588d"/>
+				<text><![CDATA[Owner ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="ColumnHeader" x="117" y="0" width="240" height="20" uuid="10bbf0e0-5a0f-483a-83d0-7fab12cc774c"/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="ColumnHeader" x="369" y="0" width="97" height="20" uuid="2d586935-0cac-4a9e-bed9-6ab471b8b8b8"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Dues Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="ColumnHeader" x="472" y="0" width="100" height="20" uuid="ce08e6e5-31c1-411f-be5a-2718e593800c"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Amount Due]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="572" height="1" uuid="f2eab17e-0cb4-445c-8db8-e888dec3a847"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement style="Text Body" x="0" y="0" width="100" height="20" uuid="7bd80c59-6071-45f0-b8ff-5d677e44490e"/>
+				<textFieldExpression><![CDATA[$F{owner_ident}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Text Body" x="117" y="0" width="240" height="20" uuid="fe704197-8b7b-4cf9-9c8a-2f22700c5a86"/>
+				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="Text Body" x="369" y="0" width="97" height="20" uuid="20484641-b407-47de-94be-da39de425950"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dues_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="Text Body" x="472" y="0" width="100" height="20" uuid="83090c8c-7c8e-4348-93f3-7de541f21274"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{amount_due}.abs()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement style="PageFooter" x="0" y="2" width="74" height="20" uuid="43a503cd-7ca0-403b-939e-a11ee222d4ce"/>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+			<textField pattern="EEE, MMM d, yyyy h:mm a">
+				<reportElement style="PageFooter" x="74" y="2" width="283" height="20" uuid="df0c9a2c-9242-4522-8a23-69525a533df7"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="PageFooter" x="452" y="4" width="80" height="20" uuid="fc7ebf3f-bbb7-4441-9a7b-2bf5b47cb474"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="PageFooter" x="532" y="4" width="40" height="20" uuid="5d184953-fde5-4dfa-a467-c693f1654499"/>
+				<textElement>
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="2" width="572" height="1" uuid="9606232d-6f01-4ddc-af36-41ad5890b9c2"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="23" splitType="Stretch">
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="ColumnHeader" x="472" y="0" width="100" height="20" uuid="7c27caa3-ebfe-48c9-b3a6-11e73e397455"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{TotalAmountDue}.abs()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="ColumnHeader" x="369" y="3" width="97" height="20" uuid="5b58ce08-38e0-4a4b-ace4-cbeb44900237"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total Amount Due]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="572" height="1" uuid="9cb09794-51f6-49a4-84d8-aa39624a1f59"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
