@@ -30,7 +30,8 @@
                ON (p.person_id = m.person_id AND p.active_ind = 1)
  WHERE ms.active_ind   = 1
 GROUP BY ms.membership_id
-HAVING amount_due < 0.0;]]>
+HAVING amount_due < 0.0
+ORDER BY member_name]]>
 	</queryString>
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
