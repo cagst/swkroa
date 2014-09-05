@@ -26,7 +26,8 @@
     <div data-th-include="membership/modify/section_membership"></div>
     <div data-th-include="membership/modify/section_counties"></div>
     <div data-th-include="membership/modify/section_members"
-         data-ng-show="membership.primaryMember.memberType.allowMember"></div>
+         data-ng-show="membership.primaryMember.memberType.allowMember ||
+                       membership.additionalMembers.length > 0"></div>
 
     <div class="spacer-top">
       <div class="divider-top">
