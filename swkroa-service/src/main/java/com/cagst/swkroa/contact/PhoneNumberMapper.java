@@ -28,31 +28,13 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
   private static final String UPDT_ID = "updt_id";
   private static final String UPDT_CNT = "updt_cnt";
 
-  private final CodeValueRepository codeValueRepo;
-
-  /**
-   * Primary Constructor used to create an instance of <i>PhoneNumberMapper</i> used to create
-   * {@link PhoneNumber} from a resultset.
-   *
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve the phone type for the PhoneNumber.
-   */
-  public PhoneNumberMapper(final CodeValueRepository codeValueRepo) {
-    this.codeValueRepo = codeValueRepo;
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public PhoneNumber mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     PhoneNumber phone = new PhoneNumber();
     phone.setPhoneUID(rs.getLong(PHONE_ID));
     phone.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
     phone.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    phone.setPhoneType(codeValueRepo.getCodeValueByUID(rs.getLong(PHONE_TYPE)));
+    phone.setPhoneTypeCD(rs.getLong(PHONE_TYPE));
     phone.setPhoneNumber(rs.getString(PHONE_NUMBER));
     phone.setPhoneExtension(rs.getString(PHONE_EXTENSION));
     phone.setActive(rs.getBoolean(ACTIVE_IND));
@@ -77,8 +59,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(PARENT_ENTITY_ID, phoneNumber.getParentEntityUID());
     params.addValue(PARENT_ENTITY_NAME, phoneNumber.getParentEntityName());
-    params.addValue(PHONE_TYPE, phoneNumber.getPhoneType() != null ? phoneNumber.getPhoneType().getCodeValueUID()
-        : null);
+    params.addValue(PHONE_TYPE, phoneNumber.getPhoneTypeCD() != 0L ? phoneNumber.getPhoneTypeCD() : null);
     params.addValue(PHONE_NUMBER, phoneNumber.getPhoneNumber());
     params.addValue(PHONE_EXTENSION,
         StringUtils.isNotBlank(phoneNumber.getPhoneExtension()) ? phoneNumber.getPhoneExtension() : null);
@@ -90,7 +71,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
   }
 
   /**
-   * Will marshal a {@link PhoneNumber} into a {@link MapSqlParamterSource} for updating into the
+   * Will marshal a {@link PhoneNumber} into a {@link MapSqlParameterSource} for updating into the
    * database.
    *
    * @param phoneNumber
@@ -103,8 +84,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
    */
   public static MapSqlParameterSource mapUpdateStatement(final PhoneNumber phoneNumber, final User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue(PHONE_TYPE, phoneNumber.getPhoneType() != null ? phoneNumber.getPhoneType().getCodeValueUID()
-        : null);
+    params.addValue(PHONE_TYPE, phoneNumber.getPhoneTypeCD() != 0L ? phoneNumber.getPhoneTypeCD() : null);
     params.addValue(PHONE_NUMBER, phoneNumber.getPhoneNumber());
     params.addValue(PHONE_EXTENSION,
         StringUtils.isNotBlank(phoneNumber.getPhoneExtension()) ? phoneNumber.getPhoneExtension() : null);

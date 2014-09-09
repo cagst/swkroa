@@ -1,8 +1,9 @@
 /**
  * (c) 2014 CAGST Solutions: http://www.cagst.com/solutions
  *
- * Author: Craig Gaskill
+ * Provides functionality for the Maintain User pages.
  *
+ * Author:  Craig Gaskill
  * Version: 1.0.0
  */
 
@@ -14,13 +15,13 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/home",
       views: {
         '': {
-          templateUrl: "/partials/maintain/user/partial_main.html"
+          templateUrl: "/partials/maintain/user/main.html"
         },
         'list@home': {
-          templateUrl: "/partials/maintain/user/partial_list.html"
+          templateUrl: "/partials/maintain/user/list.html"
         },
         'detail@home': {
-          templateUrl: "/partials/maintain/user/partial_detail.html"
+          templateUrl: "/partials/maintain/user/detail.html"
         }
       }
     })
@@ -28,10 +29,10 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/add",
       views: {
         '': {
-          templateUrl: "/partials/maintain/user/partial_modify.html"
+          templateUrl: "/partials/maintain/user/modify.html"
         },
         'contact@add': {
-          templateUrl: "/partials/maintain/user/partial_contact.html"
+          templateUrl: "/partials/maintain/user/contact.html"
         }
       }
     })
@@ -39,19 +40,36 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/edit",
       views: {
         '': {
-          templateUrl: "/partials/maintain/user/partial_modify.html"
+          templateUrl: "/partials/maintain/user/modify.html"
         },
         'contact@edit': {
-          templateUrl: "/partials/maintain/user/partial_contact.html"
+          templateUrl: "/partials/maintain/user/contact.html"
         }
       }
     });
 });
 
-swkroaApp.controller('userController', ['$scope', '$http', '$state', function($scope, $http, $state) {
+swkroaApp.controller('userController',
+  ['$scope', '$http', 'contactService', '$state',
+  function($scope, $http, contactService, $state) {
+
+  $scope.contactService = contactService;
+
   $http.get('/api/users').success(function(data) {
     $scope.users = data;
     $("#successMessage").hide();
+  });
+
+  contactService.getAddressTypes().then(function(data) {
+    $scope.addressTypes = data;
+  });
+
+  contactService.getPhoneTypes().then(function(data) {
+    $scope.phoneTypes = data;
+  });
+
+  contactService.getEmailTypes().then(function(data) {
+    $scope.emailTypes = data;
   });
 
   $scope.getUser = function(user) {
@@ -111,54 +129,15 @@ swkroaApp.controller('userController', ['$scope', '$http', '$state', function($s
   };
 }]);
 
-swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService', '$state', function($scope, $http, contactService, $state) {
-  var original          = angular.copy($scope.share.user);
-  var syncItems         = 0;
-  var syncCount         = 0;
-  $scope.contactService = contactService;
+swkroaApp.controller('modifyUserController', ['$scope', '$http', '$state', function($scope, $http, $state) {
+  var original = angular.copy($scope.share.user);
 
   $("#errorMessage").hide();
 
-  $scope.states = contactService.getStates();
+  $scope.states = $scope.contactService.getStates();
 
-  syncItems++;
-  contactService.getAddressTypes().then(function(data) {
-    $scope.addressTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope, contactService);
-    }
-  });
-
-  syncItems++;
-  contactService.getPhoneTypes().then(function(data) {
-    $scope.phoneTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope, contactService);
-    }
-  });
-
-  syncItems++;
-  contactService.getEmailTypes().then(function(data) {
-    $scope.emailTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope, contactService);
-    }
-  });
-
-  syncItems++;
   $http.get('/api/codeset/TITLE/').success(function(data) {
     $scope.titles = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope, contactService);
-    }
   });
 
   $scope.hasChanges = function(user) {
@@ -220,18 +199,3 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', 'contactService
       });
   };
 }]);
-
-var syncAllItems = function(scope, contactService) {
-  if (scope.share.user.title) {
-    for (var idx = 0; idx < scope.titles.length; idx++) {
-      if (scope.share.user.title.codeValueUID == scope.titles[idx].codeValueUID) {
-        scope.share.user.title = scope.titles[idx];
-        break;
-      }
-    }
-  }
-
-  contactService.syncAddressTypes(scope.share.user.addresses, scope.addressTypes);
-  contactService.syncPhoneTypes(scope.share.user.phoneNumbers, scope.phoneTypes);
-  contactService.syncEmailTypes(scope.share.user.emailAddresses, scope.emailTypes);
-}

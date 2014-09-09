@@ -256,37 +256,26 @@ swkroaApp.service('contactService', ['$http', function($http) {
     }
   };
 
-  this.syncAddressTypes = function(addresses, types) {
-    var states = this.getStates();
-
-    for (var idx1 = 0; idx1 < addresses.length; idx1++) {
-      for (var idx2 = 0; idx2 < types.length; idx2++) {
-        if (addresses[idx1].addressType.codeValueUID == types[idx2].codeValueUID) {
-          addresses[idx1].addressType = types[idx2];
-          break;
-        }
+  this.getAddressTypeDisplay = function(address, types) {
+    for (var idx1 = 0; idx1 < types.length; idx1++) {
+      if (address.addressTypeCD == types[idx1].codeValueUID) {
+        return types[idx1].display;
       }
     }
   };
 
-  this.syncPhoneTypes = function(phones, types) {
-    for (var idx1 = 0; idx1 < phones.length; idx1++) {
-      for (var idx2 = 0; idx2 < types.length; idx2++) {
-        if (phones[idx1].phoneType.codeValueUID == types[idx2].codeValueUID) {
-          phones[idx1].phoneType = types[idx2];
-          break;
-        }
+  this.getPhoneTypeDisplay = function(phone, types) {
+    for (var idx1 = 0; idx1 < types.length; idx1++) {
+      if (phone.phoneTypeCD == types[idx1].codeValueUID) {
+        return types[idx1].display;
       }
     }
   };
 
-  this.syncEmailTypes = function(emails, types) {
-    for (var idx1 = 0; idx1 < emails.length; idx1++) {
-      for (var idx2 = 0; idx2 < types.length; idx2++) {
-        if (emails[idx1].emailType.codeValueUID == types[idx2].codeValueUID) {
-          emails[idx1].emailType = types[idx2];
-          break;
-        }
+  this.getEmailTypeDisplay = function(email, types) {
+    for (var idx1 = 0; idx1 < types.length; idx1++) {
+      if (email.emailTypeCD == types[idx1].codeValueUID) {
+        return types[idx1].display;
       }
     }
   };

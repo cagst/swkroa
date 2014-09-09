@@ -1,7 +1,6 @@
 package com.cagst.swkroa.person;
 
 import com.cagst.common.util.CGTStringUtils;
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -34,26 +33,8 @@ public abstract class BasePersonMapper {
   protected static final String UPDT_ID = "updt_id";
   protected static final String PERSON_UPDT_CNT = "person_updt_cnt";
 
-  protected final CodeValueRepository codeValueRepo;
-
-  /**
-   * Primary Constructor used to create an instance of <i>BasePersonMapper</i>.
-   *
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve additional attributes.
-   */
-  public BasePersonMapper(final CodeValueRepository codeValueRepo) {
-    this.codeValueRepo = codeValueRepo;
-  }
-
   public Person mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     Person person = new Person();
-
-    long titleCd = rs.getLong(TITLE_CD);
-
-    if (titleCd > 0L) {
-      person.setTitle(codeValueRepo.getCodeValueByUID(titleCd));
-    }
 
     String language = rs.getString(LOCALE_LANGUAGE);
     String country = rs.getString(LOCALE_COUNTRY);
@@ -66,6 +47,7 @@ public abstract class BasePersonMapper {
     }
 
     person.setPersonUID(rs.getLong(PERSON_ID));
+    person.setTitleCD(rs.getLong(TITLE_CD));
     person.setFirstName(rs.getString(NAME_FIRST));
     person.setMiddleName(rs.getString(NAME_MIDDLE));
     person.setLastName(rs.getString(NAME_LAST));
@@ -117,7 +99,7 @@ public abstract class BasePersonMapper {
   }
 
   private static void mapCommonProperties(final MapSqlParameterSource params, final Person person, final User user) {
-    params.addValue(TITLE_CD, person.getTitle() != null ? person.getTitle().getCodeValueUID() : null);
+    params.addValue(TITLE_CD, person.getTitleCD() > 0L ? person.getTitleCD() : null);
     params.addValue(NAME_LAST, person.getLastName());
     params.addValue(NAME_LAST_KEY, CGTStringUtils.normalizeToKey(person.getLastName()));
     params.addValue(NAME_FIRST, person.getFirstName());

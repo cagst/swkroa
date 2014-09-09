@@ -251,53 +251,13 @@ var syncAllItems = function(scope, contactService) {
         }
       }
     }
-
-    if (scope.membership.primaryMember.person && scope.membership.primaryMember.person.title) {
-      for (var idx = 0; idx < scope.titles.length; idx++) {
-        if (scope.membership.primaryMember.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
-          scope.membership.primaryMember.person.title = scope.titles[idx];
-          break;
-        }
-      }
-    }
-
-    if (scope.membership.primaryMember.person && scope.membership.primaryMember.person.gender) {
-      for (var idx = 0; idx < scope.genders.length; idx++) {
-        if (scope.membership.primaryMember.person.gender.codeValueUID == scope.genders[idx].codeValueUID) {
-          scope.membership.primaryMember.person.gender = scope.genders[idx];
-          break;
-        }
-      }
-    }
   }
-
-  contactService.syncAddressTypes(scope.membership.primaryMember.addresses, scope.addressTypes);
-  contactService.syncPhoneTypes(scope.membership.primaryMember.phoneNumbers, scope.phoneTypes);
-  contactService.syncEmailTypes(scope.membership.primaryMember.emailAddresses, scope.emailTypes);
 
   if (scope.membership.primarySpouse && scope.membership.primarySpouse.person) {
     if (scope.membership.primarySpouse.memberType) {
       for (var idx = 0; idx < scope.memberTypes.length; idx++) {
         if (scope.membership.primarySpouse.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
           scope.membership.primarySpouse.memberType = scope.memberTypes[idx];
-          break;
-        }
-      }
-    }
-
-    if (scope.membership.primarySpouse.person.title) {
-      for (var idx = 0; idx < scope.titles.length; idx++) {
-        if (scope.membership.primarySpouse.person.title.codeValueUID == scope.titles[idx].codeValueUID) {
-          scope.membership.primarySpouse.person.title = scope.titles[idx];
-          break;
-        }
-      }
-    }
-
-    if (scope.membership.primarySpouse.person.gender) {
-      for (var idx = 0; idx < scope.genders.length; idx++) {
-        if (scope.membership.primarySpouse.person.gender.codeValueUID == scope.genders[idx].codeValueUID) {
-          scope.membership.primarySpouse.person.gender = scope.genders[idx];
           break;
         }
       }
@@ -311,29 +271,5 @@ var syncAllItems = function(scope, contactService) {
         break;
       }
     }
-  }
-
-  for (var idx1 = 0; idx1 < scope.membership.additionalMembers.length; idx1++) {
-    if (scope.membership.additionalMembers[idx1].person && scope.membership.additionalMembers[idx1].person.title) {
-      for (var idx2 = 0; idx2 < scope.titles.length; idx2++) {
-        if (scope.membership.additionalMembers[idx1].person.title.codeValueUID == scope.titles[idx2].codeValueUID) {
-          scope.membership.additionalMembers[idx1].person.title = scope.titles[idx2];
-          break;
-        }
-      }
-    }
-
-    if (scope.membership.additionalMembers[idx1].person && scope.membership.additionalMembers[idx1].person.gender) {
-      for (var idx2 = 0; idx2 < scope.genders.length; idx2++) {
-        if (scope.membership.additionalMembers[idx1].person.gender.codeValueUID == scope.genders[idx2].codeValueUID) {
-          scope.membership.additionalMembers[idx1].person.gender = scope.genders[idx2];
-          break;
-        }
-      }
-    }
-
-    contactService.syncAddressTypes(scope.membership.additionalMembers[idx1].addresses, scope.addressTypes);
-    contactService.syncPhoneTypes(scope.membership.additionalMembers[idx1].phoneNumbers, scope.phoneTypes);
-    contactService.syncEmailTypes(scope.membership.additionalMembers[idx1].emailAddresses, scope.emailTypes);
   }
 }

@@ -1,8 +1,9 @@
 /**
  * (c) 2014 CAGST Solutions: http://www.cagst.com/solutions
  *
- * Author: Craig Gaskill
+ * Provides functionality needed for the Membership pages.
  *
+ * Author:  Craig Gaskill
  * Version: 1.0.0
  */
 

@@ -1,6 +1,5 @@
 package com.cagst.swkroa.contact;
 
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -26,32 +25,13 @@ public class EmailAddressMapper implements RowMapper<EmailAddress> {
   private static final String UPDT_ID = "updt_id";
   private static final String UPDT_CNT = "updt_cnt";
 
-  private final CodeValueRepository codeValueRepo;
-
-  /**
-   * Primary Constructor used to create an instance of <i>EmailAddressMapper</i> used to create
-   * {@link EmailAddress} from a resultset.
-   *
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve the email type for the
-   *     EmailAddress.
-   */
-  public EmailAddressMapper(final CodeValueRepository codeValueRepo) {
-    this.codeValueRepo = codeValueRepo;
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public EmailAddress mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     EmailAddress email = new EmailAddress();
     email.setEmailAddressUID(rs.getLong(EMAIL_ID));
     email.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
     email.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    email.setEmailType(codeValueRepo.getCodeValueByUID(rs.getLong(EMAIL_TYPE)));
+    email.setEmailTypeCD(rs.getLong(EMAIL_TYPE));
     email.setEmailAddress(rs.getString(EMAIL_ADDRESS));
     email.setActive(rs.getBoolean(ACTIVE_IND));
     email.setEmailAddressUpdateCount(rs.getLong(UPDT_CNT));
@@ -75,8 +55,7 @@ public class EmailAddressMapper implements RowMapper<EmailAddress> {
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(PARENT_ENTITY_ID, emailAddress.getParentEntityUID());
     params.addValue(PARENT_ENTITY_NAME, emailAddress.getParentEntityName());
-    params.addValue(EMAIL_TYPE, emailAddress.getEmailType() != null ? emailAddress.getEmailType().getCodeValueUID()
-        : null);
+    params.addValue(EMAIL_TYPE, emailAddress.getEmailTypeCD() != 0L ? emailAddress.getEmailTypeCD() : null);
     params.addValue(EMAIL_ADDRESS, emailAddress.getEmailAddress());
     params.addValue(ACTIVE_IND, emailAddress.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
@@ -100,8 +79,7 @@ public class EmailAddressMapper implements RowMapper<EmailAddress> {
   public static MapSqlParameterSource mapUpdateStatement(final EmailAddress emailAddress, final User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
 
-    params.addValue(EMAIL_TYPE, emailAddress.getEmailType() != null ? emailAddress.getEmailType().getCodeValueUID()
-        : null);
+    params.addValue(EMAIL_TYPE, emailAddress.getEmailTypeCD() != 0L ? emailAddress.getEmailTypeCD() : null);
     params.addValue(EMAIL_ADDRESS, emailAddress.getEmailAddress());
     params.addValue(ACTIVE_IND, emailAddress.isActive());
     params.addValue(UPDT_ID, user.getUserUID());

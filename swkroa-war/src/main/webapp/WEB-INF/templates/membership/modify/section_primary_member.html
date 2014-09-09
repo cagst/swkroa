@@ -105,8 +105,8 @@
     <div class="col-xs-2">
       <label data-th-text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
       <select class="form-control"
-              data-ng-model="membership.primaryMember.person.title"
-              data-ng-options="title.display for title in titles">
+              data-ng-model="membership.primaryMember.person.titleCD"
+              data-ng-options="title.codeValueUID as title.display for title in titles">
       </select>
     </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryFirstName.$invalid}">

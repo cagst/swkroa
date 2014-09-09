@@ -28,10 +28,8 @@ import static org.junit.Assert.*;
 public class PersonRepositoryJdbcTest extends BaseTestRepository {
   private PersonRepositoryJdbc repo;
 
-  private CodeValueRepository codeValueRepo;
   private ContactRepository contactRepo;
 
-  private CodeValue home;
   private User user;
 
   @Before
@@ -39,25 +37,11 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
     user = new User();
     user.setUserUID(1L);
 
-    home = new CodeValue();
-    home.setCodeValueUID(1L);
-    home.setMeaning("HOME");
-    home.setDisplay("Home");
-
-    CodeValue cvWork = new CodeValue();
-    cvWork.setCodeValueUID(2L);
-    cvWork.setMeaning("WORK");
-    cvWork.setDisplay("Work");
-
-    codeValueRepo = Mockito.mock(CodeValueRepository.class);
     contactRepo = Mockito.mock(ContactRepository.class);
-
-    Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(home);
-    Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(cvWork);
 
     DataSource dataSource = createTestDataSource();
 
-    repo = new PersonRepositoryJdbc(dataSource, codeValueRepo, contactRepo);
+    repo = new PersonRepositoryJdbc(dataSource, contactRepo);
     repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
   }
 
@@ -89,7 +73,6 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
     Person person = new Person();
     person.setLastName("Person");
     person.setFirstName("Test");
-    person.setTitle(home);
 
     assertEquals("Ensure our new Person doesn't have an Id yet.", 0, person.getPersonUID());
 

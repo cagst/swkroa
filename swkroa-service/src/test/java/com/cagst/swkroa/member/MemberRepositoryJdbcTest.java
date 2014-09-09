@@ -2,8 +2,6 @@ package com.cagst.swkroa.member;
 
 import com.cagst.common.db.DataSourceFactory;
 import com.cagst.common.db.StatementLoader;
-import com.cagst.swkroa.codevalue.CodeValue;
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.county.County;
 import com.cagst.swkroa.county.CountyRepository;
@@ -37,7 +35,6 @@ public class MemberRepositoryJdbcTest {
   private MemberRepositoryJdbc repo;
 
   private PersonRepository personRepo;
-  private CodeValueRepository codeValueRepo;
   private MemberTypeRepository memberTypeRepo;
   private CountyRepository countyRepo;
   private ContactRepository contactRepo;
@@ -52,26 +49,9 @@ public class MemberRepositoryJdbcTest {
     user.setUserUID(1L);
 
     personRepo = Mockito.mock(PersonRepository.class);
-    codeValueRepo = Mockito.mock(CodeValueRepository.class);
     memberTypeRepo = Mockito.mock(MemberTypeRepository.class);
     countyRepo = Mockito.mock(CountyRepository.class);
     contactRepo = Mockito.mock(ContactRepository.class);
-
-    CodeValue associate = new CodeValue();
-    associate.setCodeValueUID(1L);
-    associate.setDisplay("Associate Membership");
-
-    CodeValue regular = new CodeValue();
-    regular.setCodeValueUID(2L);
-    regular.setDisplay("Regular Membership");
-
-    CodeValue family = new CodeValue();
-    family.setCodeValueUID(3L);
-    family.setDisplay("Family Membership");
-
-    Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(associate);
-    Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(regular);
-    Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(family);
 
     MemberType regularMember = new MemberType();
     regularMember.setMemberTypeUID(1L);
@@ -97,8 +77,7 @@ public class MemberRepositoryJdbcTest {
 
     Mockito.when(countyRepo.getCountyByUID(1L)).thenReturn(svCounty);
 
-    repo = new MemberRepositoryJdbc(createTestDataSource(), personRepo, codeValueRepo, memberTypeRepo, countyRepo,
-        contactRepo);
+    repo = new MemberRepositoryJdbc(createTestDataSource(), personRepo, memberTypeRepo, countyRepo, contactRepo);
 
     repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
   }

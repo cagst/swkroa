@@ -1,6 +1,5 @@
 package com.cagst.swkroa.contact;
 
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,26 +32,13 @@ import java.sql.SQLException;
   private static final String UPDT_ID = "updt_id";
   private static final String UPDT_CNT = "updt_cnt";
 
-  private final CodeValueRepository codeValueRepo;
-
-  /**
-   * Primary Constructor used to create an instance of <i>AddressMapper</i> used to create
-   * {@link Address Addresses} from a resultset.
-   *
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve the address type for the Address.
-   */
-  public AddressMapper(final CodeValueRepository codeValueRepo) {
-    this.codeValueRepo = codeValueRepo;
-  }
-
   @Override
   public Address mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     Address address = new Address();
     address.setAddressUID(rs.getLong(ADDRESS_ID));
     address.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
     address.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    address.setAddressType(codeValueRepo.getCodeValueByUID(rs.getLong(ADDRESS_TYPE)));
+    address.setAddressTypeCD(rs.getLong(ADDRESS_TYPE));
     address.setAddressLine1(rs.getString(ADDRESS1));
     address.setAddressLine2(rs.getString(ADDRESS2));
     address.setAddressLine3(rs.getString(ADDRESS3));
@@ -83,7 +69,7 @@ import java.sql.SQLException;
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(PARENT_ENTITY_ID, address.getParentEntityUID());
     params.addValue(PARENT_ENTITY_NAME, address.getParentEntityName());
-    params.addValue(ADDRESS_TYPE, address.getAddressType() != null ? address.getAddressType().getCodeValueUID() : null);
+    params.addValue(ADDRESS_TYPE, address.getAddressTypeCD() != 0L ? address.getAddressTypeCD() : null);
     params.addValue(ADDRESS1, address.getAddressLine1());
     params.addValue(ADDRESS2, StringUtils.isNotBlank(address.getAddressLine2()) ? address.getAddressLine2() : null);
     params.addValue(ADDRESS3, StringUtils.isNotBlank(address.getAddressLine3()) ? address.getAddressLine3() : null);
@@ -112,7 +98,7 @@ import java.sql.SQLException;
   public static MapSqlParameterSource mapUpdateStatement(final Address address, final User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
 
-    params.addValue(ADDRESS_TYPE, address.getAddressType() != null ? address.getAddressType().getCodeValueUID() : null);
+    params.addValue(ADDRESS_TYPE, address.getAddressTypeCD() != 0L ? address.getAddressTypeCD() : null);
     params.addValue(ADDRESS1, address.getAddressLine1());
     params.addValue(ADDRESS2, StringUtils.isNotBlank(address.getAddressLine2()) ? address.getAddressLine2() : null);
     params.addValue(ADDRESS3, StringUtils.isNotBlank(address.getAddressLine3()) ? address.getAddressLine3() : null);

@@ -1,7 +1,6 @@
 package com.cagst.swkroa.member;
 
 import com.cagst.common.db.StatementLoader;
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
@@ -63,8 +62,6 @@ import java.util.Map;
    *     The {@link DataSource} to use to retrieve / persist data objects.
    * @param personRepo
    *     The {@link PersonRepository} to use to retrieve the Person attributes.
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve additional membership attributes.
    * @param memberTypeRepo
    *     The {@link MemberTypeRepository} to use to populate the {@link MemberType} objects.
    * @param countyRepo
@@ -73,10 +70,10 @@ import java.util.Map;
    *     The {@link ContactRepository} to use to populate contact objects.
    */
   public MemberRepositoryJdbc(final DataSource dataSource, final PersonRepository personRepo,
-                              final CodeValueRepository codeValueRepo, final MemberTypeRepository memberTypeRepo,
+                              final MemberTypeRepository memberTypeRepo,
                               final CountyRepository countyRepo, final ContactRepository contactRepo) {
 
-    super(dataSource, codeValueRepo, contactRepo);
+    super(dataSource, contactRepo);
 
     this.personRepo = personRepo;
     this.memberTypeRepo = memberTypeRepo;

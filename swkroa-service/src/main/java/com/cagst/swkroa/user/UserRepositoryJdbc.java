@@ -62,13 +62,11 @@ import java.util.Map;
    *
    * @param dataSource
    *      The {@link DataSource} used to retrieve / persist data objects.
-   * @param codeValueRepo
-   *      The {@link CodeValueRepository} to use to retrieve codified information.
    * @param contactRepo
    *      The {@link ContactRepository} to use to populate contact objects.
    */
-  public UserRepositoryJdbc(final DataSource dataSource, final CodeValueRepository codeValueRepo, final ContactRepository contactRepo) {
-    super(dataSource, codeValueRepo, contactRepo);
+  public UserRepositoryJdbc(final DataSource dataSource, final ContactRepository contactRepo) {
+    super(dataSource, contactRepo);
   }
 
   @Override
@@ -81,9 +79,7 @@ import java.util.Map;
     Map<String, String> params = new HashMap<String, String>(1);
     params.put("username", username);
 
-    List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_USERNAME), params,
-        new UserMapper(getCodeValueRepository()));
-
+    List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_USERNAME), params, new UserMapper());
     if (users.size() == 1) {
       return users.get(0);
     } else if (users.size() == 0) {
@@ -104,9 +100,7 @@ import java.util.Map;
     Map<String, Long> params = new HashMap<String, Long>(1);
     params.put("user_id", uid);
 
-    List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_UID), params,
-        new UserMapper(getCodeValueRepository()));
-
+    List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_UID), params, new UserMapper());
     if (users.size() == 1) {
       return users.get(0);
     } else if (users.size() == 0) {
@@ -342,7 +336,7 @@ import java.util.Map;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ALL_USERS), new UserMapper(getCodeValueRepository()));
+    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ALL_USERS), new UserMapper());
   }
 
   /** Place helper methods below this line. **/

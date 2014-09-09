@@ -41,24 +41,14 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
   private static final String INSERT_EMAIL = "INSERT_EMAIL";
   private static final String UPDATE_EMAIL = "UPDATE_EMAIL";
 
-  private final CodeValueRepository codeValueRepo;
-
   /**
    * Primary Constructor used to create an instance of <i>PersonRepositoryJdbc</i>.
    *
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve codified information.
    */
-  public ContactRepositoryJdbc(final DataSource dataSource, final CodeValueRepository codeValueRepo) {
+  public ContactRepositoryJdbc(final DataSource dataSource) {
     super(dataSource);
-
-    this.codeValueRepo = codeValueRepo;
-  }
-
-  protected CodeValueRepository getCodeValueRepository() {
-    return codeValueRepo;
   }
 
   @Override
@@ -85,7 +75,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     params.put("parent_entity_id", id);
     params.put("parent_entity_name", name);
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_ADDRESSES_FOR_ENTITY), params, new AddressMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_ADDRESSES_FOR_ENTITY), params, new AddressMapper());
   }
 
   @Override
@@ -112,8 +102,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     params.put("parent_entity_id", id);
     params.put("parent_entity_name", name);
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_PHONENUMBERS_FOR_ENTITY), params,
-        new PhoneNumberMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_PHONENUMBERS_FOR_ENTITY), params, new PhoneNumberMapper());
   }
 
   @Override
@@ -140,16 +129,9 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     params.put("parent_entity_id", id);
     params.put("parent_entity_name", name);
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_EMAILADDRESSES_FOR_ENTITY), params,
-        new EmailAddressMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_EMAILADDRESSES_FOR_ENTITY), params, new EmailAddressMapper());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.contact.ContactRepository#saveAddress(com.cagst.swkroa.contact.Address,
-   * com.cagst.swkroa.user.User)
-   */
   @Override
   public Address saveAddress(final Address address, final User user) {
     Assert.notNull(address, "Assertion Failure - argument [address] cannot be null");
@@ -201,13 +183,6 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     return address;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cagst.swkroa.contact.ContactRepository#savePhoneNumber(com.cagst.swkroa.contact.PhoneNumber
-   * , com.cagst.swkroa.user.User)
-   */
   @Override
   public PhoneNumber savePhoneNumber(final PhoneNumber phoneNumber, final User user) {
     Assert.notNull(phoneNumber, "Assertion Failure - argument [phoneNumber] cannot be null");
@@ -260,13 +235,6 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     return phoneNumber;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cagst.swkroa.contact.ContactRepository#saveEmailAddress(com.cagst.swkroa.contact.EmailAddress
-   * , com.cagst.swkroa.user.User)
-   */
   @Override
   public EmailAddress saveEmailAddress(final EmailAddress emailAddress, final User user) {
     Assert.notNull(emailAddress, "Assertion Failure - argument [emailAddress] cannot be null");

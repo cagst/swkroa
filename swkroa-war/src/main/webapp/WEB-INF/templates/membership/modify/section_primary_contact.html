@@ -21,8 +21,8 @@
         <div class="row spacer-top">
           <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
             <select class="form-control" name="addressType"
-                    data-ng-options="type.display for type in addressTypes"
-                    data-ng-model="address.addressType"
+                    data-ng-options="type.codeValueUID as type.display for type in addressTypes"
+                    data-ng-model="address.addressTypeCD"
                     data-ng-required="true">
             </select>
           </div>
@@ -96,8 +96,8 @@
         <div class="row spacer-top">
           <div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
             <select class="form-control" name="phoneType"
-                    data-ng-options="type.display for type in phoneTypes"
-                    data-ng-model="phone.phoneType"
+                    data-ng-options="type.codeValueUID as type.display for type in phoneTypes"
+                    data-ng-model="phone.phoneTypeCD"
                     data-ng-required="true">
             </select>
           </div>
@@ -141,8 +141,8 @@
         <div class="row spacer-top">
           <div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
             <select class="form-control" name="emailType"
-                    data-ng-options="type.display for type in emailTypes"
-                    data-ng-model="email.emailType"
+                    data-ng-options="type.codeValueUID as type.display for type in emailTypes"
+                    data-ng-model="email.emailTypeCD"
                     data-ng-required="true">
             </select>
           </div>

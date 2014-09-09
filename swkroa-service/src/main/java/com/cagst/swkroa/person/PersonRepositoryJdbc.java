@@ -2,7 +2,6 @@ package com.cagst.swkroa.person;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
@@ -35,7 +34,6 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
   private static final String INSERT_PERSON = "INSERT_PERSON";
   private static final String UPDATE_PERSON = "UPDATE_PERSON";
 
-  private final CodeValueRepository codeValueRepo;
   private final ContactRepository contactRepo;
 
   /**
@@ -43,20 +41,13 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
    *
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve coded values.
    * @param contactRepo
    *     The {@link ContactRepository} to use to populate contact objects.
    */
-  public PersonRepositoryJdbc(final DataSource dataSource, final CodeValueRepository codeValueRepo, final ContactRepository contactRepo) {
+  public PersonRepositoryJdbc(final DataSource dataSource, final ContactRepository contactRepo) {
     super(dataSource);
 
-    this.codeValueRepo = codeValueRepo;
     this.contactRepo = contactRepo;
-  }
-
-  protected CodeValueRepository getCodeValueRepository() {
-    return codeValueRepo;
   }
 
   protected ContactRepository getContactRepository() {
@@ -71,9 +62,7 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
     Map<String, Long> params = new HashMap<String, Long>();
     params.put("person_id", uid);
 
-    List<Person> persons = getJdbcTemplate().query(stmtLoader.load(GET_PERSON_BY_UID), params,
-        new PersonMapper(codeValueRepo));
-
+    List<Person> persons = getJdbcTemplate().query(stmtLoader.load(GET_PERSON_BY_UID), params, new PersonMapper());
     if (persons.size() == 1) {
       return persons.get(0);
     } else if (persons.size() == 0) {

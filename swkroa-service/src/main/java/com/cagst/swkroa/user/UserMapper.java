@@ -1,7 +1,6 @@
 package com.cagst.swkroa.user;
 
 import com.cagst.common.util.CGTDateTimeUtils;
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.person.BasePersonMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTimeZone;
@@ -41,28 +40,13 @@ import java.util.Locale;
   private static final String USER_UPDT_CNT = "user_updt_cnt";
   private static final String USER_CREATE_DT_TM = "user_create_dt_tm";
 
-  /**
-   * Primary Constructor used to create an instance of <i>UserMapper</i>.
-   *
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve codified values.
-   */
-  public UserMapper(final CodeValueRepository codeValueRepo) {
-    super(codeValueRepo);
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public User mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     User user = new User();
 
     user.setUserUID(rs.getLong(USER_ID));
     user.setPersonUID(rs.getLong(PERSON_ID));
-    user.setTitle(codeValueRepo.getCodeValueByUID(rs.getLong(TITLE_CD)));
+    user.setTitleCD(rs.getLong(TITLE_CD));
     user.setLastName(rs.getString(NAME_LAST));
     user.setFirstName(rs.getString(NAME_FIRST));
     user.setMiddleName(rs.getString(NAME_MIDDLE));

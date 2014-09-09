@@ -3,12 +3,10 @@ package com.cagst.swkroa.person;
 import com.cagst.common.formatter.DefaultNameFormatter;
 import com.cagst.common.formatter.NameFormatter;
 import com.cagst.common.util.CGTCollatorBuilder;
-import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -34,7 +32,7 @@ public class Person implements Serializable, Comparable<Person> {
   private static final long serialVersionUID = 4546930957600757055L;
 
   private long person_id;
-  private CodeValue title;
+  private long title_cd;
   private String name_last;
   private String name_first;
   private String name_middle;
@@ -71,12 +69,12 @@ public class Person implements Serializable, Comparable<Person> {
     this.person_id = personUID;
   }
 
-  public CodeValue getTitle() {
-    return title;
+  public long getTitleCD() {
+    return title_cd;
   }
 
-  public void setTitle(final CodeValue title) {
-    this.title = title;
+  public void setTitleCD(final long title_cd) {
+    this.title_cd = title_cd;
   }
 
   /**

@@ -22,7 +22,6 @@
 
   <bean name="userRepo" class="com.cagst.swkroa.user.UserRepositoryJdbc">
     <constructor-arg ref="datasource"/>
-    <constructor-arg ref="codeValueRepo"/>
     <constructor-arg ref="contactRepo"/>
   </bean>
 
@@ -32,19 +31,16 @@
 
   <bean name="contactRepo" class="com.cagst.swkroa.contact.ContactRepositoryJdbc">
     <constructor-arg ref="datasource"/>
-    <constructor-arg ref="codeValueRepo"/>
   </bean>
 
   <bean name="personRepo" class="com.cagst.swkroa.person.PersonRepositoryJdbc">
     <constructor-arg ref="datasource"/>
-    <constructor-arg ref="codeValueRepo"/>
     <constructor-arg ref="contactRepo"/>
   </bean>
 
   <bean name="memberRepo" class="com.cagst.swkroa.member.MemberRepositoryJdbc">
     <constructor-arg ref="datasource"/>
     <constructor-arg ref="personRepo"/>
-    <constructor-arg ref="codeValueRepo"/>
     <constructor-arg ref="memberTypeRepo"/>
     <constructor-arg ref="countyRepo"/>
     <constructor-arg ref="contactRepo"/>
@@ -53,7 +49,7 @@
   <bean name="membershipRepo" class="com.cagst.swkroa.member.MembershipRepositoryJdbc">
     <constructor-arg ref="datasource"/>
     <constructor-arg ref="memberRepo"/>
-    <constructor-arg ref="codeValueRepo"/>
+    <constructor-arg ref="codeValueRepo" />
   </bean>
 
   <bean name="commentRepo" class="com.cagst.swkroa.comment.CommentRepositoryJdbc">
