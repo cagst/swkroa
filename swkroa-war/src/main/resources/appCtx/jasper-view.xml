@@ -4,19 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <!-- Declare a view resolver for Japser report resources
-  <bean class="org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView">
-    <property name="jdbcDataSource" ref="datasource" />
-    <property name="url" value="WEB-INF/reports/MembershipListingReport.jrxml" />
-  </bean>
-  -->
-
-  <bean id="membershipListingReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView">
+  <bean id="membershipListingReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView">
     <property name="url" value="classpath:reports/jasper/MembershipListingReport.jasper"/>
     <property name="jdbcDataSource" ref="datasource"/>
   </bean>
 
-  <bean id="membershipPastDueReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView">
+  <bean id="membershipPastDueReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView">
     <property name="url" value="classpath:reports/jasper/MembershipPastDueReport.jasper"/>
     <property name="jdbcDataSource" ref="datasource"/>
   </bean>

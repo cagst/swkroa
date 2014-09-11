@@ -46,7 +46,10 @@ public final class ReportController {
   public ModelAndView runMembershipListingReport() {
     LOGGER.info("Received request to run Membership Listing report.");
 
-    return new ModelAndView("membershipListingReport");
+    ModelAndView mav = new ModelAndView("membershipListingReport");
+    mav.addObject("format", "pdf");
+
+    return mav;
   }
 
   /**
@@ -72,6 +75,11 @@ public final class ReportController {
   public ModelAndView runMembershipPastDueReport() {
     LOGGER.info("Received request to run Membership Listing report.");
 
-    return new ModelAndView("membershipPastDueReport");
+    ModelAndView mav = new ModelAndView("membershipPastDueReport");
+    mav.addObject("format", "xls");
+    mav.addObject("ReportTitle", "Past_Due_Memberships_2014-09-09.xlsx");
+    mav.addObject("IS_IGNORE_PAGINATION", true);
+
+    return mav;
   }
 }
