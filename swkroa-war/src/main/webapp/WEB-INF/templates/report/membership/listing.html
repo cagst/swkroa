@@ -11,18 +11,15 @@
     <h3 data-th-text="#{com.cagst.swkroa.report.membership.listing.report}">zzz Membership Listing Report</h3>
   </div>
 
-  <form method="POST" action="#" name="runMembershipListing" target="_blank"
-        class="css-form"
-        data-th-action="@{/report/membership/listing}">
-    <div class="row">
-      <div class="col-xs-2">
-        <button type="submit" class="btn btn-primary form-control"
-                data-th-text="#{com.cagst.swkroa.report.generate}">
-          zzz Generate Report
-        </button>
-      </div>
+  <div class="row">
+    <div class="col-xs-2">
+      <a class="btn btn-primary form-control"
+         data-th-href="@{/report/membership/listing.pdf}" target="_blank"
+         data-th-text="#{com.cagst.swkroa.report.generate.report}">
+        zzz Generate Report
+      </a>
     </div>
-  </form>
+  </div>
 </div>
 
 </body>

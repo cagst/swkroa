@@ -15,11 +15,27 @@
         class="css-form"
         data-th-action="@{/report/membership/pastdue}">
     <div class="row">
-      <div class="col-xs-2">
-        <button type="submit" class="btn btn-primary form-control"
-                data-th-text="#{com.cagst.swkroa.report.generate}">
-          zzz Generate Report
+      <div class="col-xs-2 btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          <span data-th-text="#{com.cagst.swkroa.report.generate.report}">
+            zzz Generate Report
+          </span>
+          <span class="caret"></span>
         </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a data-th-href="@{/report/membership/pastdue.pdf}" target="_blank"
+               data-th-text="#{com.cagst.swkroa.report.generate.pdf}">
+              As PDF
+            </a>
+          </li>
+          <li>
+            <a data-th-href="@{/report/membership/pastdue.xls}" target="_blank"
+               data-th-text="#{com.cagst.swkroa.report.generate.xls}">
+              As Excel
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </form>

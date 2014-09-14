@@ -52,20 +52,13 @@ public final class ReportController {
    *
    * @return The generated report.
    */
-  @RequestMapping(value = "/membership/listing", method = RequestMethod.POST)
-  public ModelAndView runMembershipListingReport(final HttpServletRequest request) {
+  @RequestMapping(value = "/membership/listing.pdf", method = RequestMethod.GET)
+  public ModelAndView generateMembershipListingReportAsPdf(final HttpServletRequest request) {
     LOGGER.info("Received request to run Membership Listing report.");
 
     String reportFilename = "Membership_Listing_" + dateFormat.format(new Date());
 
-    AbstractJasperReportsView view = JasperReportsViewFactory.getJasperReportsView(
-        request,
-        dataSource,
-        MEMBERSHIP_LISTING,
-        JasperReportsViewFactory.REPORT_FORMAT_PDF,
-        reportFilename);
-
-    return new ModelAndView(view);
+    return getReportModalAndView(request, MEMBERSHIP_LISTING, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
   }
 
   /**
@@ -85,22 +78,44 @@ public final class ReportController {
    *
    * @return The generated report.
    */
-  @RequestMapping(value = "/membership/pastdue", method = RequestMethod.POST)
-  public ModelAndView runMembershipPastDueReport(final HttpServletRequest request) {
+  @RequestMapping(value = "/membership/pastdue.pdf", method = RequestMethod.GET)
+  public ModelAndView generateMembershipPastDueReportAsPdf(final HttpServletRequest request) {
     LOGGER.info("Received request to run Membership Listing report.");
 
     String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
 
-    AbstractJasperReportsView view = JasperReportsViewFactory.getJasperReportsView(
-        request,
-        dataSource,
-        MEMBERSHIP_PAST_DUE,
-        JasperReportsViewFactory.REPORT_FORMAT_XLS,
-        reportFilename);
+    return getReportModalAndView(request, MEMBERSHIP_PAST_DUE, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+  }
 
-    ModelAndView mav = new ModelAndView(view);
+  /**
+   * Handles the request to run/generate the Membership Past Due report page.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/membership/pastdue.xls", method = RequestMethod.GET)
+  public ModelAndView runMembershipPastDueReportAsXls(final HttpServletRequest request) {
+    LOGGER.info("Received request to run Membership Listing report.");
+
+    String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
+
+    ModelAndView mav = getReportModalAndView(request, MEMBERSHIP_PAST_DUE, JasperReportsViewFactory.REPORT_FORMAT_XLS, reportFilename);
     mav.addObject("IS_IGNORE_PAGINATION", true);
 
     return mav;
+  }
+
+  private ModelAndView getReportModalAndView(final HttpServletRequest request,
+                                             final String reportUrl,
+                                             final String format,
+                                             final String filename) {
+
+    AbstractJasperReportsView view = JasperReportsViewFactory.getJasperReportsView(
+        request,
+        dataSource,
+        reportUrl,
+        format,
+        filename);
+
+    return new ModelAndView(view);
   }
 }
