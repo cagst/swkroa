@@ -1,6 +1,6 @@
 package com.cagst.swkroa.controller.web;
 
-import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.report.JasperReportsViewFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Handles and retrieves the Report pages depending on the URI template.
@@ -20,8 +27,13 @@ import org.springframework.web.servlet.ModelAndView;
 public final class ReportController {
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
+  private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+  private static final String MEMBERSHIP_LISTING  = "/WEB-INF/reports/jasper/MembershipListingReport.jasper";
+  private static final String MEMBERSHIP_PAST_DUE = "/WEB-INF/reports/jasper/MembershipPastDueReport.jasper";
+
   @Autowired
-  private CodeValueRepository codeValueRepo;
+  private DataSource dataSource;
 
   /**
    * Handles and retrieves the Membership Listing report page.
@@ -32,9 +44,7 @@ public final class ReportController {
   public ModelAndView getMembershipListingReport() {
     LOGGER.info("Received request to show Membership Listing report options.");
 
-    ModelAndView mav = new ModelAndView("report/membership/listing");
-
-    return mav;
+    return new ModelAndView("report/membership/listing");
   }
 
   /**
@@ -43,13 +53,19 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/listing", method = RequestMethod.POST)
-  public ModelAndView runMembershipListingReport() {
+  public ModelAndView runMembershipListingReport(final HttpServletRequest request) {
     LOGGER.info("Received request to run Membership Listing report.");
 
-    ModelAndView mav = new ModelAndView("membershipListingReport");
-    mav.addObject("format", "pdf");
+    String reportFilename = "Membership_Listing_" + dateFormat.format(new Date());
 
-    return mav;
+    AbstractJasperReportsView view = JasperReportsViewFactory.getJasperReportsView(
+        request,
+        dataSource,
+        MEMBERSHIP_LISTING,
+        JasperReportsViewFactory.REPORT_FORMAT_PDF,
+        reportFilename);
+
+    return new ModelAndView(view);
   }
 
   /**
@@ -61,9 +77,7 @@ public final class ReportController {
   public ModelAndView getMembershipPastDueReport() {
     LOGGER.info("Received request to show Membership Past Due report options.");
 
-    ModelAndView mav = new ModelAndView("report/membership/pastdue");
-
-    return mav;
+    return new ModelAndView("report/membership/pastdue");
   }
 
   /**
@@ -72,12 +86,19 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/pastdue", method = RequestMethod.POST)
-  public ModelAndView runMembershipPastDueReport() {
+  public ModelAndView runMembershipPastDueReport(final HttpServletRequest request) {
     LOGGER.info("Received request to run Membership Listing report.");
 
-    ModelAndView mav = new ModelAndView("membershipPastDueReport");
-    mav.addObject("format", "xls");
-    mav.addObject("ReportTitle", "Past_Due_Memberships_2014-09-09.xlsx");
+    String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
+
+    AbstractJasperReportsView view = JasperReportsViewFactory.getJasperReportsView(
+        request,
+        dataSource,
+        MEMBERSHIP_PAST_DUE,
+        JasperReportsViewFactory.REPORT_FORMAT_XLS,
+        reportFilename);
+
+    ModelAndView mav = new ModelAndView(view);
     mav.addObject("IS_IGNORE_PAGINATION", true);
 
     return mav;
