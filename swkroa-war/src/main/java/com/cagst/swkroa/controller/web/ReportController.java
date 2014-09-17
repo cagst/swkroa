@@ -29,8 +29,11 @@ public final class ReportController {
 
   private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-  private static final String MEMBERSHIP_LISTING  = "/WEB-INF/reports/jasper/MembershipListingReport.jasper";
-  private static final String MEMBERSHIP_PAST_DUE = "/WEB-INF/reports/jasper/MembershipPastDueReport.jasper";
+  private static final String MEMBERSHIP_LISTING = "/WEB-INF/reports/jasper/MembershipListingReport.jasper";
+  private static final String MEMBERSHIP_PASTDUE = "/WEB-INF/reports/jasper/MembershipPastDueReport.jasper";
+
+  private static final String MEMBER_MAILINGLIST_XLS = "/WEB-INF/reports/jasper/MemberMailingListXls.jasper";
+  private static final String MEMBER_MAILINGLIST_PDF = "/WEB-INF/reports/jasper/MemberMailingListPdf.jasper";
 
   @Autowired
   private DataSource dataSource;
@@ -48,13 +51,13 @@ public final class ReportController {
   }
 
   /**
-   * Handles the request to run/generate the Membership Listing report page.
+   * Handles the request to run/generate the Membership Listing report.
    *
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/listing.pdf", method = RequestMethod.GET)
   public ModelAndView generateMembershipListingReportAsPdf(final HttpServletRequest request) {
-    LOGGER.info("Received request to run Membership Listing report.");
+    LOGGER.info("Received request to generate Membership Listing report.");
 
     String reportFilename = "Membership_Listing_" + dateFormat.format(new Date());
 
@@ -62,7 +65,7 @@ public final class ReportController {
   }
 
   /**
-   * Handles and retrieves the Membershp Past Due report page.
+   * Handles and retrieves the Membership Past Due report page.
    *
    * @return The name of the page.
    */
@@ -74,34 +77,74 @@ public final class ReportController {
   }
 
   /**
-   * Handles the request to run/generate the Membership Past Due report page.
+   * Handles the request to run/generate the Membership Past Due report.
    *
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/pastdue.pdf", method = RequestMethod.GET)
   public ModelAndView generateMembershipPastDueReportAsPdf(final HttpServletRequest request) {
-    LOGGER.info("Received request to run Membership Listing report.");
+    LOGGER.info("Received request to generate Membership Listing report.");
 
     String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
 
-    return getReportModalAndView(request, MEMBERSHIP_PAST_DUE, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    return getReportModalAndView(request, MEMBERSHIP_PASTDUE, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
   }
 
   /**
-   * Handles the request to run/generate the Membership Past Due report page.
+   * Handles the request to run/generate the Membership Past Due report.
    *
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/pastdue.xls", method = RequestMethod.GET)
-  public ModelAndView runMembershipPastDueReportAsXls(final HttpServletRequest request) {
-    LOGGER.info("Received request to run Membership Listing report.");
+  public ModelAndView generateMembershipPastDueReportAsXls(final HttpServletRequest request) {
+    LOGGER.info("Received request to generate Membership Listing report.");
 
     String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
 
-    ModelAndView mav = getReportModalAndView(request, MEMBERSHIP_PAST_DUE, JasperReportsViewFactory.REPORT_FORMAT_XLS, reportFilename);
+    ModelAndView mav = getReportModalAndView(request, MEMBERSHIP_PASTDUE, JasperReportsViewFactory.REPORT_FORMAT_XLS, reportFilename);
     mav.addObject("IS_IGNORE_PAGINATION", true);
 
     return mav;
+  }
+
+  /**
+   * Handles and retrieves the Member Mailing List report page.
+   *
+   * @return The name of the page.
+   */
+  @RequestMapping(value = "/member/mailinglist", method = RequestMethod.GET)
+  public ModelAndView getMemberMailingList() {
+    LOGGER.info("Received request to show Member Mailing List options.");
+
+    return new ModelAndView("report/member/mailinglist");
+  }
+
+  /**
+   * Handles the request to run/generate the Member Mailing List report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/member/mailinglist.pdf", method = RequestMethod.GET)
+  public ModelAndView generateMemberMailingListAsPdf(final HttpServletRequest request) {
+    LOGGER.info("Received request to generate Member Mailing List report.");
+
+    String reportFilename = "Member_MailingList_" + dateFormat.format(new Date());
+
+    return getReportModalAndView(request, MEMBER_MAILINGLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_XLS, reportFilename);
+  }
+
+  /**
+   * Handles the request to run/generate the Member Mailing List report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/member/mailinglist.xls", method = RequestMethod.GET)
+  public ModelAndView generateMemberMailingListAsXls(final HttpServletRequest request) {
+    LOGGER.info("Received request to generate Member Mailing List report.");
+
+    String reportFilename = "Member_MailingList_" + dateFormat.format(new Date());
+
+    return getReportModalAndView(request, MEMBER_MAILINGLIST_XLS, JasperReportsViewFactory.REPORT_FORMAT_XLS, reportFilename);
   }
 
   private ModelAndView getReportModalAndView(final HttpServletRequest request,
