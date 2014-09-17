@@ -32,7 +32,7 @@ public final class ReportController {
   private static final String MEMBERSHIP_LISTING = "/WEB-INF/reports/jasper/MembershipListingReport.jasper";
   private static final String MEMBERSHIP_PASTDUE = "/WEB-INF/reports/jasper/MembershipPastDueReport.jasper";
 
-  private static final String MEMBER_MAILINGLIST_XLS = "/WEB-INF/reports/jasper/MemberMailingListXls.jasper";
+  private static final String MEMBER_MAILINGLIST_CSV = "/WEB-INF/reports/jasper/MemberMailingListCsv.jasper";
   private static final String MEMBER_MAILINGLIST_PDF = "/WEB-INF/reports/jasper/MemberMailingListPdf.jasper";
 
   @Autowired
@@ -138,13 +138,13 @@ public final class ReportController {
    *
    * @return The generated report.
    */
-  @RequestMapping(value = "/member/mailinglist.xls", method = RequestMethod.GET)
-  public ModelAndView generateMemberMailingListAsXls(final HttpServletRequest request) {
+  @RequestMapping(value = "/member/mailinglist.csv", method = RequestMethod.GET)
+  public ModelAndView generateMemberMailingListAsCsv(final HttpServletRequest request) {
     LOGGER.info("Received request to generate Member Mailing List report.");
 
     String reportFilename = "Member_MailingList_" + dateFormat.format(new Date());
 
-    return getReportModalAndView(request, MEMBER_MAILINGLIST_XLS, JasperReportsViewFactory.REPORT_FORMAT_XLS, reportFilename);
+    return getReportModalAndView(request, MEMBER_MAILINGLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
   }
 
   private ModelAndView getReportModalAndView(final HttpServletRequest request,
