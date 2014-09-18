@@ -168,12 +168,6 @@ ORDER BY iq3.membership_name]]>
 			</band>
 		</groupFooter>
 	</group>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band splitType="Stretch"/>
-	</title>
 	<pageHeader>
 		<band height="41" splitType="Stretch">
 			<staticText>
@@ -185,9 +179,6 @@ ORDER BY iq3.membership_name]]>
 			</staticText>
 		</band>
 	</pageHeader>
-	<columnHeader>
-		<band splitType="Stretch"/>
-	</columnHeader>
 	<detail>
 		<band height="40" splitType="Stretch">
 			<textField>
@@ -220,9 +211,6 @@ ORDER BY iq3.membership_name]]>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band splitType="Stretch"/>
-	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<textField>
@@ -258,7 +246,4 @@ ORDER BY iq3.membership_name]]>
 			</line>
 		</band>
 	</pageFooter>
-	<summary>
-		<band height="22" splitType="Stretch"/>
-	</summary>
 </jasperReport>

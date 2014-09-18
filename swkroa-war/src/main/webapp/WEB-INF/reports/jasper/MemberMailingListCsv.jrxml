@@ -4,11 +4,9 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
-	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
-	<style name="ColumnHeader" fontName="Verdana" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<queryString>
 		<![CDATA[SELECT m.company_name
-	  ,m.owner_ident
+      ,m.owner_ident
       ,m.greeting
       ,m.in_care_of
       ,cv.codevalue_display AS title
@@ -20,7 +18,7 @@
       ,a.address3
       ,a.city
       ,a.state_code
-	  ,IF(LENGTH(a.postal_code) > 5, CONCAT(LEFT(a.postal_code, 5), "-", MID(a.postal_code, 6)), a.postal_code) AS postal_code
+      ,IF(LENGTH(a.postal_code) > 5, CONCAT(LEFT(a.postal_code, 5), "-", MID(a.postal_code, 6)), a.postal_code) AS postal_code
       ,a.country_code
   FROM (SELECT a.parent_entity_id, a.address_id
           FROM address a
@@ -89,50 +87,53 @@
 	<variable name="CSZ" class="java.lang.String">
 		<variableExpression><![CDATA[$F{city} + ", " + $F{state_code} + " " + $F{postal_code}]]></variableExpression>
 	</variable>
+	<variable name="Greeting" class="java.lang.String">
+		<variableExpression><![CDATA[$F{greeting} == null || $F{greeting}.isEmpty() ? ($F{title} == null || $F{title}.isEmpty() ? $F{name_first} : ($F{name_last} == null || $F{name_last}.isEmpty() ? "" : $F{title} + " " + $F{name_last})) : $F{greeting}]]></variableExpression>
+	</variable>
 	<columnHeader>
 		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement style="ColumnHeader" x="0" y="0" width="60" height="20" uuid="da6911da-3e60-4451-9706-1d5cd5f2afb4"/>
+				<reportElement x="0" y="0" width="60" height="20" uuid="da6911da-3e60-4451-9706-1d5cd5f2afb4"/>
 				<text><![CDATA[Company Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="65" y="0" width="60" height="20" uuid="fc9a0777-b840-4290-ae1c-fbdb4e1d3ae5"/>
+				<reportElement x="65" y="0" width="60" height="20" uuid="fc9a0777-b840-4290-ae1c-fbdb4e1d3ae5"/>
 				<text><![CDATA[Owner ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="130" y="0" width="60" height="20" uuid="e0b01fab-10c7-4c95-bb2e-d41181ee1aa4"/>
+				<reportElement x="130" y="0" width="60" height="20" uuid="e0b01fab-10c7-4c95-bb2e-d41181ee1aa4"/>
 				<text><![CDATA[Greeting]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="195" y="0" width="60" height="20" uuid="9b87dbff-ffb6-4e2c-9d7f-9127d9af9ad6"/>
+				<reportElement x="195" y="0" width="60" height="20" uuid="9b87dbff-ffb6-4e2c-9d7f-9127d9af9ad6"/>
 				<text><![CDATA[In Care Of]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="260" y="0" width="60" height="20" uuid="560fec6d-71e2-4479-bf87-fb72936de7ad"/>
+				<reportElement x="260" y="0" width="60" height="20" uuid="560fec6d-71e2-4479-bf87-fb72936de7ad"/>
 				<text><![CDATA[Title]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="325" y="0" width="60" height="20" uuid="a5b40005-ebe7-4d49-9330-0abc826b85aa"/>
+				<reportElement x="325" y="0" width="60" height="20" uuid="a5b40005-ebe7-4d49-9330-0abc826b85aa"/>
 				<text><![CDATA[First Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="390" y="0" width="60" height="20" uuid="fb745bc1-ce83-454d-9aae-30d43320cf5a"/>
+				<reportElement x="390" y="0" width="60" height="20" uuid="fb745bc1-ce83-454d-9aae-30d43320cf5a"/>
 				<text><![CDATA[Last Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="455" y="0" width="60" height="20" uuid="4d2ab6ee-95dd-4d52-952d-fca3654782f2"/>
+				<reportElement x="455" y="0" width="60" height="20" uuid="4d2ab6ee-95dd-4d52-952d-fca3654782f2"/>
 				<text><![CDATA[Address 1]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="520" y="0" width="60" height="20" uuid="6a49c297-55cc-4b7c-b508-45eaace7af38"/>
+				<reportElement x="520" y="0" width="60" height="20" uuid="6a49c297-55cc-4b7c-b508-45eaace7af38"/>
 				<text><![CDATA[Address 2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="585" y="0" width="60" height="20" uuid="de1ac8aa-6f91-447b-b693-c02c602f5671"/>
+				<reportElement x="585" y="0" width="60" height="20" uuid="de1ac8aa-6f91-447b-b693-c02c602f5671"/>
 				<text><![CDATA[Address 3]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="650" y="0" width="102" height="20" uuid="d955a19e-f294-4485-8731-c2a8d677eaba"/>
+				<reportElement x="650" y="0" width="102" height="20" uuid="d955a19e-f294-4485-8731-c2a8d677eaba"/>
 				<text><![CDATA[City, State Zip]]></text>
 			</staticText>
 		</band>
@@ -146,10 +147,6 @@
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="65" y="0" width="60" height="20" uuid="46f3d153-ee36-415d-ba30-69d81d8adc73"/>
 				<textFieldExpression><![CDATA[$F{owner_ident}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="130" y="0" width="60" height="20" uuid="882e675d-5d7e-43e0-9315-69acc93b01f7"/>
-				<textFieldExpression><![CDATA[$F{greeting}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="195" y="0" width="60" height="20" uuid="b86e2a99-7588-4310-b239-056875979fa8"/>
@@ -179,9 +176,13 @@
 				<reportElement x="455" y="0" width="60" height="20" uuid="d0c0a76c-dc09-4f81-9e19-9f103eedee22"/>
 				<textFieldExpression><![CDATA[$F{address1}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="650" y="0" width="102" height="20" uuid="07ac77b3-14a3-445a-84ef-1b280baf9d6e"/>
 				<textFieldExpression><![CDATA[$V{CSZ}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="0" width="60" height="20" uuid="9e669d00-ae84-41f9-aef6-04d8739d268a"/>
+				<textFieldExpression><![CDATA[$V{Greeting}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

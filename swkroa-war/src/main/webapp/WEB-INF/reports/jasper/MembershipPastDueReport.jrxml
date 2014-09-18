@@ -50,12 +50,6 @@ ORDER BY member_name]]>
 	<group name="membership_id">
 		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
 	</group>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band splitType="Stretch"/>
-	</title>
 	<pageHeader>
 		<band height="35" splitType="Stretch">
 			<staticText>
@@ -116,9 +110,6 @@ ORDER BY member_name]]>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band splitType="Stretch"/>
-	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<staticText>

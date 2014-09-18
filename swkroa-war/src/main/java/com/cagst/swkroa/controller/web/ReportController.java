@@ -130,7 +130,7 @@ public final class ReportController {
 
     String reportFilename = "Member_MailingList_" + dateFormat.format(new Date());
 
-    return getReportModalAndView(request, MEMBER_MAILINGLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_XLS, reportFilename);
+    return getReportModalAndView(request, MEMBER_MAILINGLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
   }
 
   /**

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MemberMailingListPdf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6c33a9fb-1046-43d9-8428-90bfa5fc0cbd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
+	<style name="ZebraStrips" mode="Transparent" fontName="Verdana" fontSize="12">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 1]]></conditionExpression>
+			<style backcolor="#dddddd"/>
+		</conditionalStyle>
+	</style>
+	<queryString>
+		<![CDATA[SELECT m.company_name
+      ,m.owner_ident
+      ,m.greeting
+      ,m.in_care_of
+      ,cv.codevalue_display AS title
+      ,p.name_first
+      ,p.name_middle
+      ,p.name_last
+      ,a.address1
+      ,a.address2
+      ,a.address3
+      ,a.city
+      ,a.state_code
+      ,IF(LENGTH(a.postal_code) > 5, CONCAT(LEFT(a.postal_code, 5), "-", MID(a.postal_code, 6)), a.postal_code) AS postal_code
+      ,a.country_code
+      ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
+      ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS membership_name
+  FROM (SELECT a.parent_entity_id, a.address_id
+          FROM address a
+         WHERE a.parent_entity_name = 'MEMBER'
+           AND a.active_ind = 1
+           AND a.primary_ind = 1
+      GROUP BY a.parent_entity_id
+         UNION
+        SELECT a.parent_entity_id, a.address_id
+          FROM address a
+         WHERE a.parent_entity_name = 'MEMBER'
+           AND a.active_ind = 1
+           AND a.primary_ind = 0
+      GROUP BY a.parent_entity_id
+       )iq
+      INNER JOIN member m ON (m.member_id = iq.parent_entity_id)
+      INNER JOIN address a ON (a.address_id = iq.address_id)
+ LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
+ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
+  WHERE m.mail_newsletter_ind = 1
+    AND m.active_ind = 1;]]>
+	</queryString>
+	<field name="company_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="greeting" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="in_care_of" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="title" class="java.lang.String"/>
+	<field name="name_first" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name_middle" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name_last" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address3" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="state_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="postal_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="country_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="full_name" class="java.lang.String"/>
+	<field name="membership_name" class="java.lang.String"/>
+	<variable name="CSZ" class="java.lang.String">
+		<variableExpression><![CDATA[$F{city} + ", " + $F{state_code} + " " + $F{postal_code}]]></variableExpression>
+	</variable>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement style="ReportTitle" x="0" y="0" width="538" height="35" uuid="52468bee-a90a-487d-915e-7cf70ac0c2ef"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Member Mailing List Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="121" splitType="Stretch">
+			<textField>
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="0" width="572" height="20" uuid="9d509358-c1d3-4500-b68e-b904f6973688"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="20" width="572" height="20" isRemoveLineWhenBlank="true" uuid="516dd698-ec85-4f02-ac2b-0227ea7a6740"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{in_care_of}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="40" width="572" height="20" isRemoveLineWhenBlank="true" uuid="4d3c9069-a0b9-4844-a850-0ddc387f8783"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="60" width="572" height="20" isRemoveLineWhenBlank="true" uuid="d54f3424-5ed6-45fd-a6b5-abab66025989"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="80" width="572" height="20" isRemoveLineWhenBlank="true" uuid="8a14b5b1-d0e7-4430-b4fe-6ea825ad2768"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="100" width="572" height="20" isRemoveLineWhenBlank="true" uuid="91cd7db4-24e5-4e0c-9770-5d20cd071220"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CSZ}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="452" y="0" width="80" height="20" uuid="b9f7be1d-e77b-4c34-a2ec-5fb9d4f3cbaf"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="532" y="0" width="40" height="20" uuid="1d5c2d9e-08f0-43db-96d4-2326e180b650"/>
+				<textElement>
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE, MMM d, yyyy h:mm a">
+				<reportElement x="89" y="0" width="267" height="20" uuid="7162e8f0-c032-4a2c-ad8f-5c9ac412e1dd"/>
+				<textElement>
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="89" height="20" uuid="16618f41-960f-40d7-a563-1789c70b7807"/>
+				<textElement>
+					<font fontName="Verdana"/>
+				</textElement>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="572" height="1" uuid="3145958b-7f30-4c68-a958-26dc277dfb26"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>
