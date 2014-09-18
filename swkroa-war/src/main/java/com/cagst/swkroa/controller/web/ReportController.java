@@ -34,6 +34,8 @@ public final class ReportController {
 
   private static final String MEMBER_MAILINGLIST_CSV = "/WEB-INF/reports/jasper/MemberMailingListCsv.jasper";
   private static final String MEMBER_MAILINGLIST_PDF = "/WEB-INF/reports/jasper/MemberMailingListPdf.jasper";
+  private static final String MEMBER_EMAILLIST_CSV   = "/WEB-INF/reports/jasper/MemberEmailListCsv.jasper";
+  private static final String MEMBER_EMAILLIST_PDF   = "/WEB-INF/reports/jasper/MemberEmailListPdf.jasper";
 
   @Autowired
   private DataSource dataSource;
@@ -145,6 +147,46 @@ public final class ReportController {
     String reportFilename = "Member_MailingList_" + dateFormat.format(new Date());
 
     return getReportModalAndView(request, MEMBER_MAILINGLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+  }
+
+  /**
+   * Handles and retrieves the Member Email List report page.
+   *
+   * @return The name of the page.
+   */
+  @RequestMapping(value = "/member/emaillist", method = RequestMethod.GET)
+  public ModelAndView getMemberEmailList() {
+    LOGGER.info("Received request to show Member Email List options.");
+
+    return new ModelAndView("report/member/emaillist");
+  }
+
+  /**
+   * Handles the request to run/generate the Member Email List report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/member/emaillist.pdf", method = RequestMethod.GET)
+  public ModelAndView generateMemberEmailListAsPdf(final HttpServletRequest request) {
+    LOGGER.info("Received request to generate Member Email List report.");
+
+    String reportFilename = "Member_EmailList_" + dateFormat.format(new Date());
+
+    return getReportModalAndView(request, MEMBER_EMAILLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+  }
+
+  /**
+   * Handles the request to run/generate the Member Email List report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/member/emaillist.csv", method = RequestMethod.GET)
+  public ModelAndView generateMemberEmailListAsCsv(final HttpServletRequest request) {
+    LOGGER.info("Received request to generate Member Email List report.");
+
+    String reportFilename = "Member_EmailList_" + dateFormat.format(new Date());
+
+    return getReportModalAndView(request, MEMBER_EMAILLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
   }
 
   private ModelAndView getReportModalAndView(final HttpServletRequest request,

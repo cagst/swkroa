@@ -7,7 +7,7 @@
 	<style name="ZebraStrips" mode="Transparent" fontName="Verdana" fontSize="12">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 1]]></conditionExpression>
-			<style backcolor="#dddddd"/>
+			<style backcolor="#DDDDDD"/>
 		</conditionalStyle>
 	</style>
 	<queryString>
@@ -47,7 +47,8 @@
  LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
  LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
   WHERE m.mail_newsletter_ind = 1
-    AND m.active_ind = 1;]]>
+    AND m.active_ind = 1
+ORDER BY membership_name]]>
 	</queryString>
 	<field name="company_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -116,13 +117,6 @@
 				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="20" width="572" height="20" isRemoveLineWhenBlank="true" uuid="516dd698-ec85-4f02-ac2b-0227ea7a6740"/>
-				<textElement>
-					<paragraph leftIndent="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{in_care_of}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
 				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="40" width="572" height="20" isRemoveLineWhenBlank="true" uuid="4d3c9069-a0b9-4844-a850-0ddc387f8783"/>
 				<textElement>
 					<paragraph leftIndent="10"/>
@@ -149,6 +143,13 @@
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{CSZ}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="20" width="572" height="20" isRemoveLineWhenBlank="true" uuid="cb918ef9-b6a8-495c-a0bb-cf957069e52e"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{in_care_of}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
