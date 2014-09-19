@@ -86,7 +86,7 @@ swkroaApp.controller('userController',
   };
 
   $scope.unlockUser = function() {
-    var url = "/api/users/" + $scope.user.userUID + "/unlock";
+    var url = "/api/users/" + $scope.share.user.userUID + "/unlock";
 
     $http.put(url).success(function(data) {
       var idx = $scope.users.indexOf($scope.share.user);
@@ -96,7 +96,7 @@ swkroaApp.controller('userController',
   };
 
   $scope.disableUser = function() {
-    var url = "/api/users/" + $scope.user.userUID + "/disable";
+    var url = "/api/users/" + $scope.share.user.userUID + "/disable";
 
     $http.put(url).success(function(data) {
       var idx = $scope.users.indexOf($scope.share.user);
@@ -106,7 +106,7 @@ swkroaApp.controller('userController',
   };
 
   $scope.enableUser = function() {
-    var url = "/api/users/" + $scope.user.userUID + "/enable";
+    var url = "/api/users/" + $scope.share.user.userUID + "/enable";
 
     $http.put(url).success(function(data) {
       var idx = $scope.users.indexOf($scope.share.user);
