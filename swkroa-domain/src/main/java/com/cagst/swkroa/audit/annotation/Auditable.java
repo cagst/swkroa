@@ -18,6 +18,7 @@ public @interface Auditable {
   public static final String ACTION_SIGNIN_SUCCESSFUL = "SIGNIN_SUCCESSFUL";
   public static final String ACTION_SIGNIN_FAILURE    = "SIGNIN_FAILURE";
   public static final String ACTION_PASSWORD_CHANGED  = "PASSWORD_CHANGED";
+  public static final String ACTION_PASSWORD_RESET    = "PASSWORD_RESET";
   public static final String ACTION_ACCOUNT_LOCKED    = "ACCOUNT_LOCKED";
   public static final String ACTION_ACCOUNT_UNLOCKED  = "ACCOUNT_UNLOCKED";
   public static final String ACTION_SIGNED_OUT        = "SIGNED_OUT";

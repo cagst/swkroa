@@ -9,6 +9,7 @@ package com.cagst.swkroa.controller.api;
  *
  */
 
+import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserService;
 import com.cagst.swkroa.user.UsernameTakenException;
@@ -16,6 +17,8 @@ import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -118,6 +121,29 @@ public final class UserApiController {
     LOGGER.info("Received request to disable user [{}]", userUID);
 
     return userService.disableAccount(userUID, WebAppUtils.getUser());
+  }
+
+  /**
+   * Handles the request and resets the User's password associated with the specified id.
+   *
+   * @param userUID
+   *     The unique identifier of the user to reset the password for.
+   *
+   * @return A JSON representation of the {@link User} after it has had its password reset.
+   */
+  @RequestMapping(value = "/api/users/{userUID}/resetpassword", method = RequestMethod.PUT)
+  @ResponseBody
+  public User resetUserPassword(final @PathVariable long userUID) {
+    LOGGER.info("Received request to reset user [{}] password", userUID);
+
+    try {
+      User user = userService.getUserByUID(userUID);
+      return userService.resetPassword(user, WebAppUtils.getUser());
+    } catch (EmptyResultDataAccessException ex) {
+      throw new ResourceNotFoundException(ex);
+    } catch (IncorrectResultSizeDataAccessException ex) {
+      throw new ResourceNotFoundException(ex);
+    }
   }
 
   /**

@@ -262,8 +262,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     User user2 = repo.changeUserPassword(user1, "newPassword", "message");
     assertNotNull("Ensure user is valid.", user2);
     assertEquals("Ensure it is the correct user (check username).", "temp", user2.getUsername());
-    assertEquals("Ensure the password has been changed.", "newPassword", user2.getPassword());
-    assertFalse("Ensure the user account is not longer temporary.", user2.isPasswordTemporary());
+    assertFalse("Ensure the user account is no longer temporary.", user2.isPasswordTemporary());
   }
 
   /**
@@ -290,6 +289,50 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct user (check password).", "password1", user1.getPassword());
 
     repo.changeUserPassword(user1, StringUtils.EMPTY, null);
+  }
+
+  /**
+   * Tests the resetUserPassword method.
+   */
+  @Test
+  public void testResetUserPassword() {
+    User user1 = repo.getUserByUID(11);
+    assertNotNull("Ensure user was found.", user1);
+    assertEquals("Ensure we found the correct user (check username).", "cgaskill", user1.getUsername());
+    assertEquals("Ensure we found the correct user (check password).", "password1", user1.getPassword());
+    assertFalse("Ensure the user account is not temporary.", user1.isPasswordTemporary());
+    assertEquals("Ensure the user account has not been updated.", 0, user1.getUserUpdateCount());
+
+    User user2 = repo.resetUserPassword(user1, "tempPassword", "message", user1);
+    assertNotNull("Ensure user is valid.", user2);
+    assertEquals("Ensure it is the correct user (check username).", "cgaskill", user2.getUsername());
+    assertTrue("Ensure the user account is now temporary.", user2.isPasswordTemporary());
+  }
+
+  /**
+   * Tests the resetUserPassword method with a null password.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testResetUserPassword_NullPassword() {
+    User user1 = repo.getUserByUID(11);
+    assertNotNull("Ensure user was found.", user1);
+    assertEquals("Ensure we found the correct user (check username).", "cgaskill", user1.getUsername());
+    assertEquals("Ensure we found the correct user (check password).", "password1", user1.getPassword());
+
+    repo.resetUserPassword(user1, null, null, user1);
+  }
+
+  /**
+   * Tests the resetUserPassword method with an empty password
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testResetUserPassword_EmptyPassword() {
+    User user1 = repo.getUserByUID(11);
+    assertNotNull("Ensure user was found.", user1);
+    assertEquals("Ensure we found the correct user (check username).", "cgaskill", user1.getUsername());
+    assertEquals("Ensure we found the correct user (check password).", "password1", user1.getPassword());
+
+    repo.resetUserPassword(user1, StringUtils.EMPTY, null, user1);
   }
 
   /**

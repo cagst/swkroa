@@ -84,6 +84,19 @@ public interface UserService extends UserDetailsService {
                              final String confirmPassword) throws BadCredentialsException;
 
   /**
+   * Reset the user's password to a random temporary password.
+   *
+   * @param user
+   *     The {@link User} to reset the password for.
+   * @param instigator
+   *     The {@link User} that instigated (performed) the reset of the password for the user.
+   *
+   * @return A {@link User} that has been updated accordingly.
+   *
+   */
+  public User resetPassword(final User user, final User instigator);
+
+  /**
    * Updates the user's record by clearing the locked date (unlocking) on the user's account.
    *
    * @param unlockUserUID

@@ -153,7 +153,28 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null or <code>password</code> is null or empty
    */
-  public User changeUserPassword(final User user, String newPassword, final String message)
+  public User changeUserPassword(final User user, final String newPassword, final String message)
+      throws IllegalArgumentException;
+
+  /**
+   * Resets the specified {@link User User} password. The password will be temporary
+   * and the user will be required to change it the next time they sign-in.
+   *
+   * @param user
+   *     The {@link User} to reset the password for.
+   * @param tempPassword
+   *     The {@link String Password} to reset to.
+   * @param message
+   *     A descriptive message of the reset password event.
+   * @param instigator
+   *     The {@link User} that instigated (performed) this action.
+   *
+   * @return A new {@link User} with it's password changed.
+   *
+   * @throws IllegalArgumentException
+   *     if <code>user</code> is null or <code>password</code> is null or empty
+   */
+  public User resetUserPassword(final User user, final String tempPassword, final String message, final User instigator)
       throws IllegalArgumentException;
 
   /**

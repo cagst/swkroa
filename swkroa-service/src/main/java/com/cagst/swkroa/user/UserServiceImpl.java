@@ -8,6 +8,7 @@ import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.role.RoleRepository;
 import com.cagst.swkroa.security.SecurityPolicy;
 import com.cagst.swkroa.security.SecurityService;
+import com.cagst.swkroa.utils.RandomPasswordGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -208,6 +209,23 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
     user.setPassword(checkNewPassword);
     return userRepo.changeUserPassword(user, checkNewPassword, msg);
+  }
+
+  @Override
+  @Transactional
+  public User resetPassword(final User user, final User instigator) {
+    Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
+
+    String msg = messages.getMessage("com.cagst.swkroa.changepwd.audit.message",
+        new Object[]{user.getUsername(), instigator.getUsername()},
+        "Password reset for user [{0}] by user [{1}].");
+
+    String tempPassword = RandomPasswordGenerator.generateRandomPassword(10);
+
+    User updatedUser = userRepo.resetUserPassword(user, passwordEncoder.encode(tempPassword), msg, instigator);
+    updatedUser.setPassword(tempPassword);
+
+    return updatedUser;
   }
 
   @Override

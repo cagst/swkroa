@@ -45,6 +45,7 @@ import java.util.Map;
   private static final String SIGNIN_ATTEMPT          = "SIGNIN_ATTEMPT";
   private static final String SIGNIN_SUCCESSFUL       = "SIGNIN_SUCCESSFUL";
   private static final String CHANGE_USER_PASSWORD    = "CHANGE_USER_PASSWORD";
+  private static final String RESET_USER_PASSWORD     = "RESET_USER_PASSWORD";
   private static final String CHECK_USERNAME_NEW      = "CHECK_USERNAME_NEW";
   private static final String CHECK_USERNAME_EXISTING = "CHECK_USERNAME_EXISTING";
   private static final String USER_LOCK               = "USER_LOCK";
@@ -273,9 +274,35 @@ import java.util.Map;
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    user.setPassword(newPassword);
     user.setPasswordChangedDate(new DateTime(DateTimeZone.UTC));
     user.setPasswordTemporary(false);
+
+    return user;
+  }
+
+  @Override
+  @CacheEvict(value = "users", key = "userUID")
+  @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_PASSWORD_RESET)
+  public User resetUserPassword(final User user, final String tempPassword, final @AuditMessage String message,
+                                final @AuditInstigator User instigator) throws IllegalArgumentException {
+
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.hasLength(tempPassword, "Assertion Failed - argument [tempPassword] cannot be null or empty");
+
+    LOGGER.info("Calling changeUserPassword for User [{}].", user.getUsername());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Object> params = new HashMap<String, Object>(3);
+    params.put("user_id", user.getUserUID());
+    params.put("password", tempPassword);
+    params.put("updt_id", instigator.getUserUID());
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(RESET_USER_PASSWORD), params);
+    if (cnt != 1) {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+
+    user.setPasswordTemporary(true);
 
     return user;
   }
