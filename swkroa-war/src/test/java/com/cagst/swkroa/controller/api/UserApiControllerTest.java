@@ -4,10 +4,8 @@ import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.cagst.swkroa.user.User;
@@ -49,6 +47,35 @@ public class UserApiControllerTest {
   }
 
   /**
+   * Test the getUserByUID GET method with an invalid user.
+   */
+  @Test
+  public void testGetUserByUID_NotFound() throws Exception {
+    when(userService.getUserByUID(anyLong())).thenThrow(IncorrectResultSizeDataAccessException.class);
+
+    mockMvc.perform(get("/api/users/123")).andExpect(status().isNotFound());
+
+    verify(userService, times(1)).getUserByUID(anyLong());
+  }
+
+  /**
+   * Test the getUserByUID GET method with a valid user.
+   */
+  @Test
+  public void testGetUserByUID_Found() throws Exception {
+    User user = new User();
+    user.setUserUID(123);
+    user.setUsername("resetme");
+    user.setPasswordTemporary(false);
+
+    when(userService.getUserByUID(123)).thenReturn(user);
+
+    mockMvc.perform(get("/api/users/123").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+    verify(userService, times(1)).getUserByUID(anyLong());
+  }
+
+  /**
    * Tests the resetUserPassword PUT method with an invalid user.
    */
   @Test
@@ -70,7 +97,7 @@ public class UserApiControllerTest {
     user.setUsername("resetme");
     user.setPasswordTemporary(false);
 
-    when(userService.getUserByUID(anyLong())).thenReturn(user);
+    when(userService.getUserByUID(123)).thenReturn(user);
 
     mockMvc.perform(put("/api/users/123/resetpassword").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
   }

@@ -72,7 +72,13 @@ public final class UserApiController {
   public User getUser(final @PathVariable long userUID) {
     LOGGER.info("Received request to retrieve the user [{}].", userUID);
 
-    return userService.getUserByUID(userUID);
+    try {
+      return userService.getUserByUID(userUID);
+    } catch (EmptyResultDataAccessException ex) {
+      throw new ResourceNotFoundException(ex);
+    } catch (IncorrectResultSizeDataAccessException ex) {
+      throw new ResourceNotFoundException(ex);
+    }
   }
 
   /**

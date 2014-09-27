@@ -2,6 +2,7 @@ package com.cagst.swkroa.user;
 
 import com.cagst.swkroa.security.SecurityPolicy;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
@@ -35,8 +36,11 @@ public interface UserRepository {
    *     A {@link long} that uniquely identifies the User to retrieve.
    *
    * @return The {@link User} that is associated with the specified uid.
+   *
+   * @throws EmptyResultDataAccessException when no user was found with the specified uid.
+   * @throws IncorrectResultSizeDataAccessException when more than 1 user was found with the specified uid.
    */
-  public User getUserByUID(final long uid);
+  public User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
    * Updates the {@link User} account for a signin attempt.
