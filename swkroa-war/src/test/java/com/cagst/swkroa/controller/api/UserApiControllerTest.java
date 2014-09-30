@@ -76,22 +76,46 @@ public class UserApiControllerTest {
   }
 
   /**
-   * Tests the resetUserPassword PUT method with an invalid user.
+   * Test the updateUser PUT method with no action.
    */
   @Test
-  public void testResetUserPassword_NotFound() throws Exception {
+  public void testUpdateUser_NoAction() throws Exception {
     when(userService.getUserByUID(anyLong())).thenThrow(IncorrectResultSizeDataAccessException.class);
 
-    mockMvc.perform(put("/api/users/123/resetpassword")).andExpect(status().isNotFound());
+    mockMvc.perform(put("/api/users/123")).andExpect(status().isBadRequest());
+
+    verify(userService, times(0)).getUserByUID(anyLong());
+  }
+
+  /**
+   * Test the updateUser PUT method with no action.
+   */
+  @Test
+  public void testUpdateUser_InvalidAction() throws Exception {
+    when(userService.getUserByUID(anyLong())).thenThrow(IncorrectResultSizeDataAccessException.class);
+
+    mockMvc.perform(put("/api/users/123?action=invalid")).andExpect(status().isBadRequest());
+
+    verify(userService, times(0)).getUserByUID(anyLong());
+  }
+
+  /**
+   * Test the updateUser PUT method with no action.
+   */
+  @Test
+  public void testUpdateUser_InvalidUser() throws Exception {
+    when(userService.getUserByUID(anyLong())).thenThrow(IncorrectResultSizeDataAccessException.class);
+
+    mockMvc.perform(put("/api/users/321?action=unlock")).andExpect(status().isNotFound());
 
     verify(userService, times(1)).getUserByUID(anyLong());
   }
 
   /**
-   * Test the resetUserPassword PUT method with a valid user.
+   * Test the updateUser PUT method with the action of 'resetpwd'.
    */
   @Test
-  public void testResetUserPassword_Found() throws Exception {
+  public void testUpdateUser_ResetPassword() throws Exception {
     User user = new User();
     user.setUserUID(123);
     user.setUsername("resetme");
@@ -99,6 +123,8 @@ public class UserApiControllerTest {
 
     when(userService.getUserByUID(123)).thenReturn(user);
 
-    mockMvc.perform(put("/api/users/123/resetpassword").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+    mockMvc.perform(put("/api/users/123?action=resetpwd").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+    verify(userService, times(1)).getUserByUID(anyLong());
   }
 }

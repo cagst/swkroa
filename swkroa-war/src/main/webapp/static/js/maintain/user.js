@@ -86,7 +86,7 @@ swkroaApp.controller('userController',
   };
 
   $scope.unlockUser = function() {
-    var url = "/api/users/" + $scope.share.user.userUID + "/unlock";
+    var url = "/api/users/" + $scope.share.user.userUID + "?actions=unlock";
 
     $http.put(url).success(function(data) {
       var idx = $scope.users.indexOf($scope.share.user);
@@ -96,7 +96,7 @@ swkroaApp.controller('userController',
   };
 
   $scope.disableUser = function() {
-    var url = "/api/users/" + $scope.share.user.userUID + "/disable";
+    var url = "/api/users/" + $scope.share.user.userUID + "?action=disable";
 
     $http.put(url).success(function(data) {
       var idx = $scope.users.indexOf($scope.share.user);
@@ -106,12 +106,23 @@ swkroaApp.controller('userController',
   };
 
   $scope.enableUser = function() {
-    var url = "/api/users/" + $scope.share.user.userUID + "/enable";
+    var url = "/api/users/" + $scope.share.user.userUID + "?action=enable";
 
     $http.put(url).success(function(data) {
       var idx = $scope.users.indexOf($scope.share.user);
       $scope.users[idx] = data;
       $scope.share.user = data;
+    });
+  };
+
+  $scope.resetUserPassword = function() {
+    var url = "/api/users/" + $scope.share.user.userUID + "?action=resetpwd";
+
+    $http.put(url).success(function(data) {
+      var idx = $scope.users.indexOf($scope.share.user);
+      $scope.users[idx] = data;
+      $scope.share.user = data;
+      $('#passwordReset').modal('show');
     });
   };
 

@@ -9,11 +9,13 @@ package com.cagst.swkroa.controller.api;
  *
  */
 
+import com.cagst.swkroa.exception.BadRequestException;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserService;
 import com.cagst.swkroa.user.UsernameTakenException;
 import com.cagst.swkroa.web.util.WebAppUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,11 @@ import java.util.List;
 @Controller
 public final class UserApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserApiController.class);
+
+  private static final String ACTION_UNLOCK   = "unlock";
+  private static final String ACTION_ENABLE   = "enable";
+  private static final String ACTION_DISABLE  = "disable";
+  private static final String ACTION_RESETPWD = "resetpwd";
 
   @Autowired
   private UserService userService;
@@ -81,70 +88,35 @@ public final class UserApiController {
     }
   }
 
-  /**
-   * Handles the request and unlocks the User associated with the specified id.
-   *
-   * @param userUID
-   *     The unique identifier of the user to unlock.
-   *
-   * @return A JSON representation of the {@link User} after it has been unlocked.
-   */
-  @RequestMapping(value = "/api/users/{userUID}/unlock", method = RequestMethod.PUT)
+  @RequestMapping(value = "/api/users/{userUID}", method = RequestMethod.PUT)
   @ResponseBody
-  public User unlockUser(final @PathVariable long userUID) {
-    LOGGER.info("Received request to unlock user [{}]", userUID);
+  public User updateUser(final @PathVariable long userUID, final @RequestParam String action) {
+    LOGGER.info("Received request to update the user [{}] for [{}]", userUID, action);
 
-    return userService.unlockAccount(userUID, WebAppUtils.getUser());
-  }
+    if (StringUtils.isBlank(action)) {
+      throw new BadRequestException("An 'action' must be specified.");
+    }
 
-  /**
-   * Handles the request and enables the User associated with the specified id.
-   *
-   * @param userUID
-   *     The unique identifier of the user to enable.
-   *
-   * @return A JSON representation of the {@link User} after it has been enabled.
-   */
-  @RequestMapping(value = "/api/users/{userUID}/enable", method = RequestMethod.PUT)
-  @ResponseBody
-  public User enableUser(final @PathVariable long userUID) {
-    LOGGER.info("Received request to enable user [{}]", userUID);
-
-    return userService.enableAccount(userUID, WebAppUtils.getUser());
-  }
-
-  /**
-   * Handles the request and disables the User associated with the specified id.
-   *
-   * @param userUID
-   *     The unique identifier of the user to disable.
-   *
-   * @return A JSON representation of the {@link User} after it has been disable.
-   */
-  @RequestMapping(value = "/api/users/{userUID}/disable", method = RequestMethod.PUT)
-  @ResponseBody
-  public User disableUser(final @PathVariable long userUID) {
-    LOGGER.info("Received request to disable user [{}]", userUID);
-
-    return userService.disableAccount(userUID, WebAppUtils.getUser());
-  }
-
-  /**
-   * Handles the request and resets the User's password associated with the specified id.
-   *
-   * @param userUID
-   *     The unique identifier of the user to reset the password for.
-   *
-   * @return A JSON representation of the {@link User} after it has had its password reset.
-   */
-  @RequestMapping(value = "/api/users/{userUID}/resetpassword", method = RequestMethod.PUT)
-  @ResponseBody
-  public User resetUserPassword(final @PathVariable long userUID) {
-    LOGGER.info("Received request to reset user [{}] password", userUID);
+    if (!ACTION_UNLOCK.equalsIgnoreCase(action) &&
+        !ACTION_ENABLE.equalsIgnoreCase(action) &&
+        !ACTION_DISABLE.equalsIgnoreCase(action) &&
+        !ACTION_RESETPWD.equalsIgnoreCase(action)) {
+      throw new BadRequestException("The 'action' [" + action + "] is not recognized.");
+    }
 
     try {
       User user = userService.getUserByUID(userUID);
-      return userService.resetPassword(user, WebAppUtils.getUser());
+      if (ACTION_UNLOCK.equalsIgnoreCase(action)) {
+        return userService.unlockAccount(user, WebAppUtils.getUser());
+      } else if (ACTION_ENABLE.equalsIgnoreCase(action)) {
+        return userService.enableAccount(user, WebAppUtils.getUser());
+      } else if (ACTION_DISABLE.equalsIgnoreCase(action)) {
+        return userService.disableAccount(user, WebAppUtils.getUser());
+      } else if (ACTION_RESETPWD.equalsIgnoreCase(action)) {
+        return userService.resetPassword(user, WebAppUtils.getUser());
+      } else {
+        return null;
+      }
     } catch (EmptyResultDataAccessException ex) {
       throw new ResourceNotFoundException(ex);
     } catch (IncorrectResultSizeDataAccessException ex) {

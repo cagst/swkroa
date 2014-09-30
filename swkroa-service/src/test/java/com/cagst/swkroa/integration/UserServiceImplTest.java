@@ -170,7 +170,7 @@ public class UserServiceImplTest {
     assertFalse("Ensure the user account is locked.", user1.isAccountNonLocked());
     assertNotNull("Ensure the user account is locked (has a locked date).", user1.getAccountLockedDate());
 
-    User user2 = userService.unlockAccount(user1.getUserUID(), user1);
+    User user2 = userService.unlockAccount(user1, user1);
     assertNotNull("Ensure the user is not null.", user2);
     assertTrue("Ensure the user account is not locked.", user2.isAccountNonLocked());
     assertNull("Ensure the user account is not locked (does not have a locked date).", user2.getAccountLockedDate());
