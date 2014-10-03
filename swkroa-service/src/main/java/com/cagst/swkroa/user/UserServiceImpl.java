@@ -314,4 +314,18 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
     return user;
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public User getProfileUser(final User user) {
+    // retrieve SecurityPolicy for user
+    SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
+    user.setSecurityPolicy(securityPolicy);
+
+    user.setAddresses(contactRepo.getAddressesForPerson(user));
+    user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
+    user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
+
+    return user;
+  }
 }

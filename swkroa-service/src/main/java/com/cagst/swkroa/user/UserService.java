@@ -176,4 +176,15 @@ public interface UserService extends UserDetailsService {
    * @throws IncorrectResultSizeDataAccessException when more than 1 user was found with the specified uid.
    */
   public User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+
+  /**
+   * Retrieves a {@link User} that is currently signed on.
+   *
+   * @param user
+   *      The {@link User} that is currently signed in.
+   *
+   * @return The {@link User} that is currently signed on.
+   */
+  public User getProfileUser(final User user);
+
 }

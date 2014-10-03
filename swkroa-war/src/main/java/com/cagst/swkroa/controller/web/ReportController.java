@@ -1,12 +1,14 @@
 package com.cagst.swkroa.controller.web;
 
 import com.cagst.swkroa.report.JasperReportsViewFactory;
+import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsView;
 
@@ -166,27 +168,28 @@ public final class ReportController {
    *
    * @return The generated report.
    */
-  @RequestMapping(value = "/member/emaillist.pdf", method = RequestMethod.GET)
-  public ModelAndView generateMemberEmailListAsPdf(final HttpServletRequest request) {
+  @RequestMapping(value = "/member/emaillist", method = RequestMethod.POST)
+  public ModelAndView generateMemberEmailListAs(final @RequestParam("reportType") String reportType,
+                                                final HttpServletRequest request) {
+
     LOGGER.info("Received request to generate Member Email List report.");
+
+    String newslettersOnly = request.getParameter("newslettersOnly");
 
     String reportFilename = "Member_EmailList_" + dateFormat.format(new Date());
 
-    return getReportModalAndView(request, MEMBER_EMAILLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
-  }
+    ModelAndView mav = null;
+    if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBER_EMAILLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBER_EMAILLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    }
 
-  /**
-   * Handles the request to run/generate the Member Email List report.
-   *
-   * @return The generated report.
-   */
-  @RequestMapping(value = "/member/emaillist.csv", method = RequestMethod.GET)
-  public ModelAndView generateMemberEmailListAsCsv(final HttpServletRequest request) {
-    LOGGER.info("Received request to generate Member Email List report.");
+    if (mav != null) {
+      mav.addObject("newsletters_only", BooleanUtils.toBoolean(newslettersOnly));
+    }
 
-    String reportFilename = "Member_EmailList_" + dateFormat.format(new Date());
-
-    return getReportModalAndView(request, MEMBER_EMAILLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    return mav;
   }
 
   private ModelAndView getReportModalAndView(final HttpServletRequest request,

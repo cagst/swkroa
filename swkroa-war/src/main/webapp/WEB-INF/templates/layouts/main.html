@@ -39,7 +39,9 @@
   <ul id="account-navigation">
     <li>
       <span data-th-text="#{com.cagst.swkroa.header.welcome}">zzz Welcome</span>
-      <span data-th-text="${#authentication.principal.firstName}" />
+      <a data-th-href="@{/profile}" data-th-text="${#authentication.principal.firstName}">
+        zzz Profile
+      </a>
     </li>
     <li>
       <a data-th-href="@{/j_spring_security_logout}" data-th-text="#{com.cagst.swkroa.header.signout}">

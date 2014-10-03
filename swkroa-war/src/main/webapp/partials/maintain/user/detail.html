@@ -16,19 +16,19 @@
       </h2>
       <div>
         <span>Last signed in:</span>
-        <span data-ng-bind="share.user.lastSigninDate | date:'medium'" />
+        <span data-ng-bind="share.user.lastSigninDate | date:'medium'"></span>
       </div>
 
       <div data-ng-show="share.user.addresses.length > 0">
         <h4 class="divider-bottom">Addresses</h4>
         <div data-ng-repeat="address in share.user.addresses" class="row">
           <div class="col-xs-4">
-            <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)" />
+            <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
           </div>
           <div class="col-xs-8">
-            <div data-ng-bind="address.addressLine1" />
-            <div data-ng-bind="address.addressLine2" />
-            <div data-ng-bind="address.addressLine3" />
+            <div data-ng-bind="address.addressLine1"></div>
+            <div data-ng-bind="address.addressLine2"></div>
+            <div data-ng-bind="address.addressLine3"></div>
             <div>
               {{address.city}}, {{address.state}} {{address.postalCode | zip}}
             </div>
@@ -40,7 +40,7 @@
         <h4 class="divider-bottom">Phone Numbers</h4>
         <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
           <div class="col-xs-4">
-            <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)" />
+            <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
           </div>
           <div class="col-xs=8">
             <span>
@@ -57,10 +57,10 @@
         <h4 class="divider-bottom">Email Addresses</h4>
         <div data-ng-repeat="email in share.user.emailAddresses" class="row">
           <div class="col-xs-4">
-            <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)" />
+            <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
           </div>
           <div class="col-xs=8">
-            <span data-ng-bind="email.emailAddress"/>
+            <span data-ng-bind="email.emailAddress"></span>
           </div>
         </div>
       </div>

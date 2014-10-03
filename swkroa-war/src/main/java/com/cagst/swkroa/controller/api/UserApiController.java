@@ -9,6 +9,8 @@ package com.cagst.swkroa.controller.api;
  *
  */
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.cagst.swkroa.exception.BadRequestException;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.user.User;
@@ -22,15 +24,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
 import java.util.List;
 
-@Controller
+@RestController
 public final class UserApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserApiController.class);
 
@@ -48,7 +53,6 @@ public final class UserApiController {
    * @return A JSON representation of the active {@link User Users} within the system.
    */
   @RequestMapping(value = "/api/users", method = RequestMethod.GET)
-  @ResponseBody
   public List<User> getUsers() {
     LOGGER.info("Received request to retrieve user listing.");
 
@@ -75,8 +79,7 @@ public final class UserApiController {
    * @return A JSON representation of the {@link User} associated with the specified id.
    */
   @RequestMapping(value = "/api/users/{userUID}", method = RequestMethod.GET)
-  @ResponseBody
-  public User getUser(final @PathVariable long userUID) {
+  public User getUser(final @PathVariable("userUID") long userUID) {
     LOGGER.info("Received request to retrieve the user [{}].", userUID);
 
     try {
@@ -89,8 +92,7 @@ public final class UserApiController {
   }
 
   @RequestMapping(value = "/api/users/{userUID}", method = RequestMethod.PUT)
-  @ResponseBody
-  public User updateUser(final @PathVariable long userUID, final @RequestParam String action) {
+  public User updateUser(final @PathVariable("userUID") long userUID, final @RequestParam String action) {
     LOGGER.info("Received request to update the user [{}] for [{}]", userUID, action);
 
     if (StringUtils.isBlank(action)) {
@@ -125,22 +127,6 @@ public final class UserApiController {
   }
 
   /**
-   * Handles the request and checks if the specified username is already being used.
-   *
-   * @param username
-   *      The username to check to see if it already exists.
-   *
-   * @return {@code true} if the username is being used, {@code false} otherwise.
-   */
-  @RequestMapping(value = "/api/users/{username}/exists", method = RequestMethod.GET)
-  @ResponseBody
-  public boolean usernameExists(final @PathVariable String username) {
-    LOGGER.info("Received request to check if username [{}] already exists", username);
-
-    return userService.doesUsernameExist(username);
-  }
-
-  /**
    * Handles the request and persists the {@link User} to persistent storage. Called from the Add/Edit User
    * page when adding/editing a user.
    *
@@ -149,13 +135,28 @@ public final class UserApiController {
    *
    * @return The {@link User} after it has been persisted.
    */
-  @RequestMapping(value = "/api/users", method = RequestMethod.PUT)
-  @ResponseBody
-  public ResponseEntity<User> saveUser(final @RequestBody User user) {
+  @RequestMapping(value = "/api/users", method = RequestMethod.POST)
+  public ResponseEntity<User> saveUser(final @RequestBody User user, final HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", user.getUserUID());
 
     try {
-      return new ResponseEntity<User>(userService.saveUser(user, WebAppUtils.getUser()), HttpStatus.OK);
+      // save the user
+      User savedUser = userService.saveUser(user, WebAppUtils.getUser());
+
+      // specify the location of the resource
+      UriComponents locationUri = ServletUriComponentsBuilder
+          .fromContextPath(request)
+          .path("/api/users/{userUID}")
+          .buildAndExpand(savedUser.getUserUID());
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.setLocation(locationUri.toUri());
+
+      if (user.getUserUID() == 0) {
+        return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
+      } else {
+        return new ResponseEntity<User>(savedUser, headers, HttpStatus.OK);
+      }
     } catch (UsernameTakenException ex) {
       return new ResponseEntity<User>(user, HttpStatus.BAD_REQUEST);
     } catch (OptimisticLockingFailureException ex) {
@@ -163,5 +164,32 @@ public final class UserApiController {
     } catch (Exception ex) {
       return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  /**
+   * Handles the request and checks if the specified username is already being used.
+   *
+   * @param username
+   *      The username to check to see if it already exists.
+   *
+   * @return {@code true} if the username is being used, {@code false} otherwise.
+   */
+  @RequestMapping(value = "/api/users/{username}/exists", method = RequestMethod.GET)
+  public boolean usernameExists(final @PathVariable("username") String username) {
+    LOGGER.info("Received request to check if username [{}] already exists", username);
+
+    return userService.doesUsernameExist(username);
+  }
+
+  /**
+   * Handles the request and retrieves the {@link User} currently signed in.
+   *
+   * @return A JSON representation of the {@link User} currently signed in.
+   */
+  @RequestMapping(value = "/api/profile", method = RequestMethod.GET)
+  public User getProfileUser() {
+    LOGGER.info("Received request to retrieve the profile user.");
+
+    return userService.getProfileUser(WebAppUtils.getUser());
   }
 }

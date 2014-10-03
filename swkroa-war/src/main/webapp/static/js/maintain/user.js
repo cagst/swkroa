@@ -178,7 +178,7 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', '$state', funct
   };
 
   $scope.save = function() {
-    $http.put('/api/users', $scope.share.user).
+    $http.post('/api/users', $scope.share.user).
       success(function(data) {
         if ($scope.share.user.userUID == 0) {
           $scope.users.push(data);
