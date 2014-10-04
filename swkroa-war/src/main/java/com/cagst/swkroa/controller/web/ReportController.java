@@ -33,6 +33,7 @@ public final class ReportController {
 
   private static final String MEMBERSHIP_LISTING = "/WEB-INF/reports/jasper/MembershipListingReport.jasper";
   private static final String MEMBERSHIP_PASTDUE = "/WEB-INF/reports/jasper/MembershipPastDueReport.jasper";
+  private static final String MEMBERSHIP_STATUS  = "/WEB-INF/reports/jasper/MembershipStatusReport.jasper";
 
   private static final String MEMBER_MAILINGLIST_CSV = "/WEB-INF/reports/jasper/MemberMailingListCsv.jasper";
   private static final String MEMBER_MAILINGLIST_PDF = "/WEB-INF/reports/jasper/MemberMailingListPdf.jasper";
@@ -87,7 +88,7 @@ public final class ReportController {
    */
   @RequestMapping(value = "/membership/pastdue.pdf", method = RequestMethod.GET)
   public ModelAndView generateMembershipPastDueReportAsPdf(final HttpServletRequest request) {
-    LOGGER.info("Received request to generate Membership Listing report.");
+    LOGGER.info("Received request to generate Membership Past Due report.");
 
     String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
 
@@ -101,7 +102,7 @@ public final class ReportController {
    */
   @RequestMapping(value = "/membership/pastdue.xls", method = RequestMethod.GET)
   public ModelAndView generateMembershipPastDueReportAsXls(final HttpServletRequest request) {
-    LOGGER.info("Received request to generate Membership Listing report.");
+    LOGGER.info("Received request to generate Membership Past Due report.");
 
     String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
 
@@ -109,6 +110,32 @@ public final class ReportController {
     mav.addObject("IS_IGNORE_PAGINATION", true);
 
     return mav;
+  }
+
+  /**
+   * Handles and retrieves the Membership Status report page.
+   *
+   * @return The name of the page.
+   */
+  @RequestMapping(value = "/membership/status", method = RequestMethod.GET)
+  public ModelAndView getMembershipStatusReport() {
+    LOGGER.info("Received request to show Membership Status report options.");
+
+    return new ModelAndView("report/membership/status");
+  }
+
+  /**
+   * Handles the request to run/generate the Membership Status report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/membership/status", method = RequestMethod.POST)
+  public ModelAndView generateMembershipStatusReport(final HttpServletRequest request) {
+    LOGGER.info("Received request to generate Membership Status report.");
+
+    String reportFilename = "Membership_Status_" + dateFormat.format(new Date());
+
+    return getReportModalAndView(request, MEMBERSHIP_STATUS, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
   }
 
   /**
