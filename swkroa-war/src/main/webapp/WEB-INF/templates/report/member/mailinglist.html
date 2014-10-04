@@ -4,6 +4,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+</head>
+
 <body>
 
 <div data-layout-fragment="content">
@@ -11,29 +15,42 @@
     <h3 data-th-text="#{com.cagst.swkroa.report.member.mailinglist.report}">zzz Member Mailing List</h3>
   </div>
 
-  <div class="row">
-    <div class="col-xs-2 btn-group">
-      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-          <span data-th-text="#{com.cagst.swkroa.report.generate.report}">
-            zzz Generate Report
-          </span>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li>
-          <a data-th-href="@{/report/member/mailinglist.pdf}" target="_blank"
-             data-th-text="#{com.cagst.swkroa.report.generate.pdf}">
-            zzz PDF
-          </a>
-        </li>
-        <li>
-          <a data-th-href="@{/report/member/mailinglist.csv}" target="_blank"
-             data-th-text="#{com.cagst.swkroa.report.generate.csv}">
-            zzz CSV
-          </a>
-        </li>
-      </ul>
+  <form name="reportForm" data-th-attr="action=@{/report/member/mailinglist}" target="_blank" method="post">
+    <div class="container-inner">
+      <div class="row">
+        <input id="newslettersOnly" type="checkbox" name="newslettersOnly"/>
+        <input id="reportType" type="hidden" name="reportType"/>
+        <label for="newslettersOnly">For Newsletters Only</label>
+      </div>
     </div>
+
+    <div class="row">
+      <div class="col-xs-2 btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span data-th-text="#{com.cagst.swkroa.report.generate.report}">
+              zzz Generate Report
+            </span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a id="generatePdf"
+               href="javascript:submitReportForm('pdf')"
+               data-th-text="#{com.cagst.swkroa.report.generate.pdf}">
+              zzz PDF
+            </a>
+          </li>
+          <li>
+            <a id="generateCsv"
+               href="javascript:submitReportForm('csv')"
+               data-th-text="#{com.cagst.swkroa.report.generate.csv}">
+              zzz CSV
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </form>
 </div>
 
 </body>

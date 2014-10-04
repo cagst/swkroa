@@ -4,6 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<parameter name="newsletters_only" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[SELECT m.company_name
       ,m.owner_ident
@@ -40,8 +41,8 @@
       INNER JOIN address a ON (a.address_id = iq.address_id)
  LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
  LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
-  WHERE m.mail_newsletter_ind = 1
-    AND m.active_ind = 1
+  WHERE m.active_ind = 1
+    AND ($P{newsletters_only} = 0 OR m.mail_newsletter_ind = 1)
 ORDER BY membership_name]]>
 	</queryString>
 	<field name="company_name" class="java.lang.String">

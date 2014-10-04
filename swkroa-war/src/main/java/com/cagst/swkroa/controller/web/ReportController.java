@@ -128,27 +128,28 @@ public final class ReportController {
    *
    * @return The generated report.
    */
-  @RequestMapping(value = "/member/mailinglist.pdf", method = RequestMethod.GET)
-  public ModelAndView generateMemberMailingListAsPdf(final HttpServletRequest request) {
+  @RequestMapping(value = "/member/mailinglist", method = RequestMethod.POST)
+  public ModelAndView generateMemberMailingList(final @RequestParam("reportType") String reportType,
+                                                final HttpServletRequest request) {
+
     LOGGER.info("Received request to generate Member Mailing List report.");
+
+    String newslettersOnly = request.getParameter("newslettersOnly");
 
     String reportFilename = "Member_MailingList_" + dateFormat.format(new Date());
 
-    return getReportModalAndView(request, MEMBER_MAILINGLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
-  }
+    ModelAndView mav = null;
+    if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBER_MAILINGLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBER_MAILINGLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    }
 
-  /**
-   * Handles the request to run/generate the Member Mailing List report.
-   *
-   * @return The generated report.
-   */
-  @RequestMapping(value = "/member/mailinglist.csv", method = RequestMethod.GET)
-  public ModelAndView generateMemberMailingListAsCsv(final HttpServletRequest request) {
-    LOGGER.info("Received request to generate Member Mailing List report.");
+    if (mav != null) {
+      mav.addObject("newsletters_only", BooleanUtils.toBoolean(newslettersOnly));
+    }
 
-    String reportFilename = "Member_MailingList_" + dateFormat.format(new Date());
-
-    return getReportModalAndView(request, MEMBER_MAILINGLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    return mav;
   }
 
   /**
@@ -169,8 +170,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/member/emaillist", method = RequestMethod.POST)
-  public ModelAndView generateMemberEmailListAs(final @RequestParam("reportType") String reportType,
-                                                final HttpServletRequest request) {
+  public ModelAndView generateMemberEmailList(final @RequestParam("reportType") String reportType,
+                                              final HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Member Email List report.");
 
