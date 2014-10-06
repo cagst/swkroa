@@ -7,6 +7,31 @@
  * Version: 1.0.0
  */
 
+swkroaApp.config(function($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise("/home");
+
+  $stateProvider
+    .state('home', {
+      url: "/home",
+      views: {
+        '': {
+          templateUrl: "/partials/profile_view.html"
+        }
+      }
+    })
+    .state('edit', {
+      url: "/edit",
+      views: {
+        '': {
+          templateUrl: "/partials/profile_modify.html"
+        },
+        'contact@edit': {
+          templateUrl: "/partials/profile_contact.html"
+        }
+      }
+    });
+});
+
 swkroaApp.controller('profileController',
   ['$scope', '$http', 'contactService', '$state',
   function($scope, $http, contactService, $state) {
@@ -14,7 +39,10 @@ swkroaApp.controller('profileController',
   $scope.contactService = contactService;
 
   $http.get('/api/profile').success(function(data) {
-    $scope.user = data;
+      $scope.share = {
+        user: data,
+        successMessage: null
+      }
     $("#successMessage").hide();
   });
 
@@ -31,7 +59,7 @@ swkroaApp.controller('profileController',
   });
 }]);
 
-swkroaApp.controller('modifyUserController', ['$scope', '$http', '$state', function($scope, $http, $state) {
+swkroaApp.controller('modifyProfileController', ['$scope', '$http', '$state', function($scope, $http, $state) {
   var original = angular.copy($scope.share.user);
 
   $("#errorMessage").hide();
@@ -46,39 +74,13 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', '$state', funct
     return angular.equals(user, original);
   };
 
-  $scope.doesUsernameExist = function() {
-    if ($scope.share.user.userUID == 0 &&  $scope.share.user.username && $scope.share.user.username.length > 0) {
-      var url = "/api/users/" + $scope.share.user.username + "/exists";
-
-      $http.get(url).success(function(data) {
-        $scope.usernameExists = data;
-      });
-    }
-  };
-
-  $scope.validatePasswordFields = function() {
-    $scope.passwordError = null;
-
-    if ($scope.share.user.password && $scope.share.user.password.length > 0 &&
-        $scope.confirmPassword && $scope.confirmPassword.length > 0) {
-
-      if ($scope.share.user.password != $scope.confirmPassword) {
-        $scope.passwordError = "The confirmation password does not match the password!";
-      }
-    }
-  };
-
   $scope.save = function() {
-    $http.put('/api/users', $scope.share.user).
+    $http.post('/profile', $scope.share.user).
       success(function(data) {
         if ($scope.share.user.userUID == 0) {
-          $scope.users.push(data);
           $scope.share.user = data;
           $scope.share.successMessage = "User " + data.fullName + " was created successfully!";
         } else {
-          var idx = $scope.users.indexOf($scope.user);
-
-          $scope.users[idx] = data;
           $scope.share.user = data;
           $scope.share.successMessage = "User " + data.fullName + " was updated successfully!";
         }

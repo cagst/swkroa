@@ -1,0 +1,62 @@
+<div data-ng-controller="modifyProfileController">
+  <div class="page-header">
+    <h3 data-ng-show="share.user.userUID == 0">Add User</h3>
+    <h3 data-ng-show="share.user.userUID > 0">Edit User</h3>
+
+    <div id="errorMessage" class="alert alert-danger alert-dismissible" role="alert"
+         data-ng-show="errorMessage">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      <strong>Warning!</strong>
+      <div data-ng-bind="errorMessage"></div>
+    </div>
+  </div>
+
+  <form method="POST" name="profileForm" novalidate data-ng-submit="save()" class="css-form">
+    <div class="row row-inner spacer-top">
+      <div class="col-xs-2">
+        <label>Title</label>
+        <select class="form-control"
+                data-ng-model="share.user.titleCD"
+                data-ng-options="title.codeValueUID as title.display for title in titles">
+        </select>
+      </div>
+      <div class="col-xs-2" data-ng-class="{'has-error': userForm.firstName.$invalid}">
+        <label class="control-label label-required">First Name</label>
+        <input type="text" class="form-control" name="firstName" maxlength="50" placeholder="Enter First Name"
+               data-ng-model="share.user.firstName" data-ng-required="true" />
+      </div>
+      <div class="col-xs-2">
+        <label>Middle Name</label>
+        <input type="text" class="form-control" maxlength="50" placeholder="Enter Middle Name"
+               data-ng-model="share.user.middleName" />
+      </div>
+      <div class="col-xs-2" data-ng-class="{'has-error': userForm.lastName.$invalid}">
+        <label class="control-label label-required">Last Name</label>
+        <input type="text" class="form-control" name="lastName" maxlength="50" placeholder="Enter Last Name"
+               data-ng-model="share.user.lastName" data-ng-required="true" />
+      </div>
+    </div>
+
+    <div data-ui-view="contact"/>
+
+    <div class="spacer-top">
+      <div class="divider-top">
+        <div class="spacer-top">
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-ng-show="share.user.userUID == 0"
+                  data-ng-disabled="hasChanges(share.user) || userForm.$invalid">
+            <span>Create User</span>
+          </button>
+          <button type="submit"
+                  class="btn btn-primary"
+                  data-ng-show="share.user.userUID > 0"
+                  data-ng-disabled="hasChanges(share.user) || userForm.$invalid">
+            <span>Update User</span>
+          </button>
+          <a class="btn btn-default" ui-sref="home">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

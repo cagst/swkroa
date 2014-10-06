@@ -237,7 +237,6 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     User user = repo.signinSuccessful(user1, ipAddress);
     assertNotNull("Ensure user is valid.", user);
     assertEquals("Ensure it is the correct user (check username).", "temp", user.getUsername());
-    assertEquals("Ensure the user has been updated.", 1, user.getUserUpdateCount());
 
     User user2 = repo.getUserByUsername("temp");
     assertNotNull("Ensure user was found.", user2);

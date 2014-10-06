@@ -152,7 +152,6 @@ import java.util.Map;
     }
 
     user.setSigninAttempts(0);
-    user.setUserUpdateCount(user.getUserUpdateCount() + 1);
 
     return user;
   }
