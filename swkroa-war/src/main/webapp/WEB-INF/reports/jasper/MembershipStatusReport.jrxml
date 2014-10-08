@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipStatusReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e80c0b88-6051-425b-93b3-fb9494b51c7f">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
+	<style name="Text Body" isDefault="true" fontName="Verdana" fontSize="12"/>
+	<style name="ColumnHeader" fontName="Verdana" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="PageFooter" fontName="Verdana" fontSize="10"/>
+	<queryString>
+		<![CDATA[SELECT mt.member_type_display, count(m.member_id)
+  FROM member m
+      ,member_type mt
+ WHERE m.active_ind = 1
+   AND mt.member_type_id = m.member_type_id
+GROUP BY mt.member_type_display
+ORDER BY mt.member_type_display]]>
+	</queryString>
+	<field name="member_type_display" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="count(m.member_id)" class="java.lang.Long"/>
+	<variable name="total_members" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{count(m.member_id)}]]></variableExpression>
+	</variable>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement style="ReportTitle" x="75" y="0" width="430" height="35" uuid="869c8b72-ad0e-4864-990c-7bfec79bbf05"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="18"/>
+				</textElement>
+				<text><![CDATA[Membership Status Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="50">
+			<staticText>
+				<reportElement style="ColumnHeader" x="147" y="30" width="179" height="20" uuid="c21f6a8a-3a92-4666-a965-d942d3820547"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Member Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="ColumnHeader" x="326" y="30" width="102" height="20" uuid="f565ce54-8d5b-49b2-9b52-f22f0e400cd7"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<line>
+				<reportElement x="75" y="49" width="430" height="1" uuid="25f72674-1e01-43b6-ba7a-5b5520285cd0"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement style="Text Body" x="147" y="0" width="179" height="20" uuid="fe175d09-1e60-44b1-b87d-d9fb7bf31c20"/>
+				<textFieldExpression><![CDATA[$F{member_type_display}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement style="Text Body" x="326" y="0" width="102" height="20" uuid="2cab92af-3034-4f68-84d4-43be70ff9446"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{count(m.member_id)}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement style="PageFooter" x="1" y="0" width="74" height="20" uuid="d89c7811-eae3-490a-a2bf-33579e7fda75"/>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+			<textField pattern="EEE, MMM d, yyyy h:mm a">
+				<reportElement style="PageFooter" x="75" y="0" width="283" height="20" uuid="47160b0b-0d6a-4205-a057-3670f66cc15e"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="PageFooter" x="453" y="2" width="80" height="20" uuid="ffe2da10-fc01-4f1c-ab6e-05cb14f6c303"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="PageFooter" x="533" y="2" width="40" height="20" uuid="7d5cb804-6d95-487b-ba9e-e1e92cb805aa"/>
+				<textElement>
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="0" width="572" height="1" uuid="a1b84312-c94f-4101-8b26-2b6cf32825dd"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="50">
+			<line>
+				<reportElement x="75" y="0" width="430" height="1" uuid="86f22a03-fdc6-4c76-be0f-4ebfeb3c6e8a"/>
+			</line>
+			<textField pattern="#,##0">
+				<reportElement style="ColumnHeader" x="325" y="1" width="102" height="20" uuid="3435718a-b0c6-4639-9a29-0e5dbf6e1544"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{total_members}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="ColumnHeader" x="147" y="1" width="178" height="20" uuid="07a852c0-bf95-42a6-9233-8a08ec6d4bb0"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Totals]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
