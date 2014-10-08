@@ -8,12 +8,12 @@
 <div data-ng-show="share.user">
   <div class="container-inner constrain-view">
     <div class="pull-left">
-      <h2 class="clear-bottom">
+      <h3 class="clear-bottom">
         {{share.user.fullName}}
         <small class="text-muted">
           ({{share.user.username}})
         </small>
-      </h2>
+      </h3>
       <div>
         <span>Last signed in:</span>
         <span data-ng-bind="share.user.lastSigninDate | date:'medium'"></span>
@@ -111,7 +111,7 @@
       </button>
     </div>
     <div class="split-footer-content pull-right">
-      <a class="btn btn-primary btn-xs" ui-sref="edit">
+      <a class="btn btn-primary btn-xs" data-ui-sref="edit">
         <i class="fa fa-edit"></i>
         <span>Edit User</span>
       </a>

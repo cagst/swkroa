@@ -57,6 +57,27 @@ swkroaApp.controller('profileController',
   contactService.getEmailTypes().then(function(data) {
     $scope.emailTypes = data;
   });
+
+  $scope.changePassword = function() {
+    $scope.errorMessage = null;
+    $http({
+      method: 'POST',
+      url: '/api/changepwd',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+      data: $.param({'oldPassword': $scope.oldPassword,
+                     'newPassword': $scope.newPassword,
+                     'confirmPassword': $scope.confirmPassword})
+    }).success(function(data) {
+      $scope.share = {
+        user: data,
+        successMessage: "Password was successfully changed!"
+      };
+      $("#passwordChangeDlg").modal('hide');
+    }).error(function(data, status) {
+      $scope.errorMessage = data.message;
+      $("#errorMessageAlert").show();
+    });
+  };
 }]);
 
 swkroaApp.controller('modifyProfileController', ['$scope', '$http', '$state', function($scope, $http, $state) {

@@ -10,7 +10,10 @@ package com.cagst.swkroa.controller.api;
  */
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.cagst.common.web.servlet.tags.StaticResourceTag;
 import com.cagst.swkroa.exception.BadRequestException;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.user.User;
@@ -27,11 +30,16 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -191,5 +199,40 @@ public final class UserApiController {
     LOGGER.info("Received request to retrieve the profile user.");
 
     return userService.getProfileUser(WebAppUtils.getUser());
+  }
+
+  /**
+   * Handles the request to actually change the password.
+   *
+   * @param oldPassword
+   *     The old (current) password.
+   * @param newPassword
+   *     The password we want to change to.
+   * @param confirmPassword
+   *     The password we want to change to (entered again for confirmation purposes).
+   */
+  @RequestMapping(value = "/api/changepwd", method = RequestMethod.POST)
+  public ResponseEntity<User> changePassword(final @RequestParam String oldPassword,
+                                             final @RequestParam String newPassword,
+                                             final @RequestParam String confirmPassword)
+      throws IOException {
+
+    User user = WebAppUtils.getUser();
+    if (user == null) {
+      LOGGER.error("Unable to determine current user.");
+      return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    LOGGER.info("Changing password for user [{}]", user.getUsername());
+
+    try {
+      user = userService.changePassword(user, oldPassword, newPassword, confirmPassword);
+      WebAppUtils.setUser(user);
+
+      return new ResponseEntity<User>(user, HttpStatus.OK);
+    } catch (AuthenticationException ex) {
+      LOGGER.debug("Unable to change password due to [{}]", ex.getLocalizedMessage());
+      throw new BadRequestException(ex.getLocalizedMessage(), ex);
+    }
   }
 }
