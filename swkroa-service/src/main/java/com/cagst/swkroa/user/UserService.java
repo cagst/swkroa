@@ -1,6 +1,7 @@
 package com.cagst.swkroa.user;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -84,40 +85,53 @@ public interface UserService extends UserDetailsService {
                              final String confirmPassword) throws BadCredentialsException;
 
   /**
+   * Reset the user's password to a random temporary password.
+   *
+   * @param user
+   *     The {@link User} to reset the password for.
+   * @param instigator
+   *     The {@link User} that instigated (performed) the reset of the password for the user.
+   *
+   * @return A {@link User} that has been updated accordingly.
+   *
+   */
+  public User resetPassword(final User user, final User instigator);
+
+  /**
    * Updates the user's record by clearing the locked date (unlocking) on the user's account.
    *
-   * @param unlockUserUID
-   *     The unique identifier of the user to unlock.
    * @param user
+   *     The {@link User} to unlock.
+   * @param instigator
    *     The {@link User} that is performing the unlock.
    *
    * @return A {@link User} that has been updated accordingly.
    */
-  public User unlockAccount(final long unlockUserUID, final User user);
+  public User unlockAccount(final User user, final User instigator);
 
   /**
    * Enables the user's account.
    *
-   * @param enableUserUID
-   *      The unique identifier of the user to enable.
    * @param user
+   *      The {@link User} to enable.
+   * @param instigator
    *      The {@link User} that is performing the action.
    *
    * @return The {@link User} that has been updated accordingly.
    */
-  public User enableAccount(final long enableUserUID, final User user);
+  public User enableAccount(final User user, final User instigator);
 
   /**
    * Disables the user's account.
    *
-   * @param disableUserUID
-   *      The unique identifier of the user to disable.
    * @param user
+   *      The {@link User} to disable.
+   * @param instigator
    *      The {@link User} that is performing the action.
    *
    * @return The {@link User} that has been updated accordingly.
    */
-  public User disableAccount(final long disableUserUID, final User user);
+  public User disableAccount(final User user, final User instigator);
 
   public boolean doesUsernameExist(final String username);
 
@@ -157,6 +171,20 @@ public interface UserService extends UserDetailsService {
    *     A {@link long} that uniquely identifies the {@link User} to retrieve.
    *
    * @return The {@link User} associated with the specified id.
+   *
+   * @throws EmptyResultDataAccessException when no user was found with the specified uid.
+   * @throws IncorrectResultSizeDataAccessException when more than 1 user was found with the specified uid.
    */
-  public User getUserByUID(final long uid);
+  public User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+
+  /**
+   * Retrieves a {@link User} that is currently signed on.
+   *
+   * @param user
+   *      The {@link User} that is currently signed in.
+   *
+   * @return The {@link User} that is currently signed on.
+   */
+  public User getProfileUser(final User user);
+
 }

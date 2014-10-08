@@ -11,18 +11,30 @@
     <h3 data-th-text="#{com.cagst.swkroa.report.membership.pastdue.report}">zzz Membership Past Due Report</h3>
   </div>
 
-  <form method="POST" action="#" name="runMembershipPastDue" target="_blank"
-        class="css-form"
-        data-th-action="@{/report/membership/pastdue}">
-    <div class="row">
-      <div class="col-xs-2">
-        <button type="submit" class="btn btn-primary form-control"
-                data-th-text="#{com.cagst.swkroa.report.generate}">
+  <div class="row">
+    <div class="col-xs-2 btn-group">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <span data-th-text="#{com.cagst.swkroa.report.generate.report}">
           zzz Generate Report
-        </button>
-      </div>
+        </span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a data-th-href="@{/report/membership/pastdue.pdf}" target="_blank"
+             data-th-text="#{com.cagst.swkroa.report.generate.pdf}">
+            zzz PDF
+          </a>
+        </li>
+        <li>
+          <a data-th-href="@{/report/membership/pastdue.xls}" target="_blank"
+             data-th-text="#{com.cagst.swkroa.report.generate.xls}">
+            zzz XLS
+          </a>
+        </li>
+      </ul>
     </div>
-  </form>
+  </div>
 </div>
 
 </body>

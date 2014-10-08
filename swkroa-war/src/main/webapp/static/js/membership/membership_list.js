@@ -83,8 +83,7 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', function
     $scope.comment.active = false;
     $http.put("/api/comments", $scope.comment).success(function(data) {
       $scope.selectedMembership.comments.splice($scope.commentIdx, 1);
-    })
-    .error(function(data) {
+    }).error(function(data) {
       // TODO: Need to add a message for the user
       $scope.comment.active = true;
       $scope.selectedMembership.comments[$scope.commentIdx] = $scope.comment;

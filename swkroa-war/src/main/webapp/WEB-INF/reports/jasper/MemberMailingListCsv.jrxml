@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MemberMailingListCsv" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="0b79281c-c950-4cf4-a772-c170aab664f9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<parameter name="newsletters_only" class="java.lang.Boolean"/>
+	<queryString>
+		<![CDATA[SELECT m.company_name
+      ,m.owner_ident
+      ,m.greeting
+      ,m.in_care_of
+      ,cv.codevalue_display AS title
+      ,p.name_first
+      ,p.name_middle
+      ,p.name_last
+      ,a.address1
+      ,a.address2
+      ,a.address3
+      ,a.city
+      ,a.state_code
+      ,IF(LENGTH(a.postal_code) > 5, CONCAT(LEFT(a.postal_code, 5), "-", MID(a.postal_code, 6)), a.postal_code) AS postal_code
+      ,a.country_code
+      ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
+      ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS membership_name
+  FROM (SELECT a.parent_entity_id, a.address_id
+          FROM address a
+         WHERE a.parent_entity_name = 'MEMBER'
+           AND a.active_ind = 1
+           AND a.primary_ind = 1
+      GROUP BY a.parent_entity_id
+         UNION
+        SELECT a.parent_entity_id, a.address_id
+          FROM address a
+         WHERE a.parent_entity_name = 'MEMBER'
+           AND a.active_ind = 1
+           AND a.primary_ind = 0
+      GROUP BY a.parent_entity_id
+       )iq
+      INNER JOIN member m ON (m.member_id = iq.parent_entity_id)
+      INNER JOIN address a ON (a.address_id = iq.address_id)
+ LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
+ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
+  WHERE m.active_ind = 1
+    AND ($P{newsletters_only} = 0 OR m.mail_newsletter_ind = 1)
+ORDER BY membership_name]]>
+	</queryString>
+	<field name="company_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="greeting" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="in_care_of" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="title" class="java.lang.String"/>
+	<field name="name_first" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name_middle" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name_last" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address3" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="state_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="postal_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="country_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="CSZ" class="java.lang.String">
+		<variableExpression><![CDATA[$F{city} + ", " + $F{state_code} + " " + $F{postal_code}]]></variableExpression>
+	</variable>
+	<variable name="Greeting" class="java.lang.String">
+		<variableExpression><![CDATA[$F{greeting} == null || $F{greeting}.isEmpty() ? ($F{title} == null || $F{title}.isEmpty() ? $F{name_first} : ($F{name_last} == null || $F{name_last}.isEmpty() ? "" : $F{title} + " " + $F{name_last})) : $F{greeting}]]></variableExpression>
+	</variable>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="60" height="20" uuid="da6911da-3e60-4451-9706-1d5cd5f2afb4"/>
+				<text><![CDATA[Company Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="65" y="0" width="60" height="20" uuid="fc9a0777-b840-4290-ae1c-fbdb4e1d3ae5"/>
+				<text><![CDATA[Owner ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="60" height="20" uuid="e0b01fab-10c7-4c95-bb2e-d41181ee1aa4"/>
+				<text><![CDATA[Greeting]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="195" y="0" width="60" height="20" uuid="9b87dbff-ffb6-4e2c-9d7f-9127d9af9ad6"/>
+				<text><![CDATA[In Care Of]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="0" width="60" height="20" uuid="560fec6d-71e2-4479-bf87-fb72936de7ad"/>
+				<text><![CDATA[Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="325" y="0" width="60" height="20" uuid="a5b40005-ebe7-4d49-9330-0abc826b85aa"/>
+				<text><![CDATA[First Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="0" width="60" height="20" uuid="fb745bc1-ce83-454d-9aae-30d43320cf5a"/>
+				<text><![CDATA[Last Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="60" height="20" uuid="4d2ab6ee-95dd-4d52-952d-fca3654782f2"/>
+				<text><![CDATA[Address 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="520" y="0" width="60" height="20" uuid="6a49c297-55cc-4b7c-b508-45eaace7af38"/>
+				<text><![CDATA[Address 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="585" y="0" width="60" height="20" uuid="de1ac8aa-6f91-447b-b693-c02c602f5671"/>
+				<text><![CDATA[Address 3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="0" width="102" height="20" uuid="d955a19e-f294-4485-8731-c2a8d677eaba"/>
+				<text><![CDATA[City, State Zip]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="60" height="20" uuid="046c3a47-bfb0-46af-8b44-ca8570289dc1"/>
+				<textFieldExpression><![CDATA[$F{company_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="65" y="0" width="60" height="20" uuid="46f3d153-ee36-415d-ba30-69d81d8adc73"/>
+				<textFieldExpression><![CDATA[$F{owner_ident}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="195" y="0" width="60" height="20" uuid="b86e2a99-7588-4310-b239-056875979fa8"/>
+				<textFieldExpression><![CDATA[$F{in_care_of}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="260" y="0" width="60" height="20" uuid="ef0cdd54-083c-4d48-9c6d-3cf8db4f4e1c"/>
+				<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="325" y="0" width="60" height="20" uuid="4b2097ee-bbdb-4242-8afa-7dc0609d34ec"/>
+				<textFieldExpression><![CDATA[$F{name_first}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="390" y="0" width="60" height="20" uuid="cbbdddb5-8cc6-4092-99f5-e909cbb1eee3"/>
+				<textFieldExpression><![CDATA[$F{name_last}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="520" y="0" width="60" height="20" uuid="49dd4947-c1f1-4b0a-bffa-8c9c6a7c1ffd"/>
+				<textFieldExpression><![CDATA[$F{address2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="585" y="0" width="60" height="20" uuid="ca69106d-9c73-41b1-9941-f99ab18b1be0"/>
+				<textFieldExpression><![CDATA[$F{address3}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="455" y="0" width="60" height="20" uuid="d0c0a76c-dc09-4f81-9e19-9f103eedee22"/>
+				<textFieldExpression><![CDATA[$F{address1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="650" y="0" width="102" height="20" uuid="07ac77b3-14a3-445a-84ef-1b280baf9d6e"/>
+				<textFieldExpression><![CDATA[$V{CSZ}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="0" width="60" height="20" uuid="9e669d00-ae84-41f9-aef6-04d8739d268a"/>
+				<textFieldExpression><![CDATA[$V{Greeting}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -2,6 +2,7 @@ package com.cagst.swkroa.user;
 
 import com.cagst.swkroa.security.SecurityPolicy;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
@@ -35,8 +36,11 @@ public interface UserRepository {
    *     A {@link long} that uniquely identifies the User to retrieve.
    *
    * @return The {@link User} that is associated with the specified uid.
+   *
+   * @throws EmptyResultDataAccessException when no user was found with the specified uid.
+   * @throws IncorrectResultSizeDataAccessException when more than 1 user was found with the specified uid.
    */
-  public User getUserByUID(final long uid);
+  public User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
    * Updates the {@link User} account for a signin attempt.
@@ -70,11 +74,11 @@ public interface UserRepository {
    * Locks the user account as of NOW. Used primarily when the user has exceeded their sign-in
    * attempts.
    *
-   * @param lockUserUID
-   *     The unique identifier who's account is to be locked.
+   * @param user
+   *     The {@link User} who's account is to be locked.
    * @param message
    *     A descriptive message describing why the account as locked.
-   * @param user
+   * @param instigator
    *     The {@link User} that is performing the lock.
    *
    * @return The {@link User} that has been locked and updated accordingly.
@@ -82,18 +86,18 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if {@code user} is null
    */
-  public User lockUserAccount(final long lockUserUID, final String message, final User user) throws IllegalArgumentException;
+  public User lockUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
 
   /**
    * Unlocks the user account as of NOW. Used by the system to automatically unlock a user account
    * when they have gone past the Account Locked Days according to the {@link SecurityPolicy}
    * defined for the user or by another user to manually unlock a user account.
    *
-   * @param unlockUserUID
-   *     The unique identifier who's account is to be unlocked.
+   * @param user
+   *     The {@link User} who's account is to be unlocked.
    * @param message
    *     A descriptive message describing why the account was unlocked.
-   * @param user
+   * @param instigator
    *     The {@link User} that is performing the unlock.
    *
    * @return The {@link User} that has been successfully unlocked and updated accordingly.
@@ -101,39 +105,39 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if {@code user} is null
    */
-  public User unlockUserAccount(final long unlockUserUID, final String message, final User user) throws IllegalArgumentException;
+  public User unlockUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
 
   /**
    * Enables the specified {@link User} account.
    *
-   * @param enableUserUID
-   *     The unique identifier who's account is to be enabled.
+   * @param user
+   *     The {@link User} who's account is to be enabled.
    * @param message
    *     A descriptive message describing why the account was enabled.
-   * @param user
+   * @param instigator
    *     The {@link User} that is performing the enabling of the account.
    *
    * @return The {@link User} that has been successfully enabled and updated accordingly.
    *
    * @throws IllegalArgumentException
    */
-  public User enableUserAccount(final long enableUserUID, final String message, final User user) throws IllegalArgumentException;
+  public User enableUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
 
   /**
    * Disables the specified {@link User} account.
    *
-   * @param disableUserUID
-   *     The unique identifier who's account is to be disabled.
+   * @param user
+   *     The {@link User} who's account is to be disabled.
    * @param message
    *     A descriptive message describing why the account was disabled.
-   * @param user
+   * @param instigator
    *     The {@link User} that is performing the disabling of the account.
    *
    * @return The {@link User} that has been successfully disabled and updated accordingly.
    *
    * @throws IllegalArgumentException
    */
-  public User disableUserAccount(final long disableUserUID, final String message, final User user) throws IllegalArgumentException;
+  public User disableUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
 
   /**
    * Changes the specified {@link User User} password.
@@ -153,7 +157,28 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null or <code>password</code> is null or empty
    */
-  public User changeUserPassword(final User user, String newPassword, final String message)
+  public User changeUserPassword(final User user, final String newPassword, final String message)
+      throws IllegalArgumentException;
+
+  /**
+   * Resets the specified {@link User User} password. The password will be temporary
+   * and the user will be required to change it the next time they sign-in.
+   *
+   * @param user
+   *     The {@link User} to reset the password for.
+   * @param tempPassword
+   *     The {@link String Password} to reset to.
+   * @param message
+   *     A descriptive message of the reset password event.
+   * @param instigator
+   *     The {@link User} that instigated (performed) this action.
+   *
+   * @return A new {@link User} with it's password changed.
+   *
+   * @throws IllegalArgumentException
+   *     if <code>user</code> is null or <code>password</code> is null or empty
+   */
+  public User resetUserPassword(final User user, final String tempPassword, final String message, final User instigator)
       throws IllegalArgumentException;
 
   /**

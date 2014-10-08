@@ -39,7 +39,9 @@
   <ul id="account-navigation">
     <li>
       <span data-th-text="#{com.cagst.swkroa.header.welcome}">zzz Welcome</span>
-      <span data-th-text="${#authentication.principal.firstName}" />
+      <a data-th-href="@{/profile}" data-th-text="${#authentication.principal.firstName}">
+        zzz Profile
+      </a>
     </li>
     <li>
       <a data-th-href="@{/j_spring_security_logout}" data-th-text="#{com.cagst.swkroa.header.signout}">
@@ -84,6 +86,25 @@
             <a data-th-href="@{/report/membership/pastdue}"
                data-th-text="#{com.cagst.swkroa.report.membership.pastdue.title}">
               zzz Membership Past Due
+            </a>
+          </li>
+          <li>
+            <a data-th-href="@{/report/membership/status}"
+               data-th-text="#{com.cagst.swkroa.report.membership.status.title}">
+              zzz Membership Past Due
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a data-th-href="@{/report/member/mailinglist}"
+               data-th-text="#{com.cagst.swkroa.report.member.mailinglist.title}">
+              zzz Member Mailing List
+            </a>
+          </li>
+          <li>
+            <a data-th-href="@{/report/member/emaillist}"
+               data-th-text="#{com.cagst.swkroa.report.member.emaillist.title}">
+              zzz Member Email List
             </a>
           </li>
         </ul>

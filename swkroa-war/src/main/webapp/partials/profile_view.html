@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/profile.js}"></script>
+</head>
+
+<body data-ng-app="swkroaApp">
+
+<div class="row row-inner" data-layout-fragment="content" data-ng-controller="profileController">
+  <div class="page-header">
+    <h3>User Profile</h3>
+
+    <div id="successMessage" class="alert alert-success alert-dismissible" role="alert" data-ng-show="share.successMessage">
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+      </button>
+      <strong>Success!</strong>
+      <div data-ng-bind="share.successMessage">User was updated!</div>
+    </div>
+  </div>
+
+  <div class="container-inner">
+    <h3 class="clear-bottom">
+      <span data-ng-bind="share.user.fullName"></span>
+      <small class="text-muted">({{share.user.username}})</small>
+    </h3>
+
+    <div data-ng-show="share.user.addresses.length > 0">
+      <h4 class="divider-bottom">Addresses</h4>
+      <div data-ng-repeat="address in share.user.addresses" class="row">
+        <div class="col-xs-2">
+          <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+        </div>
+        <div class="col-xs-4">
+          <div data-ng-bind="address.addressLine1"></div>
+          <div data-ng-bind="address.addressLine2"></div>
+          <div data-ng-bind="address.addressLine3"></div>
+          <div>
+            {{address.city}}, {{address.state}} {{address.postalCode | zip}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-ng-show="share.user.phoneNumbers.length > 0">
+      <h4 class="divider-bottom">Phone Numbers</h4>
+      <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
+        <div class="col-xs-2">
+          <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+        </div>
+        <div class="col-xs=4">
+          <span>
+            {{phone.phoneNumber | tel}}
+          </span>
+          <span data-ng-show="phone.phoneExtension">
+            Ext. {{phone.phoneExtension}}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div data-ng-show="share.user.emailAddresses.length > 0">
+      <h4 class="divider-bottom">Email Addresses</h4>
+      <div data-ng-repeat="email in share.user.emailAddresses" class="row">
+        <div class="col-xs-2">
+          <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
+        </div>
+        <div class="col-xs=4">
+          <span data-ng-bind="email.emailAddress"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider-top split-footer">
+    <div class="split-footer-content pull-left">
+      <button type="button" class="btn btn-warning btn-xs"
+              data-toggle="modal" data-target="#passwordChangeDlg">
+        <span>Change Password</span>
+      </button>
+    </div>
+    <div class="split-footer-content pull-right">
+      <a class="btn btn-primary btn-xs" data-ui-sref="edit">
+        <i class="fa fa-edit"></i>
+        <span>Edit User</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="modal fade" id="passwordChangeDlg" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Change Password</h4>
+          <div id="errorMessageAlert" class="alert alert-danger clear-bottom" role="alert"
+               data-ng-show="errorMessage">
+            <strong>Warning!</strong>
+            <div data-ng-bind="errorMessage"></div>
+          </div>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="oldPassword" class="form_label label-required">
+              Current Password
+            </label>
+            <input id="oldPassword" name="oldPassword" type="password" maxlength="60"
+                   data-ng-model="oldPassword"
+                   class="form-control input-block-level" autofocus />
+          </div>
+          <div class="form-group">
+            <label for="newPassword" class="form_label label-required">
+              New Password
+            </label>
+            <input id="newPassword" name="newPassword" type="password" maxlength="60"
+                   data-ng-model="newPassword"
+                   class="form-control input-block-level" />
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword" class="form_label label-required">
+              Confirm New Password
+            </label>
+            <input id="confirmPassword" name="confirmPassword" type="password" maxlength="60"
+                   data-ng-model="confirmPassword"
+                   class="form-control input-block-level" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success"
+                  data-ng-click="changePassword()">
+            Change
+          </button>
+          <button type="button" class="btn"
+                  data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

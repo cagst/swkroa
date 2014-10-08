@@ -8,6 +8,7 @@ import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.role.RoleRepository;
 import com.cagst.swkroa.security.SecurityPolicy;
 import com.cagst.swkroa.security.SecurityService;
+import com.cagst.swkroa.utils.RandomPasswordGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
       DateTime unlockAfter = lockedDate.plusDays(accountLockedDays);
 
       if (unlockAfter.isBeforeNow()) {
-        user = unlockAccount(user.getUserUID(), user);
+        user = unlockAccount(user, user);
       }
     }
 
@@ -115,7 +116,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
       if (securityPolicy.getMaxSigninAttempts() > 0 && user.getSigninAttempts() > securityPolicy.getMaxSigninAttempts()) {
         String msg = messages.getMessage("com.cagst.swkroa.signin.message.attempts.exceeded",
             "The number of allowed sign-in attempts has been exceeded.  Account has been locked.");
-        user = userRepo.lockUserAccount(user.getUserUID(), msg, user);
+        user = userRepo.lockUserAccount(user, msg, user);
       }
     }
 
@@ -203,7 +204,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
           "The new password is the same as the old password."));
     }
 
-    String msg = messages.getMessage("com.cagst.swkroa.changepwd.audit.message", new Object[]{user.getUsername()},
+    String msg = messages.getMessage("com.cagst.swkroa.audit.message.changepwd", new Object[]{user.getUsername()},
         "Password changed for user [{0}].");
 
     user.setPassword(checkNewPassword);
@@ -212,47 +213,64 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User unlockAccount(final long unlockUserUID, final User user) {
-    Assert.isTrue(unlockUserUID > 0, "Assertion Failed - argument [unlockUserUID] must be greater than zero");
+  public User resetPassword(final User user, final User instigator) {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
 
+    String msg = messages.getMessage("com.cagst.swkroa.audit.message.resetpwd",
+        new Object[]{instigator.getUsername(), user.getUsername()},
+        "Password reset by user [{0}] for user [{1}].");
+
+    String tempPassword = RandomPasswordGenerator.generateRandomPassword(10);
+
+    User updatedUser = userRepo.resetUserPassword(user, passwordEncoder.encode(tempPassword), msg, instigator);
+    updatedUser.setPassword(tempPassword);
+
+    return updatedUser;
+  }
+
+  @Override
+  @Transactional
+  public User unlockAccount(final User user, final User instigator) {
+    Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
+    Assert.notNull(instigator, "[Assertion Failed] - argument [instigator] cannot be null.");
+
     String msg;
-    if (unlockUserUID == user.getUserUID()) {
-      msg = messages.getMessage("com.cagst.swkroa.unlock.auto.audit.message",
-          new Object[]{unlockUserUID}, "Account was automatically unlocked for user [{0}].");
+    if (user.getUserUID() == instigator.getUserUID()) {
+      msg = messages.getMessage("com.cagst.swkroa.audit.message.unlock.auto",
+          new Object[]{user.getUsername()}, "Account was automatically unlocked for user [{0}].");
     } else {
-      msg = messages.getMessage("com.cagst.swkroa.unlock.manual.audit.message",
-          new Object[]{user.getUsername(), unlockUserUID},
+      msg = messages.getMessage("com.cagst.swkroa.audit.message.unlock.manual",
+          new Object[]{instigator.getUsername(), user.getUsername()},
           "Account was manually unlocked by user [{0}] for user [{1}].");
     }
 
-    return userRepo.unlockUserAccount(unlockUserUID, msg, user);
+    return userRepo.unlockUserAccount(user, msg, instigator);
   }
 
   @Override
   @Transactional
-  public User enableAccount(final long enableUserUID, final User user) {
-    Assert.isTrue(enableUserUID > 0, "Assertion Failed - argument [enableUserUID] must be greater than zero");
+  public User enableAccount(final User user, final User instigator) {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
+    Assert.notNull(instigator, "[Assertion Failed] - argument [instigator] cannot be null.");
 
-    String msg = messages.getMessage("com.cagst.swkroa.enable.audit.message",
-        new Object[]{user.getUsername(), enableUserUID},
+    String msg = messages.getMessage("com.cagst.swkroa.audit.message.enable",
+        new Object[]{instigator.getUsername(), user.getUsername()},
         "Account was enabled by user [{0}] for user [{1}].");
 
-    return userRepo.enableUserAccount(enableUserUID, msg, user);
+    return userRepo.enableUserAccount(user, msg, instigator);
   }
 
   @Override
   @Transactional
-  public User disableAccount(final long disableUserUID, final User user) {
-    Assert.isTrue(disableUserUID > 0, "Assertion Failed - argument [disableUserUID] must be greater than zero");
+  public User disableAccount(final User user, final User instigator) {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
+    Assert.notNull(instigator, "[Assertion Failed] - argument [instigator] cannot be null.");
 
-    String msg = messages.getMessage("com.cagst.swkroa.disable.audit.message",
-        new Object[]{user.getUsername(), disableUserUID},
+    String msg = messages.getMessage("com.cagst.swkroa.audit.message.disable",
+        new Object[]{instigator.getUsername(), user.getUsername()},
         "Account was disabled by user [{0}] for user [{1}].");
 
-    return userRepo.disableUserAccount(disableUserUID, msg, user);
+    return userRepo.disableUserAccount(user, msg, instigator);
   }
 
   @Override
@@ -286,6 +304,20 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   public User getUserByUID(final long uid) {
     User user = userRepo.getUserByUID(uid);
 
+    // retrieve SecurityPolicy for user
+    SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
+    user.setSecurityPolicy(securityPolicy);
+
+    user.setAddresses(contactRepo.getAddressesForPerson(user));
+    user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
+    user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
+
+    return user;
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public User getProfileUser(final User user) {
     // retrieve SecurityPolicy for user
     SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
     user.setSecurityPolicy(securityPolicy);

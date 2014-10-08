@@ -1,167 +1,167 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-         
-	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.cagst.swkroa</groupId>
-		<artifactId>swkroa-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
+  <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>swkroa-service</artifactId>
-	<name>SWKROA Services</name>
-	<url>http://www.swkroa.com</url>
-	<inceptionYear>2013</inceptionYear>
-	<packaging>jar</packaging>
+  <parent>
+    <groupId>com.cagst.swkroa</groupId>
+    <artifactId>swkroa-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
 
-	<dependencies>
-		<!-- CAGST Compile Dependencies -->
-		<dependency>
-			<groupId>com.cagst</groupId>
-			<artifactId>cagst-common-db</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.cagst</groupId>
-			<artifactId>cagst-common-service</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- SWKROA Dependencies -->
-		<dependency>
-			<groupId>com.cagst.swkroa</groupId>
-			<artifactId>swkroa-domain</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Spring JDBC Dependencies -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jdbc-core</artifactId>
-			<version>1.0.0.RELEASE</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Log 4J Dependencies -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>integration</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Logback Dependencies -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Spring AOP Dependencies -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aspects</artifactId>
-			<version>${spring-version}</version>
-		</dependency>
-		
-		<!-- AspectJ Dependencies -->
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<type>jar</type>
-			<scope>runtime</scope>
-		</dependency>
-		
+  <artifactId>swkroa-service</artifactId>
+  <name>SWKROA Services</name>
+  <url>http://www.swkroa.com</url>
+  <inceptionYear>2013</inceptionYear>
+  <packaging>jar</packaging>
 
-		<!-- Test Dependencies -->
-		
-		<!-- CAGST Test Dependencies -->
-		<dependency>
-			<groupId>com.cagst</groupId>
-			<artifactId>cagst-test</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- JUnit Dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- Mockito Dependencies -->
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- HSQL DB Dependencies -->
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- MySQL Dependencies -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- Google Common Spring Aspect Dependencies -->
-		<dependency>
-			<groupId>com.googlecode.commonspringaspects</groupId>
-			<artifactId>common-spring-aspects</artifactId>
-			<version>1.0.9</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
-	
-	<repositories>
-		<repository>
-			<id>common-spring-aspects</id>
-			<url>http://common-spring-aspects.googlecode.com/svn/maven2</url>
-		</repository>
-	</repositories>
+  <dependencies>
+    <!-- CAGST Compile Dependencies -->
+    <dependency>
+      <groupId>com.cagst</groupId>
+      <artifactId>cagst-common-db</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.cagst</groupId>
+      <artifactId>cagst-common-service</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- SWKROA Dependencies -->
+    <dependency>
+      <groupId>com.cagst.swkroa</groupId>
+      <artifactId>swkroa-domain</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring JDBC Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jdbc-core</artifactId>
+      <version>1.0.0.RELEASE</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Log 4J Dependencies -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>integration</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Logback Dependencies -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring AOP Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aspects</artifactId>
+      <version>${spring-version}</version>
+    </dependency>
+
+    <!-- AspectJ Dependencies -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <type>jar</type>
+      <scope>runtime</scope>
+    </dependency>
+
+
+    <!-- Test Dependencies -->
+
+    <!-- CAGST Test Dependencies -->
+    <dependency>
+      <groupId>com.cagst</groupId>
+      <artifactId>cagst-test</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- JUnit Dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Mockito Dependencies -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- HSQL DB Dependencies -->
+    <dependency>
+      <groupId>org.hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- MySQL Dependencies -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Google Common Spring Aspect Dependencies -->
+    <dependency>
+      <groupId>com.googlecode.commonspringaspects</groupId>
+      <artifactId>common-spring-aspects</artifactId>
+      <version>1.0.9</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>common-spring-aspects</id>
+      <url>http://common-spring-aspects.googlecode.com/svn/maven2</url>
+    </repository>
+  </repositories>
 </project>
