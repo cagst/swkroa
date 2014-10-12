@@ -166,7 +166,8 @@ public final class UserApiController {
         return new ResponseEntity<User>(savedUser, headers, HttpStatus.OK);
       }
     } catch (UsernameTakenException ex) {
-      return new ResponseEntity<User>(user, HttpStatus.BAD_REQUEST);
+      LOGGER.debug("Unable to save user due to [{}]", ex.getLocalizedMessage());
+      throw new BadRequestException(ex.getLocalizedMessage(), ex);
     } catch (OptimisticLockingFailureException ex) {
       return new ResponseEntity<User>(user, HttpStatus.CONFLICT);
     } catch (Exception ex) {

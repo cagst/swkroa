@@ -49,28 +49,29 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
     });
 });
 
-swkroaApp.controller('membershipController',
-  ['$scope', '$http', '$state', '$filter',
-  function($scope, $http, $state, $filter, currencyFilter) {
-
-  $scope.queryString = "";
+swkroaApp.controller('membershipController', ['$scope', '$http', '$state', '$filter', function($scope, $http, $state, $filter, currencyFilter) {
+  $scope.query = "";
+  $scope.searched = false;
 
   $http.get('/api/codeset/TRANSACTION_ENTRY_TYPE/').success(function(data) {
     $scope.transactionEntryTypes = data;
   });
 
   $scope.queryKeydown = function($event) {
-    if ($event.keyCode == 13 && $scope.queryString.length >= 2) {
+    $scope.membership = null;
+
+    if ($event.keyCode == 13 && $scope.query.length >= 2) {
       $scope.getMemberships();
     }
   };
 
   $scope.getMemberships = function() {
     $scope.membership = null;
+    $scope.searched   = true;
 
     var url = "/api/memberships?q=";
-    if ($scope.queryString && $scope.queryString.length > 0) {
-      url = url + $scope.queryString;
+    if ($scope.query && $scope.query.length >= 2) {
+      url = url + $scope.query;
     }
 
     $http.get(url).success(function(data) {
@@ -78,15 +79,20 @@ swkroaApp.controller('membershipController',
     });
   };
 
-  $scope.getMembership = function(membershipUID) {
-    $http.get('/api/membership/' + membershipUID).success(function(data) {
-      $scope.selectedMembership = data;
+  $scope.getMembership = function(membership) {
+    $http.get('/api/memberships/' + membership.membershipUID).success(function(data) {
+      var idx = $scope.memberships.indexOf(membership);
+      $scope.memberships[idx] = data;
+      $scope.share = {
+        membership: data,
+        successMessage: null
+      }
     });
   };
 
   $scope.removeMembership = function() {
     $scope.selectedMembership.active = false;
-    $http.put("/api/membership", $scope.selectedMembership).success(function(data) {
+    $http.put("/api/memberships", $scope.selectedMembership).success(function(data) {
       $scope.selectedMembership = null;
     })
     .error(function(data) {

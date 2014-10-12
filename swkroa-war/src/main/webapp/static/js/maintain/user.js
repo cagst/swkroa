@@ -179,8 +179,8 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', '$state', funct
 
   $scope.save = function() {
     $http.post('/api/users', $scope.share.user).
-      success(function(data) {
-        if ($scope.share.user.userUID == 0) {
+      success(function(data, status) {
+        if (status == 201) {
           $scope.users.push(data);
           $scope.share.user = data;
           $scope.share.successMessage = "User " + data.fullName + " was created successfully!";
@@ -197,7 +197,7 @@ swkroaApp.controller('modifyUserController', ['$scope', '$http', '$state', funct
       error(function(data, status) {
         switch (status) {
         case 400: // bad request
-          $scope.errorMessage = "Username " + data.username + " is already in use!";
+          $scope.errorMessage = data.message
           break;
         case 409: // conflict
           $scope.errorMessage = "User " + data.fullName + " has been updated by another user!";
