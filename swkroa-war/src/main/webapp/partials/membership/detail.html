@@ -1,116 +1,98 @@
-<div data-ng-show="!share.user">
+<div data-ng-show="!share.membership">
   <em>
     <label class="panel-body text-muted text-center">
-      Select a user to view their details.
+      Select a membership to view its details.
     </label>
   </em>
 </div>
-<div data-ng-show="share.user">
+<div data-ng-show="share.membership">
   <div class="container-inner constrain-view">
-    <div class="pull-left">
-      <h2 class="clear-bottom">
-        {{share.user.fullName}}
-        <small class="text-muted">
-          ({{share.user.username}})
-        </small>
-      </h2>
+    <h2 class="lead">
+      <span data-ng-bind="share.membership.primaryMember.effectiveMemberName" />
+      <small data-ng-show="share.membership.primaryMember.joinDate">
+        Since {{membership.primaryMember.joinDate | date:'longDate'}}
+      </small>
+    </h2>
+    <div>
       <div>
-        <span>Last signed in:</span>
-        <span data-ng-bind="share.user.lastSigninDate | date:'medium'" />
-      </div>
-
-      <div data-ng-show="share.user.addresses.length > 0">
-        <h4 class="divider-bottom">Addresses</h4>
-        <div data-ng-repeat="address in share.user.addresses" class="row">
-          <div class="col-xs-4">
-            <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)" />
-          </div>
-          <div class="col-xs-8">
-            <div data-ng-bind="address.addressLine1" />
-            <div data-ng-bind="address.addressLine2" />
-            <div data-ng-bind="address.addressLine3" />
-            <div>
-              {{address.city}}, {{address.state}} {{address.postalCode | zip}}
-            </div>
-          </div>
+        <div class="text-muted divider-bottom">
+          MEMBERS
+        </div>
+        <div data-ng-show="share.membership.primaryMember">
+          <span>
+            <strong data-ng-bind="share.membership.primaryMember.effectiveMemberName" />
+          </span>
+          <small class="text-muted">({{share.membership.primaryMember.ownerIdent}})</small>
+          <small class="text-muted" data-ng-show="share.membership.primaryMember.joinDate">
+            Since {{membership.primaryMember.joinDate | date:'longDate'}}
+          </small>
+        </div>
+        <div data-ng-show="share.membership.primarySpouse">
+          <span>{{share.membership.primarySpouse.effectiveMemberName}}</span>
+          <small class="text-muted">({{share.membership.primarySpouse.ownerIdent}})</small>
+          <small class="text-muted">Since {{membership.primarySpouse.joinDate | date:'longDate'}}</small>
+        </div>
+        <div data-ng-repeat="member in share.membership.additionalMembers">
+          <span>{{member.effectiveMemberName}}</span>
+          <small class="text-muted">({{member.ownerIdent}})</small>
+          <small class="text-muted">Since {{member.joinDate | date:'longDate'}}</small>
         </div>
       </div>
 
-      <div data-ng-show="share.user.phoneNumbers.length > 0">
-        <h4 class="divider-bottom">Phone Numbers</h4>
-        <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
-          <div class="col-xs-4">
-            <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)" />
-          </div>
-          <div class="col-xs=8">
-            <span>
-              {{phone.phoneNumber | tel}}
-            </span>
-            <span data-ng-show="phone.phoneExtension">
-              Ext. {{phone.phoneExtension}}
-            </span>
-          </div>
+      <div class="spacer-top">
+        <div class="text-muted divider-bottom">COUNTIES</div>
+        <div data-ng-repeat="membershipCounty in share.membership.membershipCounties">
+          <span data-ng-class="{text_bold: membershipCounty.votingCounty === true}">
+            {{membershipCounty.county.countyName}}
+            <small class="text-muted text_normal"> / {{membershipCounty.surfaceAcres}} Surface Acres and {{membershipCounty.netMineralAcres}} Mineral Acres</small>
+          </span>
         </div>
       </div>
 
-      <div data-ng-show="share.user.emailAddresses.length > 0">
-        <h4 class="divider-bottom">Email Addresses</h4>
-        <div data-ng-repeat="email in share.user.emailAddresses" class="row">
-          <div class="col-xs-4">
-            <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)" />
-          </div>
-          <div class="col-xs=8">
-            <span data-ng-bind="email.emailAddress"/>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-small container-outline container-inner pull-right">
-      <div class="text_bold">Account Status</div>
-      <div class="indent-left"
-           data-ng-show="share.user.accountNonExpired == false">
-        Expired
-      </div>
-      <div class="indent-left"
-           data-ng-show="share.user.accountNonLocked == false">
-        Locked
-      </div>
-      <div class="indent-left"
-           data-ng-show="share.user.enabled == false">
-        Disabled
-      </div>
-      <div class="indent-left"
-           data-ng-show="share.user.enabled == true && share.user.accountNonExpired == true && share.user.accountNonLocked == true">
-        Enabled
-      </div>
+      <div data-th-include="membership/list/detail_comments"></div>
+      <div data-th-include="membership/list/detail_transactions"></div>
     </div>
   </div>
-
   <div class="divider-top split-footer">
-    <div class="split-footer-content pull-left">
-      <button type="button" class="btn btn-warning btn-xs"
-              data-ng-click="unlockUser()"
-              data-ng-show="share.user.accountNonLocked == false">
-        <i class="fa fa-unlock"></i>
-        <span>Unlock User</span>
-      </button>
-      <button type="button" class="btn btn-warning btn-xs"
-              data-ng-click="enableUser()"
-              data-ng-show="share.user.enabled == false">
-        <span>Enable User</span>
-      </button>
-      <button type="button" class="btn btn-warning btn-xs"
-              data-ng-click="disableUser()"
-              data-ng-show="share.user.enabled == true && share.user.accountNonLocked == true">
-        <i class="fa fa-ban"></i>
-        <span>Disable User</span>
-      </button>
-    </div>
     <div class="split-footer-content pull-right">
-      <a class="btn btn-primary btn-xs" ui-sref="edit">
+      <a class="btn btn-primary btn-xs"
+         data-ng-href="../membership/edit/{{share.membership.membershipUID}}">
         <i class="fa fa-edit"></i>
-        <span>Edit User</span>
+        <span>Edit</span>
       </a>
+      <button type="button" class="btn btn-danger btn-xs"
+              data-toggle="modal" data-target="#deleteMembership">
+        <i class="fa fa-trash-o"></i>
+        <span>Delete</span>
+      </button>
     </div>
   </div>
+
+  <div class="modal fade" id="deleteMembership" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please confirm</h4>
+        </div>
+        <div class="modal-body">
+          <span data-th-text="#{com.cagst.swkroa.membership.delete.message}">zzz Delete this?</span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger"
+                  data-ng-click="removeMembership()">
+            Delete
+          </button>
+          <button type="button" class="btn btn-primary"
+                  data-dismiss="modal">
+            Keep
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-th-include="membership/list/dlg_comment_modify"></div>
+  <div data-th-include="membership/list/dlg_comment_delete"></div>
+  <div data-th-include="membership/list/dlg_transaction_modify"></div>
+  <div data-th-include="membership/list/dlg_transaction_delete"></div>
 </div>

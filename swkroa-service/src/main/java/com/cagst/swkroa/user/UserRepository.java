@@ -37,10 +37,13 @@ public interface UserRepository {
    *
    * @return The {@link User} that is associated with the specified uid.
    *
-   * @throws EmptyResultDataAccessException when no user was found with the specified uid.
-   * @throws IncorrectResultSizeDataAccessException when more than 1 user was found with the specified uid.
+   * @throws EmptyResultDataAccessException
+   *    when no user was found with the specified uid.
+   * @throws IncorrectResultSizeDataAccessException
+   *    when more than 1 user was found with the specified uid.
    */
-  public User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+  public User getUserByUID(final long uid)
+      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
    * Updates the {@link User} account for a signin attempt.
@@ -223,8 +226,8 @@ public interface UserRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public User saveUser(final User builder, final User user) throws OptimisticLockingFailureException,
-      IncorrectResultSizeDataAccessException, UsernameTakenException, DataAccessException;
+  public User saveUser(final User builder, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
 
   /**
    * Retrieves a {@link List} of all {@link User Users} that are in the system.

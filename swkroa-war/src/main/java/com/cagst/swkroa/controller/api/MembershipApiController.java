@@ -76,7 +76,7 @@ public final class MembershipApiController {
    *
    * @return A {@link MembershipModel} that represents the {@link Membership} for the specified membership ID.
    */
-  @RequestMapping(value = {"/api/membership/{membershipId}"}, method = RequestMethod.GET)
+  @RequestMapping(value = {"/api/memberships/{membershipId}"}, method = RequestMethod.GET)
   @ResponseBody
   public MembershipModel getMembership(final @PathVariable long membershipId) {
     LOGGER.info("Received request to retrieve membership [{}].", membershipId);
@@ -131,7 +131,7 @@ public final class MembershipApiController {
    * @param model
    *     The {@link MembershipModel} to persist.
    */
-  @RequestMapping(value = {"/api/membership"}, method = RequestMethod.POST)
+  @RequestMapping(value = {"/api/memberships"}, method = RequestMethod.POST)
   @ResponseBody
   public String saveMembershipModel(final @RequestBody MembershipModel model, final HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", model.getMembershipUID());
@@ -151,7 +151,7 @@ public final class MembershipApiController {
    *
    * @return The {@link Membership} after it has been persisted.
    */
-  @RequestMapping(value = {"/api/membership"}, method = RequestMethod.PUT)
+  @RequestMapping(value = {"/api/memberships"}, method = RequestMethod.PUT)
   @ResponseBody
   public Membership saveMembership(final @RequestBody Membership membership) {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());

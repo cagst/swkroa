@@ -1,16 +1,17 @@
-<div>
+
   <div class="split-header">
     <div class="split-header-content form-group expand">
       <div class="input-group">
-        <a class="input-group-addon add-btn" tooltip="Add Membership" tooltip-placement="right" data-ng-click="newMembership()">
+        <a class="input-group-addon add-btn" data-tooltip="Add Membership" data-tooltip-placement="right" data-ng-click="newMembership()">
           <i class="fa fa-plus"></i>
         </a>
-        <input type="text" class="form-control" placeholder="Search for Membership" autofocus
-               data-ng-model="queryString"
+        <input type="text" class="form-control" autofocus
+               placeholder="Search for Membership"
+               data-ng-model="query"
                data-ng-keydown="queryKeydown($event)" />
         <a class="input-group-addon btn btn-primary"
           data-ng-click="getMemberships()"
-          data-ng-disabled="queryString.length < 2">
+          data-ng-disabled="query.length < 2">
           Search
         </a>
       </div>
@@ -20,57 +21,53 @@
   <div class="list-group constrain-view divider-right">
     <div>
       <div class="panel-body text-muted" data-ng-show="!memberships.length">
-        <em>No memberships have been found, please narrow your search criteria.</em>
+        <em data-ng-show="!searched">Enter search criteria then click Search to find Memberships.</em>
+        <em data-ng-show="searched">No memberships have been found, please narrow your search criteria.</em>
       </div>
       <div data-ng-show="memberships.length">
         <div class="membership list-group-item alt-list-group-item sel-list-group-item"
              data-ng-repeat="membership in memberships"
              data-ng-class="{active: membership.membershipUID === selectedMembership.membershipUID}"
-             data-ng-click="getMembership(membership.membershipUID)">
+             data-ng-click="getMembership(membership)">
           <div class="lead lead-in">
             <span data-ng-bind="membership.safePrimaryMember.effectiveMemberName">zzz Membership Name</span>
             <span data-ng-show="membership.membershipType.memberTypeMeaning == 'REGULAR'"
                   data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.regular}"
-                  tooltip-placement="left"
+                  data-tooltip-placement="left"
                   class="pull-right">
               <i class="fa fa-user"></i>
             </span>
             <span data-ng-show="membership.membershipType.memberTypeMeaning == 'FAMILY'"
                   data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.family}"
-                  tooltip-placement="left"
+                  data-tooltip-placement="left"
                   class="pull-right">
               <i class="fa fa-users"></i>
             </span>
           </div>
           <div data-ng-if="membership.safePrimaryMember.joinDate != null">
-            <span data-th-text="#{com.cagst.swkroa.membership.member.since}">
-              zzz Member Since
-            </span>
+            <span>Since {{membership.primaryMember.joinDate | date:'longDate'}}</span>
           </div>
           <div>
-            <span data-th-text="#{com.cagst.swkroa.membership.dues}">zzz Dues Of</span>
-            <span data-th-text="#{com.cagst.swkroa.membership.cal.dues}" class="text-warning"
+            <span>Dues of {{membership.effectiveDuesAmount | currency}}</span>
+            <span class="text-warning"
                   data-ng-show="membership.effectiveDuesAmount != membership.calculatedDuesAmount">
-              zzz Calculated Dues
+              Calculated Dues
             </span>
             <span class="pull-right text-danger"
-                  data-ng-bind="membership.amountDue | currency"
                   data-ng-show="membership.amountDue < 0">
-              zzz Past Due
+              {{membership.amountDue | currency}} Past Due
             </span>
             <span class="pull-right text-success"
-                  data-ng-bind="membership.amountDue | currency"
                   data-ng-show="membership.amountDue > 0">
-              zzz Credit
+              {{membership.amountDue | currency}} Credit
             </span>
             <span class="pull-right"
-                  data-ng-bind="membership.amountDue | currency"
                   data-ng-show="membership.amountDue == 0">
-              zzz Paid
+              {{membership.amountDue | currency}} Paid Up
             </span>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+

@@ -5,7 +5,6 @@ import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.person.PersonRepositoryJdbc;
 import org.joda.time.DateTime;
@@ -14,14 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataAccessException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceAware;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -37,8 +36,10 @@ import java.util.Map;
  * @version 1.0.0
  */
 @Repository("userRepo")
-/* package */ final class UserRepositoryJdbc extends PersonRepositoryJdbc implements UserRepository {
+/* package */ final class UserRepositoryJdbc extends PersonRepositoryJdbc implements UserRepository, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryJdbc.class);
+
+  private static final String MSG_USERNAME_EXISTS     = "com.cagst.swkroa.username.exists";
 
   private static final String GET_USER_BY_USERNAME    = "GET_USER_BY_USERNAME";
   private static final String GET_USER_BY_UID         = "GET_USER_BY_UID";
@@ -58,6 +59,8 @@ import java.util.Map;
   private static final String INSERT_USER = "INSERT_USER";
   private static final String UPDATE_USER = "UPDATE_USER";
 
+  private MessageSourceAccessor messages;
+
   /**
    * Primary constructor used to create an instance of <i>UserRepositoryJdbc</i>.
    *
@@ -68,6 +71,11 @@ import java.util.Map;
    */
   public UserRepositoryJdbc(final DataSource dataSource, final ContactRepository contactRepo) {
     super(dataSource, contactRepo);
+  }
+
+  @Override
+  public void setMessageSource(final MessageSource messageSource) {
+    messages = new MessageSourceAccessor(messageSource);
   }
 
   @Override
@@ -94,7 +102,9 @@ import java.util.Map;
 
   @Override
   @Cacheable(value = "users")
-  public User getUserByUID(final long uid) {
+  public User getUserByUID(final long uid)
+      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
+
     LOGGER.info("Calling getUserByUID [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -325,7 +335,7 @@ import java.util.Map;
     Map<String, String> params = new HashMap<String, String>(1);
     params.put("username", username);
 
-    int cnt = getJdbcTemplate().queryForInt(stmtLoader.load(CHECK_USERNAME_NEW), params);
+    int cnt = getJdbcTemplate().queryForObject(stmtLoader.load(CHECK_USERNAME_NEW), params, Integer.class);
     return (cnt > 0);
   }
 
@@ -341,14 +351,14 @@ import java.util.Map;
     params.put("username", username);
     params.put("user_id", user.getUserUID());
 
-    int cnt = getJdbcTemplate().queryForInt(stmtLoader.load(CHECK_USERNAME_EXISTING), params);
+    int cnt = getJdbcTemplate().queryForObject(stmtLoader.load(CHECK_USERNAME_EXISTING), params, Integer.class);
     return (cnt > 0);
   }
 
   @Override
   @CacheEvict(value = "users", key = "#builder.getUserUID()")
   public User saveUser(final User builder, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
     Assert.notNull(builder, "Assertion Failed - argument [builder] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -377,12 +387,13 @@ import java.util.Map;
   /** Place helper methods below this line. **/
 
   private User insertUser(final User newUser, final User user)
-      throws IncorrectResultSizeDataAccessException, DataAccessException, UsernameTakenException {
+      throws IncorrectResultSizeDataAccessException, UsernameTakenException {
 
     LOGGER.info("Calling insertUser for [{}]", newUser.getUsername());
 
     if (doesUsernameExist(newUser.getUsername())) {
-      throw new UsernameTakenException(newUser.getUsername());
+      throw new UsernameTakenException(
+          messages.getMessage(MSG_USERNAME_EXISTS, new Object[] {newUser.getUsername()}, "Username {0} is already in use!"));
     }
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -399,13 +410,14 @@ import java.util.Map;
     return newUser;
   }
 
-  private User updateUser(final User updateUser, final User user) throws OptimisticLockingFailureException,
-      IncorrectResultSizeDataAccessException, DataAccessException {
+  private User updateUser(final User updateUser, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
     LOGGER.info("Calling updateUser for [{}]", updateUser.getUsername());
 
     if (doesUsernameExist(updateUser.getUsername(), updateUser)) {
-      throw new UsernameTakenException(updateUser.getUsername());
+      throw new UsernameTakenException(
+          messages.getMessage(MSG_USERNAME_EXISTS, new Object[] {updateUser.getUsername()}, "Username {0} is already in use!"));
     }
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());

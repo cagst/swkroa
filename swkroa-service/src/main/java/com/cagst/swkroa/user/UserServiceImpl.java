@@ -17,6 +17,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,6 +40,18 @@ import java.util.List;
 @Service("userService")
 public class UserServiceImpl implements UserService, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+
+  private static final String MSG_SIGNIN_ATTEMPTS_EXCEEDED    = "com.cagst.swkroa.signin.message.attempts.exceeded";
+  private static final String MSG_CHANGEPWD_OLD_PWD_INCORRECT = "com.cagst.swkroa.changepwd.password.err.wrongold";
+  private static final String MSG_CHANGEPWD_MISMATCH          = "com.cagst.swkroa.changepwd.password.err.mismatch";
+  private static final String MSG_CHANGEPWD_MATCHES_USERNAME  = "com.cagst.swkroa.changepwd.password.err.username";
+  private static final String MSG_CHANGEPWD_NOT_CHANGED       = "com.cagst.swkroa.changepwd.password.err.same";
+  private static final String MSG_CHANGEPWD_CHANGED           = "com.cagst.swkroa.audit.message.changepwd";
+  private static final String MSG_RESETPWD_RESET              = "com.cagst.swkroa.audit.message.resetpwd";
+  private static final String MSG_ACCOUNT_UNLOCK_AUTO         = "com.cagst.swkroa.audit.message.unlock.auto";
+  private static final String MSG_ACCOUNT_UNLOCK_MANUAL       = "com.cagst.swkroa.audit.message.unlock.manual";
+  private static final String MSG_ACCOUNT_ENABLED             = "com.cagst.swkroa.audit.message.enable";
+  private static final String MSG_ACCOUNT_DISABLED            = "com.cagst.swkroa.audit.message.disable";
 
   private final UserRepository userRepo;
   private final RoleRepository roleRepo;
@@ -114,8 +128,10 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
       // and we have exceeded the number of maximum attempts
       // then lock the account.
       if (securityPolicy.getMaxSigninAttempts() > 0 && user.getSigninAttempts() > securityPolicy.getMaxSigninAttempts()) {
-        String msg = messages.getMessage("com.cagst.swkroa.signin.message.attempts.exceeded",
+        String msg = messages.getMessage(
+            MSG_SIGNIN_ATTEMPTS_EXCEEDED,
             "The number of allowed sign-in attempts has been exceeded.  Account has been locked.");
+
         user = userRepo.lockUserAccount(user, msg, user);
       }
     }
@@ -181,31 +197,30 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
     if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
       LOGGER.warn("Old password is not valid!");
-      throw new BadCredentialsException(messages.getMessage("com.cagst.swkroa.changepwd.password.err.wrongold",
-          "The old password is incorrect."));
+      throw new BadCredentialsException(
+          messages.getMessage(MSG_CHANGEPWD_OLD_PWD_INCORRECT, "The old password is incorrect."));
     }
 
     if (!StringUtils.equals(newPassword, confirmPassword)) {
       LOGGER.warn("New password does not match confirmation password!");
-      throw new BadCredentialsException(messages.getMessage("com.cagst.swkroa.changepwd.password.err.mismatch",
-          "The confirmation password does not match the new password."));
+      throw new BadCredentialsException(
+          messages.getMessage(MSG_CHANGEPWD_MISMATCH, "The confirmation password does not match the new password."));
     }
 
     if (StringUtils.equals(newPassword, user.getUsername())) {
       LOGGER.warn("New password matches username!");
-      throw new BadCredentialsException(messages.getMessage("com.cagst.swkroa.changepwd.password.err.username",
-          "The new password cannot be the same as your user name."));
+      throw new BadCredentialsException(
+          messages.getMessage(MSG_CHANGEPWD_MATCHES_USERNAME, "The new password cannot be the same as your user name."));
     }
 
     String checkNewPassword = passwordEncoder.encode(newPassword);
     if (StringUtils.equals(user.getPassword(), checkNewPassword)) {
       LOGGER.warn("New password is the same as the old password!");
-      throw new BadCredentialsException(messages.getMessage("com.cagst.swkroa.changepwd.password.err.same",
-          "The new password is the same as the old password."));
+      throw new BadCredentialsException(
+          messages.getMessage(MSG_CHANGEPWD_NOT_CHANGED, "The new password is the same as the old password."));
     }
 
-    String msg = messages.getMessage("com.cagst.swkroa.audit.message.changepwd", new Object[]{user.getUsername()},
-        "Password changed for user [{0}].");
+    String msg = messages.getMessage(MSG_CHANGEPWD_CHANGED, new Object[]{user.getUsername()}, "Password changed for user [{0}].");
 
     user.setPassword(checkNewPassword);
     return userRepo.changeUserPassword(user, checkNewPassword, msg);
@@ -216,7 +231,8 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   public User resetPassword(final User user, final User instigator) {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
 
-    String msg = messages.getMessage("com.cagst.swkroa.audit.message.resetpwd",
+    String msg = messages.getMessage(
+        MSG_RESETPWD_RESET,
         new Object[]{instigator.getUsername(), user.getUsername()},
         "Password reset by user [{0}] for user [{1}].");
 
@@ -236,10 +252,13 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
     String msg;
     if (user.getUserUID() == instigator.getUserUID()) {
-      msg = messages.getMessage("com.cagst.swkroa.audit.message.unlock.auto",
-          new Object[]{user.getUsername()}, "Account was automatically unlocked for user [{0}].");
+      msg = messages.getMessage(
+          MSG_ACCOUNT_UNLOCK_AUTO,
+          new Object[]{user.getUsername()},
+          "Account was automatically unlocked for user [{0}].");
     } else {
-      msg = messages.getMessage("com.cagst.swkroa.audit.message.unlock.manual",
+      msg = messages.getMessage(
+          MSG_ACCOUNT_UNLOCK_MANUAL,
           new Object[]{instigator.getUsername(), user.getUsername()},
           "Account was manually unlocked by user [{0}] for user [{1}].");
     }
@@ -253,7 +272,8 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
     Assert.notNull(instigator, "[Assertion Failed] - argument [instigator] cannot be null.");
 
-    String msg = messages.getMessage("com.cagst.swkroa.audit.message.enable",
+    String msg = messages.getMessage(
+        MSG_ACCOUNT_ENABLED,
         new Object[]{instigator.getUsername(), user.getUsername()},
         "Account was enabled by user [{0}] for user [{1}].");
 
@@ -266,7 +286,8 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
     Assert.notNull(instigator, "[Assertion Failed] - argument [instigator] cannot be null.");
 
-    String msg = messages.getMessage("com.cagst.swkroa.audit.message.disable",
+    String msg = messages.getMessage(
+        MSG_ACCOUNT_DISABLED,
         new Object[]{instigator.getUsername(), user.getUsername()},
         "Account was disabled by user [{0}] for user [{1}].");
 
@@ -282,7 +303,9 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User saveUser(final User builder, final User user) {
+  public User saveUser(final User builder, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
+
     Assert.notNull(builder, "[Assertion Failed] - argument [builder] cannot be null");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
 
