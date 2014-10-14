@@ -8,9 +8,9 @@
 <div data-ng-show="share.membership">
   <div class="container-inner constrain-view">
     <h2 class="lead">
-      <span data-ng-bind="share.membership.primaryMember.effectiveMemberName" />
+      <span data-ng-bind="share.membership.primaryMember.effectiveMemberName"></span>
       <small data-ng-show="share.membership.primaryMember.joinDate">
-        Since {{membership.primaryMember.joinDate | date:'longDate'}}
+        Since {{share.membership.primaryMember.joinDate | date:'longDate'}}
       </small>
     </h2>
     <div>
@@ -20,17 +20,17 @@
         </div>
         <div data-ng-show="share.membership.primaryMember">
           <span>
-            <strong data-ng-bind="share.membership.primaryMember.effectiveMemberName" />
+            <strong data-ng-bind="share.membership.primaryMember.effectiveMemberName"></strong>
           </span>
           <small class="text-muted">({{share.membership.primaryMember.ownerIdent}})</small>
           <small class="text-muted" data-ng-show="share.membership.primaryMember.joinDate">
-            Since {{membership.primaryMember.joinDate | date:'longDate'}}
+            Since {{share.membership.primaryMember.joinDate | date:'longDate'}}
           </small>
         </div>
         <div data-ng-show="share.membership.primarySpouse">
           <span>{{share.membership.primarySpouse.effectiveMemberName}}</span>
           <small class="text-muted">({{share.membership.primarySpouse.ownerIdent}})</small>
-          <small class="text-muted">Since {{membership.primarySpouse.joinDate | date:'longDate'}}</small>
+          <small class="text-muted">Since {{share.membership.primarySpouse.joinDate | date:'longDate'}}</small>
         </div>
         <div data-ng-repeat="member in share.membership.additionalMembers">
           <span>{{member.effectiveMemberName}}</span>
@@ -49,10 +49,11 @@
         </div>
       </div>
 
-      <div data-th-include="membership/list/detail_comments"></div>
+      <div data-ng-include="'/partials/membership/detail_comments.html'"></div>
       <div data-th-include="membership/list/detail_transactions"></div>
     </div>
   </div>
+
   <div class="divider-top split-footer">
     <div class="split-footer-content pull-right">
       <a class="btn btn-primary btn-xs"
