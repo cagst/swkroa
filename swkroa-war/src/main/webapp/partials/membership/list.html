@@ -26,24 +26,24 @@
     <div data-ng-show="memberships.length">
       <div class="membership list-group-item alt-list-group-item sel-list-group-item"
            data-ng-repeat="membership in memberships"
-           data-ng-class="{active: membership.membershipUID === selectedMembership.membershipUID}"
+           data-ng-class="{active: membership.membershipUID === share.membership.membershipUID}"
            data-ng-click="getMembership(membership)">
         <div class="lead lead-in">
-          <span data-ng-bind="membership.safePrimaryMember.effectiveMemberName">zzz Membership Name</span>
-          <span data-ng-show="membership.membershipType.memberTypeMeaning == 'REGULAR'"
+          <span data-ng-bind="membership.primaryMember.effectiveMemberName">zzz Membership Name</span>
+          <span data-ng-show="membership.primaryMember.memberType.memberTypeMeaning == 'REGULAR'"
                 data-tooltip-placement="left"
                 tooltip="Regular Membership"
                 class="pull-right">
           <i class="fa fa-user"></i>
           </span>
-          <span data-ng-show="membership.membershipType.memberTypeMeaning == 'FAMILY'"
+          <span data-ng-show="membership.primaryMember.memberType.memberTypeMeaning == 'FAMILY_HEAD'"
                 data-tooltip-placement="left"
                 tooltip="Family Membership"
                 class="pull-right">
             <i class="fa fa-users"></i>
           </span>
         </div>
-        <div data-ng-if="membership.safePrimaryMember.joinDate != null">
+        <div data-ng-if="membership.primaryMember.joinDate != null">
           <span>Since {{membership.primaryMember.joinDate | date:'longDate'}}</span>
         </div>
         <div>

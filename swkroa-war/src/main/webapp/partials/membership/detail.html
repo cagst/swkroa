@@ -27,15 +27,13 @@
             Since {{share.membership.primaryMember.joinDate | date:'longDate'}}
           </small>
         </div>
-        <div data-ng-show="share.membership.primarySpouse">
-          <span>{{share.membership.primarySpouse.effectiveMemberName}}</span>
-          <small class="text-muted">({{share.membership.primarySpouse.ownerIdent}})</small>
-          <small class="text-muted">Since {{share.membership.primarySpouse.joinDate | date:'longDate'}}</small>
-        </div>
-        <div data-ng-repeat="member in share.membership.additionalMembers">
+        <div data-ng-repeat="member in share.membership.members"
+             data-ng-show="member.memberType.primary === false">
           <span>{{member.effectiveMemberName}}</span>
           <small class="text-muted">({{member.ownerIdent}})</small>
-          <small class="text-muted">Since {{member.joinDate | date:'longDate'}}</small>
+          <small class="text-muted" data-ng-show="member.joinDate">
+            Since {{member.joinDate | date:'longDate'}}
+          </small>
         </div>
       </div>
 
@@ -50,7 +48,7 @@
       </div>
 
       <div data-ng-include="'/partials/membership/detail_comments.html'"></div>
-      <div data-th-include="membership/list/detail_transactions"></div>
+      <div data-ng-include="'/partials/membership/detail_transactions.html'"></div>
     </div>
   </div>
 
@@ -73,20 +71,14 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please confirm</h4>
+          <h4 class="modal-title">Delete Comment</h4>
         </div>
         <div class="modal-body">
           <span data-th-text="#{com.cagst.swkroa.membership.delete.message}">zzz Delete this?</span>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger"
-                  data-ng-click="removeMembership()">
-            Delete
-          </button>
-          <button type="button" class="btn btn-primary"
-                  data-dismiss="modal">
-            Keep
-          </button>
+          <button type="button" class="btn btn-danger" data-ng-click="removeMembership()">Delete</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Keep</button>
         </div>
       </div>
     </div>
