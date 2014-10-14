@@ -91,20 +91,20 @@ swkroaApp.controller('membershipController', ['$scope', '$http', '$state', '$fil
 
   $scope.removeMembership = function() {
     $scope.selectedMembership.active = false;
-    $http.put("/api/memberships", $scope.selectedMembership).success(function(data) {
-      $scope.selectedMembership = null;
+    $http.put("/api/memberships", $scope.share.membership).success(function(data) {
+      $scope.share.membership = null;
     })
     .error(function(data) {
       // if we failed to save (remove) the membership
       // set it back to active
       // TODO: Need to add a message for the user
-      $scope.selectedMembership.active = true;
+      $scope.share.membership.active = true;
     });
     $('#deleteMembership').modal('hide');
   };
 
   $scope.selectComment = function(comment) {
-    $scope.commentIdx = $scope.selectedMembership.comments.indexOf(comment);
+    $scope.commentIdx = $scope.share.membership.comments.indexOf(comment);
     $scope.comment = angular.copy(comment);
   };
 
@@ -115,13 +115,13 @@ swkroaApp.controller('membershipController', ['$scope', '$http', '$state', '$fil
 
   $scope.saveComment = function() {
     $scope.comment.parentEntityName = "MEMBERSHIP";
-    $scope.comment.parentEntityUID  = $scope.selectedMembership.membershipUID;
+    $scope.comment.parentEntityUID  = $scope.share.membership.membershipUID;
 
     $http.put("/api/comments", $scope.comment).success(function(data) {
       if ($scope.commentIdx == -1) {
-        $scope.selectedMembership.comments.push(data);
+        $scope.share.membership.comments.push(data);
       } else {
-        $scope.selectedMembership.comments[$scope.commentIdx] = data;
+        $scope.share.membership.comments[$scope.commentIdx] = data;
       }
     });
     $scope.comment = null;
@@ -131,12 +131,12 @@ swkroaApp.controller('membershipController', ['$scope', '$http', '$state', '$fil
   $scope.removeComment = function() {
     $scope.comment.active = false;
     $http.put("/api/comments", $scope.comment).success(function(data) {
-      $scope.selectedMembership.comments.splice($scope.commentIdx, 1);
+      $scope.share.membership.comments.splice($scope.commentIdx, 1);
     })
     .error(function(data) {
       // TODO: Need to add a message for the user
       $scope.comment.active = true;
-      $scope.selectedMembership.comments[$scope.commentIdx] = $scope.comment;
+      $scope.share.membership.comments[$scope.commentIdx] = $scope.comment;
     });
     $scope.comment = null;
     $('#deleteComment').modal('hide');

@@ -38,3 +38,65 @@
     </tr>
   </table>
 </div>
+
+<div class="modal fade" id="modifyComment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" data-ng-show="commentIdx > -1">Update Comment</h4>
+        <h4 class="modal-title" data-ng-show="commentIdx == -1">Create Comment</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Enter Date of Comment</label>
+          <div class="input-group">
+            <input type="text" class="form-control" name="commentDate"
+                   data-datepicker-popup="MM/dd/yyyy"
+                   data-is-open="opened"
+                   data-show-button-bar="false"
+                   data-show-weeks="false"
+                   data-ng-model="comment.commentDate" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" data-ng-click="open($event)">
+                <i class="fa fa-calendar"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+        <p>Enter Comment:</p>
+        <textarea class="form-control" rows="3" data-ng-model="comment.commentText" autofocus></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-ng-click="saveComment()" data-ng-show="commentIdx > -1">
+          Update
+        </button>
+        <button type="button" class="btn btn-success" data-ng-click="saveComment()" data-ng-show="commentIdx == -1">
+          Create
+        </button>
+        <button type="button" class="btn btn-warning" data-dismiss="modal">
+          Discard
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteComment" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Delete Comment</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this comment?</p>
+        <blockquote>
+          <p class="comment-text">{{comment.commentText}}</p>
+        </blockquote>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-ng-click="removeComment()">Delete</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Keep</button>
+      </div>
+    </div>
+  </div>
+</div>
