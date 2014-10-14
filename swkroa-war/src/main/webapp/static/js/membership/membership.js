@@ -50,28 +50,27 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
 });
 
 swkroaApp.controller('membershipController', ['$scope', '$http', '$state', '$filter', function($scope, $http, $state, $filter, currencyFilter) {
-  $scope.query = "";
   $scope.searched = false;
 
   $http.get('/api/codeset/TRANSACTION_ENTRY_TYPE/').success(function(data) {
     $scope.transactionEntryTypes = data;
   });
 
-  $scope.queryKeydown = function($event) {
+  $scope.queryKeydown = function($event, query) {
     $scope.membership = null;
 
-    if ($event.keyCode == 13 && $scope.query.length >= 2) {
-      $scope.getMemberships();
+    if ($event.keyCode === 13 && query.length >= 2) {
+      $scope.getMemberships(query);
     }
   };
 
-  $scope.getMemberships = function() {
+  $scope.getMemberships = function(query) {
     $scope.membership = null;
     $scope.searched   = true;
 
     var url = "/api/memberships?q=";
-    if ($scope.query && $scope.query.length >= 2) {
-      url = url + $scope.query;
+    if (query.length >= 2) {
+      url = url + query;
     }
 
     $http.get(url).success(function(data) {
