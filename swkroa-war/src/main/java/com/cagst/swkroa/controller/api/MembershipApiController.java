@@ -3,7 +3,6 @@ package com.cagst.swkroa.controller.api;
 import com.cagst.common.web.servlet.tags.StaticResourceAssistant;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.member.*;
-import com.cagst.swkroa.model.MembershipModel;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,7 +46,7 @@ public final class MembershipApiController {
    */
   @RequestMapping(value = "/api/memberships", method = RequestMethod.GET)
   @ResponseBody
-  public List<MembershipModel> getMemberships(final @RequestParam("q") String query) {
+  public List<Membership> getMemberships(final @RequestParam("q") String query) {
     LOGGER.info("Received request to retrieve memberships using query string [{}]", query);
 
     List<Membership> memberships;
@@ -58,14 +56,9 @@ public final class MembershipApiController {
       memberships = membershipService.getActiveMemberships();
     }
 
-    List<MembershipModel> models = new ArrayList<MembershipModel>(memberships.size());
-    for (Membership membership : memberships) {
-      models.add(new MembershipModel(membership));
-    }
+    Collections.sort(memberships);
 
-    Collections.sort(models);
-
-    return models;
+    return memberships;
   }
 
   /**
@@ -74,11 +67,11 @@ public final class MembershipApiController {
    * @param membershipId
    *     A {@link long} that uniquely identifies the {@link Membership} to retrieve.
    *
-   * @return A {@link MembershipModel} that represents the {@link Membership} for the specified membership ID.
+   * @return A {@link Membership} that represents the {@link Membership} for the specified membership ID.
    */
   @RequestMapping(value = {"/api/memberships/{membershipId}"}, method = RequestMethod.GET)
   @ResponseBody
-  public MembershipModel getMembership(final @PathVariable long membershipId) {
+  public Membership getMembership(final @PathVariable long membershipId) {
     LOGGER.info("Received request to retrieve membership [{}].", membershipId);
 
     if (membershipId == 0L) {
@@ -90,11 +83,9 @@ public final class MembershipApiController {
       membership.setEntityType(codeValueRepo.getCodeValueByMeaning("ENTITY_INDIVIDUAL"));
       membership.addMember(primary);
 
-      return new MembershipModel(membership);
+      return membership;
     } else {
-      Membership membership = membershipService.getMembershipByUID(membershipId);
-
-      return new MembershipModel(membership);
+      return membershipService.getMembershipByUID(membershipId);
     }
   }
 
@@ -125,19 +116,18 @@ public final class MembershipApiController {
   }
 
   /**
-   * Handles the request and persists the {@link MembershipModel} to persistent storage. Called from the Add/Edit
+   * Handles the request and persists the {@link Membership} to persistent storage. Called from the Add/Edit
    * Membership page.
    *
-   * @param model
-   *     The {@link MembershipModel} to persist.
+   * @param membership
+   *     The {@link Membership} to persist.
    */
   @RequestMapping(value = {"/api/memberships"}, method = RequestMethod.POST)
   @ResponseBody
-  public String saveMembershipModel(final @RequestBody MembershipModel model, final HttpServletRequest request) {
-    LOGGER.info("Received request to save membership [{}]", model.getMembershipUID());
+  public String saveMembership(final @RequestBody Membership membership, final HttpServletRequest request) {
+    LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
-    model.setMemberTypeRepository(memberTypeRepo);
-    membershipService.saveMembership(model.build(), WebAppUtils.getUser());
+    membershipService.saveMembership(membership, WebAppUtils.getUser());
 
     return StaticResourceAssistant.getString("url.membership.home", request);
   }
