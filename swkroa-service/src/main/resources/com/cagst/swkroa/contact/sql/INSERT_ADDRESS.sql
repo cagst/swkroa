@@ -8,6 +8,7 @@ INSERT INTO address (parent_entity_id
                     ,state_code
                     ,postal_code
                     ,country_code
+                    ,active_ind
                     ,create_id
                     ,create_dt_tm
                     ,updt_id
@@ -22,6 +23,7 @@ INSERT INTO address (parent_entity_id
                    ,:state_code
                    ,:postal_code
                    ,:country_code
+                   ,:active_ind
                    ,:create_id
                    ,CURRENT_TIMESTAMP
                    ,:updt_id

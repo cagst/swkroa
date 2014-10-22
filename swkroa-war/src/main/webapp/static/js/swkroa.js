@@ -211,7 +211,7 @@ swkroaApp.service('contactService', ['$http', function($http) {
   };
 
   this.removeAddress = function(entity, address) {
-    if (entity.addressUID > 0) {
+    if (address.addressUID > 0) {
       address.active = false;
     } else {
       var idx = entity.addresses.indexOf(address);

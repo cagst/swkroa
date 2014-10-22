@@ -77,6 +77,7 @@ import java.sql.SQLException;
     params.addValue(STATE_CODE, address.getState());
     params.addValue(POSTAL_CODE, address.getPostalCode());
     params.addValue(COUNTRY_CODE, address.getCountry());
+    params.addValue(ACTIVE_IND, address.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
     params.addValue(UPDT_ID, user.getUserUID());
 
@@ -106,6 +107,7 @@ import java.sql.SQLException;
     params.addValue(STATE_CODE, address.getState());
     params.addValue(POSTAL_CODE, address.getPostalCode());
     params.addValue(COUNTRY_CODE, address.getCountry());
+    params.addValue(ACTIVE_IND, address.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
 
     params.addValue(ADDRESS_ID, address.getAddressUID());

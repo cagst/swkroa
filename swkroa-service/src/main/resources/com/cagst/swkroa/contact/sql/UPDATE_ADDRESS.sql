@@ -7,6 +7,7 @@ UPDATE address
       ,state_code      = :state_code
       ,postal_code     = :postal_code
       ,country_code    = :country_code
+      ,active_ind      = :active_ind
       ,updt_id         = :updt_id
       ,updt_dt_tm      = CURRENT_TIMESTAMP
       ,updt_cnt        = updt_cnt + 1

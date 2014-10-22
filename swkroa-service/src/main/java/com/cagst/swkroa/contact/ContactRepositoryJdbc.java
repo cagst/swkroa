@@ -2,7 +2,6 @@ package com.cagst.swkroa.contact;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.user.User;
