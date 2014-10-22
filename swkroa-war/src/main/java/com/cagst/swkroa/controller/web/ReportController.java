@@ -40,6 +40,8 @@ public final class ReportController {
   private static final String MEMBER_EMAILLIST_CSV   = "/WEB-INF/reports/jasper/MemberEmailListCsv.jasper";
   private static final String MEMBER_EMAILLIST_PDF   = "/WEB-INF/reports/jasper/MemberEmailListPdf.jasper";
 
+  private static final String CUSTOM_MEMBERS_BY_COUNTY = "/WEB-INF/reports/jasper/CustomMembersForCounties.jasper";
+
   @Autowired
   private DataSource dataSource;
 
@@ -218,6 +220,32 @@ public final class ReportController {
     }
 
     return mav;
+  }
+
+  /**
+   * Handles and retrieves the Custom Members by County report page.
+   *
+   * @return The name of the page.
+   */
+  @RequestMapping(value = "/custom/membersbycounty", method = RequestMethod.GET)
+  public ModelAndView getCustomMembersByCounty() {
+    LOGGER.info("Received request to show the custom report Members by County");
+
+    return new ModelAndView("report/custom/membersbycounty");
+  }
+
+  /**
+   * Handles the request to run/generate the Custome Members by County report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/custom/membersbycounty.pdf", method = RequestMethod.GET)
+  public ModelAndView generateCustomMembersByCountyReportAsPdf(final HttpServletRequest request) {
+    LOGGER.info("Received request to generate Custom Members by County report.");
+
+    String reportFilename = "Member_by_County" + dateFormat.format(new Date());
+
+    return getReportModalAndView(request, CUSTOM_MEMBERS_BY_COUNTY, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
   }
 
   private ModelAndView getReportModalAndView(final HttpServletRequest request,

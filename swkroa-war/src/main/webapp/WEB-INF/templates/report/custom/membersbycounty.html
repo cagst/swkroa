@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<body>
+
+<div data-layout-fragment="content">
+  <div class="page-header">
+    <h3>Custom Members by County Report</h3>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-2">
+      <a class="btn btn-primary form-control"
+         data-th-href="@{/report/custom/membersbycounty.pdf}" target="_blank"
+         data-th-text="#{com.cagst.swkroa.report.generate.report}">
+        zzz Generate Report
+      </a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

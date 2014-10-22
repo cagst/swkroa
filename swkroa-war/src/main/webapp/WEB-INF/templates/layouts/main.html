@@ -33,7 +33,7 @@
 <div id="page-header">
   <span id="page-title">
     <a data-th-href="@{/}" href="#">
-      <img data-th-src="@{/static/images/swkroa_logo_small.jpg}" />
+      <img src="static/images/swkroa_logo_small.jpg" data-th-src="@{/static/images/swkroa_logo_small.jpg}" />
     </a>
   </span>
   <ul id="account-navigation">
@@ -105,6 +105,12 @@
             <a data-th-href="@{/report/member/emaillist}"
                data-th-text="#{com.cagst.swkroa.report.member.emaillist.title}">
               zzz Member Email List
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a data-th-href="@{/report/custom/membersbycounty}">
+              Members by County
             </a>
           </li>
         </ul>
