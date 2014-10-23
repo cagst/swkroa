@@ -9,7 +9,7 @@
   <!--Daily rolling file appender -->
   <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${catalina.base}/logs/swkroa.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <fileNamePattern>${catalina.base}/logs/swkroa.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
 
       <!-- Keep 30 days worth of history -->
       <maxHistory>30</maxHistory>

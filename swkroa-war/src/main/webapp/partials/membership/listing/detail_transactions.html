@@ -1,0 +1,244 @@
+<div class="spacer-top">
+  <div class="divider-inner-header sub-header">
+    <span>TRANSACTIONS</span>
+      <span class="pull-right">
+        <button type="button" class="btn btn-success btn-xs"
+                data-toggle="modal" data-target="#modifyTransaction"
+                data-ng-click="addTransaction()"
+                data-tooltip="Create Transaction"
+                data-tooltip-placement="left">
+          <i class="fa fa-plus"></i>
+        </button>
+      </span>
+  </div>
+
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th style="width:150px">Transaction Date</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th style="width:100px">Amount</th>
+        <th style="width:75px"></th>
+      </tr>
+    </thead>
+    <tbody data-ng-repeat="transaction in share.membership.transactions | orderBy: 'transactionDate': true"
+           data-ng-show="transaction.active">
+      <tr>
+        <td style="width:150px">
+          <div>
+            <a href="#" onclick="toggleTransactionDetails(this)">
+              <i class="fa fa-plus fa-fw"></i>
+            </a>
+            {{transaction.transactionDate | date:'mediumDate'}}
+          </div>
+        </td>
+        <td>
+          <span data-ng-show="transaction.transactionType == 'INVOICE'">Invoice</span>
+          <span data-ng-show="transaction.transactionType == 'PAYMENT'">Payment</span>
+        </td>
+        <td>{{transaction.transactionDescription}}</td>
+        <td style="width:100px">
+          <div class="pull-right">
+            {{transaction.transactionAmount | currency}}
+          </div>
+        </td>
+        <td style="width:75px">
+          <div class="pull-right">
+            <button type="button" class="btn btn-primary btn-xs"
+                    data-ng-click="editTransaction(transaction)"
+                    data-tooltip="Update Transaction"
+                    data-tooltip-placement="left">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button type="button" class="btn btn-danger btn-xs"
+                    data-toggle="modal" data-target="#deleteTransaction"
+                    data-ng-click="deleteTransaction(transaction)"
+                    data-tooltip="Delete Transaction"
+                    data-tooltip-placement="left">
+              <i class="fa fa-trash-o"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr class="details hide" data-ng-repeat="entry in transaction.transactionEntries">
+        <td></td>
+        <td colspan="2">{{entry.transactionEntryType.display}}</td>
+        <td style="width:100px">
+          <div class="pull-right">
+            {{entry.transactionEntryAmount | currency}}
+          </div>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div data-th-fragment="dlgDeleteTransaction">
+  <div class="modal fade" id="deleteTransaction" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Transaction</h4>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this Transaction?</p>
+          <div>
+            <span>{{transaction.transactionDate | date:'mediumDate'}}</span>
+            <span>{{transaction.transactionType.display}}</span>
+            <span>{{transaction.transactionAmount | currency}}</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-ng-click="removeTransaction()">Delete</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Keep</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modifyTransaction">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" data-ng-show="transactionIdx > -1">Update Transaction</h4>
+        <h4 class="modal-title" data-ng-show="transactionIdx == -1">Create Transaction</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-4">
+            <label class="form-label">Date of Transaction</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="transactionDate"
+                     data-datepicker-popup="MM/dd/yyyy"
+                     data-is-open="opened"
+                     data-show-button-bar="false"
+                     data-show-weeks="false"
+                     data-ng-model="transaction.transactionDate"
+                     data-ng-required="true" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" data-ng-click="open($event)">
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </span>
+            </div>
+          </div>
+          <div class="col-xs-4 col-xs-offset-4">
+            <label class="form-label">Ref Num</label>
+            <input type="text" class="form-control" maxlength="25" data-ng-model="transaction.referenceNumber"/>
+          </div>
+        </div>
+        <div class="row spacer-top">
+          <div class="col-xs-4"
+               data-ng-class="{'has-error': type.$invalid}">
+            <label class="form-label">Type</label>
+            <select class="form-control select2" name="type"
+                    data-ng-model="transaction.transactionType"
+                    data-ng-required="true"
+                    data-ng-show="transactionIdx == -1">
+              <option value="INVOICE">Invoice</option>
+              <option value="PAYMENT">Payment</option>
+            </select>
+            <input class="form-control select2" name="type" readonly
+                   data-th-value="#{com.cagst.swkroa.membership.transaction.invoice}"
+                   data-ng-show="transactionIdx > -1 && transaction.transactionType == 'INVOICE'" />
+            <input class="form-control" name="type" readonly
+                   data-th-value="#{com.cagst.swkroa.membership.transaction.payment}"
+                   data-ng-show="transactionIdx > -1 && transaction.transactionType == 'PAYMENT'" />
+          </div>
+          <div class="col-xs-4">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" name="desc"
+                   data-ng-model="transaction.transactionDescription"
+                   data-ng-required="true"
+                   data-ng-options="type.display for type in transactionTypes" />
+          </div>
+          <div class="col-xs-4" data-ng-class="{'has-error': amount.$invalid}">
+            <label class="form-label">Amount</label>
+            <input id="amount" name="amount" type="text" class="form-control" readonly
+                   data-ng-model="transactionAmount" />
+          </div>
+        </div>
+
+        <table class="table table-condensed spacer-top">
+          <thead>
+          <tr>
+            <th>Type</th>
+            <th>Member</th>
+            <th>Amount</th>
+            <th>
+              <button type="button" class="btn btn-success btn-xs"
+                      data-ng-click="addTransactionEntry()"
+                      data-tooltip="Create Entry">
+                <i class="fa fa-plus"></i>
+              </button>
+            </th>
+          </tr>
+          </thead>
+          <tbody data-ng-repeat="entry in transaction.transactionEntries" data-ng-show="entry.active">
+          <tr>
+            <td class="col-xs-4">
+              <select class="form-control select2" name="entryType"
+                      data-ng-model="entry.transactionEntryType"
+                      data-ng-required="true"
+                      data-ng-options="type.display for type in transactionEntryTypes">
+              </select>
+            </td>
+            <td class="col-xs-4">
+              <select class="form-control" name="member"
+                      data-ng-model="entry.member"
+                      data-ng-required="true"
+                      data-ng-options="member.effectiveMemberName for member in membership.members">
+              </select>
+            </td>
+            <td class="col-xs-4">
+              <input type="number" class="form-control"
+                     data-ng-model="entry.transactionEntryAmount"
+                     data-ng-change="calculateTransactionAmount()" />
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger btn-xs"
+                      data-ng-click="deleteTransactionEntry(entry)"
+                      data-tooltip="Delete Transaction Entry">
+                <i class="fa fa-trash-o"></i>
+              </button>
+            </td>
+          </tr>
+          <tr data-ng-show="entry.relatedTransactionUID > 0 ||
+                            entry.transactionEntryType.meaning == 'TRANS_CREDIT' ||
+                            entry.transactionEntryType.meaning == 'TRANS_PAYMENT'">
+            <td></td>
+            <td colspan="2">
+              <select class="form-control" name="relatedTransaction"
+                      data-ng-model="entry.relatedTransaction"
+                      data-ng-options="tran.relatedDescription for tran in membership.transactions | filter:{transactionType:'INVOICE'}">
+              </select>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div class="row spacer-top">
+          <div class="col-xs-12">
+            <label class="form-label">Memo / Note</label>
+            <textarea class="form-control" rows="3" data-ng-model="transaction.memo"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-ng-click="saveTransaction()" data-ng-show="transactionIdx > -1">
+          Update
+        </button>
+        <button type="button" class="btn btn-success" data-ng-click="saveTransaction()" data-ng-show="transactionIdx == -1">
+          Create
+        </button>
+        <button type="button" class="btn btn-warning" data-dismiss="modal">
+          Discard
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

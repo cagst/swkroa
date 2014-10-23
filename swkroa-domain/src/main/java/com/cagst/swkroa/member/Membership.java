@@ -176,6 +176,22 @@ public final class Membership implements Serializable, Comparable<Membership> {
     }
   }
 
+  /**
+   * Helper method to return the "spouse" associated with this membership.
+   *
+   * @return The "spouse" {@link Member} associated with this membership,
+   *         {@code null} if none is found.
+   */
+  public Member getSpouse() {
+    for (Member member : members) {
+      if (MemberType.SPOUSE.equals(member.getMemberType().getMemberTypeMeaning())) {
+        return member;
+      }
+    }
+
+    return null;
+  }
+
   public void clearCounties() {
     counties.clear();
   }

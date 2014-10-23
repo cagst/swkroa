@@ -15,13 +15,13 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/home",
       views: {
         '': {
-          templateUrl: "/partials/membership/main.html"
+          templateUrl: "/partials/membership/listing/main.html"
         },
         'list@home': {
-          templateUrl: "/partials/membership/list.html"
+          templateUrl: "/partials/membership/listing/list.html"
         },
         'detail@home': {
-          templateUrl: "/partials/membership/detail.html"
+          templateUrl: "/partials/membership/listing/detail.html"
         }
       }
     })
@@ -29,10 +29,7 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/add",
       views: {
         '': {
-          templateUrl: "/partials/membership/modify.html"
-        },
-        'contact@add': {
-          templateUrl: "/partials/membership/contact.html"
+          templateUrl: "/partials/membership/modify/main.html"
         }
       }
     })
@@ -40,10 +37,7 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
       url: "/edit",
       views: {
         '': {
-          templateUrl: "/partials/membership/modify.html"
-        },
-        'contact@edit': {
-          templateUrl: "/partials/membership/contact.html"
+          templateUrl: "/partials/membership/modify/main.html"
         }
       }
     });
@@ -153,12 +147,12 @@ swkroaApp.controller('membershipController', ['$scope', '$http', '$state', '$fil
 //  }
 
   $scope.deleteTransaction = function(transaction) {
-    $scope.transactionIdx = $scope.selectedMembership.transactions.indexOf(transaction);
+    $scope.transactionIdx = $scope.share.membership.transactions.indexOf(transaction);
     $scope.transaction = angular.copy(transaction);
   };
 
   $scope.editTransaction = function(transaction) {
-    $scope.transactionIdx = $scope.selectedMembership.transactions.indexOf(transaction);
+    $scope.transactionIdx = $scope.share.membership.transactions.indexOf(transaction);
     $scope.transaction = angular.copy(transaction);
 
     syncTransactionEntryType($scope);
@@ -188,25 +182,25 @@ swkroaApp.controller('membershipController', ['$scope', '$http', '$state', '$fil
   $scope.removeTransaction = function() {
     $scope.transaction.active = false;
     $http.put("/api/transaction", $scope.transaction).success(function(data) {
-      $scope.selectedMembership.transactions.splice($scope.transactionIdx, 1);
+      $scope.share.membership.transactions.splice($scope.transactionIdx, 1);
     })
     .error(function(data) {
       // TODO: Need to add a message for the user
       $scope.transaction.active = true;
-      $scope.selectedMembership.transactions[$scope.transactionIdx] = $scope.transaction;
+      $scope.share.membership.transactions[$scope.transactionIdx] = $scope.transaction;
     });
     $scope.transaction = null;
     $('#deleteTransaction').modal('hide');
   };
 
   $scope.saveTransaction = function() {
-    $scope.transaction.membershipUID  = $scope.selectedMembership.membershipUID;
+    $scope.transaction.membershipUID  = $scope.share.membership.membershipUID;
 
     $http.put("/api/transaction", $scope.transaction).success(function(data) {
       if ($scope.transactionIdx == -1) {
-        $scope.selectedMembership.transactions.push(data);
+        $scope.share.membership.transactions.push(data);
       } else {
-        $scope.selectedMembership.transactions[$scope.transactionIdx] = data;
+        $scope.share.membership.transactions[$scope.transactionIdx] = data;
       }
     });
     $scope.transaction = null;
@@ -245,9 +239,9 @@ var syncTransactionEntryType = function(scope) {
 var syncMember = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
     if (scope.transaction.transactionEntries[idx1].member) {
-      for (var idx2 = 0; idx2 < scope.selectedMembership.allMembers.length; idx2++) {
-        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.selectedMembership.allMembers[idx2].memberUID) {
-          scope.transaction.transactionEntries[idx1].member = scope.selectedMembership.allMembers[idx2];
+      for (var idx2 = 0; idx2 < scope.share.membership.members.length; idx2++) {
+        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.share.membership.members[idx2].memberUID) {
+          scope.transaction.transactionEntries[idx1].member = scope.share.membership.members[idx2];
           break;
         }
       }
@@ -258,9 +252,9 @@ var syncMember = function(scope) {
 var syncRelatedTransactions = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
     if (scope.transaction.transactionEntries[idx1].relatedTransactionUID > 0) {
-      for (var idx2 = 0; idx2 < scope.selectedMembership.transactions.length; idx2++) {
-        if (scope.transaction.transactionEntries[idx1].relatedTransactionUID == scope.selectedMembership.transactions[idx2].transactionUID) {
-          scope.transaction.transactionEntries[idx1].relatedTransaction = scope.selectedMembership.transactions[idx2];
+      for (var idx2 = 0; idx2 < scope.share.membership.transactions.length; idx2++) {
+        if (scope.transaction.transactionEntries[idx1].relatedTransactionUID == scope.share.membership.transactions[idx2].transactionUID) {
+          scope.transaction.transactionEntries[idx1].relatedTransaction = scope.share.membership.transactions[idx2];
           break;
         }
       }
@@ -289,4 +283,8 @@ var toggleTransactionDetails = function(transaction) {
 
 $(document).on('shown.bs.modal', function (event) {
   $('[autofocus]', this).focus();
+});
+
+$(document).on('ready', function (event) {
+  $("#query").focus();
 });
