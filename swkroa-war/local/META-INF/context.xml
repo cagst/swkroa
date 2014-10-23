@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Context>
+<Context reloadable="true">
   <!-- maxActive:
   Maximum number of database connections in pool. Make sure you configure all your mysqld max_connections
   large enough to handle all of your db connections. Set to -1 for no limit.
@@ -26,35 +26,5 @@
 
   <!-- url:
   The JDBC connection url for connecting to your MySQL database.
-  -->
-
-  <!--
-  <Resource name="jdbc/SWKROADataSource"
-            auth="Container"
-            type="javax.sql.DataSource"
-
-            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-            testWhileIdle="true"
-            testOnBorrow="true"
-            testOnReturn="false"
-            validationQuery="SELECT 1"
-            validationInterval="30000"
-            timesBetweenEvictionRunsMillis="30000"
-            maxWait="10000"
-            initialSize="10"
-            removeAbandonedTimeout="60"
-            removeAbandoned="true"
-            logAbandoned="true"
-            minEvictableIdelTimeMillis="30000"
-            jmxEnabled="true"
-            jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState
-                             ;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
-
-            username="swkroauser"
-            password="swkroadbuser"
-            driverClassName="com.mysql.jdbc.Driver"
-            url="jdbc:mysql://localhost:3306/swkroadb"
-            maxActive="100"
-            maxIdle="10"/>
   -->
 </Context>

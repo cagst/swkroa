@@ -28,7 +28,7 @@
   </div>
 
   <div class="panel-body">
-    <div data-th-include="membership/modify/section_primary_member"></div>
+    <div data-ng-include="'/partials/membership/modify/primary_member.html'"></div>
     <div data-th-include="membership/modify/section_primary_spouse"
          data-ng-show="membership.primarySpouse && membership.primarySpouse.active"></div>
     <div data-th-include="membership/modify/section_primary_contact"></div>

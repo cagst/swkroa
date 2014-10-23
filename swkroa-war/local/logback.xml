@@ -6,20 +6,6 @@
     </encoder>
   </appender>
 
-  <!--Daily rolling file appender -->
-  <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${catalina.base}/logs/swkroa.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
-
-      <!-- Keep 30 days worth of history -->
-      <maxHistory>30</maxHistory>
-    </rollingPolicy>
-
-    <encoder>
-      <pattern>%date{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{40} - %msg%n</pattern>
-    </encoder>
-  </appender>
-
   <logger name="com.cagst.swkroa" level="debug"/>
   <!--
     <logger name="com.fasterxml.jackson.databind" level="debug" />
@@ -30,8 +16,5 @@
   <root>
     <level value="warn"/>
     <appender-ref ref="STDOUT"/>
-    <!--
-    <appender-ref ref="ROLLING" />
-    -->
   </root>
 </configuration>
