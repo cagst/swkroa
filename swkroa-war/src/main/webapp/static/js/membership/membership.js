@@ -19,6 +19,7 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
   $scope.searched    = false;
   $scope.fullyLoaded = false;
   $scope.original    = null;
+  $scope.message     = null;
 
   $http.get('/api/codeset/TRANSACTION_ENTRY_TYPE/').success(function(data) {
     $scope.transactionEntryTypes = data;
