@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<body>
-
 <div data-th-fragment="sectionMembers" class="panel panel-default">
   <div class="panel-heading">
     <span data-th-text="#{com.cagst.swkroa.membership.section.additional}">zzz Additional Members</span>
@@ -16,13 +11,13 @@
   </div>
 
   <div class="panel-body">
-    <div data-ng-repeat="member in membership.additionalMembers"
-         data-ng-show="member.active"
+    <div data-ng-repeat="member in membership.members"
+         data-ng-show="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true"
          data-ng-form="memberForm">
       <div class="row">
         <div class="divider-inner">
           <span data-th-text="#{com.cagst.swkroa.membership.member.divider}">zzz MEMBERS</span>
-          <span>{{$index + 1}}</span>
+          <span>{{$index}}</span>
           <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
                   data-ng-click="removeMember(member)">
             <i class="fa fa-trash-o"></i>
@@ -301,6 +296,3 @@
     </div>
   </div>
 </div>
-
-</body>
-</html>

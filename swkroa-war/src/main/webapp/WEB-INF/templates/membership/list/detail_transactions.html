@@ -27,7 +27,7 @@
           <th style="width:75px"></th>
         </tr>
       </thead>
-      <tbody data-ng-repeat="transaction in selectedMembership.transactions | orderBy: 'transactionDate': true"
+      <tbody data-ng-repeat="transaction in membership.transactions | orderBy: 'transactionDate': true"
              data-ng-show="transaction.active">
         <tr>
           <td style="width:125px">

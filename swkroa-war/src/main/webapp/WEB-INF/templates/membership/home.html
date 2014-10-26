@@ -5,12 +5,266 @@
       layout:decorator="layouts/main">
 
 <head>
+  <script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
   <script type="text/javascript" data-th-src="@{/static/js/membership/membership.js}"></script>
 </head>
 
-<body data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="membershipController">
+<body>
 
-  <div ui-view></div>
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="swkroaController">
+  <!-- Membership Listing Page -->
+  <div data-ng-show="view == 'listing'">
+    <div class="page-header">
+      <h3 data-th-text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
+    </div>
+    <div class="container-outline">
+      <div class="row row-inner">
+        <!-- Listing (Quick View) -->
+        <div class="col-xs-5 stretch">
+          <div class="split-header">
+            <div class="split-header-content form-group expand">
+              <div class="input-group">
+                <a class="input-group-addon add-btn"
+                   data-ng-click="addMembership()"
+                   data-th-attr="tooltip=#{com.cagst.swkroa.membership.add}"
+                   data-tooltip-placement="right">
+                  <i class="fa fa-plus"></i>
+                </a>
+                <input type="text" class="form-control" autofocus="autofocus"
+                       data-th-placeholder="#{com.cagst.swkroa.membership.search.prompt}"
+                       data-ng-model="query"
+                       data-ng-keydown="queryKeydown($event)" />
+                <a class="input-group-addon btn btn-primary"
+                   data-ng-click="getMemberships()"
+                   data-ng-disabled="query.length < 2"
+                   data-th-text="#{com.cagst.swkroa.membership.search.button}">
+                  zzz Search
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="list-group constrain-view divider-right">
+            <div>
+              <div class="panel-body text-muted" data-ng-show="!memberships.length">
+                <em data-th-text="#{com.cagst.swkroa.membership.nosearch}"
+                    data-ng-show="!searched">
+                  zzz No Search
+                </em>
+                <em data-th-text="#{com.cagst.swkroa.membership.nomemberships}"
+                    data-ng-show="searched">
+                  zzz No memberships
+                </em>
+              </div>
+              <div data-ng-show="memberships.length">
+                <div class="list-group-item alt-list-group-item sel-list-group-item"
+                     data-ng-repeat="mem in memberships"
+                     data-ng-class="{active: mem.membershipUID === membership.membershipUID}"
+                     data-ng-click="getMembership(mem.membershipUID)">
+                  <div class="lead lead-in">
+                    <span data-ng-bind="mem.primaryMember.effectiveMemberName">zzz Membership Name</span>
+                    <span data-ng-show="mem.primaryMember.memberType.memberTypeMeaning == 'REGULAR'"
+                          data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.regular}"
+                          data-tooltip-placement="left"
+                          class="pull-right">
+                      <i class="fa fa-user"></i>
+                    </span>
+                    <span data-ng-show="mem.primaryMember.memberType.memberTypeMeaning == 'FAMILY_HEAD'"
+                          data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.family}"
+                          data-tooltip-placement="left"
+                          class="pull-right">
+                      <i class="fa fa-users"></i>
+                    </span>
+                  </div>
+                  <div data-ng-if="mem.primaryMember.joinDate != null">
+                    <span data-th-text="#{com.cagst.swkroa.membership.member.since}">zzz Member Since</span>
+                  </div>
+                  <div>
+                    <span data-th-text="#{com.cagst.swkroa.membership.dues}">zzz Dues Of</span>
+                    <span data-th-text="#{com.cagst.swkroa.membership.cal.dues}" class="text-warning"
+                          data-ng-show="mem.effectiveDuesAmount != mem.calculatedDuesAmount">
+                      zzz Calculated Dues
+                    </span>
+                    <span class="pull-right text-danger"
+                          data-ng-bind="mem.amountDue | currency"
+                          data-ng-show="mem.amountDue < 0">
+                      zzz Past Due
+                    </span>
+                    <span class="pull-right text-success"
+                          data-ng-bind="mem.amountDue | currency"
+                          data-ng-show="mem.amountDue > 0">
+                      zzz Credit
+                    </span>
+                    <span class="pull-right"
+                          data-ng-bind="mem.amountDue | currency"
+                          data-ng-show="mem.amountDue == 0">
+                      zzz Paid
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details (Summary) -->
+        <div class="col-xs-7 divider-left stretch pull-right">
+          <div data-ng-show="!membership">
+            <em>
+              <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.membership.notselected}">
+                zzz No membership selected.
+              </label>
+            </em>
+          </div>
+          <div data-ng-show="membership">
+            <div class="container-inner constrain-view">
+              <h2 class="lead">
+                <span data-ng-bind="membership.primaryMember.effectiveMemberName"></span>
+                <small data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
+                       data-ng-show="membership.primaryMember.joinDate">
+                  zzz Since
+                </small>
+              </h2>
+              <div>
+                <div>
+                  <div class="text-muted divider-bottom" data-th-text="#{com.cagst.swkroa.membership.members}">
+                    zzz Members
+                  </div>
+                  <div data-ng-show="membership.primaryMember">
+                    <span>
+                      <strong data-ng-bind="membership.primaryMember.effectiveMemberName"></strong>
+                    </span>
+                    <small class="text-muted">({{membership.primaryMember.ownerIdent}})</small>
+                    <small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
+                           data-ng-show="membership.primaryMember.joinDate">
+                      zzz Since
+                    </small>
+                  </div>
+                  <div data-ng-repeat="member in membership.members"
+                       data-ng-show="member.memberType.primary === false && member.active === true">
+                    <span>{{member.effectiveMemberName}}</span>
+                    <small class="text-muted">({{member.ownerIdent}})</small>
+                    <small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.since}">
+                      zzz Since
+                    </small>
+                  </div>
+                </div>
+
+                <div class="spacer-top">
+                  <div class="text-muted divider-bottom" data-th-text="#{com.cagst.swkroa.membership.counties}">
+                    zzz Counties
+                  </div>
+                  <div data-ng-repeat="membershipCounty in membership.membershipCounties">
+                    <span data-ng-class="{text_bold: membershipCounty.votingCounty === true}">
+                      {{membershipCounty.county.countyName}}
+                      <small class="text-muted text_normal"
+                             data-th-text="#{com.cagst.swkroa.membership.member.detail.county}">
+                        zzz County Details
+                      </small>
+                    </span>
+                  </div>
+                </div>
+
+                <div data-th-include="membership/list/detail_comments"></div>
+                <div data-th-include="membership/list/detail_transactions"></div>
+              </div>
+            </div>
+
+            <div class="divider-top split-footer">
+              <div class="split-footer-content pull-right">
+                <button type="button" class="btn btn-primary btn-xs"
+                        data-ng-click="editMembership()">
+                  <i class="fa fa-edit"></i>
+                  <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                </button>
+                <button type="button" class="btn btn-danger btn-xs"
+                        data-toggle="modal" data-target="#deleteMembership">
+                  <i class="fa fa-trash-o"></i>
+                  <span data-th-text="#{com.cagst.swkroa.delete}">zzz Delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="deleteMembership" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please confirm</h4>
+                </div>
+                <div class="modal-body">
+                  <span data-th-text="#{com.cagst.swkroa.membership.delete.message}">zzz Delete this?</span>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger"
+                          data-ng-click="removeMembership()"
+                          data-th-text="#{com.cagst.swkroa.delete}">
+                    zzz Delete
+                  </button>
+                  <button type="button" class="btn btn-primary"
+                          data-dismiss="modal"
+                          data-th-text="#{com.cagst.swkroa.keep}">
+                    zzz Keep
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div data-th-include="membership/list/dlg_comment_modify"></div>
+          <div data-th-include="membership/list/dlg_comment_delete"></div>
+          <div data-th-include="membership/list/dlg_transaction_modify"></div>
+          <div data-th-include="membership/list/dlg_transaction_delete"></div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modify (Add/Edit) Membership Page -->
+  <div data-ng-show="view == 'add' || view == 'edit'">
+    <div class="page-header">
+      <h3 data-th-text="#{com.cagst.swkroa.membership.add}" data-ng-show="membership.membershipUID == 0">
+        zzz Add Membership
+      </h3>
+      <input id="membershipId" type="hidden" data-th-value="${membershipId}" />
+      <h3 data-th-text="#{com.cagst.swkroa.membership.edit}" data-ng-show="membership.membershipUID > 0">
+        zzz Edit Membership
+      </h3>
+    </div>
+
+    <form method="POST" name="membershipForm" novalidate data-ng-submit="save()" class="css-form">
+      <div data-th-include="membership/modify/section_membership"></div>
+      <div data-th-include="membership/modify/section_counties"></div>
+      <div data-th-include="membership/modify/section_members"
+           data-ng-show="membership.primaryMember.memberType.allowMember ||
+                         membership.members.length > 0"></div>
+
+      <div class="spacer-top">
+        <div class="divider-top">
+          <div class="spacer-top">
+            <button type="submit"
+                    class="btn btn-primary"
+                    data-th-text="#{com.cagst.swkroa.membership.create}"
+                    data-ng-show="membership.membershipUID == 0"
+                    data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
+            </button>
+            <button type="submit"
+                    class="btn btn-primary"
+                    data-th-text="#{com.cagst.swkroa.membership.update}"
+                    data-ng-show="membership.membershipUID > 0"
+                    data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
+            </button>
+            <button class="btn btn-default"
+                    data-ng-click="cancelChanges()"
+                    data-th-text="#{com.cagst.swkroa.membership.cancel}">
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
 
 </body>
 </html>

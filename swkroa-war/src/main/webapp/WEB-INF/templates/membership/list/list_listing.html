@@ -34,7 +34,7 @@
       <div data-ng-show="memberships.length">
         <div class="membership list-group-item alt-list-group-item sel-list-group-item"
              data-ng-repeat="membership in memberships"
-             data-ng-class="{active: membership.membershipUID === selectedMembership.membershipUID}"
+             data-ng-class="{active: membership.membershipUID === membership.membershipUID}"
              data-ng-click="getMembership(membership.membershipUID)">
           <div class="lead lead-in">
             <span data-ng-bind="membership.safePrimaryMember.effectiveMemberName">zzz Membership Name</span>
