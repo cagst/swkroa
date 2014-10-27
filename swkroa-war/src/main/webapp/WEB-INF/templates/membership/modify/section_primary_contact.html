@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<body>
-
 <div data-th-fragment="primaryAddress">
   <div class="row spacer-top">
     <div class="col-xs-4">
@@ -26,7 +21,13 @@
                     data-ng-required="true">
             </select>
           </div>
-          <div class="col-xs-4 col-xs-offset-4">
+          <div class="col-xs-4">
+            <input id="primaryAddress" type="checkbox" data-ng-model="address.primary" />
+            <label for="primaryAddress" data-th-text="#{com.cagst.swkroa.membership.member.address.primary}">
+              zzz Primary Address
+            </label>
+          </div>
+          <div class="col-xs-4">
             <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
                     data-ng-click="contactService.removeAddress(membership.primaryMember, address)">
               <i class="fa fa-trash-o"></i>
@@ -101,7 +102,13 @@
                     data-ng-required="true">
             </select>
           </div>
-          <div class="col-xs-4 col-xs-offset-4">
+          <div class="col-xs-4">
+            <input id="primaryPhone" type="checkbox" data-ng-model="phone.primary" />
+            <label for="primaryPhone" data-th-text="#{com.cagst.swkroa.membership.member.phone.primary}">
+              zzz Primary Phone
+            </label>
+          </div>
+          <div class="col-xs-4">
             <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
                     data-ng-click="contactService.removePhone(membership.primaryMember, phone)">
               <i class="fa fa-trash-o"></i>
@@ -146,7 +153,13 @@
                     data-ng-required="true">
             </select>
           </div>
-          <div class="col-xs-4 col-xs-offset-4">
+          <div class="col-xs-4">
+            <input id="primaryEmail" type="checkbox" data-ng-model="email.primary" />
+            <label for="primaryEmail" data-th-text="#{com.cagst.swkroa.membership.member.email.primary}">
+              zzz Primary Email
+            </label>
+          </div>
+          <div class="col-xs-4">
             <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
                     data-ng-click="contactService.removeEmail(membership.primaryMember, email)">
               <i class="fa fa-trash-o"></i>
@@ -166,6 +179,3 @@
     </div>
   </div>
 </div>
-
-</body>
-</html>

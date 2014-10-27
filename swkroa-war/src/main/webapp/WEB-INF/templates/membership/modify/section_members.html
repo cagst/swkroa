@@ -130,17 +130,17 @@
                class="grouper">
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
-                <label class="control-label label-required"
-                       data-th-text="#{com.cagst.swkroa.membership.member.address.type}">
-                  zzz Type
-                </label>
-              </div>
-              <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
                 <select class="form-control" name="addressType"
                         data-ng-options="type.codeValueUID as type.display for type in addressTypes"
                         data-ng-model="address.addressTypeCD"
                         data-ng-required="true">
                 </select>
+              </div>
+              <div class="col-xs-4">
+                <input id="primaryAddress{{$index}}" type="checkbox" data-ng-model="address.primary" />
+                <label for="primaryAddress{{$index}}" data-th-text="#{com.cagst.swkroa.membership.member.address.primary}">
+                  zzz Primary Address
+                </label>
               </div>
               <div class="col-xs-4">
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
@@ -211,17 +211,17 @@
                class="grouper">
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
-                <label class="control-label label-required"
-                       data-th-text="#{com.cagst.swkroa.membership.member.phone.type}">
-                  zzz Type
-                </label>
-              </div>
-              <div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
                 <select class="form-control" name="phoneType"
                         data-ng-options="type.codeValueUID as type.display for type in phoneTypes"
                         data-ng-model="phone.phoneTypeCD"
                         data-ng-required="true">
                 </select>
+              </div>
+              <div class="col-xs-4">
+                <input id="primaryPhone{{$index}}" type="checkbox" data-ng-model="phone.primary" />
+                <label for="primaryPhone{{$index}}" data-th-text="#{com.cagst.swkroa.membership.member.phone.primary}">
+                  zzz Primary Phone
+                </label>
               </div>
               <div class="col-xs-4">
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
@@ -262,17 +262,17 @@
                class="grouper">
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
-                <label class="control-label label-required"
-                       data-th-text="#{com.cagst.swkroa.membership.member.email.type}">
-                  zzz Type
-                </label>
-              </div>
-              <div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
                 <select class="form-control" name="emailType"
                         data-ng-options="type.codeValueUID as type.display for type in emailTypes"
                         data-ng-model="email.emailTypeCD"
                         data-ng-required="true">
                 </select>
+              </div>
+              <div class="col-xs-4">
+                <input id="primaryEmail{{$index}}" type="checkbox" data-ng-model="email.primary" />
+                <label for="primaryEmail{{$index}}" data-th-text="#{com.cagst.swkroa.membership.member.email.primary}">
+                  zzz Primary Email
+                </label>
               </div>
               <div class="col-xs-4">
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
