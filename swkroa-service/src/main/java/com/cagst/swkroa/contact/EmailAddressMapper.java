@@ -1,11 +1,11 @@
 package com.cagst.swkroa.contact;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link EmailAddress} object. Used to marshal / unmarshal a
@@ -20,6 +20,7 @@ public class EmailAddressMapper implements RowMapper<EmailAddress> {
   private static final String PARENT_ENTITY_NAME = "parent_entity_name";
   private static final String EMAIL_TYPE = "email_type_cd";
   private static final String EMAIL_ADDRESS = "email_address";
+  private static final String PRIMARY_IND = "primary_ind";
   private static final String ACTIVE_IND = "active_ind";
   private static final String CREATE_ID = "create_id";
   private static final String UPDT_ID = "updt_id";
@@ -33,6 +34,7 @@ public class EmailAddressMapper implements RowMapper<EmailAddress> {
     email.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
     email.setEmailTypeCD(rs.getLong(EMAIL_TYPE));
     email.setEmailAddress(rs.getString(EMAIL_ADDRESS));
+    email.setPrimary(rs.getBoolean(PRIMARY_IND));
     email.setActive(rs.getBoolean(ACTIVE_IND));
     email.setEmailAddressUpdateCount(rs.getLong(UPDT_CNT));
 
@@ -57,6 +59,7 @@ public class EmailAddressMapper implements RowMapper<EmailAddress> {
     params.addValue(PARENT_ENTITY_NAME, emailAddress.getParentEntityName());
     params.addValue(EMAIL_TYPE, emailAddress.getEmailTypeCD() != 0L ? emailAddress.getEmailTypeCD() : null);
     params.addValue(EMAIL_ADDRESS, emailAddress.getEmailAddress());
+    params.addValue(PRIMARY_IND, emailAddress.isPrimary());
     params.addValue(ACTIVE_IND, emailAddress.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
     params.addValue(UPDT_ID, user.getUserUID());
@@ -81,6 +84,7 @@ public class EmailAddressMapper implements RowMapper<EmailAddress> {
 
     params.addValue(EMAIL_TYPE, emailAddress.getEmailTypeCD() != 0L ? emailAddress.getEmailTypeCD() : null);
     params.addValue(EMAIL_ADDRESS, emailAddress.getEmailAddress());
+    params.addValue(PRIMARY_IND, emailAddress.isPrimary());
     params.addValue(ACTIVE_IND, emailAddress.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
 

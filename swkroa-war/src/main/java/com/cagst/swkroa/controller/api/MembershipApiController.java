@@ -1,20 +1,27 @@
 package com.cagst.swkroa.controller.api;
 
-import com.cagst.common.web.servlet.tags.StaticResourceAssistant;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.List;
+
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.member.*;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
+import net.sf.ehcache.transaction.xa.OptimisticLockFailureException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.List;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
 
 /**
  * Handles and retrieves {@link Membership}, {@link Member}, and {@link MembershipCounty} objects depending upon the URI
@@ -23,7 +30,7 @@ import java.util.List;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Controller
+@RestController
 public final class MembershipApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipApiController.class);
 
@@ -45,7 +52,6 @@ public final class MembershipApiController {
    * @return A JSON representation of the active Memberships within the system.
    */
   @RequestMapping(value = "/api/memberships", method = RequestMethod.GET)
-  @ResponseBody
   public List<Membership> getMemberships(final @RequestParam("q") String query) {
     LOGGER.info("Received request to retrieve memberships using query string [{}]", query);
 
@@ -70,7 +76,6 @@ public final class MembershipApiController {
    * @return A {@link Membership} that represents the {@link Membership} for the specified membership ID.
    */
   @RequestMapping(value = {"/api/memberships/{membershipId}"}, method = RequestMethod.GET)
-  @ResponseBody
   public Membership getMembership(final @PathVariable long membershipId) {
     LOGGER.info("Received request to retrieve membership [{}].", membershipId);
 
@@ -84,8 +89,14 @@ public final class MembershipApiController {
       membership.addMember(primary);
 
       return membership;
-    } else {
+    }
+
+    try {
       return membershipService.getMembershipByUID(membershipId);
+    } catch (EmptyResultDataAccessException ex) {
+      throw new ResourceNotFoundException(ex);
+    } catch (IncorrectResultSizeDataAccessException ex) {
+      throw new ResourceNotFoundException(ex);
     }
   }
 
@@ -101,9 +112,7 @@ public final class MembershipApiController {
    * OwnerId could be determined.
    */
   @RequestMapping(value = {"/api/generateOwnerId/{firstName}/{lastName}"})
-  public
-  @ResponseBody
-  String generateOwnerId(final @PathVariable String firstName, final @PathVariable String lastName) {
+  public String generateOwnerId(final @PathVariable String firstName, final @PathVariable String lastName) {
     String ownerId = StringUtils.EMPTY;
 
     try {
@@ -116,23 +125,6 @@ public final class MembershipApiController {
   }
 
   /**
-   * Handles the request and persists the {@link Membership} to persistent storage. Called from the Add/Edit
-   * Membership page.
-   *
-   * @param membership
-   *     The {@link Membership} to persist.
-   */
-  @RequestMapping(value = {"/api/memberships"}, method = RequestMethod.POST)
-  @ResponseBody
-  public String saveMembership(final @RequestBody Membership membership, final HttpServletRequest request) {
-    LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
-
-    membershipService.saveMembership(membership, WebAppUtils.getUser());
-
-    return StaticResourceAssistant.getString("url.membership.home", request);
-  }
-
-  /**
    * Handles the request and persists the {@link Membership} to persistent storage. Called from the Add/Edit Membership
    * page when adding/editing a membership.
    *
@@ -141,11 +133,32 @@ public final class MembershipApiController {
    *
    * @return The {@link Membership} after it has been persisted.
    */
-  @RequestMapping(value = {"/api/memberships"}, method = RequestMethod.PUT)
-  @ResponseBody
-  public Membership saveMembership(final @RequestBody Membership membership) {
+  @RequestMapping(value = {"/api/memberships"}, method = RequestMethod.POST)
+  public ResponseEntity<Membership> saveMembership(final @RequestBody Membership membership, final HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
-    return membershipService.saveMembership(membership, WebAppUtils.getUser());
+    try {
+      // save the membersip
+      Membership savedMembership = membershipService.saveMembership(membership, WebAppUtils.getUser());
+
+      // specify the location of the resource
+      UriComponents locationUri = ServletUriComponentsBuilder
+          .fromContextPath(request)
+          .path("/api/memberships/{membershipUID}")
+          .buildAndExpand(savedMembership.getMembershipUID());
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.setLocation(locationUri.toUri());
+
+      if (membership.getMembershipUID() == 0) {
+        return new ResponseEntity<Membership>(savedMembership, headers, HttpStatus.CREATED);
+      } else {
+        return new ResponseEntity<Membership>(savedMembership, headers, HttpStatus.OK);
+      }
+    } catch (OptimisticLockFailureException ex) {
+      return new ResponseEntity<Membership>(membership, HttpStatus.CONFLICT);
+    } catch (Exception ex) {
+      return new ResponseEntity<Membership>(membership, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

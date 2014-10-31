@@ -1,12 +1,12 @@
 package com.cagst.swkroa.contact;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link Address} object. Used to marshal / unmarshal a
@@ -27,6 +27,7 @@ import java.sql.SQLException;
   private static final String STATE_CODE = "state_code";
   private static final String POSTAL_CODE = "postal_code";
   private static final String COUNTRY_CODE = "country_code";
+  private static final String PRIMARY_IND = "primary_ind";
   private static final String ACTIVE_IND = "active_ind";
   private static final String CREATE_ID = "create_id";
   private static final String UPDT_ID = "updt_id";
@@ -46,6 +47,7 @@ import java.sql.SQLException;
     address.setState(rs.getString(STATE_CODE));
     address.setPostalCode(rs.getString(POSTAL_CODE));
     address.setCountry(rs.getString(COUNTRY_CODE));
+    address.setPrimary(rs.getBoolean(PRIMARY_IND));
 
     address.setActive(rs.getBoolean(ACTIVE_IND));
     address.setAddressUpdateCount(rs.getLong(UPDT_CNT));
@@ -77,6 +79,7 @@ import java.sql.SQLException;
     params.addValue(STATE_CODE, address.getState());
     params.addValue(POSTAL_CODE, address.getPostalCode());
     params.addValue(COUNTRY_CODE, address.getCountry());
+    params.addValue(PRIMARY_IND, address.isPrimary());
     params.addValue(ACTIVE_IND, address.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
     params.addValue(UPDT_ID, user.getUserUID());
@@ -107,6 +110,7 @@ import java.sql.SQLException;
     params.addValue(STATE_CODE, address.getState());
     params.addValue(POSTAL_CODE, address.getPostalCode());
     params.addValue(COUNTRY_CODE, address.getCountry());
+    params.addValue(PRIMARY_IND, address.isPrimary());
     params.addValue(ACTIVE_IND, address.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
 

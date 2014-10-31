@@ -6,7 +6,7 @@
 
 <head>
   <script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
-  <script type="text/javascript" data-th-src="@{/static/js/membership/membership.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/js/membership.js}"></script>
 </head>
 
 <body>
@@ -16,11 +16,15 @@
   <div data-ng-show="view == 'listing'">
     <div class="page-header">
       <h3 data-th-text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
-      <div id="message" class="alert alert-success alert-dismissible" role="alert"
-           data-ng-show="successMessage">
+      <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <strong>Success!</strong>
-        <div data-ng-bind="message">User was created!</div>
+        <div data-th-text="#{com.cagst.swkroa.membership.save.created}">zzz Created</div>
+      </div>
+      <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <strong>Success!</strong>
+        <div data-th-text="#{com.cagst.swkroa.membership.save.updated}">zzz Updated</div>
       </div>
     </div>
     <div class="container-outline">

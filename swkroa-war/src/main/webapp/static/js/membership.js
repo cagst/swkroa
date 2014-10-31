@@ -21,6 +21,9 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
   $scope.original    = null;
   $scope.message     = null;
 
+  $('#createdMessage').hide();
+  $('#updatedMessage').hide();
+
   $http.get('/api/codeset/TRANSACTION_ENTRY_TYPE/').success(function(data) {
     $scope.transactionEntryTypes = data;
   });
@@ -80,18 +83,6 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
     $scope.view = "edit";
   };
 
-  $scope.hasChanges = function(membership) {
-    return angular.equals(membership, $scope.original);
-  };
-
-  $scope.cancelChanges = function() {
-    if ($scope.membership.membershipUID == 0) {
-      $scope.membership = null;
-    }
-
-    $scope.view = "listing";
-  };
-
   $scope.removeMembership = function() {
     $scope.membership.active = false;
     $http.put("/api/membership", $scope.membership).success(function(data) {
@@ -116,6 +107,19 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
     $scope.comment = {active: true, commentDate: new Date()};
   };
 
+  $scope.removeComment = function() {
+    $scope.comment.active = false;
+    $http.put("/api/comments", $scope.comment).success(function(data) {
+      $scope.membership.comments.splice($scope.commentIdx, 1);
+    }).error(function(data) {
+      // TODO: Need to add a message for the user
+      $scope.comment.active = true;
+      $scope.membership.comments[$scope.commentIdx] = $scope.comment;
+    });
+    $scope.comment = null;
+    $('#deleteComment').modal('hide');
+  };
+
   $scope.saveComment = function() {
     $scope.comment.parentEntityName = "MEMBERSHIP";
     $scope.comment.parentEntityUID  = $scope.membership.membershipUID;
@@ -129,19 +133,6 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
     });
     $scope.comment = null;
     $('#modifyComment').modal('hide');
-  };
-
-  $scope.removeComment = function() {
-    $scope.comment.active = false;
-    $http.put("/api/comments", $scope.comment).success(function(data) {
-      $scope.membership.comments.splice($scope.commentIdx, 1);
-    }).error(function(data) {
-      // TODO: Need to add a message for the user
-      $scope.comment.active = true;
-      $scope.membership.comments[$scope.commentIdx] = $scope.comment;
-    });
-    $scope.comment = null;
-    $('#deleteComment').modal('hide');
   };
 
   $scope.deleteTransaction = function(transaction) {
@@ -220,6 +211,141 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
     }
 
     $scope.calculateTransactionAmount();
+  };
+
+  $scope.openDueDate = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.openedDueDate = true;
+  };
+
+  $scope.openPrimaryJoinDate = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.openedPrimaryJoinDate = true;
+  };
+
+  $scope.openSpouseJoinDate = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.openedSpouseJoinDate = true;
+  };
+
+  $scope.toggleDuesAmount = function(fixed) {
+    $scope.fixedDuesAmount = fixed;
+
+    if ($scope.fixedDuesAmount == false) {
+      $scope.membership.duesAmount = null;
+    }
+  };
+
+  $scope.addSpouse = function() {
+    $scope.membership.spouse = {
+      active: true
+    };
+  };
+
+  $scope.removeSpouse = function() {
+    if ($scope.membership.spouse.memberUID > 0) {
+      $scope.membership.spouse.active = false;
+    } else {
+      $scope.membership.spouse = null;
+    }
+  };
+
+  $scope.addCounty = function() {
+    $scope.membership.membershipCounties.push({
+      netMineralAcres: 0,
+      surfaceAcres: 0,
+      active: true
+    });
+  };
+
+  $scope.removeCounty = function(county) {
+    if (county.membershipCountyUID > 0) {
+      county.active = false;
+    } else {
+      var idx = $scope.membership.membershipCounties.indexOf(county);
+      $scope.membership.membershipCounties.splice(idx, 1);
+    }
+  };
+
+  $scope.validateVotingCounty = function(membership, membershipCounty) {
+    if (membershipCounty.votingCounty) {
+      angular.forEach(membership.membershipCounties, function(cnty) {
+        cnty.votingCounty = false;
+      });
+
+      membershipCounty.votingCounty = true;
+    } else {
+      membershipCounty.votingCounty = false;
+    }
+  };
+
+  $scope.addMember = function() {
+    var familyMember = null;
+    for (idx = 0; idx < $scope.memberTypes.length; idx++) {
+      if ($scope.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
+        familyMember = $scope.memberTypes[idx];
+        break;
+      }
+    }
+
+    $scope.membership.members.push({
+      active: true,
+      memberType: familyMember
+    });
+  };
+
+  $scope.removeMember = function(member) {
+    if (member.memberUID > 0) {
+      member.active = false;
+    } else {
+      var idx = $scope.membership.members.indexOf(member);
+      $scope.membership.members.splice(idx, 1);
+    }
+  };
+
+  $scope.generateOwnerId = function(member) {
+    var firstName  = member.person.firstName;
+    var lastName   = member.person.lastName;
+    var ownerIdent = member.ownerIdent;
+
+    if (firstName  && firstName.length > 2 &&
+        lastName   && lastName.length > 2 &
+        (!ownerIdent || ownerIdent.length == 0)) {
+
+      $http.get("/api/generateOwnerId/" + firstName + "/" + lastName).success(function(data) {
+        member.ownerIdent = JSON.parse(data);
+      });
+    };
+  };
+
+  $scope.hasChanges = function(membership) {
+    return angular.equals(membership, $scope.original);
+  };
+
+  $scope.cancelChanges = function() {
+    if ($scope.membership.membershipUID == 0) {
+      $scope.membership = null;
+    }
+
+    $scope.view = "listing";
+  };
+
+  $scope.save = function() {
+    $http.post("/api/memberships", $scope.membership).success(function(data, status) {
+      $scope.view = "listing";
+
+      if (status == 201) {
+        $('#createdMessage').show();
+      } else {
+        $('#updatedMessage').show();
+      }
+    });
   };
 }]);
 

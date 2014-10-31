@@ -1,11 +1,11 @@
 package com.cagst.swkroa.contact;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.builder.*;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.*;
 
 /**
  * Represents an Address within the system.
@@ -27,6 +27,7 @@ public final class Address implements Serializable, Comparable<Address> {
   private String state_code;
   private String postal_code;
   private String country_code = "US";
+  private boolean primary_ind;
 
   // meta-data
   private boolean active_ind = true;
@@ -133,6 +134,14 @@ public final class Address implements Serializable, Comparable<Address> {
 
   public void setCountry(final String countryCode) {
     this.country_code = countryCode;
+  }
+
+  public boolean isPrimary() {
+    return primary_ind;
+  }
+
+  public void setPrimary(boolean primary_ind) {
+    this.primary_ind = primary_ind;
   }
 
   public boolean isActive() {

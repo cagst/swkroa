@@ -3,6 +3,7 @@ INSERT INTO phone (parent_entity_id
                   ,phone_type_cd
                   ,phone_number
                   ,phone_extension
+                  ,primary_ind
                   ,active_ind
                   ,create_id
                   ,create_dt_tm
@@ -13,6 +14,7 @@ INSERT INTO phone (parent_entity_id
                  ,:phone_type_cd
                  ,:phone_number
                  ,:phone_extension
+                 ,:primary_ind
                  ,:active_ind
                  ,:create_id
                  ,CURRENT_TIMESTAMP

@@ -3,6 +3,7 @@ SELECT e.email_id
       ,e.parent_entity_name
       ,e.email_type_cd
       ,e.email_address
+      ,e.primary_ind
       ,e.active_ind
       ,e.updt_cnt AS updt_cnt
   FROM email e

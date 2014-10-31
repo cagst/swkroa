@@ -1,15 +1,15 @@
 package com.cagst.swkroa.contact;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.text.Collator;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.text.Collator;
 
 /**
  * Represents an EmailAddress within the system.
@@ -25,6 +25,9 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
   private String parent_entity_name;
   private long email_type_cd;
   private String email_address;
+  private boolean primary_ind;
+
+  // meta-data
   private boolean active_ind = true;
   private long updt_cnt;
 
@@ -71,6 +74,14 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
 
   public void setEmailAddress(final String emailAddress) {
     this.email_address = emailAddress;
+  }
+
+  public boolean isPrimary() {
+    return primary_ind;
+  }
+
+  public void setPrimary(boolean primary_ind) {
+    this.primary_ind = primary_ind;
   }
 
   public boolean isActive() {
