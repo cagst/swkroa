@@ -93,6 +93,7 @@ public class MembershipApiControllerTest {
     when(membershipService.saveMembership(membership, user)).thenThrow(OptimisticLockFailureException.class);
 
     ObjectMapper mapper = new JacksonObjectMapper();
+
     String json = mapper.writeValueAsString(membership);
 
     mockMvc.perform(

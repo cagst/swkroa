@@ -22,7 +22,9 @@
             </select>
           </div>
           <div class="col-xs-4">
-            <input id="primaryAddress" type="checkbox" data-ng-model="address.primary" />
+            <input id="primaryAddress" type="checkbox"
+                   data-ng-model="address.primary"
+                   data-ng-change="contactService.ensurePrimaryAddress(membership.primaryMember, address)" />
             <label for="primaryAddress" data-th-text="#{com.cagst.swkroa.membership.member.address.primary}">
               zzz Primary Address
             </label>
@@ -103,7 +105,9 @@
             </select>
           </div>
           <div class="col-xs-4">
-            <input id="primaryPhone" type="checkbox" data-ng-model="phone.primary" />
+            <input id="primaryPhone" type="checkbox"
+                   data-ng-model="phone.primary"
+                   data-ng-change="contactService.ensurePrimaryPhone(membership.primaryMember, phone)"/>
             <label for="primaryPhone" data-th-text="#{com.cagst.swkroa.membership.member.phone.primary}">
               zzz Primary Phone
             </label>
@@ -154,7 +158,9 @@
             </select>
           </div>
           <div class="col-xs-4">
-            <input id="primaryEmail" type="checkbox" data-ng-model="email.primary" />
+            <input id="primaryEmail" type="checkbox"
+                   data-ng-model="email.primary"
+                   data-ng-change="contactService.ensurePrimaryEmail(membership.primaryMember, email)"/>
             <label for="primaryEmail" data-th-text="#{com.cagst.swkroa.membership.member.email.primary}">
               zzz Primary Email
             </label>

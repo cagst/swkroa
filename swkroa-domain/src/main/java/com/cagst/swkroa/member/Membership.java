@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import com.cagst.common.util.CGTCollatorBuilder;
@@ -177,6 +178,26 @@ public final class Membership implements Serializable, Comparable<Membership> {
   }
 
   /**
+   * Helper method to replace (or add) the "primary" member associated with this membership.
+   *
+   * @param primary
+   *        The {@link Member} to replace (or add) as the "primary" member.
+   */
+  public void setPrimaryMember(final Member primary) {
+    // remove the existing "primary" member if one exists
+    Iterator<Member> it = members.iterator();
+    while (it.hasNext()) {
+      if (it.next().getMemberType().isPrimary()) {
+        it.remove();
+        break;
+      }
+    }
+
+    // add the "primary" member to our members list
+    members.add(primary);
+  }
+
+  /**
    * Helper method to return the "spouse" associated with this membership.
    *
    * @return The "spouse" {@link Member} associated with this membership,
@@ -190,6 +211,26 @@ public final class Membership implements Serializable, Comparable<Membership> {
     }
 
     return null;
+  }
+
+  /**
+   * Helper method to replace (or add) the "spouse" member associated with this membership.
+   *
+   * @param spouse
+   *        The {@link Member} to replace (or add) as the "spouse" member.
+   */
+  public void setSpouse(final Member spouse) {
+    // remove the existing "spouse" member if one exists
+    Iterator<Member> it = members.iterator();
+    while (it.hasNext()) {
+      if (MemberType.SPOUSE.equals(it.next().getMemberType().getMemberTypeMeaning())) {
+        it.remove();
+        break;
+      }
+    }
+
+    // add the "spouse" member to our members list
+    members.add(spouse);
   }
 
   public void clearCounties() {

@@ -219,6 +219,18 @@ swkroaApp.service('contactService', ['$http', function($http) {
     }
   };
 
+  this.ensurePrimaryAddress = function(entity, address) {
+    if (address.primary) {
+      var pos = entity.addresses.indexOf(address);
+
+      for (var idx = 0; idx < entity.addresses.length; idx++) {
+        if (entity.addresses[idx].primary && pos != idx) {
+          entity.addresses[idx].primary = false;
+        }
+      }
+    }
+  };
+
   this.addPhone = function(entity) {
     if (!entity.phoneNumbers) {
       entity.phoneNumbers = new Array();
@@ -238,6 +250,18 @@ swkroaApp.service('contactService', ['$http', function($http) {
     }
   };
 
+  this.ensurePrimaryPhone = function(entity, phone) {
+    if (phone.primary) {
+      var pos = entity.phoneNumbers.indexOf(phone);
+
+      for (var idx = 0; idx < entity.phoneNumbers.length; idx++) {
+        if (entity.phoneNumbers[idx].primary && pos != idx) {
+          entity.phoneNumbers[idx].primary = false;
+        }
+      }
+    }
+  };
+
   this.addEmail = function(entity) {
     if (!entity.emailAddresses) {
       entity.emailAddresses = new Array();
@@ -253,6 +277,18 @@ swkroaApp.service('contactService', ['$http', function($http) {
     } else {
       var idx = entity.emailAddresses.indexOf(email);
       entity.emailAddresses.splice(idx, 1);
+    }
+  };
+
+  this.ensurePrimaryEmail = function(entity, email) {
+    if (email.primary) {
+      var pos = entity.emailAddresses.indexOf(email);
+
+      for (var idx = 0; idx < entity.emailAddresses.length; idx++) {
+        if (entity.emailAddresses[idx].primary && pos != idx) {
+          entity.emailAddresses[idx].primary = false;
+        }
+      }
     }
   };
 

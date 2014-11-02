@@ -138,7 +138,7 @@ public final class MembershipApiController {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
     try {
-      // save the membersip
+      // save the membership
       Membership savedMembership = membershipService.saveMembership(membership, WebAppUtils.getUser());
 
       // specify the location of the resource
