@@ -277,6 +277,14 @@
 
     <!-- Testing Dependencies -->
 
+    <!-- Apache Common IO Dependencies -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-io</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
     <!-- Spring Testing Dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>

@@ -220,6 +220,10 @@ public final class Membership implements Serializable, Comparable<Membership> {
    *        The {@link Member} to replace (or add) as the "spouse" member.
    */
   public void setSpouse(final Member spouse) {
+    if (spouse == null) {
+      return;
+    }
+
     // remove the existing "spouse" member if one exists
     Iterator<Member> it = members.iterator();
     while (it.hasNext()) {

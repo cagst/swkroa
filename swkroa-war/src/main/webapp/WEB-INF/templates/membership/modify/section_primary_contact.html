@@ -18,7 +18,7 @@
             <select class="form-control" name="addressType"
                     data-ng-options="type.codeValueUID as type.display for type in addressTypes"
                     data-ng-model="address.addressTypeCD"
-                    data-ng-required="true">
+                    data-ng-required="address.active">
             </select>
           </div>
           <div class="col-xs-4">
@@ -42,7 +42,7 @@
             <input type="text" class="form-control" name="address1" maxlength="50"
                    data-th-placeholder="#{com.cagst.swkroa.membership.member.address.line1}"
                    data-ng-model="address.addressLine1"
-                   data-ng-required="true" />
+                   data-ng-required="address.active" />
           </div>
         </div>
         <div class="row spacer-top">
@@ -64,20 +64,20 @@
             <input type="text" class="form-control" name="city" maxlength="50"
                    data-th-placeholder="#{com.cagst.swkroa.membership.member.address.city}"
                    data-ng-model="address.city"
-                   data-ng-required="true" />
+                   data-ng-required="address.active" />
           </div>
           <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressState.$invalid}">
             <select class="form-control" name="addressState"
                     data-ng-model="address.state"
                     data-ng-options="state.code as state.name for state in states"
-                    data-ng-required="true">
+                    data-ng-required="address.active">
             </select>
           </div>
           <div class="col-xs-4" data-ng-class="{'has-error': addressForm.postalCode.$invalid}">
             <input type="text" class="form-control" name="postalCode" maxlength="15"
                    data-th-placeholder="#{com.cagst.swkroa.membership.member.address.zip}"
                    data-ng-model="address.postalCode"
-                   data-ng-required="true" />
+                   data-ng-required="address.active" />
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@
             <select class="form-control" name="phoneType"
                     data-ng-options="type.codeValueUID as type.display for type in phoneTypes"
                     data-ng-model="phone.phoneTypeCD"
-                    data-ng-required="true">
+                    data-ng-required="phone.active">
             </select>
           </div>
           <div class="col-xs-4">
@@ -125,7 +125,7 @@
             <input type="tel" class="form-control" name="number" maxlength="25"
                    data-ng-model="phone.phoneNumber"
                    data-ui-mask="(999) 999-9999"
-                   data-ng-required="true" />
+                   data-ng-required="phone.active" />
           </div>
           <div class="col-xs-4">
             <input type="text" class="form-control" maxlength="10"
@@ -154,7 +154,7 @@
             <select class="form-control" name="emailType"
                     data-ng-options="type.codeValueUID as type.display for type in emailTypes"
                     data-ng-model="email.emailTypeCD"
-                    data-ng-required="true">
+                    data-ng-required="email.active">
             </select>
           </div>
           <div class="col-xs-4">
@@ -178,7 +178,7 @@
             <input type="email" class="form-control" name="emailAddress" maxlength="256"
                    data-th-placeholder="#{com.cagst.swkroa.membership.member.email.prompt}"
                    data-ng-model="email.emailAddress"
-                   data-ng-required="true" />
+                   data-ng-required="email.active" />
           </div>
         </div>
       </div>

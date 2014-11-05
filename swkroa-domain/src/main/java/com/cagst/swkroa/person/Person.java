@@ -1,5 +1,13 @@
 package com.cagst.swkroa.person;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import com.cagst.common.formatter.DefaultNameFormatter;
 import com.cagst.common.formatter.NameFormatter;
 import com.cagst.common.util.CGTCollatorBuilder;
@@ -13,14 +21,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Representation of a generic Person within the system.
@@ -146,6 +146,13 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     return nameFormatter.formatFullName(name_last, name_first, name_middle);
+  }
+
+  /**
+   * This is an empty method to allow proper serialization of JSON.
+   */
+  public void setFullName(final String fullName) {
+
   }
 
   public Locale getLocale() {

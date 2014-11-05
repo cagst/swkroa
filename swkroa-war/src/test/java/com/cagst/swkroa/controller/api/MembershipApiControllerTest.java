@@ -8,14 +8,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.user.User;
-import com.cagst.swkroa.web.util.JacksonObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.ehcache.transaction.xa.OptimisticLockFailureException;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -82,7 +82,7 @@ public class MembershipApiControllerTest {
   }
 
   /**
-   * Test the saveMembership POST method where the save failes due to Optimistic Locking.
+   * Test the saveMembership POST method where the save fails due to Optimistic Locking.
    */
   @Test
   @Ignore
@@ -92,12 +92,11 @@ public class MembershipApiControllerTest {
 
     when(membershipService.saveMembership(membership, user)).thenThrow(OptimisticLockFailureException.class);
 
-    ObjectMapper mapper = new JacksonObjectMapper();
-
-    String json = mapper.writeValueAsString(membership);
+    InputStream in = getClass().getResourceAsStream("basic_membership.json");
+    String json = IOUtils.toString(in);
 
     mockMvc.perform(
-        post("/api/memberships", membership)
+        post("/api/memberships")
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
         .andExpect(status().isConflict());

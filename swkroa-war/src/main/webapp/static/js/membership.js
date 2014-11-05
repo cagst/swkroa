@@ -338,13 +338,21 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
 
   $scope.save = function() {
     $http.post("/api/memberships", $scope.membership).success(function(data, status) {
-      $scope.view = "listing";
-
       if (status == 201) {
+        $scope.memberships.push(data);
+        $scope.membership = data;
+
         $('#createdMessage').show();
       } else {
+        var idx = $scope.memberships.indexOf($scope.membership);
+
+        $scope.memberships[idx] = data;
+        $scope.membership       = data;
+
         $('#updatedMessage').show();
       }
+
+      $scope.view = "listing";
     });
   };
 }]);
