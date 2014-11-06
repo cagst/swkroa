@@ -37,6 +37,9 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
   $scope.getMemberships = function() {
     $scope.membership = null;
 
+    $('#createdMessage').hide();
+    $('#updatedMessage').hide();
+
     var url = "/api/memberships?q=";
     if ($scope.query && $scope.query.length > 0) {
       url = url + $scope.query;

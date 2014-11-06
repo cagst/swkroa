@@ -30,6 +30,7 @@
             <select class="form-control"
                     data-ng-model="member.person.titleCD"
                     data-ng-options="title.codeValueUID as title.display for title in titles">
+              <option value="" data-th-text="#{com.cagst.swkroa.none}"></option>
             </select>
           </div>
           <div class="col-xs-2" data-ng-class="{'has-error': memberForm.firstName.$invalid}">
