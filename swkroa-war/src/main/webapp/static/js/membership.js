@@ -14,19 +14,11 @@ swkroaApp.service('membershipService', ['$http', function($http) {
       url = url + query;
     }
 
-    var promise = $http.get(url).then(function(response) {
-      return response.data;
-    });
-
-    return promise;
+    return $http.get(url);
   };
 
   this.getMembership = function(membershipUID) {
-    var promise = $http.get('/api/memberships/' + membershipUID).then(function(response) {
-      return response.data;
-    });
-
-    return promise;
+    return $http.get('/api/memberships/' + membershipUID);
   };
 
   this.saveMembership = function(membership) {
@@ -75,31 +67,35 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
     $('#createdMessage').hide();
     $('#updatedMessage').hide();
 
-    membershipService.getMemberships($scope.query).then(function(data) {
-      $scope.memberships = data;
-      $scope.searched    = true;
+    membershipService.getMemberships($scope.query).then(function(response) {
+      if (response.status == 200) {
+        $scope.memberships = response.data;
+        $scope.searched    = true;
+      }
     });
   };
 
   $scope.getMembership = function(membershipUID) {
-    membershipService.getMembership(membershipUID).then(function(data) {
-      $scope.membership = data;
-
-      for (var idx = 0; idx < $scope.memberships.length; idx++) {
-        if ($scope.memberships[idx].membershipUID == $scope.membership.membershipUID) {
-          $scope.memberships[idx] = $scope.membership;
-          break;
+    membershipService.getMembership(membershipUID).then(function(response) {
+      if (response.status == 200) {
+        $scope.membership = response.data;
+        for (var idx = 0; idx < $scope.memberships.length; idx++) {
+          if ($scope.memberships[idx].membershipUID == $scope.membership.membershipUID) {
+            $scope.memberships[idx] = $scope.membership;
+            break;
+          }
         }
       }
     });
   };
 
   $scope.addMembership = function() {
-    membershipService.getMembership(0).then(function(data) {
-      $scope.membership = data;
-      $scope.original   = angular.copy(data);
-
-      $scope.fixedDuesAmount = ($scope.membership.duesAmount > 0);
+    membershipService.getMembership(0).then(function(response) {
+      if (response.status == 200) {
+        $scope.membership      = response.data;
+        $scope.original        = angular.copy(response.data);
+        $scope.fixedDuesAmount = ($scope.membership.duesAmount > 0);
+      }
     });
 
     if (!$scope.fullyLoaded) {
@@ -119,7 +115,7 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
     }
 
     $scope.original = angular.copy($scope.membership);
-    $scope.view = "edit";
+    $scope.view     = "edit";
   };
 
   $scope.removeMembership = function() {
@@ -139,7 +135,7 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
 
   $scope.selectComment = function(comment) {
     $scope.commentIdx = $scope.membership.comments.indexOf(comment);
-    $scope.comment = angular.copy(comment);
+    $scope.comment    = angular.copy(comment);
   };
 
   $scope.addComment = function() {
@@ -283,8 +279,17 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
   };
 
   $scope.addSpouse = function() {
+    var spouseMember = null;
+    for (idx = 0; idx < $scope.memberTypes.length; idx++) {
+      if ($scope.memberTypes[idx].memberTypeMeaning === 'SPOUSE') {
+        spouseMember = $scope.memberTypes[idx];
+        break;
+      }
+    }
+
     $scope.membership.spouse = {
-      active: true
+      active: true,
+      memberType: spouseMember
     };
   };
 
@@ -377,22 +382,23 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
   };
 
   $scope.save = function() {
-    $http.post("/api/memberships", $scope.membership).success(function(data, status) {
-      if (status == 201) {
-        $scope.memberships.push(data);
-        $scope.membership = data;
+    membershipService.saveMembership($scope.membership).then(function(response) {
+      if (response.status == 201) {
+        $scope.memberships.push(response.data);
+
+        $scope.membership = response.data;
+        $scope.view       = "listing";
 
         $('#createdMessage').show();
-      } else {
+      } else if (response.status == 200) {
         var idx = $scope.memberships.indexOf($scope.membership);
 
-        $scope.memberships[idx] = data;
-        $scope.membership       = data;
+        $scope.memberships[idx] = response.data;
+        $scope.membership       = response.data;
+        $scope.view             = "listing";
 
         $('#updatedMessage').show();
       }
-
-      $scope.view = "listing";
     });
   };
 }]);

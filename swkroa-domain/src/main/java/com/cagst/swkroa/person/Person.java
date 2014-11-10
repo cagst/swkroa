@@ -148,13 +148,6 @@ public class Person implements Serializable, Comparable<Person> {
     return nameFormatter.formatFullName(name_last, name_first, name_middle);
   }
 
-  /**
-   * This is an empty method to allow proper serialization of JSON.
-   */
-  public void setFullName(final String fullName) {
-
-  }
-
   public Locale getLocale() {
     return locale;
   }

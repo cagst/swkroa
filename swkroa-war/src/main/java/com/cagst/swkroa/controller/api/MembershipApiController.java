@@ -139,6 +139,9 @@ public final class MembershipApiController {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
     try {
+      // determine if this is a new membership before we save it (since we will update the membership after the save)
+      boolean newMembership = (membership.getMembershipUID() == 0);
+
       // save the membership
       Membership savedMembership = membershipService.saveMembership(membership, WebAppUtils.getUser());
 
@@ -151,11 +154,7 @@ public final class MembershipApiController {
       HttpHeaders headers = new HttpHeaders();
       headers.setLocation(locationUri.toUri());
 
-      if (membership.getMembershipUID() == 0) {
-        return new ResponseEntity<Membership>(savedMembership, headers, HttpStatus.CREATED);
-      } else {
-        return new ResponseEntity<Membership>(savedMembership, headers, HttpStatus.OK);
-      }
+      return new ResponseEntity<Membership>(savedMembership, headers, newMembership ? HttpStatus.CREATED : HttpStatus.OK);
     } catch (OptimisticLockingFailureException ex) {
       return new ResponseEntity<Membership>(membership, HttpStatus.CONFLICT);
     } catch (Exception ex) {
