@@ -76,6 +76,9 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
   };
 
   $scope.getMembership = function(membershipUID) {
+    $('#createdMessage').hide();
+    $('#updatedMessage').hide();
+
     membershipService.getMembership(membershipUID).then(function(response) {
       if (response.status == 200) {
         $scope.membership = response.data;

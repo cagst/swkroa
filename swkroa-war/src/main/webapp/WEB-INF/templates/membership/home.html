@@ -17,12 +17,10 @@
     <div class="page-header">
       <h3 data-th-text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
       <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <strong>Success!</strong>
         <div data-th-text="#{com.cagst.swkroa.membership.save.created}">zzz Created</div>
       </div>
       <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <strong>Success!</strong>
         <div data-th-text="#{com.cagst.swkroa.membership.save.updated}">zzz Updated</div>
       </div>
@@ -263,7 +261,7 @@
                     data-ng-show="membership.membershipUID > 0"
                     data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
             </button>
-            <button class="btn btn-default"
+            <button type="button" class="btn btn-default"
                     data-ng-click="cancelChanges()"
                     data-th-text="#{com.cagst.swkroa.membership.cancel}">
             </button>
