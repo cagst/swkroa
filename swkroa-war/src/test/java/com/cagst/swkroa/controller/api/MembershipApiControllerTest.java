@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.user.User;
-import net.sf.ehcache.transaction.xa.OptimisticLockFailureException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,6 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -90,7 +90,7 @@ public class MembershipApiControllerTest {
     Membership membership = new Membership();
     User user = new User();
 
-    when(membershipService.saveMembership(membership, user)).thenThrow(OptimisticLockFailureException.class);
+    when(membershipService.saveMembership(membership, user)).thenThrow(OptimisticLockingFailureException.class);
 
     InputStream in = getClass().getResourceAsStream("basic_membership.json");
     String json = IOUtils.toString(in);

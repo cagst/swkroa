@@ -9,13 +9,13 @@ import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.member.*;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
-import net.sf.ehcache.transaction.xa.OptimisticLockFailureException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +31,7 @@ import org.springframework.web.util.UriComponents;
  * @version 1.0.0
  */
 @RestController
+@RequestMapping("/api/memberships")
 public final class MembershipApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipApiController.class);
 
@@ -51,7 +52,7 @@ public final class MembershipApiController {
    *
    * @return A JSON representation of the active Memberships within the system.
    */
-  @RequestMapping(value = "/api/memberships", method = RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public List<Membership> getMemberships(final @RequestParam("q") String query) {
     LOGGER.info("Received request to retrieve memberships using query string [{}]", query);
 
@@ -75,7 +76,7 @@ public final class MembershipApiController {
    *
    * @return A {@link Membership} that represents the {@link Membership} for the specified membership ID.
    */
-  @RequestMapping(value = {"/api/memberships/{membershipId}"}, method = RequestMethod.GET)
+  @RequestMapping(value = "/{membershipId}", method = RequestMethod.GET)
   public Membership getMembership(final @PathVariable long membershipId) {
     LOGGER.info("Received request to retrieve membership [{}].", membershipId);
 
@@ -111,7 +112,7 @@ public final class MembershipApiController {
    * @return The next available OwnerId based upon the specified first name and last name, or an empty string if no
    * OwnerId could be determined.
    */
-  @RequestMapping(value = {"/api/generateOwnerId/{firstName}/{lastName}"})
+  @RequestMapping(value = "/ownerId/{firstName}/{lastName}", method = RequestMethod.GET)
   public String generateOwnerId(final @PathVariable String firstName, final @PathVariable String lastName) {
     String ownerId = StringUtils.EMPTY;
 
@@ -133,7 +134,7 @@ public final class MembershipApiController {
    *
    * @return The {@link Membership} after it has been persisted.
    */
-  @RequestMapping(value = {"/api/memberships"}, method = RequestMethod.POST)
+  @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<Membership> saveMembership(final @RequestBody Membership membership, final HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
@@ -155,7 +156,7 @@ public final class MembershipApiController {
       } else {
         return new ResponseEntity<Membership>(savedMembership, headers, HttpStatus.OK);
       }
-    } catch (OptimisticLockFailureException ex) {
+    } catch (OptimisticLockingFailureException ex) {
       return new ResponseEntity<Membership>(membership, HttpStatus.CONFLICT);
     } catch (Exception ex) {
       return new ResponseEntity<Membership>(membership, HttpStatus.INTERNAL_SERVER_ERROR);

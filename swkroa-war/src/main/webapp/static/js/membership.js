@@ -7,8 +7,43 @@
  * Version: 1.0.0
  */
 
-swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contactService',
-    function($scope, $http, $filter, contactService, currencyFilter)
+swkroaApp.service('membershipService', ['$http', function($http) {
+  this.getMemberships = function(query) {
+    var url = "/api/memberships?q=";
+    if (query && query.length > 0) {
+      url = url + query;
+    }
+
+    var promise = $http.get(url).then(function(response) {
+      return response.data;
+    });
+
+    return promise;
+  };
+
+  this.getMembership = function(membershipUID) {
+    var promise = $http.get('/api/memberships/' + membershipUID).then(function(response) {
+      return response.data;
+    });
+
+    return promise;
+  };
+
+  this.saveMembership = function(membership) {
+    return $http.post('/api/memberships', membership);
+  }
+
+  this.generateOwnerId = function(firstName, lastName) {
+    var promise = $http.get('/api/memberships/ownerId/' + firstName + "/" + lastName).then(function(response) {
+      return JSON.parse(response.data);
+    });
+
+    return promise;
+  };
+}]);
+
+swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService', 'membershipService', '$filter',
+    function($scope, $http, contactService, membershipService, $filter, currencyFilter)
   {
 
   $scope.contactService = contactService;
@@ -40,37 +75,38 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
     $('#createdMessage').hide();
     $('#updatedMessage').hide();
 
-    var url = "/api/memberships?q=";
-    if ($scope.query && $scope.query.length > 0) {
-      url = url + $scope.query;
-    }
-
-    $http.get(url).success(function(data) {
+    membershipService.getMemberships($scope.query).then(function(data) {
       $scope.memberships = data;
       $scope.searched    = true;
     });
   };
 
   $scope.getMembership = function(membershipUID) {
-    $http.get('/api/memberships/' + membershipUID).success(function(data) {
+    membershipService.getMembership(membershipUID).then(function(data) {
       $scope.membership = data;
+
+      for (var idx = 0; idx < $scope.memberships.length; idx++) {
+        if ($scope.memberships[idx].membershipUID == $scope.membership.membershipUID) {
+          $scope.memberships[idx] = $scope.membership;
+          break;
+        }
+      }
     });
   };
 
   $scope.addMembership = function() {
+    membershipService.getMembership(0).then(function(data) {
+      $scope.membership = data;
+      $scope.original   = angular.copy(data);
+
+      $scope.fixedDuesAmount = ($scope.membership.duesAmount > 0);
+    });
+
     if (!$scope.fullyLoaded) {
       loadAll($scope, $http);
     } else {
       syncAllItems($scope);
     }
-
-    $http.get('/api/memberships/0').success(function(data) {
-      $scope.membership = data;
-      $scope.fixedDuesAmount = ($scope.membership.duesAmount > 0);
-
-      $scope.original = angular.copy(data);
-      syncAllItems($scope);
-    });
 
     $scope.view = "add";
   };
@@ -88,16 +124,17 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
 
   $scope.removeMembership = function() {
     $scope.membership.active = false;
-    $http.put("/api/membership", $scope.membership).success(function(data) {
-      $scope.membership = null;
-    })
-    .error(function(data) {
-      // if we failed to save (remove) the membership
-      // set it back to active
-      // TODO: Need to add a message for the user
-      $scope.membership.active = true;
-    });
     $('#deleteMembership').modal('hide');
+
+    membershipService.saveMembership($scope.membership).then(function(response) {
+      if (response.status == 200) {
+        var idx = $scope.memberships.indexOf($scope.membership);
+        $scope.memberships.splice(idx, 1);
+        $scope.membership = null;
+      } else {
+        $scope.membership.active = true;
+      }
+    });
   };
 
   $scope.selectComment = function(comment) {
@@ -321,8 +358,8 @@ swkroaApp.controller('swkroaController', ['$scope', '$http', '$filter', 'contact
         lastName   && lastName.length > 2 &
         (!ownerIdent || ownerIdent.length == 0)) {
 
-      $http.get("/api/generateOwnerId/" + firstName + "/" + lastName).success(function(data) {
-        member.ownerIdent = JSON.parse(data);
+      membershipService.generateOwnerId(firstName, lastName).then(function(data) {
+        member.ownerIdent = data;
       });
     };
   };

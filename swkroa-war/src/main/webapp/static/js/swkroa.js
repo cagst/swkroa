@@ -88,7 +88,7 @@ angular.module('ng').filter('zip', function () {
 });
 
 // add an interceptor to our http service to inject the context root for our requests
-swkroaApp.factory('contextRootInterceptor', function($location) {
+swkroaApp.factory('contextRootInterceptor', function() {
   return {
     'request': function(config) {
       if (config.url.startsWith("/")) {
@@ -96,6 +96,16 @@ swkroaApp.factory('contextRootInterceptor', function($location) {
       }
 
       return config;
+    },
+
+    'responseError': function(rejection) {
+      if (rejection.status == 409) {
+        $('#optimisticErrorMessage').modal('show');
+      } else if (rejection.status == 500) {
+        $('#unknownErrorMessage').modal('show');
+      }
+
+      return rejection;
     }
   };
 });

@@ -146,6 +146,46 @@
   </div>
 </div>
 
+<div class="modal fade" id="optimisticErrorMessage" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.save.failed.caption}">zzz Optimistic</h4>
+      </div>
+      <div class="modal-body">
+        <span data-th-text="#{com.cagst.swkroa.save.failed.message.optimistic}">zzz Update Failed?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"
+                data-dismiss="modal"
+                data-th-text="#{com.cagst.swkroa.ok}">
+          zzz Keep
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="unknownErrorMessage" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.save.failed.caption}">zzz Unknown</h4>
+      </div>
+      <div class="modal-body">
+        <span data-th-text="#{com.cagst.swkroa.save.failed.message.unknown}">zzz Update Failed?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"
+                data-dismiss="modal"
+                data-th-text="#{com.cagst.swkroa.ok}">
+          zzz Keep
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript" data-th-src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js}"></script>
 <script type="text/javascript" data-th-src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js}"></script>
 

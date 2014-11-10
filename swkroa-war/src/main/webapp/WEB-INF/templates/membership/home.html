@@ -11,7 +11,7 @@
 
 <body>
 
-<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="swkroaController">
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="membershipController">
   <!-- Membership Listing Page -->
   <div data-ng-show="view == 'listing'">
     <div class="page-header">
@@ -68,6 +68,7 @@
               <div data-ng-show="memberships.length">
                 <div class="list-group-item alt-list-group-item sel-list-group-item"
                      data-ng-repeat="mem in memberships"
+                     data-ng-show="mem.active"
                      data-ng-class="{active: mem.membershipUID === membership.membershipUID}"
                      data-ng-click="getMembership(mem.membershipUID)">
                   <div class="lead lead-in">
