@@ -21,7 +21,7 @@
   <link type="text/css" data-th-href="@{/static/css/swkroa.css}" rel="stylesheet" />
 
   <script type="text/javascript" data-th-src="@{//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js}"></script>
-  <script type="text/javascript" data-th-src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js}"></script>
+  <script type="text/javascript" data-th-src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js}"></script>
   <script type="text/javascript" data-th-src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js}"></script>
 
   <script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
@@ -65,7 +65,7 @@
         </a>
       </li>
       <li>
-        <a href="/membership/listing" data-th-href="@{/membership/home}"
+        <a data-th-href="@{/memberships}"
            data-th-text="#{com.cagst.swkroa.nav.membership}">
           zzz Memberships
         </a>
@@ -146,16 +146,48 @@
   </div>
 </div>
 
+<div class="modal fade" id="optimisticErrorMessage" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.save.failed.caption}">zzz Optimistic</h4>
+      </div>
+      <div class="modal-body">
+        <span data-th-text="#{com.cagst.swkroa.save.failed.message.optimistic}">zzz Update Failed?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"
+                data-dismiss="modal"
+                data-th-text="#{com.cagst.swkroa.ok}">
+          zzz Keep
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="unknownErrorMessage" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.save.failed.caption}">zzz Unknown</h4>
+      </div>
+      <div class="modal-body">
+        <span data-th-text="#{com.cagst.swkroa.save.failed.message.unknown}">zzz Update Failed?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"
+                data-dismiss="modal"
+                data-th-text="#{com.cagst.swkroa.ok}">
+          zzz Keep
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript" data-th-src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js}"></script>
 <script type="text/javascript" data-th-src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js}"></script>
-
-<!--
-<script>
-  $(document).ready(function() {
-    $("select.select2").select2();
-  });
-</script>
--->
 
 </body>
 </html>

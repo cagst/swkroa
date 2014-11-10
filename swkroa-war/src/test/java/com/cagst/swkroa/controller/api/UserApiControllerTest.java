@@ -17,6 +17,7 @@ import org.junit.runners.JUnit4;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,7 +52,7 @@ public class UserApiControllerTest {
    */
   @Test
   public void testGetUserByUID_NotFound() throws Exception {
-    when(userService.getUserByUID(anyLong())).thenThrow(IncorrectResultSizeDataAccessException.class);
+    when(userService.getUserByUID(anyLong())).thenThrow(EmptyResultDataAccessException.class);
 
     mockMvc.perform(get("/api/users/123")).andExpect(status().isNotFound());
 

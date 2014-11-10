@@ -1,12 +1,12 @@
 package com.cagst.swkroa.contact;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link PhoneNumber} object. Used to marsahl / unmarshal a
@@ -22,6 +22,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
   private static final String PHONE_TYPE = "phone_type_cd";
   private static final String PHONE_NUMBER = "phone_number";
   private static final String PHONE_EXTENSION = "phone_extension";
+  private static final String PRIMARY_IND = "primary_ind";
   private static final String ACTIVE_IND = "active_ind";
   private static final String CREATE_ID = "create_id";
   private static final String UPDT_ID = "updt_id";
@@ -36,6 +37,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
     phone.setPhoneTypeCD(rs.getLong(PHONE_TYPE));
     phone.setPhoneNumber(rs.getString(PHONE_NUMBER));
     phone.setPhoneExtension(rs.getString(PHONE_EXTENSION));
+    phone.setPrimary(rs.getBoolean(PRIMARY_IND));
     phone.setActive(rs.getBoolean(ACTIVE_IND));
     phone.setPhoneUpdateCount(rs.getLong(UPDT_CNT));
 
@@ -62,6 +64,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
     params.addValue(PHONE_NUMBER, phoneNumber.getPhoneNumber());
     params.addValue(PHONE_EXTENSION,
         StringUtils.isNotBlank(phoneNumber.getPhoneExtension()) ? phoneNumber.getPhoneExtension() : null);
+    params.addValue(PRIMARY_IND, phoneNumber.isPrimary());
     params.addValue(ACTIVE_IND, phoneNumber.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
     params.addValue(UPDT_ID, user.getUserUID());
@@ -87,6 +90,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
     params.addValue(PHONE_NUMBER, phoneNumber.getPhoneNumber());
     params.addValue(PHONE_EXTENSION,
         StringUtils.isNotBlank(phoneNumber.getPhoneExtension()) ? phoneNumber.getPhoneExtension() : null);
+    params.addValue(PRIMARY_IND, phoneNumber.isPrimary());
     params.addValue(ACTIVE_IND, phoneNumber.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
 

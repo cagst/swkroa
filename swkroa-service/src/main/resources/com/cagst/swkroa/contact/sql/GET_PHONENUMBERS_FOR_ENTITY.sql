@@ -4,6 +4,7 @@ SELECT p.phone_id
       ,p.phone_type_cd
       ,p.phone_number
       ,p.phone_extension
+      ,p.primary_ind
       ,p.active_ind
       ,p.updt_cnt
   FROM phone p

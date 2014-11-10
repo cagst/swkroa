@@ -1,22 +1,27 @@
 package com.cagst.swkroa.controller.api;
 
-import com.cagst.common.web.servlet.tags.StaticResourceAssistant;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.List;
+
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.member.*;
-import com.cagst.swkroa.model.MembershipModel;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
 
 /**
  * Handles and retrieves {@link Membership}, {@link Member}, and {@link MembershipCounty} objects depending upon the URI
@@ -25,7 +30,8 @@ import java.util.List;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Controller
+@RestController
+@RequestMapping("/api/memberships")
 public final class MembershipApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipApiController.class);
 
@@ -46,9 +52,8 @@ public final class MembershipApiController {
    *
    * @return A JSON representation of the active Memberships within the system.
    */
-  @RequestMapping(value = "/api/memberships", method = RequestMethod.GET)
-  @ResponseBody
-  public List<MembershipModel> getMemberships(final @RequestParam("q") String query) {
+  @RequestMapping(method = RequestMethod.GET)
+  public List<Membership> getMemberships(final @RequestParam("q") String query) {
     LOGGER.info("Received request to retrieve memberships using query string [{}]", query);
 
     List<Membership> memberships;
@@ -58,14 +63,9 @@ public final class MembershipApiController {
       memberships = membershipService.getActiveMemberships();
     }
 
-    List<MembershipModel> models = new ArrayList<MembershipModel>(memberships.size());
-    for (Membership membership : memberships) {
-      models.add(new MembershipModel(membership));
-    }
+    Collections.sort(memberships);
 
-    Collections.sort(models);
-
-    return models;
+    return memberships;
   }
 
   /**
@@ -74,11 +74,10 @@ public final class MembershipApiController {
    * @param membershipId
    *     A {@link long} that uniquely identifies the {@link Membership} to retrieve.
    *
-   * @return A {@link MembershipModel} that represents the {@link Membership} for the specified membership ID.
+   * @return A {@link Membership} that represents the {@link Membership} for the specified membership ID.
    */
-  @RequestMapping(value = {"/api/membership/{membershipId}"}, method = RequestMethod.GET)
-  @ResponseBody
-  public MembershipModel getMembership(final @PathVariable long membershipId) {
+  @RequestMapping(value = "/{membershipId}", method = RequestMethod.GET)
+  public Membership getMembership(final @PathVariable long membershipId) {
     LOGGER.info("Received request to retrieve membership [{}].", membershipId);
 
     if (membershipId == 0L) {
@@ -90,11 +89,15 @@ public final class MembershipApiController {
       membership.setEntityType(codeValueRepo.getCodeValueByMeaning("ENTITY_INDIVIDUAL"));
       membership.addMember(primary);
 
-      return new MembershipModel(membership);
-    } else {
-      Membership membership = membershipService.getMembershipByUID(membershipId);
+      return membership;
+    }
 
-      return new MembershipModel(membership);
+    try {
+      return membershipService.getMembershipByUID(membershipId);
+    } catch (EmptyResultDataAccessException ex) {
+      throw new ResourceNotFoundException(ex);
+    } catch (IncorrectResultSizeDataAccessException ex) {
+      throw new ResourceNotFoundException(ex);
     }
   }
 
@@ -109,10 +112,8 @@ public final class MembershipApiController {
    * @return The next available OwnerId based upon the specified first name and last name, or an empty string if no
    * OwnerId could be determined.
    */
-  @RequestMapping(value = {"/api/generateOwnerId/{firstName}/{lastName}"})
-  public
-  @ResponseBody
-  String generateOwnerId(final @PathVariable String firstName, final @PathVariable String lastName) {
+  @RequestMapping(value = "/ownerId/{firstName}/{lastName}", method = RequestMethod.GET)
+  public String generateOwnerId(final @PathVariable String firstName, final @PathVariable String lastName) {
     String ownerId = StringUtils.EMPTY;
 
     try {
@@ -125,24 +126,6 @@ public final class MembershipApiController {
   }
 
   /**
-   * Handles the request and persists the {@link MembershipModel} to persistent storage. Called from the Add/Edit
-   * Membership page.
-   *
-   * @param model
-   *     The {@link MembershipModel} to persist.
-   */
-  @RequestMapping(value = {"/api/membership"}, method = RequestMethod.POST)
-  @ResponseBody
-  public String saveMembershipModel(final @RequestBody MembershipModel model, final HttpServletRequest request) {
-    LOGGER.info("Received request to save membership [{}]", model.getMembershipUID());
-
-    model.setMemberTypeRepository(memberTypeRepo);
-    membershipService.saveMembership(model.build(), WebAppUtils.getUser());
-
-    return StaticResourceAssistant.getString("url.membership.home", request);
-  }
-
-  /**
    * Handles the request and persists the {@link Membership} to persistent storage. Called from the Add/Edit Membership
    * page when adding/editing a membership.
    *
@@ -151,11 +134,31 @@ public final class MembershipApiController {
    *
    * @return The {@link Membership} after it has been persisted.
    */
-  @RequestMapping(value = {"/api/membership"}, method = RequestMethod.PUT)
-  @ResponseBody
-  public Membership saveMembership(final @RequestBody Membership membership) {
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<Membership> saveMembership(final @RequestBody Membership membership, final HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
-    return membershipService.saveMembership(membership, WebAppUtils.getUser());
+    try {
+      // determine if this is a new membership before we save it (since we will update the membership after the save)
+      boolean newMembership = (membership.getMembershipUID() == 0);
+
+      // save the membership
+      Membership savedMembership = membershipService.saveMembership(membership, WebAppUtils.getUser());
+
+      // specify the location of the resource
+      UriComponents locationUri = ServletUriComponentsBuilder
+          .fromContextPath(request)
+          .path("/api/memberships/{membershipUID}")
+          .buildAndExpand(savedMembership.getMembershipUID());
+
+      HttpHeaders headers = new HttpHeaders();
+      headers.setLocation(locationUri.toUri());
+
+      return new ResponseEntity<Membership>(savedMembership, headers, newMembership ? HttpStatus.CREATED : HttpStatus.OK);
+    } catch (OptimisticLockingFailureException ex) {
+      return new ResponseEntity<Membership>(membership, HttpStatus.CONFLICT);
+    } catch (Exception ex) {
+      return new ResponseEntity<Membership>(membership, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

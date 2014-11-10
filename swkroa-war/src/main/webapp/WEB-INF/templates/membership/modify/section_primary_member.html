@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<body>
-
 <div data-th-fragment="primaryMember">
   <div class="row">
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.entityType.$invalid}">
@@ -31,7 +26,6 @@
       <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.dueon}">
         zzz Due On
       </label>
-
       <p class="input-group">
         <input type="text" class="form-control" id="dueDate" name="dueDate"
                data-datepicker-popup="MM/dd/yyyy"
@@ -53,7 +47,6 @@
           <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
           <span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
         </label>
-
         <div class="input-group">
           <input type="number" class="form-control"
                  data-ng-model="membership.calculatedDuesAmount"
@@ -72,7 +65,6 @@
           <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
           <span data-th-text="#{com.cagst.swkroa.membership.dues.fixed}">(zzz Fixed)</span>
         </label>
-
         <div class="input-group">
           <input type="number" class="form-control"
                  data-ng-model="membership.duesAmount"
@@ -93,7 +85,6 @@
           <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
           <span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
         </label>
-
         <div>
           {{membership.calculatedDuesAmount | currency}}
         </div>
@@ -107,6 +98,7 @@
       <select class="form-control"
               data-ng-model="membership.primaryMember.person.titleCD"
               data-ng-options="title.codeValueUID as title.display for title in titles">
+        <option value="" data-th-text="#{com.cagst.swkroa.none}"></option>
       </select>
     </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryFirstName.$invalid}">
@@ -149,7 +141,6 @@
   <div class="row spacer-top">
     <div class="col-xs-2">
       <label data-th-text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
-
       <div class="input-group">
         <input type="text" class="form-control" id="primaryJoinDate" name="primaryJoinDate"
                data-datepicker-popup="MM/dd/yyyy"
@@ -171,7 +162,7 @@
              data-ng-model="membership.primaryMember.greeting" />
     </div>
     <div class="col-xs-2">
-      <label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz Greeting</label>
+      <label data-th-text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz In Care Of</label>
       <input type="text" class="form-control" maxlength="50"
              data-ng-model="membership.primaryMember.inCareOf" />
     </div>
@@ -187,6 +178,3 @@
     </div>
   </div>
 </div>
-
-</body>
-</html>

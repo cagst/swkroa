@@ -155,7 +155,8 @@ public interface UserService extends UserDetailsService {
    * @throws DataAccessException
    *     if the query fails
    */
-  public User saveUser(final User builder, final User user);
+  public User saveUser(final User builder, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
 
   /**
    * Retrieves a {@link List} of all {@link User Users} that are in the system.

@@ -1,70 +1,64 @@
- <!DOCTYPE html>
+<div data-th-fragment="sectionCounties" class="panel panel-default">
+  <div class="panel-heading">
+    <span data-th-text="#{com.cagst.swkroa.membership.section.county}">zzz Counties</span>
+      <span class="pull-right">
+        <button type="button" class="btn btn-success btn-xs hover-reveal"
+                data-ng-click="addCounty()">
+          <i class="fa fa-plus"></i>
+          <span data-th-text="#{com.cagst.swkroa.membership.county.add}">zzz Add County</span>
+        </button>
+      </span>
+  </div>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<body>
-		<div data-th-fragment="sectionCounties" class="panel panel-default">
-			<div class="panel-heading">
-				<span data-th-text="#{com.cagst.swkroa.membership.section.county}">zzz Counties</span>
-				<span class="pull-right">
-					<button type="button" class="btn btn-success btn-xs hover-reveal"
-					        data-ng-click="addCounty()">
-						<i class="fa fa-plus"></i>
-						<span data-th-text="#{com.cagst.swkroa.membership.county.add}">zzz Add County</span>
-					</button>
-				</span>
-			</div>
-			
-			<div class="panel-body">
-				<div class="row">
-					<label class="col-xs-2 label-required" data-th-text="#{com.cagst.swkroa.membership.county.county}">
-						zzz County
-					</label>
-					<label class="col-xs-2" data-th-text="#{com.cagst.swkroa.membership.county.acres.mineral}">
-						zzz Minerals
-					</label>
-					<label class="col-xs-2" data-th-text="#{com.cagst.swkroa.membership.county.acres.surface}">
-						zzz Surface
-					</label>
-				</div>
-				
-				<div class="row spacer-bottom"
-				     data-ng-repeat="membershipCounty in membership.membershipCounties"
-				     data-ng-show="membershipCounty.active"
-				     data-ng-form="countyForm">
-					<div class="col-xs-2" data-ng-class="{'has-error': countyForm.county.$invalid}">
-						<select class="form-control" name="county"
-						        data-ng-options="cnty.countyName group by cnty.votingCounty for cnty in counties"
-						        data-ng-model="membershipCounty.county"
-						        data-ng-required="true">
-						</select>
-					</div>
-					<div class="col-xs-2">
-						<input type="number"
-						       class="form-control"
-						       data-ng-model="membershipCounty.netMineralAcres" />
-					</div>
-					<div class="col-xs-2">
-						<input type="number"
-						       class="form-control"
-						       data-ng-model="membershipCounty.surfaceAcres" />
-					</div>
-					<div class="col-xs-2">
-						<div data-ng-show="membershipCounty.county.swkroaCounty == true">
-							<input type="checkbox" name="votingCounty"
-							       data-ng-model="membershipCounty.votingCounty"
-							       data-ng-change="validateVotingCounty(membership, membershipCounty)"/>
-							<label data-th-text="#{com.cagst.swkroa.membership.county.voting}">zzz Voting County</label>
-						</div>
-					</div>
-					<div class="col-xs-2">
-						<button type="button" class="btn btn-danger btn-xs hover-reveal"
-						        data-ng-click="removeCounty(membershipCounty)">
-							<i class="fa fa-trash-o"></i>
-							<span data-th-text="#{com.cagst.swkroa.membership.county.remove}">zzz Remove County</span>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
-</html>
+  <div class="panel-body">
+    <div class="row">
+      <label class="col-xs-2 label-required" data-th-text="#{com.cagst.swkroa.membership.county.county}">
+        zzz County
+      </label>
+      <label class="col-xs-2" data-th-text="#{com.cagst.swkroa.membership.county.acres.mineral}">
+        zzz Minerals
+      </label>
+      <label class="col-xs-2" data-th-text="#{com.cagst.swkroa.membership.county.acres.surface}">
+        zzz Surface
+      </label>
+    </div>
+
+    <div class="row spacer-bottom"
+         data-ng-repeat="membershipCounty in membership.membershipCounties"
+         data-ng-show="membershipCounty.active"
+         data-ng-form="countyForm">
+      <div class="col-xs-2" data-ng-class="{'has-error': countyForm.county.$invalid}">
+        <select class="form-control" name="county"
+                data-ng-options="cnty.countyName group by cnty.votingCounty for cnty in counties"
+                data-ng-model="membershipCounty.county"
+                data-ng-required="membershipCounty.active">
+        </select>
+      </div>
+      <div class="col-xs-2">
+        <input type="number"
+               class="form-control"
+               data-ng-model="membershipCounty.netMineralAcres" />
+      </div>
+      <div class="col-xs-2">
+        <input type="number"
+               class="form-control"
+               data-ng-model="membershipCounty.surfaceAcres" />
+      </div>
+      <div class="col-xs-2">
+        <div data-ng-show="membershipCounty.county.swkroaCounty == true">
+          <input type="checkbox" name="votingCounty"
+                 data-ng-model="membershipCounty.votingCounty"
+                 data-ng-change="validateVotingCounty(membership, membershipCounty)" />
+          <label data-th-text="#{com.cagst.swkroa.membership.county.voting}">zzz Voting County</label>
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <button type="button" class="btn btn-danger btn-xs hover-reveal"
+                data-ng-click="removeCounty(membershipCounty)">
+          <i class="fa fa-trash-o"></i>
+          <span data-th-text="#{com.cagst.swkroa.membership.county.remove}">zzz Remove County</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

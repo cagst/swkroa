@@ -1,6 +1,7 @@
 UPDATE email
    SET email_type_cd = :email_type_cd
       ,email_address = :email_address
+      ,primary_ind   = :primary_ind
       ,active_ind    = :active_ind
       ,updt_id       = :updt_id
       ,updt_dt_tm    = CURRENT_TIMESTAMP

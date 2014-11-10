@@ -1,11 +1,11 @@
 package com.cagst.swkroa.contact;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.builder.*;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.*;
 
 /**
  * Represents a PhoneNumber within the system.
@@ -22,6 +22,7 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
   private long phone_type_cd;
   private String phone_number;
   private String phone_extension;
+  private boolean primary_ind;
 
   // meta-data
   private boolean active_ind = true;
@@ -83,6 +84,14 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
   @Size(max = 10)
   public void setPhoneExtension(final String extension) {
     this.phone_extension = extension;
+  }
+
+  public boolean isPrimary() {
+    return primary_ind;
+  }
+
+  public void setPrimary(boolean primary_ind) {
+    this.primary_ind = primary_ind;
   }
 
   public boolean isActive() {

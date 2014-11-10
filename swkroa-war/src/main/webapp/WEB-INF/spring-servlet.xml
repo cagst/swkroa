@@ -23,7 +23,7 @@
     <property name="cacheable" value="false"/>
   </bean>
 
-  <bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+  <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
     <property name="templateResolver" ref="templateResolver"/>
 
     <!-- Add the Dialect to Thymeleaf -->
@@ -36,7 +36,7 @@
   </bean>
 
   <!-- Declare a view resolver for Thymeleaf resources -->
-  <bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+  <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
     <property name="order" value="1"/>
     <property name="templateEngine" ref="templateEngine"/>
     <property name="excludedViewNames" value="reports/*"/>

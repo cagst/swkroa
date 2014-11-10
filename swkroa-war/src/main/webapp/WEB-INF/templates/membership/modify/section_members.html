@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<body>
-
 <div data-th-fragment="sectionMembers" class="panel panel-default">
   <div class="panel-heading">
     <span data-th-text="#{com.cagst.swkroa.membership.section.additional}">zzz Additional Members</span>
@@ -16,13 +11,13 @@
   </div>
 
   <div class="panel-body">
-    <div data-ng-repeat="member in membership.additionalMembers"
-         data-ng-show="member.active"
+    <div data-ng-repeat="member in membership.members"
+         data-ng-show="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true"
          data-ng-form="memberForm">
       <div class="row">
         <div class="divider-inner">
           <span data-th-text="#{com.cagst.swkroa.membership.member.divider}">zzz MEMBERS</span>
-          <span>{{$index + 1}}</span>
+          <span>{{$index}}</span>
           <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
                   data-ng-click="removeMember(member)">
             <i class="fa fa-trash-o"></i>
@@ -35,6 +30,7 @@
             <select class="form-control"
                     data-ng-model="member.person.titleCD"
                     data-ng-options="title.codeValueUID as title.display for title in titles">
+              <option value="" data-th-text="#{com.cagst.swkroa.none}"></option>
             </select>
           </div>
           <div class="col-xs-2" data-ng-class="{'has-error': memberForm.firstName.$invalid}">
@@ -44,7 +40,7 @@
             <input type="text" class="form-control" name="firstName" maxlength="50"
                    data-th-placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
                    data-ng-model="member.person.firstName"
-                   data-ng-required="true"
+                   data-ng-required="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true"
                    data-ng-blur="generateOwnerId(member)" />
           </div>
           <div class="col-xs-2">
@@ -60,7 +56,7 @@
             <input type="text" class="form-control" name="lastName" maxlength="50"
                    data-th-placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
                    data-ng-model="member.person.lastName"
-                   data-ng-required="true"
+                   data-ng-required="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true"
                    data-ng-blur="generateOwnerId(member)" />
           </div>
           <div class="col-xs-2" data-ng-class="{'has-error': memberForm.ownerIdent.$invalid}">
@@ -70,7 +66,7 @@
             <input type="text" class="form-control" name="ownerIdent" maxlength="15"
                    data-th-placeholder="#{com.cagst.swkroa.membership.member.ownerid.prompt}"
                    data-ng-model="member.ownerIdent"
-                   data-ng-required="true" />
+                   data-ng-required="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true" />
           </div>
         </div>
       </div>
@@ -135,17 +131,19 @@
                class="grouper">
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
-                <label class="control-label label-required"
-                       data-th-text="#{com.cagst.swkroa.membership.member.address.type}">
-                  zzz Type
-                </label>
-              </div>
-              <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
                 <select class="form-control" name="addressType"
                         data-ng-options="type.codeValueUID as type.display for type in addressTypes"
                         data-ng-model="address.addressTypeCD"
-                        data-ng-required="true">
+                        data-ng-required="address.active">
                 </select>
+              </div>
+              <div class="col-xs-4">
+                <input id="primaryAddress{{$index}}" type="checkbox"
+                       data-ng-model="address.primary"
+                       data-ng-change="contactService.ensurePrimaryAddress(member, address)"/>
+                <label for="primaryAddress{{$index}}" data-th-text="#{com.cagst.swkroa.membership.member.address.primary}">
+                  zzz Primary Address
+                </label>
               </div>
               <div class="col-xs-4">
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
@@ -160,7 +158,7 @@
                 <input type="text" class="form-control" name="address1" maxlength="50"
                        data-th-placeholder="#{com.cagst.swkroa.membership.member.address.line1}"
                        data-ng-model="address.addressLine1"
-                       data-ng-required="true" />
+                       data-ng-required="address.active" />
               </div>
             </div>
             <div class="row spacer-top">
@@ -182,20 +180,20 @@
                 <input type="text" class="form-control" name="city" maxlength="50"
                        data-th-placeholder="#{com.cagst.swkroa.membership.member.address.city}"
                        data-ng-model="address.city"
-                       data-ng-required="true" />
+                       data-ng-required="address.active" />
               </div>
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.state.$invalid}">
                 <select class="form-control" name="state"
                         data-ng-model="address.state"
                         data-ng-options="state.code as state.name for state in states"
-                        data-ng-required="true">
+                        data-ng-required="address.active">
                 </select>
               </div>
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.postalCode.$invalid}">
                 <input type="text" class="form-control" name="postalCode" maxlength="15"
                        data-th-placeholder="#{com.cagst.swkroa.membership.member.address.zip}"
                        data-ng-model="address.postalCode"
-                       data-ng-required="true" />
+                       data-ng-required="address.active" />
               </div>
             </div>
           </div>
@@ -216,17 +214,19 @@
                class="grouper">
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
-                <label class="control-label label-required"
-                       data-th-text="#{com.cagst.swkroa.membership.member.phone.type}">
-                  zzz Type
-                </label>
-              </div>
-              <div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
                 <select class="form-control" name="phoneType"
                         data-ng-options="type.codeValueUID as type.display for type in phoneTypes"
                         data-ng-model="phone.phoneTypeCD"
-                        data-ng-required="true">
+                        data-ng-required="phone.active">
                 </select>
+              </div>
+              <div class="col-xs-4">
+                <input id="primaryPhone{{$index}}" type="checkbox"
+                       data-ng-model="phone.primary"
+                       data-ng-change="contactService.ensurePrimaryPhone(member, phone)"/>
+                <label for="primaryPhone{{$index}}" data-th-text="#{com.cagst.swkroa.membership.member.phone.primary}">
+                  zzz Primary Phone
+                </label>
               </div>
               <div class="col-xs-4">
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
@@ -241,7 +241,7 @@
                 <input type="tel" class="form-control" name="number" maxlength="25"
                        data-ui-mask="(999) 999-9999"
                        data-ng-model="phone.phoneNumber"
-                       data-ng-required="true" />
+                       data-ng-required="phone.active" />
               </div>
               <div class="col-xs-4">
                 <input type="text" class="form-control" maxlength="10"
@@ -267,17 +267,19 @@
                class="grouper">
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
-                <label class="control-label label-required"
-                       data-th-text="#{com.cagst.swkroa.membership.member.email.type}">
-                  zzz Type
-                </label>
-              </div>
-              <div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
                 <select class="form-control" name="emailType"
                         data-ng-options="type.codeValueUID as type.display for type in emailTypes"
                         data-ng-model="email.emailTypeCD"
-                        data-ng-required="true">
+                        data-ng-required="email.active">
                 </select>
+              </div>
+              <div class="col-xs-4">
+                <input id="primaryEmail{{$index}}" type="checkbox"
+                       data-ng-model="email.primary"
+                       data-ng-change="contactService.ensurePrimaryEmail(member, email)"/>
+                <label for="primaryEmail{{$index}}" data-th-text="#{com.cagst.swkroa.membership.member.email.primary}">
+                  zzz Primary Email
+                </label>
               </div>
               <div class="col-xs-4">
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
@@ -292,7 +294,7 @@
                 <input type="email" class="form-control" name="emailAddress" maxlength="256"
                        data-th-placeholder="#{com.cagst.swkroa.membership.member.email.prompt}"
                        data-ng-model="email.emailAddress"
-                       data-ng-required="true" />
+                       data-ng-required="email.active" />
               </div>
             </div>
           </div>
@@ -301,6 +303,3 @@
     </div>
   </div>
 </div>
-
-</body>
-</html>

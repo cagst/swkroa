@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div data-ui-view="contact"/>
+    <div data-ui-view="contact"></div>
 
     <div class="row row-inner spacer-top">
       <div class="col-xs-12">
@@ -49,7 +49,8 @@
     <div class="row row-inner spacer-top">
       <div class="col-xs-2" data-ng-class="{'has-error': userForm.username.$invalid}">
         <label class="label-required">Username</label>
-        <input type="text" class="form-control" name="username" maxlength="50" placeholder="Enter Username"
+        <input type="text" class="form-control" name="username" maxlength="50" autocomplete="off"
+               placeholder="Enter Username"
                data-ng-model="share.user.username"
                data-ng-disabled="share.user.userUID > 0"
                data-ng-required="true"/>
@@ -120,7 +121,7 @@
                   data-ng-disabled="hasChanges(share.user) || userForm.$invalid">
             <span>Update User</span>
           </button>
-          <a class="btn btn-default" ui-sref="home">Cancel</a>
+          <a class="btn btn-default" data-ui-sref="home">Cancel</a>
         </div>
       </div>
     </div>

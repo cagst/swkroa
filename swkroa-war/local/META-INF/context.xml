@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context reloadable="true">
+  <!-- maxActive:
+  Maximum number of database connections in pool. Make sure you configure all your mysqld max_connections
+  large enough to handle all of your db connections. Set to -1 for no limit.
+  -->
+
+  <!-- maxIdle:
+  Maximum number of idle database connections to retain in the pool. Set to -1 for no limit. See also the
+  DBCP documentation on this and the minEvictableIdleTimeMillis configuration parameters.
+  -->
+
+  <!-- maxWait:
+  Maximum time to wait for a database connection to become available in ms, in this example 10 seconds.
+  An Exception is thrown if this timeout is exceeded. Set to -1 to wait indefinitely.
+  -->
+
+  <!-- username and password:
+  MySQL username and password for the database connection.
+  -->
+
+  <!-- driverClassName:
+  Class name for the official MySQL Connector/J driver is com.mysql.jdbc.Driver.
+  -->
+
+  <!-- url:
+  The JDBC connection url for connecting to your MySQL database.
+  -->
+</Context>

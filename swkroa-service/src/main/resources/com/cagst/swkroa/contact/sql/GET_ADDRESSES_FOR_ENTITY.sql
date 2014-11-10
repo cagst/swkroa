@@ -9,6 +9,7 @@ SELECT a.address_id
       ,a.state_code
       ,a.postal_code
       ,a.country_code
+      ,a.primary_ind
       ,a.active_ind
       ,a.updt_cnt
   FROM address a

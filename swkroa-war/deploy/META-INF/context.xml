@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Context>
+<Context reloadable="true">
   <!-- maxActive:
   Maximum number of database connections in pool. Make sure you configure all your mysqld max_connections
   large enough to handle all of your db connections. Set to -1 for no limit.
@@ -28,7 +28,6 @@
   The JDBC connection url for connecting to your MySQL database.
   -->
 
-  <!--
   <Resource name="jdbc/SWKROADataSource"
             auth="Container"
             type="javax.sql.DataSource"
@@ -56,5 +55,4 @@
             url="jdbc:mysql://localhost:3306/swkroadb"
             maxActive="100"
             maxIdle="10"/>
-  -->
 </Context>

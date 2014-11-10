@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<body>
-
 <div data-th-fragment="sectionMembership">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -17,13 +12,13 @@
           <span class="pull-right"
                 data-ng-show="membership.primaryMember.memberType.allowSpouse">
             <button type="button" class="btn btn-success btn-xs hover-reveal"
-                    data-ng-show="!membership.primarySpouse || !membership.primarySpouse.active"
+                    data-ng-show="!membership.spouse || !membership.spouse.active"
                     data-ng-click="addSpouse()">
               <i class="fa fa-plus"></i>
               <span data-th-text="#{com.cagst.swkroa.membership.member.spouse.add}">zzz Add Spouse</span>
             </button>
             <button type="button" class="btn btn-danger btn-xs hover-reveal"
-                    data-ng-show="membership.primarySpouse && membership.primarySpouse.active"
+                    data-ng-show="membership.spouse && membership.spouse.active"
                     data-ng-click="removeSpouse()">
               <i class="fa fa-trash-o"></i>
               <span data-th-text="#{com.cagst.swkroa.membership.member.spouse.remove}">zzz Remove Spouse</span>
@@ -36,11 +31,8 @@
     <div class="panel-body">
       <div data-th-include="membership/modify/section_primary_member"></div>
       <div data-th-include="membership/modify/section_primary_spouse"
-           data-ng-show="membership.primarySpouse && membership.primarySpouse.active"></div>
+           data-ng-show="membership.spouse && membership.spouse.active"></div>
       <div data-th-include="membership/modify/section_primary_contact"></div>
     </div>
   </div>
 </div>
-
-</body>
-</html>

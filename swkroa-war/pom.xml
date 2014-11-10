@@ -211,7 +211,7 @@
     </dependency>
     <dependency>
       <groupId>org.thymeleaf</groupId>
-      <artifactId>thymeleaf-spring3</artifactId>
+      <artifactId>thymeleaf-spring4</artifactId>
       <type>jar</type>
       <scope>runtime</scope>
     </dependency>
@@ -277,6 +277,14 @@
 
     <!-- Testing Dependencies -->
 
+    <!-- Apache Common IO Dependencies -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-io</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
     <!-- Spring Testing Dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -304,86 +312,67 @@
   <build>
     <finalName>swkroa-${project.version}</finalName>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
     <plugins>
-      <!-- Compile Jasper Report Files
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jasperreports-maven-plugin</artifactId>
-        <version>1.0-beta-2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile-reports</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <sourceDirectory>src/main/resources/reports/jasper</sourceDirectory>
-          <outputDirectory>${project.basedir}/target/reports/jasper</outputDirectory>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports</artifactId>
-            <version>${jasper-version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      -->
-
-      <!-- Generate our JSON schema models
-      <plugin>
-        <groupId>org.jsonschema2pojo</groupId>
-        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-        <version>0.4.5</version>
-        <configuration>
-          <sourceDirectory>${project.basedir}/src/main/resources/schema</sourceDirectory>
-          <outputDirectory>${project.basedir}/target/generated-sources/jsonschema</outputDirectory>
-          <targetPackage>com.cagst.swkroa.model</targetPackage>
-          <propertyWordDelimiters>"_"</propertyWordDelimiters>
-          <generateBuilders>true</generateBuilders>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      -->
-
-      <!-- Additional configuration for WAR -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-      </plugin>
-
       <!-- Enable Tomcat 7 Support -->
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
         <version>2.2</version>
+        <configuration>
+          <contextFile>${project.basedir}/local/META-INF/context.xml</contextFile>
+          <additionalClassesDirs>
+            <additionalClassesDir>${project.basedir}/local</additionalClassesDir>
+          </additionalClassesDirs>
+        </configuration>
       </plugin>
     </plugins>
   </build>
 
-  <!--
-    <profiles>
-      <profile>
-        <id>dev</id>
-        <activation>
-          <activeByDefault>true</activeByDefault>
-        </activation>
-      </profile>
+  <profiles>
+    <profile>
+      <id>local</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+              <webResources>
+                <resource>
+                  <directory>${project.basedir}/local</directory>
+                </resource>
+              </webResources>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
-        <profile>
-          <id>non-prod</id>
-        </profile>
-
-        <profile>
-          <id>prod</id>
-        </profile>
-      </profiles>
-  -->
+    <profile>
+      <id>deploy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+              <webResources>
+                <resource>
+                  <directory>${project.basedir}/deploy</directory>
+                </resource>
+              </webResources>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

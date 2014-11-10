@@ -2,51 +2,55 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/auth" >
-      
-	<body>
-		<div data-layout-fragment="content">
-			<div class="page-header">
-				<h3 data-th-text="#{com.cagst.swkroa.signin.title}">zzz Sign In</h3>
-			</div>
-			<form action="/j_spring_security_check" data-th-attr="action=@{/j_spring_security_check}"
-			      method="POST"
-			      autocomplete="off"
-			      class="container-center-large">
-			
-				<div class="container-medium pull-right">
-					<p class="lead lead-sm" data-th-text="#{com.cagst.swkroa.signin.message}">
-						zzz Sign in
-					</p>
-					<div class="text-danger"
-					     data-th-if="${session['SPRING_SECURITY_LAST_EXCEPTION']}">
-						<strong data-th-text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
-						</strong>
-					</div>
-				</div>
-				<div class="container-medium divider-right" style="padding-right:20px;">
-					<div class="form-group">
-						<label for="j_username" class="form_label label-required" data-th-text="#{com.cagst.swkroa.signin.username.label}">
-							zzz Username
-						</label>
-						<input id="j_username" name="j_username" type="text" maxlength="50"
-						       class="form-control input-block-level"
-						       data-th-placeholder="#{com.cagst.swkroa.signin.username.prompt}" autofocus/>
-					</div>
-					<div class="form-group">
-						<label for="j_password" class="form_label label-required" data-th-text="#{com.cagst.swkroa.signin.password.label}">
-							zzz Password
-						</label>
-						<input id="j_password" name="j_password" type="password" maxlength="50"
-						       class="form-control input-block-level"
-						       data-th-placeholder="#{com.cagst.swkroa.signin.password.prompt}" />
-					</div>
-					
-					<button type="submit" class="btn btn-primary btn-block" data-th-text="#{com.cagst.swkroa.signin.button}">
-						zzz Signin
-					</button>
-				</div>
-			</form>
-		</div>
-	</body>
+      layout:decorator="layouts/auth">
+<body>
+
+<div data-layout-fragment="content">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.signin.title}">zzz Sign In</h3>
+  </div>
+  <form action="/j_spring_security_check" data-th-attr="action=@{/j_spring_security_check}"
+        method="POST"
+        autocomplete="off"
+        class="container-center-large">
+
+    <div class="container-medium pull-right">
+      <p class="lead lead-sm" data-th-text="#{com.cagst.swkroa.signin.message}">
+        zzz Sign in
+      </p>
+
+      <div class="text-danger"
+           data-th-if="${session['SPRING_SECURITY_LAST_EXCEPTION']}">
+        <strong data-th-text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+        </strong>
+      </div>
+    </div>
+    <div class="container-medium divider-right" style="padding-right:20px;">
+      <div class="form-group">
+        <label for="j_username" class="form_label label-required"
+               data-th-text="#{com.cagst.swkroa.signin.username.label}">
+          zzz Username
+        </label>
+        <input id="j_username" name="j_username" type="text" maxlength="50"
+               class="form-control input-block-level"
+               data-th-placeholder="#{com.cagst.swkroa.signin.username.prompt}" autofocus="autofocus" />
+      </div>
+      <div class="form-group">
+        <label for="j_password" class="form_label label-required"
+               data-th-text="#{com.cagst.swkroa.signin.password.label}">
+          zzz Password
+        </label>
+        <input id="j_password" name="j_password" type="password" maxlength="50"
+               class="form-control input-block-level"
+               data-th-placeholder="#{com.cagst.swkroa.signin.password.prompt}" />
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" data-th-text="#{com.cagst.swkroa.signin.button}">
+        zzz Signin
+      </button>
+    </div>
+  </form>
+</div>
+
+</body>
 </html>

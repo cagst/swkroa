@@ -1,10 +1,8 @@
 package com.cagst.swkroa.web.util;
 
-import com.cagst.swkroa.codevalue.CodeValue;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
@@ -23,10 +21,14 @@ public final class JacksonObjectMapper extends ObjectMapper {
     this.registerModule(new JodaModule());
 
     // Ensures the Joda DateTime is serialized/de-serialized formatted as ISO Date and Time
-    this.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+//    this.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    this.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-    // Adds support for read-only properties (getters with no setters).
-    this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    // Adds support for read-only properties (getters with no setters)
+    this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+    // Set empty fields to null
+    this.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 
     // Create a module to contain our custom serializer / deserializers.
 //    SimpleModule module = new SimpleModule();
