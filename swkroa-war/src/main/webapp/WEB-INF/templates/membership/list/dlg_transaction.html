@@ -127,7 +127,7 @@
                   <select class="form-control" name="member"
                           data-ng-model="entry.member"
                           data-ng-required="true"
-                          data-ng-options="member.effectiveMemberName for member in membership.allMembers">
+                          data-ng-options="member.effectiveMemberName for member in membership.members">
                   </select>
                 </td>
                 <td class="col-xs-4">
@@ -136,7 +136,7 @@
                          data-ng-change="calculateTransactionAmount()"/>
                 </td>
                 <td>
-                  <button type="button" class="btn btn-danger btn-xs" tooltip="zzz Delete Entry"
+                  <button type="button" class="btn btn-danger btn-xs" data-tooltip="zzz Delete Entry"
                           data-ng-click="deleteTransactionEntry(entry)"
                           data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
                     <i class="fa fa-trash-o"></i>
