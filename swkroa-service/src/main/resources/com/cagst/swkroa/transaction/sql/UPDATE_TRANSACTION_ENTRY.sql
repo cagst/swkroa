@@ -1,5 +1,6 @@
 UPDATE transaction_entry
    SET transaction_id            = :transaction_id
+      ,member_id                 = :member_id
       ,transaction_entry_type_cd = :transaction_entry_type_cd
       ,transaction_entry_amount  = :transaction_entry_amount
       ,related_transaction_id    = :related_transaction_id
