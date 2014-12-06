@@ -1,0 +1,1 @@
+DROP VIEW membership_summary;

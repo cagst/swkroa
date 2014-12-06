@@ -37,6 +37,7 @@
         <value>properties/i18n/report</value>
         <value>properties/i18n/maintenance</value>
         <value>properties/i18n/user</value>
+        <value>properties/i18n/accounting</value>
       </list>
     </property>
   </bean>

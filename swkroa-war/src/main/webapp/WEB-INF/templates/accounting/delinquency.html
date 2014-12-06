@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/delinquency.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="delinquencyController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.delinquency.title}">zzz Delinquencies</h3>
+  </div>
+</div>
+
+</body>
+</html>

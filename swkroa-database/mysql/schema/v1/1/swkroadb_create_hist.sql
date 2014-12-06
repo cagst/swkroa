@@ -61,7 +61,7 @@ CREATE TABLE person_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT person_hist_pk PRIMARY KEY (person_hist)
+  CONSTRAINT person_hist_pk PRIMARY KEY (person_hist_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE address_hist (
@@ -153,6 +153,8 @@ CREATE TABLE membership_hist (
   next_due_dt            DATE NOT NULL,
   dues_amount            NUMERIC(10,2) NULL,
   active_ind             BOOLEAN DEFAULT 1 NOT NULL,
+  inactive_reason_id     BIGINT UNSIGNED NULL,
+  inactive_reason_txt    VARCHAR(100) NULL,
   create_dt_tm           DATETIME NOT NULL,
   create_id              BIGINT UNSIGNED NOT NULL,
   updt_dt_tm             DATETIME NOT NULL,
@@ -214,6 +216,8 @@ CREATE TABLE member_hist (
   mail_newsletter_ind    BOOLEAN DEFAULT 1 NOT NULL,
   email_newsletter_ind   BOOLEAN DEFAULT 0 NOT NULL,
   active_ind             BOOLEAN DEFAULT 1 NOT NULL,
+  inactive_reason_id     BIGINT UNSIGNED NULL,
+  inactive_reason_txt    VARCHAR(100) NULL,
   create_dt_tm           DATETIME NOT NULL,
   create_id              BIGINT UNSIGNED NOT NULL,
   updt_dt_tm             DATETIME NOT NULL,
@@ -297,32 +301,10 @@ CREATE TRIGGER county_history AFTER UPDATE ON county
   END;
 |
 
-
-
-CREATE TRIGGER person_history AFTER UPDATE ON person
-  FOR EACH ROW BEGIN
-    INSERT INTO person_hist (person_id, name_last, name_last_key, name_middle, name_first, name_first_key, dob_dt_tm, gender_cd, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
-    VALUES (old.person_id, old.name_last, old.name_last_key, old.name_middle, old.name_first, old.name_first_key, old.dob_dt_tm, old.gender_cd, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
-  END;
-|
-
-CREATE TRIGGER user_history AFTER UPDATE ON user
-  FOR EACH ROW BEGIN
-    IF old.username != new.username OR
-       old.password != new.password OR
-       old.change_password_ind != new.change_password_ind OR
-       old.account_locked_dt_tm != new.account_locked_dt_tm OR
-       old.active_ind != new.active_ind THEN
-      INSERT INTO user_hist (user_id, person_id, username, password, password_key, last_signin_dt_tm, last_signin_ip, signin_attempts, change_password_ind, account_locked_dt_tm, account_expired_dt_tm, password_changed_dt_tm, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
-      VALUES (old.user_id, old.person_id, old.username, old.password, old.password_key, old.last_signin_dt_tm, old.last_signin_ip, old.signin_attempts, old.change_password_ind, old.account_locked_dt_tm, old.account_expired_dt_tm, old.password_changed_dt_tm, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
-    END IF;
-  END;
-|
-
 CREATE TRIGGER codeset_history AFTER UPDATE ON codeset
   FOR EACH ROW BEGIN
     INSERT INTO codeset_hist (codeset_id, codeset_display, codeset_meaning, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
-    VALUES (old.codeset_id, old.codeset_display, old.codeset_meaning, old.active_ind, old.updt_id, old.create_id, old.create_dt_tm, old.updt_dt_tm, old.updt_cnt);
+    VALUES (old.codeset_id, old.codeset_display, old.codeset_meaning, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
   END;
 |
 
@@ -333,9 +315,99 @@ CREATE TRIGGER codevalue_history AFTER UPDATE ON codevalue
   END;
 |
 
+CREATE TRIGGER person_history AFTER UPDATE ON person
+  FOR EACH ROW BEGIN
+    INSERT INTO person_hist (person_id, title_cd, name_last, name_last_key, name_middle, name_first, name_first_key, locale_language, locale_country, time_zone, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.person_id, old.title_cd, old.name_last, old.name_last_key, old.name_middle, old.name_first, old.name_first_key, old.locale_language, old.locale_country, old.time_zone, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER address_history AFTER UPDATE ON address
+  FOR EACH ROW BEGIN
+    INSERT INTO address_hist (address_id, parent_entity_id, parent_entity_name, address_type_cd, address1, address2, address3, city, state_code, country_code, postal_code, primary_ind, verified_cd, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.address_id, old.parent_entity_id, old.parent_entity_name, old.address_type_cd, old.address1, old.address2, old.address3, old.city, old.state_code, old.country_code, old.postal_code, old.primary_ind, old.verified_cd, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER phone_history AFTER UPDATE ON phone
+  FOR EACH ROW BEGIN
+    INSERT INTO phone_hist (phone_id, parent_entity_id, parent_entity_name, phone_type_cd, phone_number, phone_extension, primary_ind, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.phone_id, old.parent_entity_id, old.parent_entity_name, old.phone_type_cd, old.phone_number, old.phone_extension, old.primary_ind, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER email_history AFTER UPDATE ON email
+  FOR EACH ROW BEGIN
+    INSERT INTO email_hist (email_id, parent_entity_id, parent_entity_name, email_type_cd, email_address, primary_ind, verified_cd, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.email_id, old.parent_entity_id, old.parent_entity_name, old.email_type_cd, old.email_address, old.primary_ind, old.verified_cd, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER user_history AFTER UPDATE ON user
+  FOR EACH ROW BEGIN
+    IF old.username != new.username OR
+       old.password != new.password OR
+       old.temporary_pwd_ind != new.temporary_pwd_ind OR
+       old.account_locked_dt_tm != new.account_locked_dt_tm OR
+       old.active_ind != new.active_ind THEN
+      INSERT INTO user_hist (user_id, person_id, username, password, last_signin_dt_tm, last_signin_ip, signin_attempts, temporary_pwd_ind, account_locked_dt_tm, account_expired_dt_tm, password_changed_dt_tm, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+      VALUES (old.user_id, old.person_id, old.username, old.password, old.last_signin_dt_tm, old.last_signin_ip, old.signin_attempts, old.temporary_pwd_ind, old.account_locked_dt_tm, old.account_expired_dt_tm, old.password_changed_dt_tm, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+    END IF;
+  END;
+|
+
+CREATE TRIGGER membership_history AFTER UPDATE ON membership
+  FOR EACH ROW BEGIN
+    INSERT INTO membership_hist (membership_id, entity_type_cd, next_due_dt, dues_amount, active_ind, inactive_reason_id, inactive_reason_txt, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.membership_id, old.entity_type_cd, old.next_due_dt, old.dues_amount, old.active_ind, old.inactive_reason_id, old.inactive_reason_txt, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER membership_county_history AFTER UPDATE ON membership_county
+  FOR EACH ROW BEGIN
+    INSERT INTO membership_county_hist (membership_county_id, membership_id, county_id, net_mineral_acres, surface_acres, voting_ind, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.membership_county_id, old.membership_id, old.county_id, old.net_mineral_acres, old.surface_acres, old.voting_ind, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER member_type_history AFTER UPDATE ON member_type
+  FOR EACH ROW BEGIN
+    INSERT INTO member_type_hist (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, primary_ind, allow_spouse_ind, allow_member_ind, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.member_type_id, old.prev_member_type_id, old.member_type_display, old.member_type_meaning, old.dues_amount, old.primary_ind, old.allow_spouse_ind, old.allow_member_ind, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
 CREATE TRIGGER member_history AFTER UPDATE ON member
   FOR EACH ROW BEGIN
-    INSERT INTO member_hist (member_id, person_id, owner_ident, company_name, dues_amount, due_on, start_dt_tm, end_dt_tm, member_type_cv, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
-    VALUES (old.member_id, old.person_id, old.owner_ident, old.company_name, old.dues_amount, old.due_on, old.start_dt_tm, old.end_dt_tm, old.member_type_cv, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+    INSERT INTO member_hist (member_id, membership_id, person_id, company_name, company_name_key, owner_ident, member_type_id, greeting, in_care_of, join_dt, mail_newsletter_ind, email_newsletter_ind, active_ind, inactive_reason_id, inactive_reason_txt, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.member_id, old.membership_id, old.person_id, old.company_name, old.company_name_key, old.owner_ident, old.member_type_id, old.greeting, old.in_care_of, old.join_dt, old.mail_newsletter_ind, old.email_newsletter_ind, old.active_ind, old.inactive_reason_id, old.inactive_reason_txt, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER comment_history AFTER UPDATE ON comment
+  FOR EACH ROW BEGIN
+    INSERT INTO comment_hist (comment_id, parent_entity_id, parent_entity_name, comment_dt, comment_txt, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.comment_id, old.parent_entity_id, old.parent_entity_name, old.comment_dt, old.comment_txt, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER transaction_history AFTER UPDATE ON transaction
+  FOR EACH ROW BEGIN
+    INSERT INTO transaction_hist (transaction_id, membership_id, transaction_dt, transaction_type_flag, transaction_desc, ref_num, memo_txt, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.transaction_id, old.membership_id, old.transaction_dt, old.transaction_type_flag, old.transaction_desc, old.ref_num, old.memo_txt, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER transaction_entry_history AFTER UPDATE ON transaction_entry
+  FOR EACH ROW BEGIN
+    INSERT INTO transaction_entry_hist (transaction_entry_id, transaction_id, related_transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.transaction_entry_id, old.transaction_id, old.related_transaction_id, old.member_id, old.transaction_entry_amount, old.transaction_entry_type_cd, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER deposit_history AFTER UPDATE ON deposit
+  FOR EACH ROW BEGIN
+    INSERT INTO deposit_hist (deposit_id, deposit_ref, deposit_dt, deposit_amount, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.deposit_id, old.deposit_ref, old.deposit_dt, old.deposit_amount, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
   END;
 |

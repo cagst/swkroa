@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Handles and retrieves the membership page(s) depending on the URI template.
+ * Handles and retrieves the User page(s) depending on the URI template.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Controller
 public final class UserController {
