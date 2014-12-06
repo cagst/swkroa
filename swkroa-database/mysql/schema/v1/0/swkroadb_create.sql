@@ -50,7 +50,7 @@ CREATE TABLE codevalue (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT codevalue_pk PRIMARY KEY (codevalue_id),
+  CONSTRAINT codevalue_pk  PRIMARY KEY (codevalue_id),
   CONSTRAINT codevalue_fk1 FOREIGN KEY (codeset_id) REFERENCES codeset (codeset_id),
   INDEX codevalue_idx1 (codevalue_meaning)
 ) ENGINE = InnoDB;
@@ -155,7 +155,7 @@ CREATE TABLE user (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT user_pk PRIMARY KEY (user_id),
+  CONSTRAINT user_pk  PRIMARY KEY (user_id),
   CONSTRAINT user_fk1 FOREIGN KEY (person_id) REFERENCES person (person_id),
   INDEX user_idx1 (username)
 ) ENGINE = InnoDB;
@@ -187,7 +187,7 @@ CREATE TABLE membership_county (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT membership_county_pk PRIMARY KEY (membership_county_id),
+  CONSTRAINT membership_county_pk  PRIMARY KEY (membership_county_id),
   CONSTRAINT membership_county_fk1 FOREIGN KEY (membership_id) REFERENCES membership (membership_id),
   CONSTRAINT membership_county_fk2 FOREIGN KEY (county_id) REFERENCES county (county_id)
 ) ENGINE = InnoDB;
@@ -232,7 +232,7 @@ CREATE TABLE member (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT member_pk PRIMARY KEY (member_id),
+  CONSTRAINT member_pk  PRIMARY KEY (member_id),
   CONSTRAINT member_fk1 FOREIGN KEY (membership_id) REFERENCES membership (membership_id),
   CONSTRAINT member_fk2 FOREIGN KEY (person_id) REFERENCES person (person_id),
   CONSTRAINT member_fk3 FOREIGN KEY (member_type_id) REFERENCES member_type (member_type_id),
@@ -270,7 +270,7 @@ CREATE TABLE transaction (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT transaction_pk PRIMARY KEY (transaction_id),
+  CONSTRAINT transaction_pk  PRIMARY KEY (transaction_id),
   CONSTRAINT transaction_fk1 FOREIGN KEY (membership_id) REFERENCES membership (membership_id)
 ) ENGINE = InnoDB;
 
@@ -287,7 +287,7 @@ CREATE TABLE transaction_entry (
   updt_dt_tm                DATETIME NOT NULL,
   updt_id                   BIGINT UNSIGNED NOT NULL,
   updt_cnt                  INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT transaction_entry_pk PRIMARY KEY (transaction_entry_id),
+  CONSTRAINT transaction_entry_pk  PRIMARY KEY (transaction_entry_id),
   CONSTRAINT transaction_entry_fk1 FOREIGN KEY (transaction_id) REFERENCES transaction (transaction_id),
   CONSTRAINT transaction_entry_fk2 FOREIGN KEY (member_id) REFERENCES member (member_id),
   CONSTRAINT transaction_entry_fk3 FOREIGN KEY (related_transaction_id) REFERENCES transaction (transaction_id)

@@ -8,7 +8,7 @@ CREATE TABLE deposit_transaction (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT deposit_transaction_pk PRIMARY KEY (deposit_transaction_id),
+  CONSTRAINT deposit_transaction_pk  PRIMARY KEY (deposit_transaction_id),
   CONSTRAINT deposit_transaction_fk1 FOREIGN KEY (deposit_id) REFERENCES deposit (deposit_id),
   CONSTRAINT deposit_transaction_fk2 FOREIGN KEY (transaction_id) REFERENCES transaction (transaction_id)
 ) ENGINE = InnoDB;

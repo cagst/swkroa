@@ -11,7 +11,8 @@ CREATE TABLE county_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT county_hist_pk PRIMARY KEY (county_hist_id)
+  CONSTRAINT county_hist_pk  PRIMARY KEY (county_hist_id),
+  CONSTRAINT county_hist_fk1 FOREIGN KEY (county_id) REFERENCES county (county_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE codeset_hist (
@@ -25,7 +26,8 @@ CREATE TABLE codeset_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT codeset_hist_pk PRIMARY KEY (codeset_hist_id)
+  CONSTRAINT codeset_hist_pk  PRIMARY KEY (codeset_hist_id),
+  CONSTRAINT codeset_hist_fk1 FOREIGN KEY (codeset_id) REFERENCES codeset (codeset_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE codevalue_hist (
@@ -40,7 +42,8 @@ CREATE TABLE codevalue_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT codevalue_hist_pk PRIMARY KEY (codevalue_hist_id)
+  CONSTRAINT codevalue_hist_pk  PRIMARY KEY (codevalue_hist_id),
+  CONSTRAINT codevalue_hist_fk1 FOREIGN KEY (codevalue_id) REFERENCES codevalue (codevalue_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE person_hist (
@@ -61,7 +64,8 @@ CREATE TABLE person_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT person_hist_pk PRIMARY KEY (person_hist_id)
+  CONSTRAINT person_hist_pk  PRIMARY KEY (person_hist_id),
+  CONSTRAINT person_hist_fk1 FOREIGN KEY (person_id) REFERENCES person (person_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE address_hist (
@@ -85,7 +89,8 @@ CREATE TABLE address_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT address_hist_pk PRIMARY KEY (address_hist_id)
+  CONSTRAINT address_hist_pk  PRIMARY KEY (address_hist_id),
+  CONSTRAINT address_hist_fk1 FOREIGN KEY (address_id) REFERENCES address (address_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE phone_hist (
@@ -103,7 +108,8 @@ CREATE TABLE phone_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT phone_hist_pk PRIMARY KEY (phone_hist_id)
+  CONSTRAINT phone_hist_pk  PRIMARY KEY (phone_hist_id),
+  CONSTRAINT phone_hist_fk1 FOREIGN KEY (phone_id) REFERENCES phone (phone_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE email_hist (
@@ -121,7 +127,8 @@ CREATE TABLE email_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT email_hist_pk PRIMARY KEY (email_hist_id)
+  CONSTRAINT email_hist_pk  PRIMARY KEY (email_hist_id),
+  CONSTRAINT email_hist_fk1 FOREIGN KEY (email_id) REFERENCES email (email_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE user_hist (
@@ -143,7 +150,8 @@ CREATE TABLE user_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT user_hist_pk PRIMARY KEY (user_hist_id)
+  CONSTRAINT user_hist_pk  PRIMARY KEY (user_hist_id),
+  CONSTRAINT user_hist_fk1 FOREIGN KEY (user_id) REFERENCES user (user_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE membership_hist (
@@ -160,7 +168,8 @@ CREATE TABLE membership_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT membership_hist_pk PRIMARY KEY (membership_hist_id)
+  CONSTRAINT membership_hist_pk  PRIMARY KEY (membership_hist_id),
+  CONSTRAINT membership_hist_fk1 FOREIGN KEY (membership_id) REFERENCES membership (membership_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE membership_county_hist (
@@ -177,7 +186,8 @@ CREATE TABLE membership_county_hist (
   updt_dt_tm                  DATETIME NOT NULL,
   updt_id                     BIGINT UNSIGNED NOT NULL,
   updt_cnt                    INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT membership_county_hist_pk PRIMARY KEY (membership_county_hist_id)
+  CONSTRAINT membership_county_hist_pk  PRIMARY KEY (membership_county_hist_id),
+  CONSTRAINT membership_county_hist_fk1 FOREIGN KEY (membership_county_id) REFERENCES membership_county (membership_county_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE member_type_hist (
@@ -198,7 +208,8 @@ CREATE TABLE member_type_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT member_type_hist_pk PRIMARY KEY (member_type_hist_id)
+  CONSTRAINT member_type_hist_pk  PRIMARY KEY (member_type_hist_id),
+  CONSTRAINT member_type_hist_fk1 FOREIGN KEY (member_type_id) REFERENCES member_type (member_type_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE member_hist (
@@ -223,7 +234,8 @@ CREATE TABLE member_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT member_hist_pk PRIMARY KEY (member_hist_id)
+  CONSTRAINT member_hist_pk  PRIMARY KEY (member_hist_id),
+  CONSTRAINT member_hist_fk1 FOREIGN KEY (member_id) REFERENCES member (member_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE comment_hist (
@@ -239,7 +251,8 @@ CREATE TABLE comment_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT comment_hist_pk PRIMARY KEY (comment_hist_id)
+  CONSTRAINT comment_hist_pk  PRIMARY KEY (comment_hist_id),
+  CONSTRAINT comment_hist_fk1 FOREIGN KEY (comment_id) REFERENCES comment (comment_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE transaction_hist (
@@ -257,7 +270,8 @@ CREATE TABLE transaction_hist (
   updt_dt_tm             DATETIME NOT NULL,
   updt_id                BIGINT UNSIGNED NOT NULL,
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT transaction_hist_pk PRIMARY KEY (transaction_hist_id)
+  CONSTRAINT transaction_hist_pk  PRIMARY KEY (transaction_hist_id),
+  CONSTRAINT transaction_hist_fk1 FOREIGN KEY (transaction_id) REFERENCES transaction (transaction_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE transaction_entry_hist (
@@ -274,22 +288,39 @@ CREATE TABLE transaction_entry_hist (
   updt_dt_tm                  DATETIME NOT NULL,
   updt_id                     BIGINT UNSIGNED NOT NULL,
   updt_cnt                    INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT transaction_entry_hist_pk PRIMARY KEY (transaction_entry_hist_id)
+  CONSTRAINT transaction_entry_hist_pk  PRIMARY KEY (transaction_entry_hist_id),
+  CONSTRAINT transaction_entry_hist_fk1 FOREIGN KEY (transaction_entry_id) REFERENCES transaction_entry (transaction_entry_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE deposit_hist (
-  deposit_hist_id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  deposit_id             BIGINT UNSIGNED NOT NULL,
-  deposit_ref            VARCHAR(25) NOT NULL,
-  deposit_dt             DATE NOT NULL,
-  deposit_amount         NUMERIC(10, 2) NOT NULL,
-  active_ind             BOOLEAN DEFAULT 1 NOT NULL,
-  create_dt_tm           DATETIME NOT NULL,
-  create_id              BIGINT UNSIGNED NOT NULL,
-  updt_dt_tm             DATETIME NOT NULL,
-  updt_id                BIGINT UNSIGNED NOT NULL,
-  updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT deposit_hist_pk PRIMARY KEY (deposit_hist_id)
+  deposit_hist_id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  deposit_id                  BIGINT UNSIGNED NOT NULL,
+  deposit_ref                 VARCHAR(25) NOT NULL,
+  deposit_dt                  DATE NOT NULL,
+  deposit_amount              NUMERIC(10, 2) NOT NULL,
+  active_ind                  BOOLEAN DEFAULT 1 NOT NULL,
+  create_dt_tm                DATETIME NOT NULL,
+  create_id                   BIGINT UNSIGNED NOT NULL,
+  updt_dt_tm                  DATETIME NOT NULL,
+  updt_id                     BIGINT UNSIGNED NOT NULL,
+  updt_cnt                    INT UNSIGNED DEFAULT 0 NOT NULL,
+  CONSTRAINT deposit_hist_pk  PRIMARY KEY (deposit_hist_id),
+  CONSTRAINT depoist_hist_fk1 FOREIGN KEY (deposit_id) REFERENCES deposit (deposit_id)
+) ENGINE = InnoDB;
+
+CREATE TABLE deposit_transaction_hist (
+  deposit_transaction_hist_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  deposit_transaction_id      BIGINT UNSIGNED NOT NULL,
+  deposit_id                  BIGINT UNSIGNED NOT NULL,
+  transaction_id              BIGINT UNSIGNED NOT NULL,
+  active_ind                  BOOLEAN DEFAULT 1 NOT NULL,
+  create_dt_tm                DATETIME NOT NULL,
+  create_id                   BIGINT UNSIGNED NOT NULL,
+  updt_dt_tm                  DATETIME NOT NULL,
+  updt_id                     BIGINT UNSIGNED NOT NULL,
+  updt_cnt                    INT UNSIGNED DEFAULT 0 NOT NULL,
+  CONSTRAINT deposit_transaction_hist_pk  PRIMARY KEY (deposit_transaction_hist_id),
+  CONSTRAINT depoist_transaction_hist_fk1 FOREIGN KEY (deposit_transaction_id) REFERENCES deposit_transaction (deposit_transaction_id)
 ) ENGINE = InnoDB;
 
 delimiter |
@@ -409,5 +440,12 @@ CREATE TRIGGER deposit_history AFTER UPDATE ON deposit
   FOR EACH ROW BEGIN
     INSERT INTO deposit_hist (deposit_id, deposit_ref, deposit_dt, deposit_amount, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
     VALUES (old.deposit_id, old.deposit_ref, old.deposit_dt, old.deposit_amount, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+  END;
+|
+
+CREATE TRIGGER deposit_transaction_history AFTER UPDATE ON deposit_transaction
+  FOR EACH ROW BEGIN
+    INSERT INTO deposit_transaction_hist (deposit_transaction_id, deposit_id, transaction_id, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.deposit_transaction_id, old.deposit_id, old.transaction_id, old.active_ind, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
   END;
 |

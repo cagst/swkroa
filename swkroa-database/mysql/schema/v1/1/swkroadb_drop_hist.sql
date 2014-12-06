@@ -15,8 +15,10 @@ DROP TRIGGER IF EXISTS comment_history;
 DROP TRIGGER IF EXISTS transaction_history;
 DROP TRIGGER IF EXISTS transaction_entry_history;
 DROP TRIGGER IF EXISTS deposit_history;
+DROP TRIGGER IF EXISTS deposit_transaction_history;
 
 -- Drop History Tables
+DROP TABLE IF EXISTS deposit_transaction_hist;
 DROP TABLE IF EXISTS deposit_hist;
 DROP TABLE IF EXISTS transaction_entry_hist;
 DROP TABLE IF EXISTS transaction_hist;
