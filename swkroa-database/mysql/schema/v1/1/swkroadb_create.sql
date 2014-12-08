@@ -14,9 +14,9 @@ CREATE TABLE deposit_transaction (
 ) ENGINE = InnoDB;
 
 ALTER TABLE membership
-  ADD COLUMN inactive_reason_id BIGINT UNSIGNED NULL,
-  ADD COLUMN inactive_reason_txt VARCHAR(100) NULL;
+  ADD COLUMN close_reason_id BIGINT UNSIGNED NULL,
+  ADD COLUMN close_reason_txt VARCHAR(100) NULL;
 
 ALTER TABLE member
-  ADD COLUMN inactive_reason_id BIGINT UNSIGNED NULL,
-  ADD COLUMN inactive_reason_txt VARCHAR(100) NULL;
+  ADD COLUMN close_reason_id BIGINT UNSIGNED NULL,
+  ADD COLUMN close_reason_txt VARCHAR(100) NULL;

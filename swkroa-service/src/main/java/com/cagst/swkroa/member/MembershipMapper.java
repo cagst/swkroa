@@ -17,11 +17,13 @@ import java.sql.SQLException;
  * @version 1.0.0
  */
 /* package */final class MembershipMapper implements RowMapper<Membership> {
-  private static final String MEMBERSHIP_ID  = "membership_id";
-  private static final String ENTITY_TYPE_CD = "entity_type_cd";
-  private static final String NEXT_DUE_DT    = "next_due_dt";
-  private static final String DUES_AMOUNT    = "dues_amount";
-  private static final String AMOUNT_DUE     = "amount_due";
+  private static final String MEMBERSHIP_ID    = "membership_id";
+  private static final String ENTITY_TYPE_CD   = "entity_type_cd";
+  private static final String NEXT_DUE_DT      = "next_due_dt";
+  private static final String DUES_AMOUNT      = "dues_amount";
+  private static final String AMOUNT_DUE       = "amount_due";
+  private static final String CLOSE_REASON_ID  = "close_reason_id";
+  private static final String CLOSE_REASON_TXT = "close_reason_txt";
 
   // meta-data
   private static final String ACTIVE_IND = "active_ind";
@@ -43,11 +45,6 @@ import java.sql.SQLException;
     this.codeValueRepo = codeValueRepo;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public Membership mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     Membership membership = new Membership();
@@ -64,6 +61,8 @@ import java.sql.SQLException;
       membership.setAmountDue(new BigDecimal(0.0));
     }
 
+    membership.setCloseReasonUID(rs.getLong(CLOSE_REASON_ID));
+    membership.setCloseReasonText(rs.getString(CLOSE_REASON_TXT));
     membership.setMembershipUpdateCount(rs.getLong(MEMBERSHIP_UPDT_CNT));
     membership.setActive(rs.getBoolean(ACTIVE_IND));
 

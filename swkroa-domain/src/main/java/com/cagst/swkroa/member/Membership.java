@@ -32,6 +32,8 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private DateTime next_due_dt;
   private BigDecimal dues_amount;
   private BigDecimal amount_due;
+  private long close_reason_id;
+  private String close_reason_txt;
 
   // meta-data
   private boolean active_ind = true;
@@ -118,6 +120,22 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setAmountDue(final BigDecimal amountDue) {
     this.amount_due = amountDue;
+  }
+
+  public long getCloseReasonUID() {
+    return close_reason_id;
+  }
+
+  public void setCloseReasonUID(final long closeReasonUID) {
+    this.close_reason_id = closeReasonUID;
+  }
+
+  public String getCloseReasonText() {
+    return close_reason_txt;
+  }
+
+  public void setCloseReasonText(final String closeReasonText) {
+    this.close_reason_txt = closeReasonText;
   }
 
   public boolean isActive() {

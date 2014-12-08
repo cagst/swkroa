@@ -160,9 +160,9 @@ CREATE TABLE membership_hist (
   entity_type_cd         BIGINT UNSIGNED NOT NULL,
   next_due_dt            DATE NOT NULL,
   dues_amount            NUMERIC(10,2) NULL,
+  close_reason_id        BIGINT UNSIGNED NULL,
+  close_reason_txt       VARCHAR(100) NULL,
   active_ind             BOOLEAN DEFAULT 1 NOT NULL,
-  inactive_reason_id     BIGINT UNSIGNED NULL,
-  inactive_reason_txt    VARCHAR(100) NULL,
   create_dt_tm           DATETIME NOT NULL,
   create_id              BIGINT UNSIGNED NOT NULL,
   updt_dt_tm             DATETIME NOT NULL,
@@ -226,9 +226,9 @@ CREATE TABLE member_hist (
   join_dt                DATE NULL,
   mail_newsletter_ind    BOOLEAN DEFAULT 1 NOT NULL,
   email_newsletter_ind   BOOLEAN DEFAULT 0 NOT NULL,
+  close_reason_id        BIGINT UNSIGNED NULL,
+  close_reason_txt       VARCHAR(100) NULL,
   active_ind             BOOLEAN DEFAULT 1 NOT NULL,
-  inactive_reason_id     BIGINT UNSIGNED NULL,
-  inactive_reason_txt    VARCHAR(100) NULL,
   create_dt_tm           DATETIME NOT NULL,
   create_id              BIGINT UNSIGNED NOT NULL,
   updt_dt_tm             DATETIME NOT NULL,
@@ -389,8 +389,8 @@ CREATE TRIGGER user_history AFTER UPDATE ON user
 
 CREATE TRIGGER membership_history AFTER UPDATE ON membership
   FOR EACH ROW BEGIN
-    INSERT INTO membership_hist (membership_id, entity_type_cd, next_due_dt, dues_amount, active_ind, inactive_reason_id, inactive_reason_txt, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
-    VALUES (old.membership_id, old.entity_type_cd, old.next_due_dt, old.dues_amount, old.active_ind, old.inactive_reason_id, old.inactive_reason_txt, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+    INSERT INTO membership_hist (membership_id, entity_type_cd, next_due_dt, dues_amount, active_ind, close_reason_id, close_reason_txt, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.membership_id, old.entity_type_cd, old.next_due_dt, old.dues_amount, old.active_ind, old.close_reason_id, old.close_reason_txt, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
   END;
 |
 
@@ -410,8 +410,8 @@ CREATE TRIGGER member_type_history AFTER UPDATE ON member_type
 
 CREATE TRIGGER member_history AFTER UPDATE ON member
   FOR EACH ROW BEGIN
-    INSERT INTO member_hist (member_id, membership_id, person_id, company_name, company_name_key, owner_ident, member_type_id, greeting, in_care_of, join_dt, mail_newsletter_ind, email_newsletter_ind, active_ind, inactive_reason_id, inactive_reason_txt, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
-    VALUES (old.member_id, old.membership_id, old.person_id, old.company_name, old.company_name_key, old.owner_ident, old.member_type_id, old.greeting, old.in_care_of, old.join_dt, old.mail_newsletter_ind, old.email_newsletter_ind, old.active_ind, old.inactive_reason_id, old.inactive_reason_txt, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
+    INSERT INTO member_hist (member_id, membership_id, person_id, company_name, company_name_key, owner_ident, member_type_id, greeting, in_care_of, join_dt, mail_newsletter_ind, email_newsletter_ind, active_ind, close_reason_id, close_reason_txt, create_id, create_dt_tm, updt_id, updt_dt_tm, updt_cnt)
+    VALUES (old.member_id, old.membership_id, old.person_id, old.company_name, old.company_name_key, old.owner_ident, old.member_type_id, old.greeting, old.in_care_of, old.join_dt, old.mail_newsletter_ind, old.email_newsletter_ind, old.active_ind, old.close_reason_id, old.close_reason_txt, old.create_id, old.create_dt_tm, old.updt_id, old.updt_dt_tm, old.updt_cnt);
   END;
 |
 

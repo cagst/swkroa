@@ -3,6 +3,8 @@ SELECT m.membership_id
       ,m.next_due_dt
       ,m.dues_amount
       ,SUM(te.transaction_entry_amount) AS amount_due
+      ,m.close_reason_id
+      ,m.close_reason_txt
       ,m.updt_cnt AS membership_updt_cnt
       ,m.active_ind
   FROM membership m LEFT OUTER JOIN transaction t

@@ -19,23 +19,25 @@ import java.sql.SQLException;
  * @version 1.0.0
  */
 /* package */final class MemberMapper implements RowMapper<Member> {
-  private static final String MEMBER_ID = "member_id";
-  private static final String MEMBERSHIP_ID = "membership_id";
-  private static final String PERSON_ID = "person_id";
-  private static final String COMPANY_NAME = "company_name";
-  private static final String COMPANY_NAME_KEY = "company_name_key";
-  private static final String OWNER_IDENT = "owner_ident";
-  private static final String MEMBER_TYPE = "member_type_id";
-  private static final String GREETING = "greeting";
-  private static final String IN_CARE_OF = "in_care_of";
-  private static final String JOIN_DT = "join_dt";
-  private static final String MAIL_NEWSLETTER_IND = "mail_newsletter_ind";
+  private static final String MEMBER_ID            = "member_id";
+  private static final String MEMBERSHIP_ID        = "membership_id";
+  private static final String PERSON_ID            = "person_id";
+  private static final String COMPANY_NAME         = "company_name";
+  private static final String COMPANY_NAME_KEY     = "company_name_key";
+  private static final String OWNER_IDENT          = "owner_ident";
+  private static final String MEMBER_TYPE          = "member_type_id";
+  private static final String GREETING             = "greeting";
+  private static final String IN_CARE_OF           = "in_care_of";
+  private static final String JOIN_DT              = "join_dt";
+  private static final String MAIL_NEWSLETTER_IND  = "mail_newsletter_ind";
   private static final String EMAIL_NEWSLETTER_IND = "email_newsletter_ind";
+  private static final String CLOSE_REASON_ID      = "close_reason_id";
+  private static final String CLOSE_REASON_TXT     = "close_reason_txt";
 
   // meta-data
-  private static final String ACTIVE_IND = "active_ind";
-  private static final String CREATE_ID = "create_id";
-  private static final String UPDT_ID = "updt_id";
+  private static final String ACTIVE_IND      = "active_ind";
+  private static final String CREATE_ID       = "create_id";
+  private static final String UPDT_ID         = "updt_id";
   private static final String MEMBER_UPDT_CNT = "member_updt_cnt";
 
   private final PersonRepository personRepo;
@@ -72,6 +74,8 @@ import java.sql.SQLException;
     member.setJoinDate(CGTDateTimeUtils.getDateTime(rs, JOIN_DT));
     member.setMailNewsletter(rs.getBoolean(MAIL_NEWSLETTER_IND));
     member.setEmailNewsletter(rs.getBoolean(EMAIL_NEWSLETTER_IND));
+    member.setCloseReasonUID(rs.getLong(CLOSE_REASON_ID));
+    member.setCloseReasonText(rs.getString(CLOSE_REASON_TXT));
 
     // meta-data
     member.setMemberUpdateCount(rs.getLong(MEMBER_UPDT_CNT));
@@ -92,7 +96,8 @@ import java.sql.SQLException;
    *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
-  public static MapSqlParameterSource mapInsertStatement(final Member member, final Membership membership,
+  public static MapSqlParameterSource mapInsertStatement(final Member member,
+                                                         final Membership membership,
                                                          final User user) {
 
     MapSqlParameterSource params = new MapSqlParameterSource();
@@ -115,7 +120,8 @@ import java.sql.SQLException;
    *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
-  public static MapSqlParameterSource mapUpdateStatement(final Member member, final Membership membership,
+  public static MapSqlParameterSource mapUpdateStatement(final Member member,
+                                                         final Membership membership,
                                                          final User user) {
 
     MapSqlParameterSource params = new MapSqlParameterSource();
@@ -127,8 +133,10 @@ import java.sql.SQLException;
     return params;
   }
 
-  private static void mapCommonProperties(final MapSqlParameterSource params, final Member member,
-                                          final Membership membership, final User user) {
+  private static void mapCommonProperties(final MapSqlParameterSource params,
+                                          final Member member,
+                                          final Membership membership,
+                                          final User user) {
 
     params.addValue(PERSON_ID, member.getPerson() != null ? member.getPerson().getPersonUID() : null);
     params.addValue(MEMBERSHIP_ID, membership.getMembershipUID());

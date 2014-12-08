@@ -39,6 +39,8 @@ public final class Member implements Serializable, Comparable<Member> {
   private DateTime join_dt;
   private boolean mail_newsletter_ind = true;
   private boolean email_newsletter_ind = false;
+  private long close_reason_id;
+  private String close_reason_txt;
 
   private List<Address> addresses = new ArrayList<Address>();
   private List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
@@ -171,6 +173,22 @@ public final class Member implements Serializable, Comparable<Member> {
     this.email_newsletter_ind = emailNewsletter;
   }
 
+  public long getCloseReasonUID() {
+    return close_reason_id;
+  }
+
+  public void setCloseReasonUID(final long closeReasonUID) {
+    this.close_reason_id = closeReasonUID;
+  }
+
+  public String getCloseReasonText() {
+    return close_reason_txt;
+  }
+
+  public void setCloseReasonText(final String closeReasonText) {
+    this.close_reason_txt = closeReasonText;
+  }
+
   public void clearAddresses() {
     addresses.clear();
   }
@@ -250,11 +268,6 @@ public final class Member implements Serializable, Comparable<Member> {
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.person.Person#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -264,11 +277,6 @@ public final class Member implements Serializable, Comparable<Member> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.person.Person#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -290,11 +298,6 @@ public final class Member implements Serializable, Comparable<Member> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.person.Person#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -304,11 +307,6 @@ public final class Member implements Serializable, Comparable<Member> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final Member rhs) {
     if (rhs == null) {

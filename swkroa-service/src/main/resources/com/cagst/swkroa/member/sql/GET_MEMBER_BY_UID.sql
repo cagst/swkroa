@@ -8,6 +8,8 @@ SELECT m.person_id
       ,m.join_dt
       ,m.mail_newsletter_ind
       ,m.email_newsletter_ind
+      ,m.close_reason_id
+      ,m.close_reason_txt
       ,m.updt_cnt AS member_updt_cnt
       ,m.active_ind
   FROM member m
