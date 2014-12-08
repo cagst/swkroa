@@ -1,5 +1,8 @@
 package com.cagst.swkroa.controller.api;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.cagst.swkroa.county.County;
 import com.cagst.swkroa.county.CountyRepository;
 import org.slf4j.Logger;
@@ -9,9 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Handles and retrieves {@link Country} objects depending on the URI template.

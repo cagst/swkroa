@@ -1,13 +1,13 @@
 package com.cagst.swkroa.transaction;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link Transaction} object. Used to marshal / unmarshal a {@link Transaction} to /
@@ -19,17 +19,17 @@ import java.sql.SQLException;
 /* package */final class TransactionMapper implements RowMapper<Transaction> {
   /* package */ static final String TRANSACTION_ID = "transaction_id";
 
-  private static final String MEMBERSHIP_ID         = "membership_id";
-  private static final String TRANSACTION_DT        = "transaction_dt";
+  private static final String MEMBERSHIP_ID = "membership_id";
+  private static final String TRANSACTION_DT = "transaction_dt";
   private static final String TRANSACTION_TYPE_FLAG = "transaction_type_flag";
-  private static final String TRANSACTION_DESC      = "transaction_desc";
-  private static final String REF_NUM               = "ref_num";
-  private static final String MEMO_TXT              = "memo_txt";
+  private static final String TRANSACTION_DESC = "transaction_desc";
+  private static final String REF_NUM = "ref_num";
+  private static final String MEMO_TXT = "memo_txt";
 
   // meta-data
   private static final String ACTIVE_IND = "active_ind";
-  private static final String CREATE_ID  = "create_id";
-  private static final String UPDT_ID    = "updt_id";
+  private static final String CREATE_ID = "create_id";
+  private static final String UPDT_ID = "updt_id";
   private static final String TRANSACTION_UPDT_CNT = "transaction_updt_cnt";
 
   /*
@@ -73,8 +73,11 @@ import java.sql.SQLException;
   /**
    * Will marshal a {@link Transaction} into a {@link MapSqlParameterSource} for inserting into the database.
    *
-   * @param transaction The {@link Transaction} to map into an insert statement.
-   * @param user        The {@link User} that performed the changes.
+   * @param transaction
+   *     The {@link Transaction} to map into an insert statement.
+   * @param user
+   *     The {@link User} that performed the changes.
+   *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
   public static MapSqlParameterSource mapInsertStatement(final Transaction transaction, final User user) {
@@ -89,8 +92,11 @@ import java.sql.SQLException;
   /**
    * Will marshal a {@link Transaction} into a {@link MapSqlParameterSource} for updating into the database.
    *
-   * @param transaction The {@link Transaction} to map into an update statement.
-   * @param user        the {@link User} that performed the changes.
+   * @param transaction
+   *     The {@link Transaction} to map into an update statement.
+   * @param user
+   *     the {@link User} that performed the changes.
+   *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
   public static MapSqlParameterSource mapUpdateStatement(final Transaction transaction, final User user) {

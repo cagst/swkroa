@@ -1,5 +1,9 @@
 package com.cagst.swkroa.web.util;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -8,10 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * This is a utility class used to share logic across the web application.

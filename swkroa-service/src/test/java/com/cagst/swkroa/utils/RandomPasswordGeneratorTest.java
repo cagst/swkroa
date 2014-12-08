@@ -1,7 +1,7 @@
 package com.cagst.swkroa.utils;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +11,7 @@ import org.junit.runners.JUnit4;
  * Test class for the {@link RandomPasswordGenerator} class.
  *
  * @author Craig Gaskill
- *
- * @version  1.0.0
+ * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class RandomPasswordGeneratorTest {

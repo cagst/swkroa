@@ -17,16 +17,16 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CodeValueRepository {
-  public static final String CLOSE_REASONS     = "CLOSE_REASONS";
-  public static final String GENDER            = "GENDER";
-  public static final String TITLE             = "TITLE";
-  public static final String ADDRESS_TYPE      = "ADDRESS_TYPE";
-  public static final String PHONE_TYPE        = "PHONE_TYPE";
-  public static final String EMAIL_TYPE        = "EMAIL_TYPE";
-  public static final String ENTITY_TYPE       = "ENTITY_TYPE";
-  public static final String MEMBERSHIP_TYPE   = "MEMBERSHIP_TYPE";
+  public static final String CLOSE_REASONS = "CLOSE_REASONS";
+  public static final String GENDER = "GENDER";
+  public static final String TITLE = "TITLE";
+  public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
+  public static final String PHONE_TYPE = "PHONE_TYPE";
+  public static final String EMAIL_TYPE = "EMAIL_TYPE";
+  public static final String ENTITY_TYPE = "ENTITY_TYPE";
+  public static final String MEMBERSHIP_TYPE = "MEMBERSHIP_TYPE";
   public static final String VERIFICATION_TYPE = "VERIFICATION_TYPE";
-  public static final String TRANSACTION_TYPE  = "TRANSACTION_TYPE";
+  public static final String TRANSACTION_TYPE = "TRANSACTION_TYPE";
 
   /**
    * Retrieves a {@link CodeSet} by its unique identifier.

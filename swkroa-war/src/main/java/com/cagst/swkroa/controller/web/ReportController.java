@@ -1,5 +1,11 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.cagst.swkroa.report.JasperReportsViewFactory;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
@@ -11,12 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Handles and retrieves the Report pages depending on the URI template.
@@ -33,12 +33,12 @@ public final class ReportController {
 
   private static final String MEMBERSHIP_LISTING = "/WEB-INF/reports/jasper/MembershipListingReport.jasper";
   private static final String MEMBERSHIP_PASTDUE = "/WEB-INF/reports/jasper/MembershipPastDueReport.jasper";
-  private static final String MEMBERSHIP_STATUS  = "/WEB-INF/reports/jasper/MembershipStatusReport.jasper";
+  private static final String MEMBERSHIP_STATUS = "/WEB-INF/reports/jasper/MembershipStatusReport.jasper";
 
   private static final String MEMBER_MAILINGLIST_CSV = "/WEB-INF/reports/jasper/MemberMailingListCsv.jasper";
   private static final String MEMBER_MAILINGLIST_PDF = "/WEB-INF/reports/jasper/MemberMailingListPdf.jasper";
-  private static final String MEMBER_EMAILLIST_CSV   = "/WEB-INF/reports/jasper/MemberEmailListCsv.jasper";
-  private static final String MEMBER_EMAILLIST_PDF   = "/WEB-INF/reports/jasper/MemberEmailListPdf.jasper";
+  private static final String MEMBER_EMAILLIST_CSV = "/WEB-INF/reports/jasper/MemberEmailListCsv.jasper";
+  private static final String MEMBER_EMAILLIST_PDF = "/WEB-INF/reports/jasper/MemberEmailListPdf.jasper";
 
   private static final String CUSTOM_MEMBERS_BY_COUNTY = "/WEB-INF/reports/jasper/CustomMembersForCounties.jasper";
 

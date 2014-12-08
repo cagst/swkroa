@@ -23,6 +23,6 @@
 
   <root>
     <level value="warn"/>
-    <appender-ref ref="ROLLING" />
+    <appender-ref ref="ROLLING"/>
   </root>
 </configuration>

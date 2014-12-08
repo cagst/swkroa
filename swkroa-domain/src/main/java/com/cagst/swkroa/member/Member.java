@@ -1,5 +1,12 @@
 package com.cagst.swkroa.member;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.contact.Address;
@@ -12,13 +19,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Representation of a Member within the system.

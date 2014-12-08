@@ -1,6 +1,7 @@
 package com.cagst.swkroa.controller.api;
 
-import com.cagst.swkroa.member.Membership;
+import java.util.List;
+
 import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.transaction.UnpaidInvoice;
@@ -9,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Handles and retrieves {@link Transaction} objects depending on the URI template.
@@ -29,7 +32,9 @@ public final class TransactionApiController {
   /**
    * Handles the request and persists the {@link Transaction} to persistent storage.
    *
-   * @param transaction The {@link Transaction} to persist.
+   * @param transaction
+   *     The {@link Transaction} to persist.
+   *
    * @return The {@link Transaction} after it has been persisted.
    */
   @RequestMapping(value = "/api/transaction", method = RequestMethod.PUT)

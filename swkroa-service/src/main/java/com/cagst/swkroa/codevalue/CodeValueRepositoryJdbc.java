@@ -29,12 +29,12 @@ import org.springframework.util.Assert;
 /* package */class CodeValueRepositoryJdbc extends BaseRepositoryJdbc implements CodeValueRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(CodeValueRepositoryJdbc.class);
 
-  private static final String GET_CODESET_BY_UID                    = "GET_CODESET_BY_UID";
-  private static final String GET_ACTIVE_CODESETS                   = "GET_ACTIVE_CODESETS";
-  private static final String GET_CODEVALUES_FOR_CODESET            = "GET_CODEVALUES_FOR_CODESET";
+  private static final String GET_CODESET_BY_UID = "GET_CODESET_BY_UID";
+  private static final String GET_ACTIVE_CODESETS = "GET_ACTIVE_CODESETS";
+  private static final String GET_CODEVALUES_FOR_CODESET = "GET_CODEVALUES_FOR_CODESET";
   private static final String GET_CODEVALUES_FOR_CODESET_BY_MEANING = "GET_CODEVALUES_FOR_CODESET_BY_MEANING";
-  private static final String GET_CODEVALUE_BY_UID                  = "GET_CODEVALUE_BY_UID";
-  private static final String GET_CODEVALUE_BY_MEANING              = "GET_CODEVALUE_BY_MEANING";
+  private static final String GET_CODEVALUE_BY_UID = "GET_CODEVALUE_BY_UID";
+  private static final String GET_CODEVALUE_BY_MEANING = "GET_CODEVALUE_BY_MEANING";
 
   private static final String INSERT_CODEVALUE = "INSERT_CODEVALUE";
   private static final String UPDATE_CODEVALUE = "UPDATE_CODEVALUE";

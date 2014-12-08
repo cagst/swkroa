@@ -1,5 +1,7 @@
 package com.cagst.swkroa.user;
 
+import java.util.List;
+
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
@@ -29,8 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.List;
-
 /**
  * User Service that provides authentication for SWKROA.
  *
@@ -41,17 +41,17 @@ import java.util.List;
 public class UserServiceImpl implements UserService, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-  private static final String MSG_SIGNIN_ATTEMPTS_EXCEEDED    = "com.cagst.swkroa.signin.message.attempts.exceeded";
+  private static final String MSG_SIGNIN_ATTEMPTS_EXCEEDED = "com.cagst.swkroa.signin.message.attempts.exceeded";
   private static final String MSG_CHANGEPWD_OLD_PWD_INCORRECT = "com.cagst.swkroa.changepwd.password.err.wrongold";
-  private static final String MSG_CHANGEPWD_MISMATCH          = "com.cagst.swkroa.changepwd.password.err.mismatch";
-  private static final String MSG_CHANGEPWD_MATCHES_USERNAME  = "com.cagst.swkroa.changepwd.password.err.username";
-  private static final String MSG_CHANGEPWD_NOT_CHANGED       = "com.cagst.swkroa.changepwd.password.err.same";
-  private static final String MSG_CHANGEPWD_CHANGED           = "com.cagst.swkroa.audit.message.changepwd";
-  private static final String MSG_RESETPWD_RESET              = "com.cagst.swkroa.audit.message.resetpwd";
-  private static final String MSG_ACCOUNT_UNLOCK_AUTO         = "com.cagst.swkroa.audit.message.unlock.auto";
-  private static final String MSG_ACCOUNT_UNLOCK_MANUAL       = "com.cagst.swkroa.audit.message.unlock.manual";
-  private static final String MSG_ACCOUNT_ENABLED             = "com.cagst.swkroa.audit.message.enable";
-  private static final String MSG_ACCOUNT_DISABLED            = "com.cagst.swkroa.audit.message.disable";
+  private static final String MSG_CHANGEPWD_MISMATCH = "com.cagst.swkroa.changepwd.password.err.mismatch";
+  private static final String MSG_CHANGEPWD_MATCHES_USERNAME = "com.cagst.swkroa.changepwd.password.err.username";
+  private static final String MSG_CHANGEPWD_NOT_CHANGED = "com.cagst.swkroa.changepwd.password.err.same";
+  private static final String MSG_CHANGEPWD_CHANGED = "com.cagst.swkroa.audit.message.changepwd";
+  private static final String MSG_RESETPWD_RESET = "com.cagst.swkroa.audit.message.resetpwd";
+  private static final String MSG_ACCOUNT_UNLOCK_AUTO = "com.cagst.swkroa.audit.message.unlock.auto";
+  private static final String MSG_ACCOUNT_UNLOCK_MANUAL = "com.cagst.swkroa.audit.message.unlock.manual";
+  private static final String MSG_ACCOUNT_ENABLED = "com.cagst.swkroa.audit.message.enable";
+  private static final String MSG_ACCOUNT_DISABLED = "com.cagst.swkroa.audit.message.disable";
 
   private final UserRepository userRepo;
   private final RoleRepository roleRepo;

@@ -1,13 +1,13 @@
 package com.cagst.swkroa.user;
 
+import java.util.List;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
 
 /**
  * Definitions of a service that retrieves and persists {@link User} objects.
@@ -93,7 +93,6 @@ public interface UserService extends UserDetailsService {
    *     The {@link User} that instigated (performed) the reset of the password for the user.
    *
    * @return A {@link User} that has been updated accordingly.
-   *
    */
   public User resetPassword(final User user, final User instigator);
 
@@ -113,9 +112,9 @@ public interface UserService extends UserDetailsService {
    * Enables the user's account.
    *
    * @param user
-   *      The {@link User} to enable.
+   *     The {@link User} to enable.
    * @param instigator
-   *      The {@link User} that is performing the action.
+   *     The {@link User} that is performing the action.
    *
    * @return The {@link User} that has been updated accordingly.
    */
@@ -125,9 +124,9 @@ public interface UserService extends UserDetailsService {
    * Disables the user's account.
    *
    * @param user
-   *      The {@link User} to disable.
+   *     The {@link User} to disable.
    * @param instigator
-   *      The {@link User} that is performing the action.
+   *     The {@link User} that is performing the action.
    *
    * @return The {@link User} that has been updated accordingly.
    */
@@ -173,8 +172,10 @@ public interface UserService extends UserDetailsService {
    *
    * @return The {@link User} associated with the specified id.
    *
-   * @throws EmptyResultDataAccessException when no user was found with the specified uid.
-   * @throws IncorrectResultSizeDataAccessException when more than 1 user was found with the specified uid.
+   * @throws EmptyResultDataAccessException
+   *     when no user was found with the specified uid.
+   * @throws IncorrectResultSizeDataAccessException
+   *     when more than 1 user was found with the specified uid.
    */
   public User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
@@ -182,7 +183,7 @@ public interface UserService extends UserDetailsService {
    * Retrieves a {@link User} that is currently signed on.
    *
    * @param user
-   *      The {@link User} that is currently signed in.
+   *     The {@link User} that is currently signed in.
    *
    * @return The {@link User} that is currently signed on.
    */

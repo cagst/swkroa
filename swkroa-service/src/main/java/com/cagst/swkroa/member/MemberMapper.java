@@ -1,5 +1,8 @@
 package com.cagst.swkroa.member;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.person.Person;
@@ -9,9 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
  * Used to marshal/un-marshal a {@link Member} to/from the database.
  *
@@ -19,25 +19,25 @@ import java.sql.SQLException;
  * @version 1.0.0
  */
 /* package */final class MemberMapper implements RowMapper<Member> {
-  private static final String MEMBER_ID            = "member_id";
-  private static final String MEMBERSHIP_ID        = "membership_id";
-  private static final String PERSON_ID            = "person_id";
-  private static final String COMPANY_NAME         = "company_name";
-  private static final String COMPANY_NAME_KEY     = "company_name_key";
-  private static final String OWNER_IDENT          = "owner_ident";
-  private static final String MEMBER_TYPE          = "member_type_id";
-  private static final String GREETING             = "greeting";
-  private static final String IN_CARE_OF           = "in_care_of";
-  private static final String JOIN_DT              = "join_dt";
-  private static final String MAIL_NEWSLETTER_IND  = "mail_newsletter_ind";
+  private static final String MEMBER_ID = "member_id";
+  private static final String MEMBERSHIP_ID = "membership_id";
+  private static final String PERSON_ID = "person_id";
+  private static final String COMPANY_NAME = "company_name";
+  private static final String COMPANY_NAME_KEY = "company_name_key";
+  private static final String OWNER_IDENT = "owner_ident";
+  private static final String MEMBER_TYPE = "member_type_id";
+  private static final String GREETING = "greeting";
+  private static final String IN_CARE_OF = "in_care_of";
+  private static final String JOIN_DT = "join_dt";
+  private static final String MAIL_NEWSLETTER_IND = "mail_newsletter_ind";
   private static final String EMAIL_NEWSLETTER_IND = "email_newsletter_ind";
-  private static final String CLOSE_REASON_ID      = "close_reason_id";
-  private static final String CLOSE_REASON_TXT     = "close_reason_txt";
+  private static final String CLOSE_REASON_ID = "close_reason_id";
+  private static final String CLOSE_REASON_TXT = "close_reason_txt";
 
   // meta-data
-  private static final String ACTIVE_IND      = "active_ind";
-  private static final String CREATE_ID       = "create_id";
-  private static final String UPDT_ID         = "updt_id";
+  private static final String ACTIVE_IND = "active_ind";
+  private static final String CREATE_ID = "create_id";
+  private static final String UPDT_ID = "updt_id";
   private static final String MEMBER_UPDT_CNT = "member_updt_cnt";
 
   private final PersonRepository personRepo;

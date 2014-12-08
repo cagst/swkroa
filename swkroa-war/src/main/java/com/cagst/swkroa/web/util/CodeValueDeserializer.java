@@ -1,5 +1,7 @@
 package com.cagst.swkroa.web.util;
 
+import java.io.IOException;
+
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.fasterxml.jackson.core.JsonParser;
@@ -8,14 +10,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
-
 /**
  * Will deserialize a CodeValue from it's unique identifier into an actual {@link CodeValue} object when receiving from
  * a web browser.
  *
  * @author Craig Gaskill
- *
  * @version 1.0.0
  */
 public class CodeValueDeserializer extends JsonDeserializer<CodeValue> {

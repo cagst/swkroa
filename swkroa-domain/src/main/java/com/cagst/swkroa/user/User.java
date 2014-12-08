@@ -1,5 +1,9 @@
 package com.cagst.swkroa.user;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.role.Role;
 import com.cagst.swkroa.security.SecurityPolicy;
@@ -11,10 +15,6 @@ import org.joda.time.Duration;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 
 /**
  * Representation of a User within the system.
@@ -55,7 +55,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the unique identifier for the User object.
    *
-   * @param userUID {@link long} the unique identifier for the User.
+   * @param userUID
+   *     {@link long} the unique identifier for the User.
    */
   public void setUserUID(final long userUID) {
     this.user_id = userUID;
@@ -74,7 +75,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the username associated to the User.
    *
-   * @param username The {@link String} username to associate to this User.
+   * @param username
+   *     The {@link String} username to associate to this User.
    */
   public void setUsername(final String username) {
     this.username = username;
@@ -93,7 +95,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the password associated to the User.
    *
-   * @param password The {@link String} password to associate to this User.
+   * @param password
+   *     The {@link String} password to associate to this User.
    */
   public void setPassword(final String password) {
     this.password = password;
@@ -111,7 +114,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the date this User last signed in.
    *
-   * @param lastSignin The {@link DateTime} this User lasted signed in.
+   * @param lastSignin
+   *     The {@link DateTime} this User lasted signed in.
    */
   public void setLastSigninDate(final DateTime lastSignin) {
     this.last_signin_dt_tm = lastSignin;
@@ -129,7 +133,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the IP address of where they last signed in from.
    *
-   * @param lastSigninIp The IP address of where the user last signed in from.
+   * @param lastSigninIp
+   *     The IP address of where the user last signed in from.
    */
   public void setLastSigninIp(final String lastSigninIp) {
     this.last_signin_ip = lastSigninIp;
@@ -147,7 +152,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the number of times this User has attempted to sign in but failed to do so.
    *
-   * @param signinAttempts The number of times this User has attempted to sign in.
+   * @param signinAttempts
+   *     The number of times this User has attempted to sign in.
    */
   public void setSigninAttempts(final int signinAttempts) {
     this.signin_attempts = signinAttempts;
@@ -163,8 +169,9 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets whether the User's password is temporary and should be changed the next time they sign in.
    *
-   * @param temporaryPwd <code>true</code> if the User's password is temporary and should changed the next time
-   *                     they sign in.
+   * @param temporaryPwd
+   *     <code>true</code> if the User's password is temporary and should changed the next time
+   *     they sign in.
    */
   public void setPasswordTemporary(final boolean temporaryPwd) {
     this.temporary_pwd_ind = temporaryPwd;
@@ -185,7 +192,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the date this account was locked.
    *
-   * @param accountLockedDate The {@link DateTime} this account was locked.
+   * @param accountLockedDate
+   *     The {@link DateTime} this account was locked.
    */
   public void setAccountedLockedDate(final DateTime accountLockedDate) {
     this.account_locked_dt_tm = accountLockedDate;
@@ -319,7 +327,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the number of times this object has been updated.
    *
-   * @param updateCount {@link long} the number of times the object has been updated.
+   * @param updateCount
+   *     {@link long} the number of times the object has been updated.
    */
   /* package */void setUserUpdateCount(final long updateCount) {
     this.updt_cnt = updateCount;
@@ -337,7 +346,8 @@ public final class User extends Person implements UserDetails {
   /**
    * Sets the {@link DateTime} of when this object was created.
    *
-   * @param createDtTm The {@link DateTime} of when this object was created.
+   * @param createDtTm
+   *     The {@link DateTime} of when this object was created.
    */
   public void setCreateDateTime(final DateTime createDtTm) {
     this.create_dt_tm = createDtTm;

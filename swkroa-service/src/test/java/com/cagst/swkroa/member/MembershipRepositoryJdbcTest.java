@@ -1,5 +1,13 @@
 package com.cagst.swkroa.member;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import javax.sql.DataSource;
+import java.util.Collection;
+
 import com.cagst.common.db.DataSourceFactory;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValue;
@@ -15,11 +23,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import javax.sql.DataSource;
-import java.util.Collection;
-
-import static org.junit.Assert.*;
 
 /**
  * Test class for the MemberRepositoryJdbc class.

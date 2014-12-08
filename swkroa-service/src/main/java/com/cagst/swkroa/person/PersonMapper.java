@@ -1,9 +1,9 @@
 package com.cagst.swkroa.person;
 
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Used to marshal/unmarshal a {@link Person} to/from the database.

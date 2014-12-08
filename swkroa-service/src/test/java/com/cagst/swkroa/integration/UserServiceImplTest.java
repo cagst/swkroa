@@ -1,5 +1,11 @@
 package com.cagst.swkroa.integration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserService;
 import org.junit.Before;
@@ -11,8 +17,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import static org.junit.Assert.*;
 
 /**
  * Test class for UserServiceImpl class.

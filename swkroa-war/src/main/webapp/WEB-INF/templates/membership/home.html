@@ -16,12 +16,15 @@
   <div data-ng-show="view == 'listing'">
     <div class="page-header">
       <h3 data-th-text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
+
       <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
+
         <div data-th-text="#{com.cagst.swkroa.membership.save.created}">zzz Created</div>
       </div>
       <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
+
         <div data-th-text="#{com.cagst.swkroa.membership.save.updated}">zzz Updated</div>
       </div>
     </div>
@@ -119,7 +122,8 @@
         <div class="col-xs-7 divider-left stretch pull-right">
           <div data-ng-show="!membership">
             <em>
-              <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.membership.notselected}">
+              <label class="panel-body text-muted text-center"
+                     data-th-text="#{com.cagst.swkroa.membership.notselected}">
                 zzz No membership selected.
               </label>
             </em>
@@ -198,7 +202,8 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please confirm</h4>
+                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please
+                                                                                                     confirm</h4>
                 </div>
                 <div class="modal-body">
                   <span data-th-text="#{com.cagst.swkroa.membership.delete.message}">zzz Delete this?</span>
@@ -234,6 +239,7 @@
         zzz Add Membership
       </h3>
       <input id="membershipId" type="hidden" data-th-value="${membershipId}" />
+
       <h3 data-th-text="#{com.cagst.swkroa.membership.edit}" data-ng-show="membership.membershipUID > 0">
         zzz Edit Membership
       </h3>

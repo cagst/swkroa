@@ -31,7 +31,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 
@@ -39,9 +44,9 @@ import org.springframework.web.util.UriComponents;
 public final class UserApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserApiController.class);
 
-  private static final String ACTION_UNLOCK   = "unlock";
-  private static final String ACTION_ENABLE   = "enable";
-  private static final String ACTION_DISABLE  = "disable";
+  private static final String ACTION_UNLOCK = "unlock";
+  private static final String ACTION_ENABLE = "enable";
+  private static final String ACTION_DISABLE = "disable";
   private static final String ACTION_RESETPWD = "resetpwd";
 
   @Autowired
@@ -171,7 +176,7 @@ public final class UserApiController {
    * Handles the request and checks if the specified username is already being used.
    *
    * @param username
-   *      The username to check to see if it already exists.
+   *     The username to check to see if it already exists.
    *
    * @return {@code true} if the username is being used, {@code false} otherwise.
    */

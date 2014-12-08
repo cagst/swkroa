@@ -49,7 +49,7 @@
   <bean name="membershipRepo" class="com.cagst.swkroa.member.MembershipRepositoryJdbc">
     <constructor-arg ref="datasource"/>
     <constructor-arg ref="memberRepo"/>
-    <constructor-arg ref="codeValueRepo" />
+    <constructor-arg ref="codeValueRepo"/>
   </bean>
 
   <bean name="commentRepo" class="com.cagst.swkroa.comment.CommentRepositoryJdbc">

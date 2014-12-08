@@ -12,7 +12,7 @@
       <div data-ng-repeat="address in membership.primaryMember.addresses"
            data-ng-show="address.active"
            data-ng-form="addressForm"
-          class="grouper">
+           class="grouper">
         <div class="row spacer-top">
           <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
             <select class="form-control" name="addressType"
@@ -107,7 +107,7 @@
           <div class="col-xs-4">
             <input id="primaryPhone" type="checkbox"
                    data-ng-model="phone.primary"
-                   data-ng-change="contactService.ensurePrimaryPhone(membership.primaryMember, phone)"/>
+                   data-ng-change="contactService.ensurePrimaryPhone(membership.primaryMember, phone)" />
             <label for="primaryPhone" data-th-text="#{com.cagst.swkroa.membership.member.phone.primary}">
               zzz Primary Phone
             </label>
@@ -160,7 +160,7 @@
           <div class="col-xs-4">
             <input id="primaryEmail" type="checkbox"
                    data-ng-model="email.primary"
-                   data-ng-change="contactService.ensurePrimaryEmail(membership.primaryMember, email)"/>
+                   data-ng-change="contactService.ensurePrimaryEmail(membership.primaryMember, email)" />
             <label for="primaryEmail" data-th-text="#{com.cagst.swkroa.membership.member.email.primary}">
               zzz Primary Email
             </label>

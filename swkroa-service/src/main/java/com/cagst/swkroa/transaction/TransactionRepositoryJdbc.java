@@ -1,5 +1,10 @@
 package com.cagst.swkroa.transaction;
 
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
@@ -18,11 +23,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * JDBC Template implementation of the {@link TransactionRepository} interface.
  *
@@ -33,8 +33,8 @@ import java.util.Map;
 /* package */ final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implements TransactionRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(TransactionRepositoryJdbc.class);
 
-  private static final String GET_TRANSACTION_BY_UID             = "GET_TRANSACTION_BY_UID";
-  private static final String GET_TRANSACTIONS_FOR_MEMBERSHIP    = "GET_TRANSACTIONS_FOR_MEMBERSHIP";
+  private static final String GET_TRANSACTION_BY_UID = "GET_TRANSACTION_BY_UID";
+  private static final String GET_TRANSACTIONS_FOR_MEMBERSHIP = "GET_TRANSACTIONS_FOR_MEMBERSHIP";
   private static final String GET_UNPAID_INVOICES_FOR_MEMBERSHIP = "GET_UNPAID_INVOICES_FOR_MEMBERSHIP";
 
   private static final String INSERT_TRANSACTION = "INSERT_TRANSACTION";
@@ -49,9 +49,12 @@ import java.util.Map;
   /**
    * Primary Constructor used to create an instance of the TransactionRepositoryJdbc.
    *
-   * @param dataSource    The {@link DataSource} to used to retrieve / persists data object.
-   * @param codeValueRepo The {@link CodeValueRepository} to use to retrieve additional attributes.
-   * @param memberRepo    The {@link MemberRepository} to us to retrieve Member information.
+   * @param dataSource
+   *     The {@link DataSource} to used to retrieve / persists data object.
+   * @param codeValueRepo
+   *     The {@link CodeValueRepository} to use to retrieve additional attributes.
+   * @param memberRepo
+   *     The {@link MemberRepository} to us to retrieve Member information.
    */
   public TransactionRepositoryJdbc(final DataSource dataSource,
                                    final CodeValueRepository codeValueRepo,

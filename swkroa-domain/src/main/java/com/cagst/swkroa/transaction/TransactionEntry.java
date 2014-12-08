@@ -1,5 +1,10 @@
 package com.cagst.swkroa.transaction;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.member.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,11 +12,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * Representation of an entry within a transaction defined within the system.

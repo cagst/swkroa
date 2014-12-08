@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:batch="http://www.springframework.org/schema/batch"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-											http://www.springframework.org/schema/beans/spring-beans.xsd
-											http://www.springframework.org/schema/batch
-											http://www.springframework.org/schema/batch/spring-batch.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+											http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<!-- 
-	<batch:job id="csvImportJob">
-		<batch:step id="step1">
-			<batch:tasklet>
-				<batch:chunk reader="csvImportItemReader" writer="csvImportItemWriter" commit-interval="1" />
-			</batch:tasklet>
-		</batch:step>
-	</batch:job>
-	
-	<bean id="csvImportItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
-		<property name="resource" value="classpath:cvs/import.csv" />
-		<property name="lineMapper" ref="csvImportLineMapper" />
-		<property name="linesToSkip" value="1" />
-	</bean>
-	
-	<bean id="csvImportLineMapper" class="com.cagst.swkroa.io.MemberLineMapper">
-		<property name="lineTokenizer" ref="csvImportLineTokenizer" />
-	</bean>
-	
-	<bean id="csvImportLineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-		<property name="names" value="" />
-	</bean>
-	
-	<bean id="csvImportItemWriter" class="com.cagst.swkroa.io.MembershipItemWriter">
-		<property name="memberRepo" ref="memberRepo" />
-	</bean>
--->
+  <!--
+    <batch:job id="csvImportJob">
+      <batch:step id="step1">
+        <batch:tasklet>
+          <batch:chunk reader="csvImportItemReader" writer="csvImportItemWriter" commit-interval="1" />
+        </batch:tasklet>
+      </batch:step>
+    </batch:job>
+
+    <bean id="csvImportItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+      <property name="resource" value="classpath:cvs/import.csv" />
+      <property name="lineMapper" ref="csvImportLineMapper" />
+      <property name="linesToSkip" value="1" />
+    </bean>
+
+    <bean id="csvImportLineMapper" class="com.cagst.swkroa.io.MemberLineMapper">
+      <property name="lineTokenizer" ref="csvImportLineTokenizer" />
+    </bean>
+
+    <bean id="csvImportLineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+      <property name="names" value="" />
+    </bean>
+
+    <bean id="csvImportItemWriter" class="com.cagst.swkroa.io.MembershipItemWriter">
+      <property name="memberRepo" ref="memberRepo" />
+    </bean>
+  -->
 </beans>

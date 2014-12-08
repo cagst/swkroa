@@ -179,7 +179,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * Helper method to return the "primary" member associated with this membership.
    *
    * @return The "primary" {@link Member} associated with this membership,
-   *         {@code null} if none is found making the membership invalid.
+   * {@code null} if none is found making the membership invalid.
    */
   public Member getPrimaryMember() {
     for (Member member : members) {
@@ -199,7 +199,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * Helper method to replace (or add) the "primary" member associated with this membership.
    *
    * @param primary
-   *        The {@link Member} to replace (or add) as the "primary" member.
+   *     The {@link Member} to replace (or add) as the "primary" member.
    */
   public void setPrimaryMember(final Member primary) {
     // remove the existing "primary" member if one exists
@@ -219,7 +219,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * Helper method to return the "spouse" associated with this membership.
    *
    * @return The "spouse" {@link Member} associated with this membership,
-   *         {@code null} if no spouse is found.
+   * {@code null} if no spouse is found.
    */
   public Member getSpouse() {
     for (Member member : members) {
@@ -235,7 +235,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * Helper method to replace (or add) the "spouse" member associated with this membership.
    *
    * @param spouse
-   *        The {@link Member} to replace (or add) as the "spouse" member.
+   *     The {@link Member} to replace (or add) as the "spouse" member.
    */
   public void setSpouse(final Member spouse) {
     if (spouse == null) {

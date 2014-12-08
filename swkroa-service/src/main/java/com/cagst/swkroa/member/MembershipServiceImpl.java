@@ -1,5 +1,8 @@
 package com.cagst.swkroa.member;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.comment.CommentRepository;
 import com.cagst.swkroa.contact.Address;
@@ -13,9 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Implementation of the {@link MembershipService} interface.
@@ -35,13 +35,17 @@ public final class MembershipServiceImpl implements MembershipService {
   /**
    * Primary Constructor used to create an instance of <i>MembershipServiceImpl</i>.
    *
-   * @param membershipRepo  The {@link MembershipRepository} used to retrieve {@link Membership Memberships}.
-   * @param contactRepo     The {@link ContactRepository} used to retrieve / persist {@link Address}, {@link PhoneNumber}, and
-   *                        {@link EmailAddress} objects.
-   * @param commentRepo     The {@link CommentRepository} used to retrieve / persist {@link Comment} objects related to a
-   *                        {@link Membership}.
-   * @param transactionRepo The {@link TransactionRepository} used to retrieve / persist {@link Transaction} objects related to a
-   *                        {@link Membership}.
+   * @param membershipRepo
+   *     The {@link MembershipRepository} used to retrieve {@link Membership Memberships}.
+   * @param contactRepo
+   *     The {@link ContactRepository} used to retrieve / persist {@link Address}, {@link PhoneNumber}, and
+   *     {@link EmailAddress} objects.
+   * @param commentRepo
+   *     The {@link CommentRepository} used to retrieve / persist {@link Comment} objects related to a
+   *     {@link Membership}.
+   * @param transactionRepo
+   *     The {@link TransactionRepository} used to retrieve / persist {@link Transaction} objects related to a
+   *     {@link Membership}.
    */
   public MembershipServiceImpl(final MembershipRepository membershipRepo, final ContactRepository contactRepo,
                                final CommentRepository commentRepo, final TransactionRepository transactionRepo) {

@@ -1,11 +1,13 @@
 package com.cagst.swkroa.controller.web;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import ch.qos.logback.classic.LoggerContext;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserService;
-import com.cagst.swkroa.user.UsernameTakenException;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import net.sf.ehcache.Cache;
 import org.slf4j.Logger;
@@ -13,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,12 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Handles and retrieves the Home page depending on the URI template.
