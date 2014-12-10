@@ -83,7 +83,7 @@ public final class HomeController {
   /**
    * Handles and retrieves the Console page.
    *
-   * @return The name of the JSP page.
+   * @return The name of the page.
    */
   @RequestMapping(value = "console", method = RequestMethod.GET)
   public ModelAndView getConsolePage() {

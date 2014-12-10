@@ -72,7 +72,7 @@ public class MembershipApiControllerTest {
   public void testGetMembershipByUID_Found() throws Exception {
     Membership membership = new Membership();
     membership.setMembershipUID(123);
-    membership.setAmountDue(new BigDecimal(123.45));
+    membership.setBalance(new BigDecimal(123.45));
 
     when(membershipService.getMembershipByUID(123)).thenReturn(membership);
 

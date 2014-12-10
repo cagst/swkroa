@@ -16,15 +16,12 @@
   <div data-ng-show="view == 'listing'">
     <div class="page-header">
       <h3 data-th-text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
-
       <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
-
         <div data-th-text="#{com.cagst.swkroa.membership.save.created}">zzz Created</div>
       </div>
       <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
-
         <div data-th-text="#{com.cagst.swkroa.membership.save.updated}">zzz Updated</div>
       </div>
     </div>
@@ -73,42 +70,42 @@
                      data-ng-class="{active: mem.membershipUID === membership.membershipUID}"
                      data-ng-click="getMembership(mem.membershipUID)">
                   <div class="lead lead-in">
-                    <span data-ng-bind="mem.primaryMember.effectiveMemberName">zzz Membership Name</span>
-                    <span data-ng-show="mem.primaryMember.memberType.memberTypeMeaning == 'REGULAR'"
+                    <span data-ng-bind="mem.membershipName">zzz Membership Name</span>
+                    <span data-ng-show="mem.memberTypeMeaning == 'REGULAR'"
                           data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.regular}"
                           data-tooltip-placement="left"
                           class="pull-right">
                       <i class="fa fa-user"></i>
                     </span>
-                    <span data-ng-show="mem.primaryMember.memberType.memberTypeMeaning == 'FAMILY_HEAD'"
+                    <span data-ng-show="mem.memberTypeMeaning == 'FAMILY_HEAD'"
                           data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.family}"
                           data-tooltip-placement="left"
                           class="pull-right">
                       <i class="fa fa-users"></i>
                     </span>
                   </div>
-                  <div data-ng-if="mem.primaryMember.joinDate != null">
+                  <div data-ng-if="mem.joinDate != null">
                     <span data-th-text="#{com.cagst.swkroa.membership.member.since}">zzz Member Since</span>
                   </div>
                   <div>
-                    <span data-th-text="#{com.cagst.swkroa.membership.dues}">zzz Dues Of</span>
-                    <span data-th-text="#{com.cagst.swkroa.membership.cal.dues}" class="text-warning"
-                          data-ng-show="mem.effectiveDuesAmount != mem.calculatedDuesAmount">
+                    <span data-th-text="#{com.cagst.swkroa.membership.fixed.dues}">zzz Dues Of</span>
+                    <span data-th-text="#{com.cagst.swkroa.membership.calculated.dues}" class="text-warning"
+                          data-ng-show="mem.fixedDuesAmount != mem.calculatedDuesAmount">
                       zzz Calculated Dues
                     </span>
                     <span class="pull-right text-danger"
-                          data-ng-bind="mem.amountDue | currency"
-                          data-ng-show="mem.amountDue < 0">
+                          data-ng-bind="mem.balance | currency"
+                          data-ng-show="mem.balance < 0">
                       zzz Past Due
                     </span>
                     <span class="pull-right text-success"
-                          data-ng-bind="mem.amountDue | currency"
-                          data-ng-show="mem.amountDue > 0">
+                          data-ng-bind="mem.balance | currency"
+                          data-ng-show="mem.balance > 0">
                       zzz Credit
                     </span>
                     <span class="pull-right"
-                          data-ng-bind="mem.amountDue | currency"
-                          data-ng-show="mem.amountDue == 0">
+                          data-ng-bind="mem.balance | currency"
+                          data-ng-show="mem.balance == 0">
                       zzz Paid
                     </span>
                   </div>
@@ -269,7 +266,7 @@
             </button>
             <button type="button" class="btn btn-default"
                     data-ng-click="cancelChanges()"
-                    data-th-text="#{com.cagst.swkroa.membership.cancel}">
+                    data-th-text="#{com.cagst.swkroa.cancel}">
             </button>
           </div>
         </div>

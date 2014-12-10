@@ -4,7 +4,6 @@
  * Provides functionality needed for the Membership pages.
  *
  * Author:  Craig Gaskill
- * Version: 1.0.0
  */
 
 swkroaApp.service('membershipService', ['$http', function($http) {
@@ -14,15 +13,69 @@ swkroaApp.service('membershipService', ['$http', function($http) {
       url = url + query;
     }
 
-    return $http.get(url);
+    var promise = $http.get(url);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
   };
 
   this.getMembership = function(membershipUID) {
-    return $http.get('/api/memberships/' + membershipUID);
+    var promise = $http.get('/api/memberships/' + membershipUID);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
   };
 
   this.saveMembership = function(membership) {
-    return $http.post('/api/memberships', membership);
+    var promise = $http.post('/api/memberships', membership);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
   }
 
   this.generateOwnerId = function(firstName, lastName) {
@@ -34,10 +87,18 @@ swkroaApp.service('membershipService', ['$http', function($http) {
   };
 }]);
 
-swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService', 'membershipService', '$filter',
-    function($scope, $http, contactService, membershipService, $filter, currencyFilter)
+swkroaApp.controller('membershipController',
+                     ['$scope',
+                      '$http',
+                      'codesetService',
+                      'contactService',
+                      'membershipService',
+                      'transactionService',
+                      '$filter',
+    function($scope, $http, codesetService, contactService, membershipService, transactionService, $filter, currencyFilter)
   {
 
+  $scope.codesetService = codesetService;
   $scope.contactService = contactService;
 
   $scope.query = "";
@@ -51,7 +112,7 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
   $('#createdMessage').hide();
   $('#updatedMessage').hide();
 
-  $http.get('/api/codeset/TRANSACTION_ENTRY_TYPE/').success(function(data) {
+  codesetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
     $scope.transactionEntryTypes = data;
   });
 
@@ -176,12 +237,12 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
 
   $scope.deleteTransaction = function(transaction) {
     $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
-    $scope.transaction = angular.copy(transaction);
+    $scope.transaction    = angular.copy(transaction);
   };
 
   $scope.editTransaction = function(transaction) {
     $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
-    $scope.transaction = angular.copy(transaction);
+    $scope.transaction    = angular.copy(transaction);
 
     syncTransactionEntryType($scope);
     syncMember($scope);
@@ -208,31 +269,33 @@ swkroaApp.controller('membershipController', ['$scope', '$http', 'contactService
   };
 
   $scope.removeTransaction = function() {
+    $('#deleteTransaction').modal('hide');
     $scope.transaction.active = false;
-    $http.put("/api/transaction", $scope.transaction).success(function(data) {
+
+    transactionService.saveTransaction($scope.transaction).success(function(data) {
       $scope.membership.transactions.splice($scope.transactionIdx, 1);
     })
     .error(function(data) {
-      // TODO: Need to add a message for the user
       $scope.transaction.active = true;
       $scope.membership.transactions[$scope.transactionIdx] = $scope.transaction;
     });
+
     $scope.transaction = null;
-    $('#deleteTransaction').modal('hide');
   };
 
   $scope.saveTransaction = function() {
+    $('#modifyTransaction').modal('hide');
     $scope.transaction.membershipUID  = $scope.membership.membershipUID;
 
-    $http.put("/api/transaction", $scope.transaction).success(function(data) {
-      if ($scope.transactionIdx == -1) {
+    transactionService.saveTransaction($scope.transaction).success(function(data, status) {
+      if (status == 201) {
         $scope.membership.transactions.push(data);
       } else {
         $scope.membership.transactions[$scope.transactionIdx] = data;
       }
     });
+
     $scope.transaction = null;
-    $('#modifyTransaction').modal('hide');
   };
 
   $scope.addTransactionEntry = function() {
@@ -477,7 +540,7 @@ var loadAll = function($scope, $http) {
   var syncCount    = 0;
 
   syncItems++;
-  $http.get('/api/codeset/ENTITY_TYPE/').success(function(data) {
+  $http.get('/api/codesets/ENTITY_TYPE/').success(function(data) {
     $scope.entityTypes = data;
 
     syncCount++;
@@ -486,44 +549,20 @@ var loadAll = function($scope, $http) {
     }
   });
 
-  syncItems++;
-  $http.get('/api/codeset/TITLE/').success(function(data) {
+  $scope.codesetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
     $scope.titles = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
-    }
   });
 
-  syncItems++;
-  $scope.contactService.getAddressTypes().then(function(data) {
+  $scope.codesetService.getCodeValuesForCodeSet('ADDRESS_TYPE').success(function(data) {
     $scope.addressTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
-    }
   });
 
-  syncItems++;
-  $scope.contactService.getPhoneTypes().then(function(data) {
+  $scope.codesetService.getCodeValuesForCodeSet('PHONE_TYPE').success(function(data) {
     $scope.phoneTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
-    }
   });
 
-  syncItems++;
-  $scope.contactService.getEmailTypes().then(function(data) {
+  $scope.codesetService.getCodeValuesForCodeSet('EMAIL_TYPE').success(function(data) {
     $scope.emailTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
-    }
   });
 
   syncItems++;

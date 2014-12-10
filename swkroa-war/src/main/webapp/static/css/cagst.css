@@ -62,12 +62,6 @@ a:hover, a:focus {
   text-decoration: none;
 }
 
-/*
-.list-group-item {
-  margin-left: -1px;
-  margin-right: -1px;
-}
-*/
 .list-group-item {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
@@ -156,6 +150,11 @@ a:hover, a:focus {
 .clear-right {
   padding-right: 0px !important;
   margin-right: 0px !important;
+}
+
+.clear-top {
+  padding-top: 0px !important;
+  margin-top: 0px !important;
 }
 
 .clear-bottom {
@@ -449,71 +448,3 @@ input.ui-spinner-input {
   border-bottom-right-radius: 0px !important;
   -webkit-border-bottom-right-radius: 0px !important;
 }
-
-
-
-
-
-
-/*
-.sidenav {
-  background-color:#fff;
-  border-radius:6px;
-  box-shadow:0 1px 4px rgba(0, 0, 0, 0.067);
-  padding:0;
-}
-
-.sidenav > li > a {
-  border:1px solid #E5E5E5;
-  display:block;
-  margin:0 0 -1px;
-  padding:8px 14px;
-}
-
-.sidenav > li:first-child > a {
-  border-radius:6px 6px 0 0;
-}
-
-.sidenav > li:last-child > a {
-  border-radius:0 0 6px 6px;
-}
-
-.sidenav > .active > a {
-  border:	0 none;
-  box-shadow:	1px 0 0 rgba(0, 0, 0, 0.1) inset, -1px 0 0 rgba(0, 0, 0, 0.1) inset;
-  padding:9px 15px;
-  position:relative;
-  text-shadow:0 1px 0 rgba(0, 0, 0, 0.15);
-  z-index:2;
-}
-
-.sidenav .fa-icon-chevron-right {
-  float:right;
-  margin-right:-6px;
-  margin-top:2px;
-  opacity:0.25;
-}
-
-.sidenav > li > a:hover {
-  background-color:#F5F5F5;
-}
-
-.sidenav a:hover .fa-icon-chevron-right {
-  opacity:0.5;
-}
-
-.sidenav .active .fa-icon-chevron-right, .sidenav .active a:hover .fa-icon-chevron-right {
-  opacity: 1;
-}
-
-.sidenav.affix {
-  top:240px;
-  width:240px;
-}
-
-.sidenav.affix-bottom {
-  bottom:270px;
-  position:absolute;
-  top:auto;
-}
-*/

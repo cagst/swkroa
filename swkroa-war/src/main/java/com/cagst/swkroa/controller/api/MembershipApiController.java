@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +19,6 @@ import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -46,17 +46,21 @@ import org.springframework.web.util.UriComponents;
 public final class MembershipApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipApiController.class);
 
-  @Autowired
-  private CodeValueRepository codeValueRepo;
+  private final CodeValueRepository codeValueRepo;
+  private final MembershipService membershipService;
+  private final MemberRepository memberRepo;
+  private final MemberTypeRepository memberTypeRepo;
 
-  @Autowired
-  private MembershipService membershipService;
-
-  @Autowired
-  private MemberRepository memberRepo;
-
-  @Autowired
-  private MemberTypeRepository memberTypeRepo;
+  @Inject
+  public MembershipApiController(final CodeValueRepository codeValueRepo,
+                                 final MembershipService membershipService,
+                                 final MemberRepository memberRepo,
+                                 final MemberTypeRepository memberTypeRepo) {
+    this.codeValueRepo = codeValueRepo;
+    this.membershipService = membershipService;
+    this.memberRepo = memberRepo;
+    this.memberTypeRepo = memberTypeRepo;
+  }
 
   /**
    * Handles the request and retrieves the active Memberships within the system.
@@ -88,7 +92,7 @@ public final class MembershipApiController {
    * @return A {@link Membership} that represents the {@link Membership} for the specified membership ID.
    */
   @RequestMapping(value = "/{membershipId}", method = RequestMethod.GET)
-  public Membership getMembership(final @PathVariable long membershipId) {
+  public Membership getMembership(final @PathVariable("membershipId") long membershipId) {
     LOGGER.info("Received request to retrieve membership [{}].", membershipId);
 
     if (membershipId == 0L) {

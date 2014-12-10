@@ -10,7 +10,7 @@
 
 <body>
 
-<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="codesetListController">
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="codesetController">
   <div class="page-header">
     <h3 data-th-text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
   </div>
@@ -52,12 +52,8 @@
             <table class="table table-bordered table-hover table-inner">
               <thead>
               <tr>
-                <th data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.display}" style="width:36%">zzz
-                                                                                                            Display
-                </th>
-                <th data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.meaning}" style="width:36%">zzz
-                                                                                                            Meaning
-                </th>
+                <th data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.display}" style="width:36%">zzz Display</th>
+                <th data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.meaning}" style="width:36%">zzz Meaning</th>
                 <th style="width: 24%">
                   <a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="addCodeValue()">
                     <i class="fa fa-plus"></i>

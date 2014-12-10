@@ -2,33 +2,26 @@
  * (c) 2014 CAGST Solutions: http://www.cagst.com/solutions
  *
  * Author: Craig Gaskill
- *
- * Version: 1.0.0
  */
 
 swkroaApp.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
 
-swkroaApp.controller('codesetListController', function($scope, $http) {
-  $http.get('/api/codeset').success(function(data) {
-    $scope.codesets = data;
+swkroaApp.controller('codesetController', ['$scope', 'codesetService', function($scope, codesetService) {
+  codesetService.getCodeSets().then(function(response) {
+    if (response.status == 200) {
+      $scope.codesets = response.data;
+    }
   });
 
   $scope.getCodeValues = function(codeSet) {
     $scope.selectedCodeSet = codeSet;
-    $http.get('/api/codeset/' + codeSet.meaning).success(function(data) {
-      $scope.codevalues = data;
-    });
-  };
 
-  $scope.addCodeValue = function(codeValue) {
-    $http:post('/api/codevalue', codeValue).success(function(data) {
-    });
-  };
-
-  $scope.editCodeValue = function(codeValue) {
-    $http.put('/api/codevalue', codeValue).success(function(data) {
+    codesetService.getCodeValuesForCodeSet(codeSet.meaning).then(function(response) {
+      if (response.status == 200) {
+        $scope.codevalues = response.data;
+      }
     });
   };
 
@@ -38,16 +31,17 @@ swkroaApp.controller('codesetListController', function($scope, $http) {
 
   $scope.removeCodeValue = function() {
     $scope.codevalue.active = false;
-    $http.put('/api/codevalue', $scope.codevalue).success(function(data) {
-      $scope.codevalue = data;
-    })
-    .error(function(data) {
-      // if we failed to save (remove the codevalue)
-      // set it back to active
-      // TODO: Need to add a message
-      $scope.codevalue.active = true;
-    });
     $('#confirmDeletion').modal('hide');
+
+    codesetService.saveCodeValue($scope.selectedCodeSet.meaning, $scope.codevalue).then(function(response) {
+      if (response.status == 200) {
+        $scope.codevalue = data;
+      } else {
+        // we failed to save (remove) the codevalue
+        // set it back to active
+        $scope.codevalue.active = true;
+      }
+    });
   };
 
   $scope.validate = function(display) {
@@ -59,10 +53,12 @@ swkroaApp.controller('codesetListController', function($scope, $http) {
   };
 
   $scope.saveCodeValue = function(codeValue) {
-    $http.put("/api/codevalue", codeValue).success(function(data) {
-      codeValue.codeValueUID = data.codeValueUID;
-      codeValue.meaning = data.meaning;
-      codeValue.codeValueUpdateCount = data.codeValueUpdateCount;
+    codesetService.saveCodeValue($scope.selectedCodeSet.meaning, codeValue).then(function(response) {
+      if (response.status == 201) {
+        codeValue = response.data;
+      } else if (response.status == 200) {
+        codeValue = response.data;
+      }
     });
   };
 
@@ -78,4 +74,4 @@ swkroaApp.controller('codesetListController', function($scope, $http) {
 
     $scope.codevalues.push($scope.inserted);
   };
-});
+}]);

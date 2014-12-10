@@ -9,6 +9,7 @@ package com.cagst.swkroa.controller.api;
  *
  */
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
@@ -23,7 +24,6 @@ import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -49,9 +49,12 @@ public final class UserApiController {
   private static final String ACTION_DISABLE = "disable";
   private static final String ACTION_RESETPWD = "resetpwd";
 
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
 
+  @Inject
+  public UserApiController(final UserService userService) {
+    this.userService = userService;
+  }
   /**
    * Handles the request and retrieves the active {@link User Users} within the system.
    *

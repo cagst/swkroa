@@ -130,6 +130,7 @@ public class AuthenticationController {
     if (user == null) {
       LOGGER.error("Unable to determine current user.");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      return;
     }
 
     LOGGER.info("Changing password for user [{}]", user.getUsername());

@@ -8,18 +8,17 @@ import com.cagst.swkroa.county.CountyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Handles and retrieves {@link Country} objects depending on the URI template.
+ * Handles and retrieves {@link County} objects depending on the URI template.
  *
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Controller
+@RestController
 public final class CountyApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(CountyApiController.class);
 
@@ -31,8 +30,7 @@ public final class CountyApiController {
    *
    * @return A JSON representation of the active Counties within the system.
    */
-  @RequestMapping(value = {"/api/counties"}, method = RequestMethod.GET)
-  @ResponseBody
+  @RequestMapping(value = "/api/counties", method = RequestMethod.GET)
   public List<County> getActiveCounties() {
     LOGGER.info("Received request to retrieve active counties.");
 
