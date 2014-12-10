@@ -32,11 +32,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
   private static final String UPDT_ID = "updt_id";
   private static final String TRANSACTION_UPDT_CNT = "transaction_updt_cnt";
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public Transaction mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     Transaction trans = new Transaction();

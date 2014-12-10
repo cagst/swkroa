@@ -1,5 +1,7 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,20 +16,19 @@ import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of the {@link MembershipService} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
-@Service("membershipService")
+@Named("membershipService")
 public final class MembershipServiceImpl implements MembershipService {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipServiceImpl.class);
 
   private final MembershipRepository membershipRepo;
+  private final MemberRepository memberRepo;
   private final ContactRepository contactRepo;
   private final CommentRepository commentRepo;
   private final TransactionRepository transactionRepo;
@@ -37,6 +38,8 @@ public final class MembershipServiceImpl implements MembershipService {
    *
    * @param membershipRepo
    *     The {@link MembershipRepository} used to retrieve {@link Membership Memberships}.
+   * @param memberRepo
+   *     The {@link MemberRepository} used to retrieve {@link Member Members} for a membership.
    * @param contactRepo
    *     The {@link ContactRepository} used to retrieve / persist {@link Address}, {@link PhoneNumber}, and
    *     {@link EmailAddress} objects.
@@ -47,10 +50,15 @@ public final class MembershipServiceImpl implements MembershipService {
    *     The {@link TransactionRepository} used to retrieve / persist {@link Transaction} objects related to a
    *     {@link Membership}.
    */
-  public MembershipServiceImpl(final MembershipRepository membershipRepo, final ContactRepository contactRepo,
-                               final CommentRepository commentRepo, final TransactionRepository transactionRepo) {
+  @Inject
+  public MembershipServiceImpl(final MembershipRepository membershipRepo,
+                               final MemberRepository memberRepo,
+                               final ContactRepository contactRepo,
+                               final CommentRepository commentRepo,
+                               final TransactionRepository transactionRepo) {
 
     this.membershipRepo = membershipRepo;
+    this.memberRepo = memberRepo;
     this.contactRepo = contactRepo;
     this.commentRepo = commentRepo;
     this.transactionRepo = transactionRepo;
@@ -75,11 +83,18 @@ public final class MembershipServiceImpl implements MembershipService {
     LOGGER.info("Calling getMembershipByUID for [{}]", uid);
 
     Membership membership = membershipRepo.getMembershipByUID(uid);
+
+    List<Member> members = memberRepo.getMembersForMembership(membership);
+    membership.setMembers(members);
+
     for (Member member : membership.getMembers()) {
       member.setAddresses(contactRepo.getAddressesForMember(member));
       member.setPhoneNumbers(contactRepo.getPhoneNumbersForMember(member));
       member.setEmailAddresses(contactRepo.getEmailAddressesForMember(member));
     }
+
+    List<MembershipCounty> counties = memberRepo.getMembershipCountiesForMembership(membership);
+    membership.setMembershipCounties(counties);
 
     List<Comment> comments = commentRepo.getCommentsForMembership(membership);
     Collections.sort(comments);

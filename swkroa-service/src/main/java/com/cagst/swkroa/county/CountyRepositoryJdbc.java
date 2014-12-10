@@ -1,5 +1,7 @@
 package com.cagst.swkroa.county;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,7 +13,6 @@ import com.cagst.common.db.StatementLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 /**
@@ -20,7 +21,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("countyRepo")
+@Named("countyRepository")
 /* package */ final class CountyRepositoryJdbc extends BaseRepositoryJdbc implements CountyRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(CountyRepositoryJdbc.class);
 
@@ -35,15 +36,11 @@ import org.springframework.util.Assert;
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.
    */
+  @Inject
   public CountyRepositoryJdbc(final DataSource dataSource) {
     super(dataSource);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.country.CountryRepository#getActiveCounties()
-   */
   @Override
   @Cacheable("countyLists")
   public Collection<County> getActiveCounties() {
@@ -54,11 +51,6 @@ import org.springframework.util.Assert;
     return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ACTIVE_COUNTIES), new CountyMapper());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.county.CountyRepository#getCountiesForState(java.lang.String)
-   */
   @Override
   public Collection<County> getCountiesForState(final String stateCode) {
     Assert.hasText(stateCode, "Assertion Failed - argument [stateCode] cannot be null");
@@ -73,11 +65,6 @@ import org.springframework.util.Assert;
     return getJdbcTemplate().query(stmtLoader.load(GET_COUNTIES_FOR_STATE), params, new CountyMapper());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.country.CountryRepository#getCountyByUID(long)
-   */
   @Override
   @Cacheable("counties")
   public County getCountyByUID(final long uid) {
@@ -102,12 +89,6 @@ import org.springframework.util.Assert;
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.county.CountyRepository#getCountyByStateAndCode(java.lang.String,
-   * java.lang.String)
-   */
   @Override
   @Cacheable("counties")
   public County getCountyByStateAndCode(final String state, final String code) {

@@ -1,5 +1,7 @@
 package com.cagst.swkroa.transaction;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +21,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -29,13 +30,15 @@ import org.springframework.util.CollectionUtils;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("transactionRepo")
+@Named("transactionRepository")
 /* package */ final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implements TransactionRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(TransactionRepositoryJdbc.class);
 
-  private static final String GET_TRANSACTION_BY_UID = "GET_TRANSACTION_BY_UID";
-  private static final String GET_TRANSACTIONS_FOR_MEMBERSHIP = "GET_TRANSACTIONS_FOR_MEMBERSHIP";
+  private static final String GET_TRANSACTION_BY_UID             = "GET_TRANSACTION_BY_UID";
+  private static final String GET_TRANSACTIONS_FOR_MEMBERSHIP    = "GET_TRANSACTIONS_FOR_MEMBERSHIP";
+  private static final String GET_TRANSACTIONS_FOR_DEPOSIT       = "GET_TRANSACTIONS_FOR_DEPOSIT";
   private static final String GET_UNPAID_INVOICES_FOR_MEMBERSHIP = "GET_UNPAID_INVOICES_FOR_MEMBERSHIP";
+  private static final String GET_UNPAID_INVOICES                = "GET_UNPAID_INVOICES";
 
   private static final String INSERT_TRANSACTION = "INSERT_TRANSACTION";
   private static final String UPDATE_TRANSACTION = "UPDATE_TRANSACTION";
@@ -56,6 +59,7 @@ import org.springframework.util.CollectionUtils;
    * @param memberRepo
    *     The {@link MemberRepository} to us to retrieve Member information.
    */
+  @Inject
   public TransactionRepositoryJdbc(final DataSource dataSource,
                                    final CodeValueRepository codeValueRepo,
                                    final MemberRepository memberRepo) {
@@ -66,8 +70,8 @@ import org.springframework.util.CollectionUtils;
   }
 
   @Override
-  public Transaction getTransactionByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException {
+  public Transaction getTransactionByUID(final long uid)
+      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getTransactionByUID for [{}]", uid);
 
@@ -75,7 +79,11 @@ import org.springframework.util.CollectionUtils;
     Map<String, Long> params = new HashMap<String, Long>(1);
     params.put("transaction_id", uid);
 
-    List<Transaction> trans = (List<Transaction>) getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTION_BY_UID), params, new TransactionListExtractor(codeValueRepo, memberRepo));
+    List<Transaction> trans = getJdbcTemplate().query(
+        stmtLoader.load(GET_TRANSACTION_BY_UID),
+        params,
+        new TransactionListExtractor(codeValueRepo, memberRepo)
+    );
 
     if (trans.size() == 1) {
       return trans.get(0);
@@ -95,7 +103,7 @@ import org.springframework.util.CollectionUtils;
     LOGGER.info("Calling getTransactionsForMembership [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>();
+    Map<String, Long> params = new HashMap<String, Long>(1);
     params.put("membership_id", membership.getMembershipUID());
 
     return (List<Transaction>) getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP), params, new TransactionListExtractor(codeValueRepo, memberRepo));

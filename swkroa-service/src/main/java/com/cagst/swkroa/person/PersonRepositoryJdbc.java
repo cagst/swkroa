@@ -1,5 +1,7 @@
 package com.cagst.swkroa.person;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
+@Named("personRepository")
 public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(PersonRepositoryJdbc.class);
 
@@ -44,6 +47,7 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
    * @param contactRepo
    *     The {@link ContactRepository} to use to populate contact objects.
    */
+  @Inject
   public PersonRepositoryJdbc(final DataSource dataSource, final ContactRepository contactRepo) {
     super(dataSource);
 

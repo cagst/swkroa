@@ -5,16 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.cagst.common.db.DataSourceFactory;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.member.Membership;
+import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -23,8 +22,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -36,19 +33,16 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * @version 1.0.0
  */
 @RunWith(JUnit4.class)
-public class TransactionRepositoryJdbcTest {
+public class TransactionRepositoryJdbcTest extends BaseTestRepository {
   private TransactionRepositoryJdbc repo;
-  private CodeValueRepository codeValueRepo;
 
   private CodeValue typeDues = new CodeValue();
   private CodeValue typePayment = new CodeValue();
   private CodeValue typeSpecial = new CodeValue();
 
-  private Member member;
-
   @Before
   public void setUp() {
-    codeValueRepo = Mockito.mock(CodeValueRepository.class);
+    CodeValueRepository codeValueRepo = Mockito.mock(CodeValueRepository.class);
 
     typeDues.setCodeValueUID(1L);
     typeDues.setDisplay("Annual Dues");
@@ -68,7 +62,7 @@ public class TransactionRepositoryJdbcTest {
 
     MemberRepository memberRepo = Mockito.mock(MemberRepository.class);
 
-    member = new Member();
+    Member member = new Member();
     member.setMemberUID(2L);
 
     Mockito.when(memberRepo.getMemberByUID(2L)).thenReturn(member);
@@ -211,12 +205,11 @@ public class TransactionRepositoryJdbcTest {
     User user = new User();
     user.setUserUID(1L);
 
-    Transaction trans = repo.getTransactionByUID(1L);
+    Transaction trans = repo.getTransactionByUID(2L);
 
     assertNotNull("Ensure we found a transaction.", trans);
     assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 
-//		trans.setTransactionAmount(new BigDecimal(-100));
     for (TransactionEntry entry : trans.getTransactionEntries()) {
       if (entry.getMember() == null) {
         entry.setTransactionEntryAmount(new BigDecimal(-35));
@@ -237,12 +230,11 @@ public class TransactionRepositoryJdbcTest {
     User user = new User();
     user.setUserUID(1L);
 
-    Transaction trans = repo.getTransactionByUID(1L);
+    Transaction trans = repo.getTransactionByUID(2L);
 
     assertNotNull("Ensure we found a transaction.", trans);
     assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 
-//		trans.setTransactionAmount(new BigDecimal(-100));
     for (TransactionEntry entry : trans.getTransactionEntries()) {
       if (entry.getMember() == null) {
         entry.setTransactionEntryAmount(new BigDecimal(-35));
@@ -251,13 +243,5 @@ public class TransactionRepositoryJdbcTest {
     }
 
     repo.saveTransaction(trans, user);
-  }
-
-  private DataSource createTestDataSource() {
-    Resource schemaLocation = new ClassPathResource("/testDb/schema.sql");
-    Resource testDataLocation = new ClassPathResource("/testDb/test_data.sql");
-
-    DataSourceFactory dsFactory = new DataSourceFactory("swkroadb", schemaLocation, testDataLocation);
-    return dsFactory.getDataSource();
   }
 }

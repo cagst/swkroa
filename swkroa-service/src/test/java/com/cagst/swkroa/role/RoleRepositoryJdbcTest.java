@@ -11,6 +11,7 @@ import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -22,6 +23,7 @@ import org.junit.runners.JUnit4;
  * @version 1.0.0
  */
 @RunWith(JUnit4.class)
+@Ignore
 public class RoleRepositoryJdbcTest extends BaseTestRepository {
   private RoleRepositoryJdbc repo;
 

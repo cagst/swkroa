@@ -1,5 +1,7 @@
 package com.cagst.swkroa.role;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,7 +15,6 @@ import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 /**
@@ -22,7 +23,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("roleRepo")
+@Named("roleRepository")
 /* package */ final class RoleRepositoryJdbc extends BaseRepositoryJdbc implements RoleRepository {
   private static final Logger logger = LoggerFactory.getLogger(RoleRepositoryJdbc.class);
 
@@ -38,6 +39,7 @@ import org.springframework.util.Assert;
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.
    */
+  @Inject
   public RoleRepositoryJdbc(final DataSource dataSource) {
     super(dataSource);
   }

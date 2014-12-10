@@ -1,5 +1,7 @@
 package com.cagst.swkroa.contact;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +18,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 /**
@@ -25,7 +26,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("contactRepo")
+@Named("contactRepository")
 public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements ContactRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(ContactRepositoryJdbc.class);
 
@@ -46,6 +47,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.
    */
+  @Inject
   public ContactRepositoryJdbc(final DataSource dataSource) {
     super(dataSource);
   }

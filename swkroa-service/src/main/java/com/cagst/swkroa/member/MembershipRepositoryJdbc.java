@@ -1,5 +1,7 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +22,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -30,7 +31,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("membershipRepo")
+@Named("membershipRepo")
 /* package */ final class MembershipRepositoryJdbc extends BaseRepositoryJdbc implements MembershipRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
@@ -54,7 +55,9 @@ import org.springframework.util.Assert;
    * @param codeValueRepo
    *     The {@link CodeValueRepository} to use to retrieve codified information.
    */
-  /* package */MembershipRepositoryJdbc(final DataSource dataSource, final MemberRepository memberRepo,
+  @Inject
+  /* package */MembershipRepositoryJdbc(final DataSource dataSource,
+                                        final MemberRepository memberRepo,
                                         final CodeValueRepository codeValueRepo) {
     super(dataSource);
 
@@ -67,8 +70,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getActiveMemberships.");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_MEMBERSHIPS_ACTIVE),
-        new MembershipMapper(memberRepo, codeValueRepo));
+    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_MEMBERSHIPS_ACTIVE), new MembershipMapper(codeValueRepo));
   }
 
   @Override
@@ -81,14 +83,14 @@ import org.springframework.util.Assert;
     Map<String, String> params = new HashMap<String, String>(1);
     params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params,
-        new MembershipMapper(memberRepo, codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
   }
 
   @Override
   @Cacheable(value = "memberships")
-  public Membership getMembershipByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException {
+  public Membership getMembershipByUID(final long uid)
+      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
+
     LOGGER.info("Calling getMembershipByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -96,8 +98,11 @@ import org.springframework.util.Assert;
     Map<String, Long> params = new HashMap<String, Long>(1);
     params.put("membership_id", uid);
 
-    List<Membership> memberships = getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_BY_UID), params,
-        new MembershipMapper(memberRepo, codeValueRepo));
+    List<Membership> memberships = getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERSHIP_BY_UID),
+        params,
+        new MembershipMapper(codeValueRepo)
+    );
 
     if (memberships.size() == 1) {
       return memberships.get(0);

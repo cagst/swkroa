@@ -1,5 +1,8 @@
 package com.cagst.swkroa.utils;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserRepository;
 
@@ -9,6 +12,7 @@ import com.cagst.swkroa.user.UserRepository;
  * @author Craig Gaskill
  * @version 1.0.0
  */
+@Named("userUtilities")
 public final class UserUtilitiesImpl implements UserUtilities {
   private final UserRepository userRepo;
 
@@ -18,6 +22,7 @@ public final class UserUtilitiesImpl implements UserUtilities {
    * @param userRepo
    *     The {@link UserRepository} to use to perform actions for / on a {@link User}.
    */
+  @Inject
   public UserUtilitiesImpl(final UserRepository userRepo) {
     this.userRepo = userRepo;
   }

@@ -1,5 +1,7 @@
 package com.cagst.swkroa.comment;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +21,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 /**
@@ -28,7 +29,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("commentRepo")
+@Named("commentRepo")
 /* package */class CommentRepositoryJdbc extends BaseRepositoryJdbc implements CommentRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommentRepositoryJdbc.class);
 
@@ -44,6 +45,7 @@ import org.springframework.util.Assert;
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persists data objects.
    */
+  @Inject
   public CommentRepositoryJdbc(final DataSource dataSource) {
     super(dataSource);
   }

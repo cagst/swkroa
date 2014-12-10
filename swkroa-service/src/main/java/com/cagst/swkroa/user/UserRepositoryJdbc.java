@@ -1,5 +1,7 @@
 package com.cagst.swkroa.user;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
@@ -35,24 +38,23 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("userRepo")
 /* package */ final class UserRepositoryJdbc extends PersonRepositoryJdbc implements UserRepository, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryJdbc.class);
 
   private static final String MSG_USERNAME_EXISTS = "com.cagst.swkroa.username.exists";
 
-  private static final String GET_USER_BY_USERNAME = "GET_USER_BY_USERNAME";
-  private static final String GET_USER_BY_UID = "GET_USER_BY_UID";
-  private static final String SIGNIN_ATTEMPT = "SIGNIN_ATTEMPT";
-  private static final String SIGNIN_SUCCESSFUL = "SIGNIN_SUCCESSFUL";
-  private static final String CHANGE_USER_PASSWORD = "CHANGE_USER_PASSWORD";
-  private static final String RESET_USER_PASSWORD = "RESET_USER_PASSWORD";
-  private static final String CHECK_USERNAME_NEW = "CHECK_USERNAME_NEW";
+  private static final String GET_USER_BY_USERNAME    = "GET_USER_BY_USERNAME";
+  private static final String GET_USER_BY_UID         = "GET_USER_BY_UID";
+  private static final String SIGNIN_ATTEMPT          = "SIGNIN_ATTEMPT";
+  private static final String SIGNIN_SUCCESSFUL       = "SIGNIN_SUCCESSFUL";
+  private static final String CHANGE_USER_PASSWORD    = "CHANGE_USER_PASSWORD";
+  private static final String RESET_USER_PASSWORD     = "RESET_USER_PASSWORD";
+  private static final String CHECK_USERNAME_NEW      = "CHECK_USERNAME_NEW";
   private static final String CHECK_USERNAME_EXISTING = "CHECK_USERNAME_EXISTING";
-  private static final String USER_LOCK = "USER_LOCK";
-  private static final String USER_UNLOCK = "USER_UNLOCK";
-  private static final String USER_ENABLE = "USER_ENABLE";
-  private static final String USER_DISABLE = "USER_DISABLE";
+  private static final String USER_LOCK               = "USER_LOCK";
+  private static final String USER_UNLOCK             = "USER_UNLOCK";
+  private static final String USER_ENABLE             = "USER_ENABLE";
+  private static final String USER_DISABLE            = "USER_DISABLE";
 
   private static final String GET_ALL_USERS = "GET_ALL_USERS";
 

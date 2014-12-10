@@ -90,8 +90,8 @@ public interface MemberRepository extends PersonRepository {
    *
    * @param member
    *     The {@link Member} to persist.
-   * @param The
-   *     {@link Membership} to associate this Member to.
+   * @param membership
+   *     The {@link Membership} to associate this Member to.
    * @param user
    *     The {@link User} that performed the changes.
    *
@@ -112,8 +112,8 @@ public interface MemberRepository extends PersonRepository {
    *
    * @param builder
    *     The {@link MembershipCounty} to persist.
-   * @param The
-   *     {@link Membership} to associate this Member to.
+   * @param membership
+   *     The {@link Membership} to associate this Member to.
    * @param user
    *     The {@link User} that performed the changes.
    *

@@ -58,8 +58,16 @@ public final class Deposit implements Serializable {
     return deposit_amount;
   }
 
-  /* package */ void setDepositAmount(final BigDecimal amount) {
+  public void setDepositAmount(final BigDecimal amount) {
     this.deposit_amount = amount;
+  }
+
+  public boolean isActive() {
+    return active_ind;
+  }
+
+  public void setActive(boolean active) {
+    this.active_ind = active;
   }
 
   public void clearTransactions() {
@@ -76,6 +84,10 @@ public final class Deposit implements Serializable {
 
   public List<Transaction> getTransactions() {
     return Collections.unmodifiableList(transactions);
+  }
+
+  public void setTransactions(final List<Transaction> transactions) {
+    this.transactions = new ArrayList<Transaction>(transactions);
   }
 
   public String toString() {

@@ -44,7 +44,7 @@ public class SecurityServiceImplTest {
    */
   @Test
   public void testGetSecurityPolicy_Default_Environment() {
-    ApplicationContext appCtx = new ClassPathXmlApplicationContext("classpath*:/test-appCtx/**/*.xml");
+    ApplicationContext appCtx = new ClassPathXmlApplicationContext("classpath*:/appCtx/**/*.xml");
     securityService = (SecurityService) appCtx.getBean("securityService");
 
     SecurityPolicy securityPolicy = securityService.getSecurityPolicy(null);

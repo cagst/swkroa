@@ -30,7 +30,7 @@ public class UserServiceImplTest {
 
   @Before
   public void setUp() {
-    ApplicationContext appCtx = new ClassPathXmlApplicationContext("classpath*:/test-appCtx/**/*.xml");
+    ApplicationContext appCtx = new ClassPathXmlApplicationContext("classpath*:/appCtx/**/*.xml");
 
     userService = (UserService) appCtx.getBean("userService");
   }

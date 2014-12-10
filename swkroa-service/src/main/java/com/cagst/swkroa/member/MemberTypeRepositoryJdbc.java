@@ -1,5 +1,7 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 /**
@@ -22,13 +23,13 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("memberTypeRepo")
+@Named("memberTypeRepository")
 /* package */class MemberTypeRepositoryJdbc extends BaseRepositoryJdbc implements MemberTypeRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberTypeRepositoryJdbc.class);
 
-  private static final String GET_MEMBERTYPE_BY_UID = "GET_MEMBERTYPE_BY_UID";
+  private static final String GET_MEMBERTYPE_BY_UID     = "GET_MEMBERTYPE_BY_UID";
   private static final String GET_MEMBERTYPE_BY_MEANING = "GET_MEMBERTYPE_BY_MEANING";
-  private static final String GET_MEMBERTYPES_ACTIVE = "GET_MEMBERTYPES_ACTIVE";
+  private static final String GET_MEMBERTYPES_ACTIVE    = "GET_MEMBERTYPES_ACTIVE";
 
   /**
    * Primary constructor used to create an instance of the MemberTypeRepositoryJdbc.
@@ -36,31 +37,21 @@ import org.springframework.util.Assert;
    * @param dataSource
    *     The {@link DataSource} to use to retrieve / persist data objects.
    */
+  @Inject
   public MemberTypeRepositoryJdbc(final DataSource dataSource) {
     super(dataSource);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.member.MemberRepository#getMemberTypeByID(long)
-   */
   @Override
   @Cacheable(value = "memberTypes")
-  public MemberType getMemberTypeByID(final long id) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException {
+  public MemberType getMemberTypeByID(final long id)
+      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMemberTypeByID for [{}].", id);
 
     return getMemberTypeByIDAsOf(id, DateTime.now());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.member.MemberRepository#getMemberTypeByIDAsOf(long,
-   * org.joda.time.DateTime)
-   */
   @Override
   @Cacheable(value = "memberTypes")
   public MemberType getMemberTypeByIDAsOf(final long id, final DateTime effectiveDateTime)
@@ -76,8 +67,11 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    List<MemberType> types = getJdbcTemplate().query(stmtLoader.load(GET_MEMBERTYPE_BY_UID), params,
-        new MemberTypeMapper());
+    List<MemberType> types = getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERTYPE_BY_UID),
+        params,
+        new MemberTypeMapper()
+    );
 
     if (types.size() == 1) {
       return types.get(0);
@@ -90,27 +84,16 @@ import org.springframework.util.Assert;
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.member.MemberRepository#getMemberTypeByMeaning(java.lang.String)
-   */
   @Override
   @Cacheable(value = "memberTypes")
-  public MemberType getMemberTypeByMeaning(final String meaning) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException {
+  public MemberType getMemberTypeByMeaning(final String meaning)
+      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMemberTypeByMeaning for [{}].", meaning);
 
     return getMemberTypeByMeaningAsOf(meaning, DateTime.now());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.member.MemberRepository#getMemberTypeByMeaningAsOf(java.lang.String,
-   * org.joda.time.DateTime)
-   */
   @Override
   @Cacheable(value = "memberTypes")
   public MemberType getMemberTypeByMeaningAsOf(final String meaning, final DateTime effectiveDateTime)
@@ -127,8 +110,11 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    List<MemberType> types = getJdbcTemplate().query(stmtLoader.load(GET_MEMBERTYPE_BY_MEANING), params,
-        new MemberTypeMapper());
+    List<MemberType> types = getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERTYPE_BY_MEANING),
+        params,
+        new MemberTypeMapper()
+    );
 
     if (types.size() == 1) {
       return types.get(0);
@@ -141,11 +127,6 @@ import org.springframework.util.Assert;
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.member.MemberRepository#getActiveMemberTypes()
-   */
   @Override
   @Cacheable(value = "memberTypeList")
   public List<MemberType> getActiveMemberTypes() {
@@ -154,11 +135,6 @@ import org.springframework.util.Assert;
     return getActiveMemberTypesAsOf(DateTime.now());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.member.MemberRepository#getActiveMemberTypesAsOf(org.joda.time.DateTime)
-   */
   @Override
   public List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime) {
     Assert.notNull(effectiveDateTime, "Assertion Failed - argument [effectiveDateTime] cannot be null");

@@ -1,5 +1,7 @@
 package com.cagst.swkroa.audit;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.Collection;
 
@@ -8,7 +10,6 @@ import com.cagst.common.db.StatementLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -17,9 +18,8 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link AuditEventRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
-@Repository("auditRepo")
+@Named("auditRepository")
 /* package */ final class AuditEventRepositoryJdbc extends BaseRepositoryJdbc implements AuditEventRepository {
   private static final Logger logger = LoggerFactory.getLogger(AuditEventRepositoryJdbc.class);
 
@@ -32,15 +32,11 @@ import org.springframework.util.Assert;
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.
    */
+  @Inject
   public AuditEventRepositoryJdbc(final DataSource dataSource) {
     super(dataSource);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.audit.AuditEventRepository#getAllAuditEvents()
-   */
   @Override
   public Collection<AuditEvent> getAllAuditEvents() {
     logger.info("Calling getAllAuditEvents.");
@@ -50,11 +46,6 @@ import org.springframework.util.Assert;
     return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ALL_AUDIT_EVENTS), new AuditEventMapper());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.audit.AuditEventRepository#save(com.cagst.swkroa.audit.AuditEvent)
-   */
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void save(final AuditEvent auditEvent) {

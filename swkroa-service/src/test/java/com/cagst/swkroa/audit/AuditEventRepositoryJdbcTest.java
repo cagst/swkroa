@@ -4,17 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import javax.sql.DataSource;
 import java.util.Collection;
 
-import com.cagst.common.db.DataSourceFactory;
 import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.test.BaseTestRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 /**
  * Test class for AuditEventRepositoryJdbc class.
@@ -23,7 +20,7 @@ import org.springframework.core.io.Resource;
  * @version 1.0.0
  */
 @RunWith(JUnit4.class)
-public class AuditEventRepositoryJdbcTest {
+public class AuditEventRepositoryJdbcTest extends BaseTestRepository {
   private AuditEventRepositoryJdbc repo;
 
   @Before
@@ -72,13 +69,5 @@ public class AuditEventRepositoryJdbcTest {
     assertNotNull("Ensure the auditEvents collection is not null.", auditEvents2);
     assertFalse("Ensure the auditEvents collection is not empty.", auditEvents2.isEmpty());
     assertEquals("Ensure we found the correct number of AuditEvents.", 4, auditEvents2.size());
-  }
-
-  private DataSource createTestDataSource() {
-    Resource schemaLocation = new ClassPathResource("/testDb/schema.sql");
-    Resource testDataLocation = new ClassPathResource("/testDb/test_data.sql");
-
-    DataSourceFactory dsFactory = new DataSourceFactory("savedb", schemaLocation, testDataLocation);
-    return dsFactory.getDataSource();
   }
 }

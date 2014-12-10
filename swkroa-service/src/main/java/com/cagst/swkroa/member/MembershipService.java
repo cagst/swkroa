@@ -12,7 +12,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Definitions of a service that retrieves and persists {@link Membership} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface MembershipService {
   /**

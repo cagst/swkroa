@@ -17,33 +17,39 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * @version 1.0.0
  */
 /* package */final class MembershipMapper implements RowMapper<Membership> {
-  private static final String MEMBERSHIP_ID = "membership_id";
-  private static final String ENTITY_TYPE_CD = "entity_type_cd";
-  private static final String NEXT_DUE_DT = "next_due_dt";
-  private static final String DUES_AMOUNT = "dues_amount";
-  private static final String AMOUNT_DUE = "amount_due";
-  private static final String CLOSE_REASON_ID = "close_reason_id";
+  private static final String MEMBERSHIP_ID    = "membership_id";
+  private static final String MEMBER_ID        = "member_id";
+  private static final String ENTITY_TYPE_CD   = "entity_type_cd";
+  private static final String NEXT_DUE_DT      = "next_due_dt";
+  private static final String COMPANY_NAME     = "company_name";
+  private static final String OWNER_IDENT      = "owner_ident";
+  private static final String JOIN_DT          = "join_dt";
+  private static final String MEMBER_TYPE_ID   = "member_type_id";
+  private static final String NAME_LAST        = "name_last";
+  private static final String NAME_MIDDLE      = "name_middle";
+  private static final String NAME_FIRST       = "name_first";
+  private static final String FIXED_DUES       = "fixed_dues";
+  private static final String CALCULATED_DUES  = "calculated_dues";
+  private static final String BALANCE          = "balance";
+  private static final String DUES_AMOUNT      = "dues_amount";
+  private static final String CLOSE_REASON_ID  = "close_reason_id";
   private static final String CLOSE_REASON_TXT = "close_reason_txt";
 
   // meta-data
-  private static final String ACTIVE_IND = "active_ind";
-  private static final String CREATE_ID = "create_id";
-  private static final String UPDT_ID = "updt_id";
+  private static final String ACTIVE_IND          = "active_ind";
+  private static final String CREATE_ID           = "create_id";
+  private static final String UPDT_ID             = "updt_id";
   private static final String MEMBERSHIP_UPDT_CNT = "membership_updt_cnt";
 
-  private final MemberRepository memberRepo;
   private final CodeValueRepository codeValueRepo;
 
   /**
    * Primary Constructor used to create an instance of <i>MembershipMapper</i>.
    *
-   * @param memberRepo
-   *     The {@link MembershipRepository} to use to retrieve additional membership values.
    * @param codeValueRepo
    *     The {@link CodeValueRepository} to use to retrieve additional membership values.
    */
-  public MembershipMapper(final MemberRepository memberRepo, final CodeValueRepository codeValueRepo) {
-    this.memberRepo = memberRepo;
+  public MembershipMapper(final CodeValueRepository codeValueRepo) {
     this.codeValueRepo = codeValueRepo;
   }
 
@@ -52,24 +58,30 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     Membership membership = new Membership();
 
     membership.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
+    membership.setMemberUID(rs.getLong(MEMBER_ID));
     membership.setEntityType(codeValueRepo.getCodeValueByUID(rs.getLong(ENTITY_TYPE_CD)));
     membership.setNextDueDate(CGTDateTimeUtils.getDateTime(rs, NEXT_DUE_DT));
-    membership.setDuesAmount(rs.getBigDecimal(DUES_AMOUNT));
+    membership.setCompanyName(rs.getString(COMPANY_NAME));
+    membership.setOwnerId(rs.getString(OWNER_IDENT));
+    membership.setJoinDate(CGTDateTimeUtils.getDateTime(rs, JOIN_DT));
 
-    BigDecimal amountDue = rs.getBigDecimal(AMOUNT_DUE);
-    if (amountDue != null) {
-      membership.setAmountDue(amountDue);
+    membership.setLastName(rs.getString(NAME_LAST));
+    membership.setMiddleName(rs.getString(NAME_MIDDLE));
+    membership.setFirstName(rs.getString(NAME_FIRST));
+
+    membership.setFixedDuesAmount(rs.getBigDecimal(FIXED_DUES));
+    membership.setCalculatedDuesAmount(rs.getBigDecimal(CALCULATED_DUES));
+    BigDecimal balance = rs.getBigDecimal(BALANCE);
+    if (balance != null) {
+      membership.setBalance(balance);
     } else {
-      membership.setAmountDue(new BigDecimal(0.0));
+      membership.setBalance(new BigDecimal(0.0));
     }
 
     membership.setCloseReasonUID(rs.getLong(CLOSE_REASON_ID));
     membership.setCloseReasonText(rs.getString(CLOSE_REASON_TXT));
     membership.setMembershipUpdateCount(rs.getLong(MEMBERSHIP_UPDT_CNT));
     membership.setActive(rs.getBoolean(ACTIVE_IND));
-
-    membership.setMembers(memberRepo.getMembersForMembership(membership));
-    membership.setMembershipCounties(memberRepo.getMembershipCountiesForMembership(membership));
 
     return membership;
   }
@@ -113,12 +125,13 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     return params;
   }
 
-  private static void mapCommonProperties(final MapSqlParameterSource params, final Membership membership,
+  private static void mapCommonProperties(final MapSqlParameterSource params,
+                                          final Membership membership,
                                           final User user) {
 
     params.addValue(NEXT_DUE_DT, CGTDateTimeUtils.convertDateTimeToTimestamp(membership.getNextDueDate()));
     params.addValue(ENTITY_TYPE_CD, membership.getEntityType().getCodeValueUID());
-    params.addValue(DUES_AMOUNT, membership.getDuesAmount());
+    params.addValue(DUES_AMOUNT, membership.getFixedDuesAmount());
     params.addValue(ACTIVE_IND, membership.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
   }

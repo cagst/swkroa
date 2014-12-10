@@ -5,19 +5,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import com.cagst.common.db.DataSourceFactory;
 import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.test.BaseTestRepository;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
@@ -28,7 +25,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
  * @version 1.0.0
  */
 @RunWith(JUnit4.class)
-public class MemberTypeRepositoryJdbcTest {
+public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
   private MemberTypeRepositoryJdbc repo;
 
   @Before
@@ -61,7 +58,7 @@ public class MemberTypeRepositoryJdbcTest {
    */
   @Test(expected = EmptyResultDataAccessException.class)
   public void testGetMemberTypeByIDAsOf_NotFound() {
-    DateTime dt = new DateTime(1999, 10, 01, 13, 15);
+    DateTime dt = new DateTime(1999, 10, 1, 13, 15);
 
     repo.getMemberTypeByIDAsOf(2L, dt);
   }
@@ -71,7 +68,7 @@ public class MemberTypeRepositoryJdbcTest {
    */
   @Test
   public void testGetMemberTypeByIDAsOf_Found() {
-    DateTime dt = new DateTime(2005, 04, 19, 13, 15);
+    DateTime dt = new DateTime(2005, 4, 19, 13, 15);
 
     MemberType type = repo.getMemberTypeByIDAsOf(2L, dt);
     assertNotNull("Ensure we found a MemberType.", type);
@@ -110,7 +107,7 @@ public class MemberTypeRepositoryJdbcTest {
    */
   @Test(expected = IncorrectResultSizeDataAccessException.class)
   public void testGetMemberTypeByMeaningAsOf_FoundTooMany() {
-    DateTime dt = new DateTime(2005, 04, 19, 13, 15);
+    DateTime dt = new DateTime(2005, 4, 19, 13, 15);
 
     repo.getMemberTypeByMeaningAsOf(MemberType.FAMILY_MEMBER, dt);
   }
@@ -120,7 +117,7 @@ public class MemberTypeRepositoryJdbcTest {
    */
   @Test
   public void testGetMemberTypeByMeaningAsOf_FoundOne() {
-    DateTime dt = new DateTime(2005, 04, 19, 13, 15);
+    DateTime dt = new DateTime(2005, 4, 19, 13, 15);
 
     MemberType type = repo.getMemberTypeByMeaningAsOf(MemberType.ASSOCIATE, dt);
     assertNotNull("Ensure we found a MemberType.", type);
@@ -136,7 +133,7 @@ public class MemberTypeRepositoryJdbcTest {
 
     assertNotNull("Ensure we have a collection of MemberType.", types);
     assertFalse("Ensure our collection is populated.", types.isEmpty());
-    assertEquals("Ensure we found the correct number of MemberTypes.", 4, types.size());
+    assertEquals("Ensure we found the correct number of MemberTypes.", 6, types.size());
   }
 
   /**
@@ -144,20 +141,12 @@ public class MemberTypeRepositoryJdbcTest {
    */
   @Test
   public void testGetActiveMemberTypesAsOf() {
-    DateTime dt = new DateTime(2012, 04, 19, 13, 15, 00);
+    DateTime dt = new DateTime(2012, 4, 19, 13, 15, 0);
 
     Collection<MemberType> types = repo.getActiveMemberTypesAsOf(dt);
 
     assertNotNull("Ensure we have a collection of MemberType.", types);
     assertFalse("Ensure our collection is populated.", types.isEmpty());
-    assertEquals("Ensure we found the correct number of MemberTypes.", 5, types.size());
-  }
-
-  private DataSource createTestDataSource() {
-    Resource schemaLocation = new ClassPathResource("/testDb/schema.sql");
-    Resource testDataLocation = new ClassPathResource("/testDb/test_data.sql");
-
-    DataSourceFactory dsFactory = new DataSourceFactory("swkroadb", schemaLocation, testDataLocation);
-    return dsFactory.getDataSource();
+    assertEquals("Ensure we found the correct number of MemberTypes.", 7, types.size());
   }
 }

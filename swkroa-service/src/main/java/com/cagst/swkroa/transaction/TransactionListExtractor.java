@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
@@ -11,7 +12,7 @@ import com.cagst.swkroa.member.MemberRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-public class TransactionListExtractor implements ResultSetExtractor {
+public class TransactionListExtractor implements ResultSetExtractor<List<Transaction>> {
   private final TransactionMapper transactionMapper;
   private final TransactionEntryMapper entryMapper;
 
@@ -23,7 +24,7 @@ public class TransactionListExtractor implements ResultSetExtractor {
   }
 
   @Override
-  public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
+  public List<Transaction> extractData(ResultSet rs) throws SQLException, DataAccessException {
     Map<Long, Transaction> transactions = new HashMap<Long, Transaction>();
 
     while (rs.next()) {
