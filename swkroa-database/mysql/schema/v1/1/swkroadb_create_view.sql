@@ -13,8 +13,9 @@ CREATE VIEW membership_summary AS
            ,p.name_first
            ,ms.next_due_dt
            ,m.join_dt
-           ,m.close_reason_id
-           ,m.close_reason_txt
+           ,ms.close_reason_id
+           ,ms.close_reason_txt
+           ,ms.close_dt_tm
            ,ms.active_ind
            ,ms.dues_amount AS fixed_dues
            ,ms.updt_cnt AS membership_updt_cnt
@@ -56,6 +57,7 @@ CREATE VIEW membership_summary AS
            ,join_dt
            ,close_reason_id
            ,close_reason_txt
+           ,close_dt_tm
            ,active_ind
            ,fixed_dues
            ,membership_updt_cnt;

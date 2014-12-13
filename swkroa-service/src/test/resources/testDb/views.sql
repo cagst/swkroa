@@ -15,8 +15,9 @@ CREATE VIEW membership_summary AS
            ,p.name_first
            ,ms.next_due_dt
            ,m.join_dt
-           ,m.close_reason_id
-           ,m.close_reason_txt
+           ,ms.close_reason_id
+           ,ms.close_reason_txt
+           ,ms.close_dt_tm
            ,ms.active_ind
            ,ms.dues_amount AS fixed_dues
            ,ms.updt_cnt AS membership_updt_cnt
@@ -28,6 +29,11 @@ CREATE VIEW membership_summary AS
                 AND t.active_ind = 1
                 AND te.transaction_id = t.transaction_id
                 AND te.active_ind = 1) AS balance
+           ,(SELECT MAX(t.transaction_dt) AS last_payment_dt
+               FROM transaction t
+              WHERE t.membership_id = ms.membership_id
+                AND t.transaction_type_flag = 1
+                AND t.active_ind = 1) AS last_payment_dt
        FROM membership ms
  INNER JOIN member m        ON (m.membership_id = ms.membership_id AND m.active_ind = 1)
  INNER JOIN member_type mt  ON (mt.prev_member_type_id = m.member_type_id
@@ -51,8 +57,9 @@ CREATE VIEW membership_summary AS
            ,p.name_first
            ,ms.next_due_dt
            ,m.join_dt
-           ,m.close_reason_id
-           ,m.close_reason_txt
+           ,ms.close_reason_id
+           ,ms.close_reason_txt
+           ,ms.close_dt_tm
            ,ms.active_ind
            ,ms.dues_amount
            ,ms.updt_cnt;

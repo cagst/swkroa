@@ -10,6 +10,7 @@ SELECT m.person_id
       ,m.email_newsletter_ind
       ,m.close_reason_id
       ,m.close_reason_txt
+      ,m.close_dt_tm
       ,m.updt_cnt AS member_updt_cnt
       ,m.active_ind
   FROM member m

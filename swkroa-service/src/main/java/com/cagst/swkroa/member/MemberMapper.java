@@ -33,6 +33,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String EMAIL_NEWSLETTER_IND = "email_newsletter_ind";
   private static final String CLOSE_REASON_ID = "close_reason_id";
   private static final String CLOSE_REASON_TXT = "close_reason_txt";
+  private static final String CLOSE_DT_TM = "close_dt_tm";
 
   // meta-data
   private static final String ACTIVE_IND = "active_ind";
@@ -76,6 +77,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     member.setEmailNewsletter(rs.getBoolean(EMAIL_NEWSLETTER_IND));
     member.setCloseReasonUID(rs.getLong(CLOSE_REASON_ID));
     member.setCloseReasonText(rs.getString(CLOSE_REASON_TXT));
+    member.setCloseDate(CGTDateTimeUtils.getDateTime(rs, CLOSE_REASON_TXT));
 
     // meta-data
     member.setMemberUpdateCount(rs.getLong(MEMBER_UPDT_CNT));

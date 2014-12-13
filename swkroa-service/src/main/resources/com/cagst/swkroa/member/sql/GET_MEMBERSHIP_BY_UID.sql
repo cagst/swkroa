@@ -13,8 +13,10 @@ SELECT membership_id
       ,fixed_dues
       ,calculated_dues
       ,balance
+      ,last_payment_dt
       ,close_reason_id
       ,close_reason_txt
+      ,close_dt_tm
       ,membership_updt_cnt
   FROM membership_summary
  WHERE membership_id = :membership_id

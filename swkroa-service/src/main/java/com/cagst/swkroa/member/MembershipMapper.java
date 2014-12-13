@@ -24,16 +24,17 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String COMPANY_NAME     = "company_name";
   private static final String OWNER_IDENT      = "owner_ident";
   private static final String JOIN_DT          = "join_dt";
-  private static final String MEMBER_TYPE_ID   = "member_type_id";
   private static final String NAME_LAST        = "name_last";
   private static final String NAME_MIDDLE      = "name_middle";
   private static final String NAME_FIRST       = "name_first";
   private static final String FIXED_DUES       = "fixed_dues";
   private static final String CALCULATED_DUES  = "calculated_dues";
   private static final String BALANCE          = "balance";
+  private static final String LAST_PAYMENT_DT  = "last_payment_dt";
   private static final String DUES_AMOUNT      = "dues_amount";
   private static final String CLOSE_REASON_ID  = "close_reason_id";
   private static final String CLOSE_REASON_TXT = "close_reason_txt";
+  private static final String CLOSE_DT_TM      = "close_dt_tm";
 
   // meta-data
   private static final String ACTIVE_IND          = "active_ind";
@@ -77,9 +78,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     } else {
       membership.setBalance(new BigDecimal(0.0));
     }
-
+    membership.setLastPaymentDate(CGTDateTimeUtils.getDateTime(rs, LAST_PAYMENT_DT));
     membership.setCloseReasonUID(rs.getLong(CLOSE_REASON_ID));
     membership.setCloseReasonText(rs.getString(CLOSE_REASON_TXT));
+    membership.setCloseDate(CGTDateTimeUtils.getDateTime(rs, CLOSE_DT_TM));
     membership.setMembershipUpdateCount(rs.getLong(MEMBERSHIP_UPDT_CNT));
     membership.setActive(rs.getBoolean(ACTIVE_IND));
 

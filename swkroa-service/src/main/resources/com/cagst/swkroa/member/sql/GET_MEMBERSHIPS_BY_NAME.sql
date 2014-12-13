@@ -13,8 +13,10 @@ SELECT ms.membership_id
       ,ms.fixed_dues
       ,ms.calculated_dues
       ,ms.balance
+      ,ms.last_payment_dt
       ,ms.close_reason_id
       ,ms.close_reason_txt
+      ,ms.close_dt_tm
       ,ms.membership_updt_cnt
   FROM membership_summary ms
  WHERE ms.membership_id IN (SELECT m.membership_id
