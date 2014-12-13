@@ -41,6 +41,7 @@ public final class Member implements Serializable, Comparable<Member> {
   private boolean email_newsletter_ind = false;
   private long close_reason_id;
   private String close_reason_txt;
+  private DateTime close_dt_tm;
 
   private List<Address> addresses = new ArrayList<Address>();
   private List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
@@ -187,6 +188,14 @@ public final class Member implements Serializable, Comparable<Member> {
 
   public void setCloseReasonText(final String closeReasonText) {
     this.close_reason_txt = closeReasonText;
+  }
+
+  public DateTime getCloseDate() {
+    return close_dt_tm;
+  }
+
+  public void setCloseDate(final DateTime closeDate) {
+    this.close_dt_tm = closeDate;
   }
 
   public void clearAddresses() {

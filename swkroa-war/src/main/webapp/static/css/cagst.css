@@ -183,6 +183,20 @@ label {
   border-bottom-width: 0px;
 }
 
+.table-fixed > tbody {
+  display: block;
+  height: 450px;
+  overflow: auto;
+}
+
+.table-fixed > tr {
+  display: block;
+}
+
+.table-fixed > th, .table-fixed td {
+  width: 100%;
+}
+
 .row-inner {
   margin-left: 0px;
   margin-right:0px;

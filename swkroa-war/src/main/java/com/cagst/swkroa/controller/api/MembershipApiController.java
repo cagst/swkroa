@@ -46,6 +46,8 @@ import org.springframework.web.util.UriComponents;
 public final class MembershipApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipApiController.class);
 
+  private static final String MEMBERSHIP_TYPE_DELINQUENT = "delinquent";
+
   private final CodeValueRepository codeValueRepo;
   private final MembershipService membershipService;
   private final MemberRepository memberRepo;
@@ -68,14 +70,21 @@ public final class MembershipApiController {
    * @return A JSON representation of the active Memberships within the system.
    */
   @RequestMapping(method = RequestMethod.GET)
-  public List<Membership> getMemberships(final @RequestParam("q") String query) {
+  public List<Membership> getMemberships(final @RequestParam(value = "q", required = false) String query,
+                                         final @RequestParam(value= "type", required = false) String type) {
+
     LOGGER.info("Received request to retrieve memberships using query string [{}]", query);
 
     List<Membership> memberships;
-    if (StringUtils.isNotBlank(query)) {
-      memberships = membershipService.getMembershipsForName(query);
+
+    if (StringUtils.equalsIgnoreCase(MEMBERSHIP_TYPE_DELINQUENT, type)) {
+      memberships = membershipService.getDelinquentMemberships();
     } else {
-      memberships = membershipService.getActiveMemberships();
+      if (StringUtils.isNotBlank(query)) {
+        memberships = membershipService.getMembershipsForName(query);
+      } else {
+        memberships = membershipService.getActiveMemberships();
+      }
     }
 
     Collections.sort(memberships);

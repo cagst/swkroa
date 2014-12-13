@@ -65,20 +65,6 @@ public final class MembershipServiceImpl implements MembershipService {
   }
 
   @Override
-  public List<Membership> getActiveMemberships() {
-    LOGGER.info("Calling getActiveMemberships");
-
-    return membershipRepo.getActiveMemberships();
-  }
-
-  @Override
-  public List<Membership> getMembershipsForName(final String name) {
-    LOGGER.info("Calling getMembershipsByName for [{}]", name);
-
-    return membershipRepo.getMembershipsByName(name);
-  }
-
-  @Override
   public Membership getMembershipByUID(final long uid) {
     LOGGER.info("Calling getMembershipByUID for [{}]", uid);
 
@@ -105,6 +91,27 @@ public final class MembershipServiceImpl implements MembershipService {
     membership.setTransactions(transactions);
 
     return membership;
+  }
+
+  @Override
+  public List<Membership> getActiveMemberships() {
+    LOGGER.info("Calling getActiveMemberships");
+
+    return membershipRepo.getActiveMemberships();
+  }
+
+  @Override
+  public List<Membership> getMembershipsForName(final String name) {
+    LOGGER.info("Calling getMembershipsByName for [{}]", name);
+
+    return membershipRepo.getMembershipsByName(name);
+  }
+
+  @Override
+  public List<Membership> getDelinquentMemberships() {
+    LOGGER.info("Calling getDelinquentMemberships");
+
+    return membershipRepo.getDelinquentMembership();
   }
 
   @Override

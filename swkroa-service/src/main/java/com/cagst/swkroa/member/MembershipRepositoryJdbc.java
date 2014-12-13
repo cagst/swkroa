@@ -35,9 +35,10 @@ import org.springframework.util.Assert;
 /* package */ final class MembershipRepositoryJdbc extends BaseRepositoryJdbc implements MembershipRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
-  private static final String GET_MEMBERSHIPS_ACTIVE = "GET_MEMBERSHIPS_ACTIVE";
-  private static final String GET_MEMBERSHIPS_BY_NAME = "GET_MEMBERSHIPS_BY_NAME";
-  private static final String GET_MEMBERSHIP_BY_UID = "GET_MEMBERSHIP_BY_UID";
+  private static final String GET_MEMBERSHIPS_ACTIVE     = "GET_MEMBERSHIPS_ACTIVE";
+  private static final String GET_MEMBERSHIPS_DELINQUENT = "GET_MEMBERSHIPS_DELINQUENT";
+  private static final String GET_MEMBERSHIPS_BY_NAME    = "GET_MEMBERSHIPS_BY_NAME";
+  private static final String GET_MEMBERSHIP_BY_UID      = "GET_MEMBERSHIP_BY_UID";
 
   private static final String INSERT_MEMBERSHIP = "INSERT_MEMBERSHIP";
   private static final String UPDATE_MEMBERSHIP = "UPDATE_MEMBERSHIP";
@@ -63,27 +64,6 @@ import org.springframework.util.Assert;
 
     this.memberRepo = memberRepo;
     this.codeValueRepo = codeValueRepo;
-  }
-
-  @Override
-  public List<Membership> getActiveMemberships() {
-    LOGGER.info("Calling getActiveMemberships.");
-
-    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_MEMBERSHIPS_ACTIVE), new MembershipMapper(codeValueRepo));
-  }
-
-  @Override
-  public List<Membership> getMembershipsByName(final String name) {
-    Assert.hasText(name, "[Assertion Failure] - argument [name] cannot be null or empty.");
-
-    LOGGER.info("Calling getMembershipsByName for [{}].", name);
-
-    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(1);
-    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
-
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
   }
 
   @Override
@@ -113,6 +93,36 @@ import org.springframework.util.Assert;
       LOGGER.error("More than one Membership with UID of [{}] was found.", uid);
       throw new IncorrectResultSizeDataAccessException(1, memberships.size());
     }
+  }
+
+  @Override
+  public List<Membership> getActiveMemberships() {
+    LOGGER.info("Calling getActiveMemberships.");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_MEMBERSHIPS_ACTIVE), new MembershipMapper(codeValueRepo));
+  }
+
+  @Override
+  public List<Membership> getMembershipsByName(final String name) {
+    Assert.hasText(name, "[Assertion Failure] - argument [name] cannot be null or empty.");
+
+    LOGGER.info("Calling getMembershipsByName for [{}].", name);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, String> params = new HashMap<String, String>(1);
+    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
+  }
+
+  @Override
+  public List<Membership> getDelinquentMembership() {
+    LOGGER.info("Calling getDelinquentMemberships");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DELINQUENT), new MembershipMapper(codeValueRepo));
   }
 
   @Override

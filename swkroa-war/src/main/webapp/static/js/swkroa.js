@@ -401,6 +401,110 @@ swkroaApp.service('contactService', ['$http', function($http) {
   };
 }]);
 
+// define a service for Memberships
+swkroaApp.service('membershipService', ['$http', function($http) {
+  this.getMembership = function(membershipUID) {
+    var promise = $http.get('/api/memberships/' + membershipUID);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.getMemberships = function(query) {
+    var url = "/api/memberships?q=";
+    if (query && query.length > 0) {
+      url = url + query;
+    }
+
+    var promise = $http.get(url);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.getDelinquentMemberships = function() {
+    var promise = $http.get("/api/memberships?type=delinquent");
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.saveMembership = function(membership) {
+    var promise = $http.post('/api/memberships', membership);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  }
+
+  this.generateOwnerId = function(firstName, lastName) {
+    var promise = $http.get('/api/memberships/ownerId/' + firstName + "/" + lastName).then(function(response) {
+      return JSON.parse(response.data);
+    });
+
+    return promise;
+  };
+}]);
+
 // define a service for Transactions
 swkroaApp.service('transactionService', ['$http', function($http) {
   this.getUnpaidTransactions = function() {

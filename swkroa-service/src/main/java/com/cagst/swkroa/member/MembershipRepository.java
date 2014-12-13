@@ -16,6 +16,22 @@ import org.springframework.dao.OptimisticLockingFailureException;
  */
 public interface MembershipRepository {
   /**
+   * Retrieves a {@link Membership} by its unique identifier.
+   *
+   * @param uid
+   *     A {@link long} that uniquely identifies the membership to retrieve.
+   *
+   * @return The {@link Membership} that is associated with the specified uid.
+   *
+   * @throws EmptyResultDataAccessException
+   *     if no Membership was found.
+   * @throws IncorrectResultSizeDataAccessException
+   *     if more than 1 Membership was found.
+   */
+  public Membership getMembershipByUID(final long uid) throws EmptyResultDataAccessException,
+      IncorrectResultSizeDataAccessException;
+
+  /**
    * Retrieves the active {@link Membership Memberships} in the system.
    *
    * @return A {@link List} of {@link Membership Memberships} in the system.
@@ -39,20 +55,9 @@ public interface MembershipRepository {
   public List<Membership> getMembershipsByName(final String name);
 
   /**
-   * Retrieves a {@link Membership} by its unique identifier.
-   *
-   * @param uid
-   *     A {@link long} that uniquely identifies the membership to retrieve.
-   *
-   * @return The {@link Membership} that is associated with the specified uid.
-   *
-   * @throws EmptyResultDataAccessException
-   *     if no Membership was found.
-   * @throws IncorrectResultSizeDataAccessException
-   *     if more than 1 Membership was found.
+   * @return A {@link List} of {@link Membership Memberships} that are delinquent (past due).
    */
-  public Membership getMembershipByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  public List<Membership> getDelinquentMembership();
 
   /**
    * Commits the specified {@link Membership Membership} to persistent storage.

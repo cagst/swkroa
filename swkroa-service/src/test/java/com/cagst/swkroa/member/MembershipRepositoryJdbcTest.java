@@ -67,6 +67,23 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
   }
 
   /**
+   * Test the getMembershipByUID method and not finding the membership.
+   */
+  @Test(expected = EmptyResultDataAccessException.class)
+  public void testGetMembershipByUID_NotFound() {
+    repo.getMembershipByUID(999L);
+  }
+
+  /**
+   * Test the getMembershipByUID method and finding a membership.
+   */
+  @Test
+  public void testGetMembershipByUID_Found() {
+    Membership membership = repo.getMembershipByUID(1L);
+    assertNotNull("Ensure we found the membership.", membership);
+  }
+
+  /**
    * Test the getMembershipsByName method and not finding any.
    */
   @Test
@@ -108,20 +125,15 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
   }
 
   /**
-   * Test the getMembershipByUID method and not finding the membership.
-   */
-  @Test(expected = EmptyResultDataAccessException.class)
-  public void testGetMembershipByUID_NotFound() {
-    repo.getMembershipByUID(999L);
-  }
-
-  /**
-   * Test the getMembershipByUID method and finding a membership.
+   * Test the getDelinquentMemberships method.
    */
   @Test
-  public void testGetMembershipByUID_Found() {
-    Membership membership = repo.getMembershipByUID(1L);
-    assertNotNull("Ensure we found the membership.", membership);
+  public void testGetDelinquentMemberships_Found() {
+    Collection<Membership> memberships = repo.getDelinquentMembership();
+
+    assertNotNull("Ensure the memberships collection is not null!", memberships);
+    assertFalse("Ensure the memberships collection is not empty!", memberships.isEmpty());
+    assertEquals("Ensure we found the correct number of memberships!", 2, memberships.size());
   }
 
   /**

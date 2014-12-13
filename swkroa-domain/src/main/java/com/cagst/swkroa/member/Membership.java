@@ -42,8 +42,10 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private BigDecimal fixed_dues;
   private BigDecimal calculated_dues;
   private BigDecimal balance;
+  private DateTime last_payment_dt_tm;
   private long close_reason_id;
   private String close_reason_txt;
+  private DateTime close_dt_tm;
 
   // meta-data
   private boolean active_ind = true;
@@ -203,6 +205,14 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.balance = balance;
   }
 
+  public DateTime getLastPaymentDate() {
+    return last_payment_dt_tm;
+  }
+
+  public void setLastPaymentDate(final DateTime paymentDate) {
+    this.last_payment_dt_tm = paymentDate;
+  }
+
   public boolean isActive() {
     return active_ind;
   }
@@ -225,6 +235,14 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setCloseReasonText(final String closeReasonText) {
     this.close_reason_txt = closeReasonText;
+  }
+
+  public DateTime getCloseDate() {
+    return close_dt_tm;
+  }
+
+  public void setCloseDate(final DateTime closeDate) {
+    this.close_dt_tm = closeDate;
   }
 
   public long getMembershipUpdateCount() {
@@ -403,7 +421,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
     }
 
     CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(getPrimaryMember(), rhs.getPrimaryMember());
+    builder.append(getMembershipName(), rhs.getMembershipName());
 
     return builder.build();
   }

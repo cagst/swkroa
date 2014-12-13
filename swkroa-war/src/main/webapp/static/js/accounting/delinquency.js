@@ -6,7 +6,22 @@
  * Author:  Craig Gaskill
  */
 
-swkroaApp.controller('delinquencyController', ['$scope', 'transactionService',
-    function($scope, transactionService) {
+swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'membershipService',
+    function($scope, codesetService, membershipService) {
+
+  membershipService.getDelinquentMemberships().success(function(data) {
+    $scope.delinquencies = data;
+    $scope.checkAll = true;
+
+    for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
+        $scope.delinquencies[idx].selected = true;
+    }
+  });
+
+  $scope.toggleCheckAll = function() {
+    for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
+        $scope.delinquencies[idx].selected = $scope.checkAll;
+    }
+  };
 
 }]);
