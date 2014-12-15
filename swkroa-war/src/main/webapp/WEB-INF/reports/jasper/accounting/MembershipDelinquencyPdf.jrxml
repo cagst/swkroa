@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipPastDueReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="154edfef-2cab-4b00-9282-814fdab4faf4">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDelinquencyPdf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="154edfef-2cab-4b00-9282-814fdab4faf4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -7,30 +7,16 @@
 	<style name="Text Body" fontName="Verdana" fontSize="12"/>
 	<style name="ColumnHeader" fontName="Verdana" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="PageFooter" fontName="Verdana" fontSize="10"/>
+	<parameter name="memberships" class="java.util.Collection"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT ms.membership_id
---      ,ms.entity_type_cd
       ,ms.next_due_dt
-      ,ms.dues_amount
-      ,SUM(te.transaction_entry_amount) AS amount_due
-      ,m.owner_ident
-      ,CASE WHEN m.company_name IS NOT NULL THEN m.company_name ELSE CONCAT(p.name_last, ", ", p.name_first) END AS member_name
-  FROM membership ms
- INNER JOIN member m
-         ON (m.membership_id = ms.membership_id AND m.active_ind = 1)
- INNER JOIN member_type mt
-         ON (mt.member_type_id = m.member_type_id AND mt.primary_ind = 1 AND mt.active_ind = 1
-        AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW()))
-  LEFT OUTER JOIN transaction t
-               ON (t.membership_id = ms.membership_id AND t.active_ind = 1)
-  LEFT OUTER JOIN transaction_entry te
-               ON (te.transaction_id = t.transaction_id AND te.active_ind = 1
-              AND te.transaction_entry_type_cd NOT IN (SELECT cv.codevalue_id FROM codevalue cv WHERE cv.codeset_id = 8 AND cv.codevalue_meaning = 'TRANS_SPECIAL_FUNDS'))
-  LEFT OUTER JOIN person p
-               ON (p.person_id = m.person_id AND p.active_ind = 1)
- WHERE ms.active_ind   = 1
-GROUP BY ms.membership_id
-HAVING amount_due < 0.0
+      ,ms.fixed_dues AS dues_amount
+      ,ms.balance AS amount_due
+      ,ms.owner_ident
+      ,CASE WHEN ms.company_name IS NOT NULL THEN ms.company_name ELSE CONCAT(ms.name_last, ", ", ms.name_first) END AS member_name
+  FROM membership_summary ms
+ WHERE $X{IN, ms.membership_id, memberships}
 ORDER BY member_name]]>
 	</queryString>
 	<field name="owner_ident" class="java.lang.String">
@@ -60,7 +46,7 @@ ORDER BY member_name]]>
 				<textElement textAlignment="Center">
 					<font fontName="Verdana" size="18"/>
 				</textElement>
-				<text><![CDATA[Membership Past Due Report]]></text>
+				<text><![CDATA[Membership Delinquency Report]]></text>
 			</staticText>
 		</band>
 	</pageHeader>

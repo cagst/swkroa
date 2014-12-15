@@ -6,6 +6,7 @@
 
 <head>
   <script type="text/javascript" data-th-src="@{/static/js/accounting/delinquency.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
 </head>
 
 <body>
@@ -14,42 +15,67 @@
   <div class="page-header">
     <h3 data-th-text="#{com.cagst.swkroa.delinquency.title}">zzz Delinquencies</h3>
   </div>
-  <div class="row" data-ng-show="delinquencies">
-    <div class="col-xs-3">
-      <div class="btn-group-vertical">
-        <button type="button" class="btn btn-default">Generate Mailing List</button>
-        <button type="button" class="btn btn-danger">
-          <i class="fa fa-close"></i>
-          <span data-th-text="#{com.cagst.swkroa.close}">zzz Close</span>
-        </button>
+
+  <form name="reportForm" data-th-attr="action=@{/report/membership/delinquent}" target="_blank" method="post">
+    <div class="row" data-ng-show="delinquencies">
+      <div class="col-xs-3">
+        <div class="btn-group-vertical">
+          <input id="reportType" type="hidden" name="reportType" />
+
+          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+              <span data-th-text="#{com.cagst.swkroa.report.generate.report}">
+                zzz Generate Report
+              </span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a id="generatePdf" href="javascript:submitReportForm('pdf')"
+                 data-th-text="#{com.cagst.swkroa.report.generate.pdf}">
+                zzz PDF
+              </a>
+            </li>
+            <li>
+              <a id="generateCsv" href="javascript:submitReportForm('csv')"
+                 data-th-text="#{com.cagst.swkroa.report.generate.csv}">
+                zzz CSV
+              </a>
+            </li>
+          </ul>
+
+          <button type="button" class="btn btn-danger">
+            <i class="fa fa-close"></i>
+            <span data-th-text="#{com.cagst.swkroa.close}">zzz Close</span>
+          </button>
+        </div>
       </div>
+      <div class="col-xs-6">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>
+                <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
+              </th>
+              <th data-th-text="#{com.cagst.swkroa.delinquency.membership}">zzz Membership</th>
+              <th data-th-text="#{com.cagst.swkroa.delinquency.duesamount}">zzz Dues Amount</th>
+              <th data-th-text="#{com.cagst.swkroa.delinquency.balance}">zzz Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="mem in delinquencies">
+              <td>
+                <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox" data-ng-model="mem.selected" />
+              </td>
+              <td>{{mem.membershipName}}</td>
+              <td>{{mem.effectiveDuesAmount | currency}}</td>
+              <td>{{mem.balance | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-3"></div>
     </div>
-    <div class="col-xs-6">
-      <table class="table table-hover table-bordered">
-        <thead>
-          <tr>
-            <th>
-              <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
-            </th>
-            <th data-th-text="#{com.cagst.swkroa.delinquency.membership}">zzz Membership</th>
-            <th data-th-text="#{com.cagst.swkroa.delinquency.duesamount}">zzz Dues Amount</th>
-            <th data-th-text="#{com.cagst.swkroa.delinquency.balance}">zzz Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr data-ng-repeat="mem in delinquencies">
-            <td>
-              <input type="checkbox" data-ng-model="mem.selected" />
-            </td>
-            <td>{{mem.membershipName}}</td>
-            <td>{{mem.effectiveDuesAmount | currency}}</td>
-            <td>{{mem.balance | currency}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="col-xs-3"></div>
-  </div>
+  </form>
 </div>
 
 </body>
