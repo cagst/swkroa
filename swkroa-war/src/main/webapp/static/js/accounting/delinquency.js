@@ -9,6 +9,10 @@
 swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'membershipService',
     function($scope, codesetService, membershipService) {
 
+  codesetService.getCodeValuesForCodeSet('CLOSE_REASONS').success(function(data) {
+    $scope.closeReasons = data;
+  });
+
   membershipService.getDelinquentMemberships().success(function(data) {
     $scope.delinquencies = data;
     $scope.checkAll = true;

@@ -21,31 +21,20 @@
       <div class="col-xs-3">
         <div class="btn-group-vertical">
           <input id="reportType" type="hidden" name="reportType" />
-
-          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-              <span data-th-text="#{com.cagst.swkroa.report.generate.report}">
-                zzz Generate Report
-              </span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a id="generatePdf" href="javascript:submitReportForm('pdf')"
-                 data-th-text="#{com.cagst.swkroa.report.generate.pdf}">
-                zzz PDF
-              </a>
-            </li>
-            <li>
-              <a id="generateCsv" href="javascript:submitReportForm('csv')"
-                 data-th-text="#{com.cagst.swkroa.report.generate.csv}">
-                zzz CSV
-              </a>
-            </li>
-          </ul>
-
-          <button type="button" class="btn btn-danger">
-            <i class="fa fa-close"></i>
-            <span data-th-text="#{com.cagst.swkroa.close}">zzz Close</span>
+          <a id="generatePdf" class="btn btn-default"
+             href="javascript:submitReportForm('pdf')"
+             data-th-text="#{com.cagst.swkroa.report.generate.report}">
+            zzz Report
+          </a>
+          <a id="generateCsv" class="btn btn-default"
+             href="javascript:submitReportForm('csv')"
+             data-th-text="#{com.cagst.swkroa.report.generate.export}">
+            zzz Export
+          </a>
+          <button type="button" class="btn btn-danger"
+                  data-toggle="modal" data-target="#closeMembershipsDlg">
+            <i class="fa fa-power-off"></i>
+            <span data-th-text="#{com.cagst.swkroa.delinquency.close.button}">zzz Close</span>
           </button>
         </div>
       </div>
@@ -75,6 +64,53 @@
       </div>
       <div class="col-xs-3"></div>
     </div>
+
+    <!-- Close Memberships Dialog -->
+    <div class="modal fade" id="closeMembershipsDlg" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.delinquency.close.title}">zzz Please confirm</h4>
+          </div>
+          <div class="modal-body">
+            <p data-th-text="#{com.cagst.swkroa.delinquency.close.msg}">zzz Members</p>
+
+            <label class="control-label"
+                   data-ng-class="{'label-required': true}"
+                   data-th-text="#{com.cagst.swkroa.delinquency.close.reason}">
+              zzz Close Reason
+            </label>
+            <select class="form-control"
+                    data-ng-model="closeReason"
+                    data-ng-required="true"
+                    data-ng-options="reason.display for reason in closeReasons">
+            </select>
+            <label class="control-label"
+                   data-ng-class="{'label-required': closeReason.meaning == 'CLOSE_OTHER'}"
+                   data-th-text="#{com.cagst.swkroa.delinquency.close.text}">
+              zzz CloseText
+            </label>
+            <input type="text" class="form-control" name="companyName" maxlength="100"
+                   data-ng-model="closeText"
+                   data-ng-disabled="closeReason.meaning != 'CLOSE_OTHER'"
+                   data-ng-required="closeReason.meaning == 'CLOSE_OTHER'" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger"
+                    data-ng-click="closeMemberships()"
+                    data-th-text="#{com.cagst.swkroa.delinquency.close.button}">
+              zzz Delete
+            </button>
+            <button type="button" class="btn btn-primary"
+                    data-dismiss="modal"
+                    data-th-text="#{com.cagst.swkroa.discard}">
+              zzz Keep
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </form>
 </div>
 
