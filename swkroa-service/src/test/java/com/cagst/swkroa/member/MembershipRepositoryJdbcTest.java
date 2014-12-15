@@ -5,7 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValue;
@@ -37,6 +39,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
   private final CodeValue associate = new CodeValue();
   private final CodeValue regular = new CodeValue();
   private final CodeValue family = new CodeValue();
+  private final CodeValue closeReason = new CodeValue();
 
   private User user;
 
@@ -57,6 +60,9 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
 
     family.setCodeValueUID(3L);
     family.setDisplay("Family Membership");
+
+    closeReason.setCodeValueUID(99L);
+    closeReason.setDisplay("Close Reason");
 
     Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(associate);
     Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(regular);
@@ -201,5 +207,41 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     membership1.setMembershipUpdateCount(1L);
 
     repo.saveMembership(membership1, user);
+  }
+
+  /**
+   * Test the closeMemberships method and failing because of no memberships.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCloseMemberships_Failed_NoMemberships() {
+    repo.closeMemberships(new ArrayList<Long>(), closeReason, null);
+  }
+
+  /**
+   * Test the closeMemberships method and failing because of no close reason.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCloseMemberships_Failed_NoCloseReason() {
+    List<Long> membershipIds = new ArrayList<Long>(2);
+
+    membershipIds.add(1L);
+    membershipIds.add(2L);
+
+    repo.closeMemberships(membershipIds, null, null);
+  }
+
+  /**
+   * Test the closeMemberships method and succeeding.
+   */
+  @Test
+  public void testCloseMemberships_Succeeded() {
+    List<Long> membershipIds = new ArrayList<Long>(2);
+
+    membershipIds.add(1L);
+    membershipIds.add(2L);
+
+    int closedMembers = repo.closeMemberships(membershipIds, closeReason, null);
+
+    assertEquals("Ensure the correct number of memberships were closed", 2, closedMembers);
   }
 }

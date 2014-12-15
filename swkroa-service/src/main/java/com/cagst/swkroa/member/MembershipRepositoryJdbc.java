@@ -10,6 +10,7 @@ import java.util.Map;
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.common.util.CGTStringUtils;
+import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +44,7 @@ import org.springframework.util.Assert;
 
   private static final String INSERT_MEMBERSHIP = "INSERT_MEMBERSHIP";
   private static final String UPDATE_MEMBERSHIP = "UPDATE_MEMBERSHIP";
+  private static final String CLOSE_MEMBERSHIPS = "CLOSE_MEMBERSHIPS";
 
   private final MemberRepository memberRepo;
   private final CodeValueRepository codeValueRepo;
@@ -153,6 +156,26 @@ import org.springframework.util.Assert;
     }
 
     return membership;
+  }
+
+  @Override
+  @Transactional
+  @CacheEvict(value = "memberships", allEntries = true)
+  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText)
+      throws DataAccessException {
+
+    Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
+    Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
+
+    LOGGER.info("Closing Memberships");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("close_reason_id", closeReason.getCodeValueUID());
+    params.addValue("close_reason_txt", closeText);
+    params.addValue("memberships", membershipIds);
+
+    return getJdbcTemplate().update(stmtLoader.load(CLOSE_MEMBERSHIPS), params);
   }
 
   private Membership insertMembership(final Membership membership, final User user)
