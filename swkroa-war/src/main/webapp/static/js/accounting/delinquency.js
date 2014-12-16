@@ -9,6 +9,8 @@
 swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'membershipService',
     function($scope, codesetService, membershipService) {
 
+  $scope.delinquencies = [];
+
   $scope.getDelinquencies = function() {
     membershipService.getDelinquentMemberships().success(function(data) {
       $scope.delinquencies = data;
@@ -23,6 +25,25 @@ swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'memb
   $scope.toggleCheckAll = function() {
     for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
         $scope.delinquencies[idx].selected = $scope.checkAll;
+    }
+  };
+
+  $scope.canExport = function() {
+    var membershipsSelected = false;
+    for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
+      if ($scope.delinquencies[idx].selected) {
+        membershipsSelected = true;
+      }
+    };
+
+    return membershipsSelected;
+  };
+
+  $scope.canClose = function() {
+    if ($scope.closeReason) {
+      return ($scope.canExport() && ($scope.closeReason.codeValueUID > 0));
+    } else {
+      return false;
     }
   };
 

@@ -23,15 +23,18 @@
           <input id="reportType" type="hidden" name="reportType" />
           <a id="generatePdf" class="btn btn-default"
              href="javascript:submitReportForm('pdf')"
+             data-ng-disabled="!canExport()"
              data-th-text="#{com.cagst.swkroa.report.generate.report}">
             zzz Report
           </a>
           <a id="generateCsv" class="btn btn-default"
              href="javascript:submitReportForm('csv')"
+             data-ng-disabled="!canExport()"
              data-th-text="#{com.cagst.swkroa.report.generate.export}">
             zzz Export
           </a>
           <button type="button" class="btn btn-danger"
+                  data-ng-disabled="!canExport()"
                   data-toggle="modal" data-target="#closeMembershipsDlg">
             <i class="fa fa-power-off"></i>
             <span data-th-text="#{com.cagst.swkroa.delinquency.close.button}">zzz Close</span>
@@ -98,6 +101,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-danger"
                     data-ng-click="closeMemberships()"
+                    data-ng-disabled="!canClose()"
                     data-th-text="#{com.cagst.swkroa.delinquency.close.button}">
               zzz Delete
             </button>
