@@ -1,111 +1,117 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-         
-	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.cagst.swkroa</groupId>
-		<artifactId>swkroa-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
+  <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>swkroa-domain</artifactId>
-	<name>SWKROA Domain</name>
-	<url>http://www.swkroa.com</url>
-	<inceptionYear>2013</inceptionYear>
-	<packaging>jar</packaging>
+  <parent>
+    <groupId>com.cagst.swkroa</groupId>
+    <artifactId>swkroa-parent</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+  </parent>
 
-	<dependencies>
-		<!-- CAGST Common Dependencies -->
-		<dependency>
-			<groupId>com.cagst</groupId>
-			<artifactId>cagst-common-util</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Apache Commons Dependencies -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Joda Time Dependencies -->
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Spring Security Dependencies -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Hibernate Validation Dependencies -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Jackson JSON -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-joda</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- Test Dependencies -->
-		
-		<!-- JUnit Dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- Mockito Dependencies -->
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+  <artifactId>swkroa-domain</artifactId>
+  <name>SWKROA Domain</name>
+  <url>http://www.swkroa.com</url>
+  <inceptionYear>2013</inceptionYear>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <!-- CAGST Common Dependencies -->
+    <dependency>
+      <groupId>com.cagst</groupId>
+      <artifactId>cagst-common-util</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Apache Commons Dependencies -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Joda Time Dependencies -->
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring Security Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Hibernate Validation Dependencies -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Jackson JSON -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-joda</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+
+    <!-- Google JSR-305 Annotations -->
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+    </dependency>
+
+    <!-- Test Dependencies -->
+
+    <!-- JUnit Dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Mockito Dependencies -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>

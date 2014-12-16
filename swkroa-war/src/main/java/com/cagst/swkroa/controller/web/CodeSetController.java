@@ -8,25 +8,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Handles and retrieves the CodeSet pages depending on the URI template.
- * 
+ *
  * @author Craig Gaskill
- * 
  * @version 1.0.0
- * 
  */
 @Controller
 public final class CodeSetController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CodeSetController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CodeSetController.class);
 
-	/**
-	 * Handles and retrieves the CodeSet Listing JSP page.
-	 * 
-	 * @return The name of the page.
-	 */
-	@RequestMapping(value = "/maintain/codeset", method = RequestMethod.GET)
-	public String getMaintainCodeSetListingPage() {
-		LOGGER.info("Received request to show codeset listing page.");
+  /**
+   * Handles and retrieves the CodeSet Listing JSP page.
+   *
+   * @return The name of the page.
+   */
+  @RequestMapping(value = "/maintain/codeset", method = RequestMethod.GET)
+  public String getMaintainCodeSetListingPage() {
+    LOGGER.info("Received request to show codeset listing page.");
 
-		return "maintain/codeset";
-	}
+    return "maintain/codeset";
+  }
 }

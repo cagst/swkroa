@@ -1,10 +1,19 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.common.util.CGTStringUtils;
+import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -13,16 +22,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * JDBC Template implementation of the {@link MembershipRepository} interface.
@@ -30,16 +34,18 @@ import java.util.Map;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("membershipRepo")
+@Named("membershipRepo")
 /* package */ final class MembershipRepositoryJdbc extends BaseRepositoryJdbc implements MembershipRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
-  private static final String GET_MEMBERSHIPS_ACTIVE = "GET_MEMBERSHIPS_ACTIVE";
-  private static final String GET_MEMBERSHIPS_BY_NAME = "GET_MEMBERSHIPS_BY_NAME";
-  private static final String GET_MEMBERSHIP_BY_UID = "GET_MEMBERSHIP_BY_UID";
+  private static final String GET_MEMBERSHIPS_ACTIVE     = "GET_MEMBERSHIPS_ACTIVE";
+  private static final String GET_MEMBERSHIPS_DELINQUENT = "GET_MEMBERSHIPS_DELINQUENT";
+  private static final String GET_MEMBERSHIPS_BY_NAME    = "GET_MEMBERSHIPS_BY_NAME";
+  private static final String GET_MEMBERSHIP_BY_UID      = "GET_MEMBERSHIP_BY_UID";
 
   private static final String INSERT_MEMBERSHIP = "INSERT_MEMBERSHIP";
   private static final String UPDATE_MEMBERSHIP = "UPDATE_MEMBERSHIP";
+  private static final String CLOSE_MEMBERSHIPS = "CLOSE_MEMBERSHIPS";
 
   private final MemberRepository memberRepo;
   private final CodeValueRepository codeValueRepo;
@@ -54,7 +60,9 @@ import java.util.Map;
    * @param codeValueRepo
    *     The {@link CodeValueRepository} to use to retrieve codified information.
    */
-  /* package */MembershipRepositoryJdbc(final DataSource dataSource, final MemberRepository memberRepo,
+  @Inject
+  /* package */MembershipRepositoryJdbc(final DataSource dataSource,
+                                        final MemberRepository memberRepo,
                                         final CodeValueRepository codeValueRepo) {
     super(dataSource);
 
@@ -63,12 +71,40 @@ import java.util.Map;
   }
 
   @Override
+  @Cacheable(value = "memberships")
+  public Membership getMembershipByUID(final long uid)
+      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
+
+    LOGGER.info("Calling getMembershipByUID for [{}].", uid);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    Map<String, Long> params = new HashMap<String, Long>(1);
+    params.put("membership_id", uid);
+
+    List<Membership> memberships = getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERSHIP_BY_UID),
+        params,
+        new MembershipMapper(codeValueRepo)
+    );
+
+    if (memberships.size() == 1) {
+      return memberships.get(0);
+    } else if (memberships.size() == 0) {
+      LOGGER.warn("Membership with UID of [{}] was not found.", uid);
+      throw new EmptyResultDataAccessException(1);
+    } else {
+      LOGGER.error("More than one Membership with UID of [{}] was found.", uid);
+      throw new IncorrectResultSizeDataAccessException(1, memberships.size());
+    }
+  }
+
+  @Override
   public List<Membership> getActiveMemberships() {
     LOGGER.info("Calling getActiveMemberships.");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_MEMBERSHIPS_ACTIVE),
-        new MembershipMapper(memberRepo, codeValueRepo));
+    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_MEMBERSHIPS_ACTIVE), new MembershipMapper(codeValueRepo));
   }
 
   @Override
@@ -81,33 +117,16 @@ import java.util.Map;
     Map<String, String> params = new HashMap<String, String>(1);
     params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params,
-        new MembershipMapper(memberRepo, codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
   }
 
   @Override
-  @Cacheable(value = "memberships")
-  public Membership getMembershipByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException {
-    LOGGER.info("Calling getMembershipByUID for [{}].", uid);
+  public List<Membership> getDelinquentMembership() {
+    LOGGER.info("Calling getDelinquentMemberships");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, Long> params = new HashMap<String, Long>(1);
-    params.put("membership_id", uid);
-
-    List<Membership> memberships = getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_BY_UID), params,
-        new MembershipMapper(memberRepo, codeValueRepo));
-
-    if (memberships.size() == 1) {
-      return memberships.get(0);
-    } else if (memberships.size() == 0) {
-      LOGGER.warn("Membership with UID of [{}] was not found.", uid);
-      throw new EmptyResultDataAccessException(1);
-    } else {
-      LOGGER.error("More than one Membership with UID of [{}] was found.", uid);
-      throw new IncorrectResultSizeDataAccessException(1, memberships.size());
-    }
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DELINQUENT), new MembershipMapper(codeValueRepo));
   }
 
   @Override
@@ -138,6 +157,26 @@ import java.util.Map;
     }
 
     return membership;
+  }
+
+  @Override
+  @Transactional
+  @CacheEvict(value = "memberships", allEntries = true)
+  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText)
+      throws DataAccessException {
+
+    Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
+    Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
+
+    LOGGER.info("Closing Memberships");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("close_reason_id", closeReason.getCodeValueUID());
+    params.addValue("close_reason_txt", StringUtils.trimToNull(closeText));
+    params.addValue("memberships", membershipIds);
+
+    return getJdbcTemplate().update(stmtLoader.load(CLOSE_MEMBERSHIPS), params);
   }
 
   private Membership insertMembership(final Membership membership, final User user)

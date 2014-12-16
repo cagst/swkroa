@@ -1,5 +1,8 @@
 package com.cagst.swkroa.member;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.person.Person;
@@ -8,9 +11,6 @@ import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Used to marshal/un-marshal a {@link Member} to/from the database.
@@ -31,6 +31,9 @@ import java.sql.SQLException;
   private static final String JOIN_DT = "join_dt";
   private static final String MAIL_NEWSLETTER_IND = "mail_newsletter_ind";
   private static final String EMAIL_NEWSLETTER_IND = "email_newsletter_ind";
+  private static final String CLOSE_REASON_ID = "close_reason_id";
+  private static final String CLOSE_REASON_TXT = "close_reason_txt";
+  private static final String CLOSE_DT_TM = "close_dt_tm";
 
   // meta-data
   private static final String ACTIVE_IND = "active_ind";
@@ -72,6 +75,9 @@ import java.sql.SQLException;
     member.setJoinDate(CGTDateTimeUtils.getDateTime(rs, JOIN_DT));
     member.setMailNewsletter(rs.getBoolean(MAIL_NEWSLETTER_IND));
     member.setEmailNewsletter(rs.getBoolean(EMAIL_NEWSLETTER_IND));
+    member.setCloseReasonUID(rs.getLong(CLOSE_REASON_ID));
+    member.setCloseReasonText(rs.getString(CLOSE_REASON_TXT));
+    member.setCloseDate(CGTDateTimeUtils.getDateTime(rs, CLOSE_REASON_TXT));
 
     // meta-data
     member.setMemberUpdateCount(rs.getLong(MEMBER_UPDT_CNT));
@@ -92,7 +98,8 @@ import java.sql.SQLException;
    *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
-  public static MapSqlParameterSource mapInsertStatement(final Member member, final Membership membership,
+  public static MapSqlParameterSource mapInsertStatement(final Member member,
+                                                         final Membership membership,
                                                          final User user) {
 
     MapSqlParameterSource params = new MapSqlParameterSource();
@@ -115,7 +122,8 @@ import java.sql.SQLException;
    *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
-  public static MapSqlParameterSource mapUpdateStatement(final Member member, final Membership membership,
+  public static MapSqlParameterSource mapUpdateStatement(final Member member,
+                                                         final Membership membership,
                                                          final User user) {
 
     MapSqlParameterSource params = new MapSqlParameterSource();
@@ -127,8 +135,10 @@ import java.sql.SQLException;
     return params;
   }
 
-  private static void mapCommonProperties(final MapSqlParameterSource params, final Member member,
-                                          final Membership membership, final User user) {
+  private static void mapCommonProperties(final MapSqlParameterSource params,
+                                          final Member member,
+                                          final Membership membership,
+                                          final User user) {
 
     params.addValue(PERSON_ID, member.getPerson() != null ? member.getPerson().getPersonUID() : null);
     params.addValue(MEMBERSHIP_ID, membership.getMembershipUID());

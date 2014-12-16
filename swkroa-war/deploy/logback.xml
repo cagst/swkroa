@@ -14,15 +14,8 @@
     </encoder>
   </appender>
 
-  <logger name="com.cagst.swkroa" level="debug"/>
-  <!--
-    <logger name="com.fasterxml.jackson.databind" level="debug" />
-    <logger name="org.springframework.http.converter.json" level="debug" />
-    <logger name="org.springframework.web.servlet" level="debug" />
-  -->
-
   <root>
-    <level value="warn"/>
-    <appender-ref ref="ROLLING" />
+    <level value="info"/>
+    <appender-ref ref="ROLLING"/>
   </root>
 </configuration>

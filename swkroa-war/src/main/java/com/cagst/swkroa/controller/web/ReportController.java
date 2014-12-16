@@ -1,7 +1,17 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import com.cagst.swkroa.report.JasperReportsViewFactory;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Handles and retrieves the Report pages depending on the URI template.
@@ -31,16 +35,19 @@ public final class ReportController {
 
   private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-  private static final String MEMBERSHIP_LISTING = "/WEB-INF/reports/jasper/MembershipListingReport.jasper";
-  private static final String MEMBERSHIP_PASTDUE = "/WEB-INF/reports/jasper/MembershipPastDueReport.jasper";
-  private static final String MEMBERSHIP_STATUS  = "/WEB-INF/reports/jasper/MembershipStatusReport.jasper";
+  private static final String BASE_PATH = "/WEB-INF/reports/jasper/";
 
-  private static final String MEMBER_MAILINGLIST_CSV = "/WEB-INF/reports/jasper/MemberMailingListCsv.jasper";
-  private static final String MEMBER_MAILINGLIST_PDF = "/WEB-INF/reports/jasper/MemberMailingListPdf.jasper";
-  private static final String MEMBER_EMAILLIST_CSV   = "/WEB-INF/reports/jasper/MemberEmailListCsv.jasper";
-  private static final String MEMBER_EMAILLIST_PDF   = "/WEB-INF/reports/jasper/MemberEmailListPdf.jasper";
+  private static final String MEMBERSHIP_LISTING        = BASE_PATH + "MembershipListingReport.jasper";
+  private static final String MEMBERSHIP_STATUS         = BASE_PATH + "MembershipStatusReport.jasper";
+  private static final String MEMBERSHIP_DELINQUENT_CSV = BASE_PATH + "accounting/MembershipDelinquencyCsv.jasper";
+  private static final String MEMBERSHIP_DELINQUENT_PDF = BASE_PATH + "accounting/MembershipDelinquencyPdf.jasper";
 
-  private static final String CUSTOM_MEMBERS_BY_COUNTY = "/WEB-INF/reports/jasper/CustomMembersForCounties.jasper";
+  private static final String MEMBER_MAILINGLIST_CSV = BASE_PATH + "MemberMailingListCsv.jasper";
+  private static final String MEMBER_MAILINGLIST_PDF = BASE_PATH + "MemberMailingListPdf.jasper";
+  private static final String MEMBER_EMAILLIST_CSV   = BASE_PATH + "MemberEmailListCsv.jasper";
+  private static final String MEMBER_EMAILLIST_PDF   = BASE_PATH + "MemberEmailListPdf.jasper";
+
+  private static final String CUSTOM_MEMBERS_BY_COUNTY = BASE_PATH + "custom/MembersForCounties.jasper";
 
   @Autowired
   private DataSource dataSource;
@@ -72,44 +79,39 @@ public final class ReportController {
   }
 
   /**
-   * Handles and retrieves the Membership Past Due report page.
-   *
-   * @return The name of the page.
-   */
-  @RequestMapping(value = "/membership/pastdue", method = RequestMethod.GET)
-  public ModelAndView getMembershipPastDueReport() {
-    LOGGER.info("Received request to show Membership Past Due report options.");
-
-    return new ModelAndView("report/membership/pastdue");
-  }
-
-  /**
-   * Handles the request to run/generate the Membership Past Due report.
+   * Handles the request to run/generate the Membership Delinquency report.
    *
    * @return The generated report.
    */
-  @RequestMapping(value = "/membership/pastdue.pdf", method = RequestMethod.GET)
-  public ModelAndView generateMembershipPastDueReportAsPdf(final HttpServletRequest request) {
-    LOGGER.info("Received request to generate Membership Past Due report.");
+  @RequestMapping(value = "/membership/delinquent", method = RequestMethod.POST)
+  public ModelAndView generateMembershipDelinquentReport(final @RequestParam("reportType") String reportType,
+                                                         final HttpServletRequest request) {
 
-    String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
+    LOGGER.info("Received request to generate Membership Delinquent report as [{}]", reportType);
 
-    return getReportModalAndView(request, MEMBERSHIP_PASTDUE, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
-  }
+    String reportFilename = "Membership_Delinquencies_" + dateFormat.format(new Date());
 
-  /**
-   * Handles the request to run/generate the Membership Past Due report.
-   *
-   * @return The generated report.
-   */
-  @RequestMapping(value = "/membership/pastdue.xls", method = RequestMethod.GET)
-  public ModelAndView generateMembershipPastDueReportAsXls(final HttpServletRequest request) {
-    LOGGER.info("Received request to generate Membership Past Due report.");
+    ModelAndView mav = null;
+    if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_DELINQUENT_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_DELINQUENT_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    }
 
-    String reportFilename = "Membership_PastDue_" + dateFormat.format(new Date());
+    Map<String, String[]> params = request.getParameterMap();
 
-    ModelAndView mav = getReportModalAndView(request, MEMBERSHIP_PASTDUE, JasperReportsViewFactory.REPORT_FORMAT_XLS, reportFilename);
-    mav.addObject("IS_IGNORE_PAGINATION", true);
+    List<Long> membershipIds = new ArrayList<Long>();
+    for (Map.Entry<String, String[]> param : params.entrySet()) {
+      if (param.getKey().contains("selectedMembership_")) {
+        String[] sections = StringUtils.split(param.getKey(), "_");
+
+        membershipIds.add(Long.valueOf(sections[1]));
+      }
+    }
+
+    if (mav != null) {
+      mav.addObject("memberships", membershipIds);
+    }
 
     return mav;
   }

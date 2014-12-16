@@ -1,5 +1,9 @@
 package com.cagst.swkroa.user;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Locale;
+
 import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.person.BasePersonMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -8,10 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Locale;
 
 /**
  * Maps a row in the resultset into a {@link User} object. Used to marshal / unmarshall a {@link User} object from the

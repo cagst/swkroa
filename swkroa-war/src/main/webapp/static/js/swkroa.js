@@ -2,15 +2,7 @@
  * (c) 2014 CAGST Solutions: http://www.cagst.com/solutions
  *
  * Author: Craig Gaskill
- *
- * Version: 1.0.0
  */
-
-var swkroaApp = angular.module('swkroaApp',
-  ['ui.bootstrap',
-   'ui.utils',
-   'ui.router',
-   'xeditable']);
 
 // add a 'startsWith' method to the String class
 if (typeof String.prototype.startsWith != 'function') {
@@ -87,6 +79,17 @@ angular.module('ng').filter('zip', function () {
   };
 });
 
+var swkroaApp = angular.module('swkroaApp',
+  ['ui.bootstrap',
+   'ui.utils',
+   'ui.router',
+   'xeditable']
+);
+
+responseSuccessful = function(response) {
+ return (200 <= response.status && response.status <= 299);
+};
+
 // add an interceptor to our http service to inject the context root for our requests
 swkroaApp.factory('contextRootInterceptor', function() {
   return {
@@ -110,8 +113,103 @@ swkroaApp.factory('contextRootInterceptor', function() {
   };
 });
 
+swkroaApp.factory('swkroaCache', function($cacheFactory) {
+  return $cacheFactory('swkroaCache');
+});
+
 swkroaApp.config(['$httpProvider', function($httpProvider) {
   $httpProvider.interceptors.push('contextRootInterceptor');
+}]);
+
+// define a service for CodeSet / CodeValues
+swkroaApp.service('codesetService', ['$http', 'swkroaCache', function($http, swkroaCache) {
+  this.getCodeSets = function() {
+    var promise = $http.get('/api/codesets');
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.getCodeValuesForCodeSet = function(codeSetMeaning) {
+    var promise = $http.get('/api/codesets/' + codeSetMeaning);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.saveCodeSet = function(codeSet) {
+    var promise = $http.post('/api/codesets', codeset);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.saveCodeValue = function(codeSetMeaning, codeValue) {
+    var promise = $http.post('/api/codesets/' + codeSetMeaning, codeValue);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
 }]);
 
 // define a service for Contacts
@@ -184,30 +282,6 @@ swkroaApp.service('contactService', ['$http', function($http) {
       {code:"WI", name:"Wisconsin"},
       {code:"WY", name:"Wyoming"}
     ]
-  };
-
-  this.getAddressTypes = function() {
-    var promise = $http.get('/api/codeset/ADDRESS_TYPE').then(function(response) {
-      return response.data;
-    });
-
-    return promise;
-  };
-
-  this.getPhoneTypes = function() {
-    var promise = $http.get('/api/codeset/PHONE_TYPE').then(function(response) {
-      return response.data;
-    });
-
-    return promise;
-  };
-
-  this.getEmailTypes = function() {
-    var promise = $http.get('/api/codeset/EMAIL_TYPE').then(function(response) {
-      return response.data;
-    });
-
-    return promise;
   };
 
   this.addAddress = function(entity) {
@@ -326,3 +400,193 @@ swkroaApp.service('contactService', ['$http', function($http) {
     }
   };
 }]);
+
+// define a service for Memberships
+swkroaApp.service('membershipService', ['$http', function($http) {
+  this.getMembership = function(membershipUID) {
+    var promise = $http.get('/api/memberships/' + membershipUID);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.getMemberships = function(query) {
+    var url = "/api/memberships?q=";
+    if (query && query.length > 0) {
+      url = url + query;
+    }
+
+    var promise = $http.get(url);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.getDelinquentMemberships = function() {
+    var promise = $http.get("/api/memberships?type=delinquent");
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.saveMembership = function(membership) {
+    var promise = $http.post('/api/memberships', membership);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  }
+
+  this.generateOwnerId = function(firstName, lastName) {
+    var promise = $http.get('/api/memberships/ownerId/' + firstName + "/" + lastName).then(function(response) {
+      return JSON.parse(response.data);
+    });
+
+    return promise;
+  };
+
+  this.closeMemberships = function(membershipsArg, closeReasonArg, closeTextArg) {
+    var closeReasonText = "";
+    if (closeTextArg) {
+      closeReasonText = closeTextArg;
+    };
+
+    var data = {
+      memberships: membershipsArg,
+      closeReason: closeReasonArg,
+      closeText: closeReasonText
+    };
+
+    var promise = $http.post('/api/memberships/close', JSON.stringify(data));
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+}]);
+
+// define a service for Transactions
+swkroaApp.service('transactionService', ['$http', function($http) {
+  this.getUnpaidTransactions = function() {
+    var promise = $http.get('/api/transactions?type=unpaid');
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.saveTransaction = function(transaction) {
+    var promise = $http.post('/api/transactions', transaction);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+}]);
+
+swkroaApp.controller('dashboardController', function($scope, $http) {
+  $http.get('/api/dashboard').success(function(data) {
+    $scope.dashboard = data;
+  });
+});

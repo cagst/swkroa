@@ -1,5 +1,6 @@
 package com.cagst.swkroa.member;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -9,12 +10,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.cagst.common.formatter.DefaultNameFormatter;
+import com.cagst.common.formatter.NameFormatter;
 import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.transaction.Transaction;
-import com.cagst.swkroa.utils.DefaultMineralUtilities;
-import com.cagst.swkroa.utils.MineralUtilities;
 import org.joda.time.DateTime;
 import org.springframework.util.CollectionUtils;
 
@@ -30,8 +31,21 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private long membership_id;
   private CodeValue entity_type;
   private DateTime next_due_dt;
-  private BigDecimal dues_amount;
-  private BigDecimal amount_due;
+  private long member_id;
+  private String company_name;
+  private String owner_ident;
+  private DateTime join_dt;
+  private MemberType member_type;
+  private String name_last;
+  private String name_middle;
+  private String name_first;
+  private BigDecimal fixed_dues;
+  private BigDecimal calculated_dues;
+  private BigDecimal balance;
+  private DateTime last_payment_dt_tm;
+  private long close_reason_id;
+  private String close_reason_txt;
+  private DateTime close_dt_tm;
 
   // meta-data
   private boolean active_ind = true;
@@ -42,11 +56,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private List<Comment> comments = new ArrayList<Comment>();
   private List<Transaction> transactions = new ArrayList<Transaction>();
 
-  private MineralUtilities mineralUtils = new DefaultMineralUtilities();
-
-  public void setMineralUtilities(final MineralUtilities mineralUtils) {
-    this.mineralUtils = mineralUtils;
-  }
+  private NameFormatter nameFormatter = new DefaultNameFormatter();
 
   public long getMembershipUID() {
     return membership_id;
@@ -74,8 +84,100 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.next_due_dt = dueDate;
   }
 
-  public BigDecimal getDuesAmount() {
-    return dues_amount;
+  public long getMemberUID() {
+    return member_id;
+  }
+
+  public void setMemberUID(final long memberID) {
+    this.member_id = memberID;
+  }
+
+  public String getCompanyName() {
+    return company_name;
+  }
+
+  public void setCompanyName(final String companyName) {
+    this.company_name = companyName;
+  }
+
+  public String getOwnerId() {
+    return owner_ident;
+  }
+
+  public void setOwnerId(final String ownderId) {
+    this.owner_ident = ownderId;
+  }
+
+  public DateTime getJoinDate() {
+    return join_dt;
+  }
+
+  public void setJoinDate(final DateTime joinDate) {
+    this.join_dt = joinDate;
+  }
+
+  public MemberType getMemberType() {
+    return member_type;
+  }
+
+  public void setMemberType(final MemberType memberType) {
+    this.member_type = memberType;
+  }
+
+  public String getLastName() {
+    return name_last;
+  }
+
+  public void setLastName(final String lastName) {
+    this.name_last = lastName;
+  }
+
+  public String getMiddleName() {
+    return name_middle;
+  }
+
+  public void setMiddleName(final String middleName) {
+    this.name_middle = middleName;
+  }
+
+  public String getFirstName() {
+    return name_first;
+  }
+
+  public void setFirstName(final String firstName) {
+    this.name_first = firstName;
+  }
+
+  public String getFullName() {
+    if (nameFormatter == null) {
+      return null;
+    }
+
+    return nameFormatter.formatFullName(name_last, name_first, name_middle);
+  }
+
+  public String getMembershipName() {
+    if (company_name != null) {
+      return company_name;
+    }
+
+    return getFullName();
+  }
+
+  public BigDecimal getFixedDuesAmount() {
+    return fixed_dues;
+  }
+
+  public void setFixedDuesAmount(final BigDecimal fixedDues) {
+    this.fixed_dues = fixedDues;
+  }
+
+  public BigDecimal getCalculatedDuesAmount() {
+    return calculated_dues;
+  }
+
+  public void setCalculatedDuesAmount(final BigDecimal calculatedDues) {
+    this.calculated_dues = calculatedDues;
   }
 
   /**
@@ -84,40 +186,31 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * @return The effective dues amount for the membership.
    */
   public BigDecimal getEffectiveDuesAmount() {
-    if (dues_amount != null) {
-      return dues_amount;
+    if (getFixedDuesAmount() != null) {
+      return getFixedDuesAmount();
     }
 
-    return getCalculatedDuesAmount();
-  }
-
-  /**
-   * @return The calculated dues amount for the membership.
-   */
-  public BigDecimal getCalculatedDuesAmount() {
-    BigDecimal countyDues = new BigDecimal(0d);
-    for (MembershipCounty county : counties) {
-      countyDues = countyDues.add(mineralUtils.calculateFeesForMembershipCounty(county));
+    if (getCalculatedDuesAmount() != null) {
+      return getCalculatedDuesAmount();
     }
 
-    BigDecimal memberDues = new BigDecimal(0d);
-    for (Member member : members) {
-      memberDues = memberDues.add(member.getMemberType().getDuesAmount());
-    }
-
-    return memberDues.add(countyDues);
+    return BigDecimal.ZERO;
   }
 
-  public void setDuesAmount(final BigDecimal duesAmount) {
-    this.dues_amount = duesAmount;
+  public BigDecimal getBalance() {
+    return balance;
   }
 
-  public BigDecimal getAmountDue() {
-    return amount_due;
+  public void setBalance(final BigDecimal balance) {
+    this.balance = balance;
   }
 
-  public void setAmountDue(final BigDecimal amountDue) {
-    this.amount_due = amountDue;
+  public DateTime getLastPaymentDate() {
+    return last_payment_dt_tm;
+  }
+
+  public void setLastPaymentDate(final DateTime paymentDate) {
+    this.last_payment_dt_tm = paymentDate;
   }
 
   public boolean isActive() {
@@ -126,6 +219,30 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setActive(final boolean active) {
     this.active_ind = active;
+  }
+
+  public long getCloseReasonUID() {
+    return close_reason_id;
+  }
+
+  public void setCloseReasonUID(final long closeReasonUID) {
+    this.close_reason_id = closeReasonUID;
+  }
+
+  public String getCloseReasonText() {
+    return close_reason_txt;
+  }
+
+  public void setCloseReasonText(final String closeReasonText) {
+    this.close_reason_txt = closeReasonText;
+  }
+
+  public DateTime getCloseDate() {
+    return close_dt_tm;
+  }
+
+  public void setCloseDate(final DateTime closeDate) {
+    this.close_dt_tm = closeDate;
   }
 
   public long getMembershipUpdateCount() {
@@ -161,7 +278,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * Helper method to return the "primary" member associated with this membership.
    *
    * @return The "primary" {@link Member} associated with this membership,
-   *         {@code null} if none is found making the membership invalid.
+   * {@code null} if none is found making the membership invalid.
    */
   public Member getPrimaryMember() {
     for (Member member : members) {
@@ -181,7 +298,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * Helper method to replace (or add) the "primary" member associated with this membership.
    *
    * @param primary
-   *        The {@link Member} to replace (or add) as the "primary" member.
+   *     The {@link Member} to replace (or add) as the "primary" member.
    */
   public void setPrimaryMember(final Member primary) {
     // remove the existing "primary" member if one exists
@@ -201,7 +318,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * Helper method to return the "spouse" associated with this membership.
    *
    * @return The "spouse" {@link Member} associated with this membership,
-   *         {@code null} if no spouse is found.
+   * {@code null} if no spouse is found.
    */
   public Member getSpouse() {
     for (Member member : members) {
@@ -217,7 +334,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
    * Helper method to replace (or add) the "spouse" member associated with this membership.
    *
    * @param spouse
-   *        The {@link Member} to replace (or add) as the "spouse" member.
+   *     The {@link Member} to replace (or add) as the "spouse" member.
    */
   public void setSpouse(final Member spouse) {
     if (spouse == null) {
@@ -298,13 +415,13 @@ public final class Membership implements Serializable, Comparable<Membership> {
   }
 
   @Override
-  public int compareTo(Membership rhs) {
+  public int compareTo(final @Nullable Membership rhs) {
     if (rhs == null) {
       return 0;
     }
 
     CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(getPrimaryMember(), rhs.getPrimaryMember());
+    builder.append(getMembershipName(), rhs.getMembershipName());
 
     return builder.build();
   }

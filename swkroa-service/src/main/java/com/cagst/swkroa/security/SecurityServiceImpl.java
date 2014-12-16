@@ -1,6 +1,9 @@
 package com.cagst.swkroa.security;
 
+import javax.inject.Named;
+
 import com.cagst.swkroa.user.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Service("securityService")
+@Named("securityService")
 public final class SecurityServiceImpl implements SecurityService {
   private int max_signin_attempts = 5;
   private int timeout_period_mins = 15;
@@ -22,6 +25,7 @@ public final class SecurityServiceImpl implements SecurityService {
     return max_signin_attempts;
   }
 
+  @Value("${security.max.signin.attempts}")
   public void setMaximumSigninAttempts(final int maxSigninAttempts) {
     this.max_signin_attempts = maxSigninAttempts;
   }
@@ -30,6 +34,7 @@ public final class SecurityServiceImpl implements SecurityService {
     return timeout_period_mins;
   }
 
+  @Value("${security.timeout.period.mins}")
   public void setTimeoutPeriodInMinutes(final int timeoutPeriod) {
     this.timeout_period_mins = timeoutPeriod;
   }
@@ -38,6 +43,7 @@ public final class SecurityServiceImpl implements SecurityService {
     return password_expiry_days;
   }
 
+  @Value("${security.password.expiry.days}")
   public void setPasswordExpiryInDays(final int passwordExpiry) {
     this.password_expiry_days = passwordExpiry;
   }
@@ -46,15 +52,11 @@ public final class SecurityServiceImpl implements SecurityService {
     return account_locked_days;
   }
 
+  @Value("${security.account.locked.days}")
   public void setAccountLockedDays(final int accountLockedDays) {
     this.account_locked_days = accountLockedDays;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.security.SecurityRepository#getSecurityPolicy(com.cagst.swkroa.user.User)
-   */
   @Override
   public SecurityPolicy getSecurityPolicy(final User user) {
     return getDefaultSecurityPolicy();

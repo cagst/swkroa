@@ -9,6 +9,7 @@ package com.cagst.swkroa.controller.api;
  *
  */
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
@@ -23,7 +24,6 @@ import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -31,7 +31,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 
@@ -39,14 +44,17 @@ import org.springframework.web.util.UriComponents;
 public final class UserApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserApiController.class);
 
-  private static final String ACTION_UNLOCK   = "unlock";
-  private static final String ACTION_ENABLE   = "enable";
-  private static final String ACTION_DISABLE  = "disable";
+  private static final String ACTION_UNLOCK = "unlock";
+  private static final String ACTION_ENABLE = "enable";
+  private static final String ACTION_DISABLE = "disable";
   private static final String ACTION_RESETPWD = "resetpwd";
 
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
 
+  @Inject
+  public UserApiController(final UserService userService) {
+    this.userService = userService;
+  }
   /**
    * Handles the request and retrieves the active {@link User Users} within the system.
    *
@@ -171,7 +179,7 @@ public final class UserApiController {
    * Handles the request and checks if the specified username is already being used.
    *
    * @param username
-   *      The username to check to see if it already exists.
+   *     The username to check to see if it already exists.
    *
    * @return {@code true} if the username is being used, {@code false} otherwise.
    */

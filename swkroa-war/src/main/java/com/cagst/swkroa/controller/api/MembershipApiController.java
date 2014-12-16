@@ -1,25 +1,38 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
-import com.cagst.swkroa.member.*;
+import com.cagst.swkroa.member.Member;
+import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.member.MemberType;
+import com.cagst.swkroa.member.MemberTypeRepository;
+import com.cagst.swkroa.member.Membership;
+import com.cagst.swkroa.member.MembershipCounty;
+import com.cagst.swkroa.member.MembershipService;
+import com.cagst.swkroa.model.CloseMembership;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 
@@ -35,17 +48,23 @@ import org.springframework.web.util.UriComponents;
 public final class MembershipApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipApiController.class);
 
-  @Autowired
-  private CodeValueRepository codeValueRepo;
+  private static final String MEMBERSHIP_TYPE_DELINQUENT = "delinquent";
 
-  @Autowired
-  private MembershipService membershipService;
+  private final CodeValueRepository codeValueRepo;
+  private final MembershipService membershipService;
+  private final MemberRepository memberRepo;
+  private final MemberTypeRepository memberTypeRepo;
 
-  @Autowired
-  private MemberRepository memberRepo;
-
-  @Autowired
-  private MemberTypeRepository memberTypeRepo;
+  @Inject
+  public MembershipApiController(final CodeValueRepository codeValueRepo,
+                                 final MembershipService membershipService,
+                                 final MemberRepository memberRepo,
+                                 final MemberTypeRepository memberTypeRepo) {
+    this.codeValueRepo = codeValueRepo;
+    this.membershipService = membershipService;
+    this.memberRepo = memberRepo;
+    this.memberTypeRepo = memberTypeRepo;
+  }
 
   /**
    * Handles the request and retrieves the active Memberships within the system.
@@ -53,14 +72,21 @@ public final class MembershipApiController {
    * @return A JSON representation of the active Memberships within the system.
    */
   @RequestMapping(method = RequestMethod.GET)
-  public List<Membership> getMemberships(final @RequestParam("q") String query) {
+  public List<Membership> getMemberships(final @RequestParam(value = "q", required = false) String query,
+                                         final @RequestParam(value= "type", required = false) String type) {
+
     LOGGER.info("Received request to retrieve memberships using query string [{}]", query);
 
     List<Membership> memberships;
-    if (StringUtils.isNotBlank(query)) {
-      memberships = membershipService.getMembershipsForName(query);
+
+    if (StringUtils.equalsIgnoreCase(MEMBERSHIP_TYPE_DELINQUENT, type)) {
+      memberships = membershipService.getDelinquentMemberships();
     } else {
-      memberships = membershipService.getActiveMemberships();
+      if (StringUtils.isNotBlank(query)) {
+        memberships = membershipService.getMembershipsForName(query);
+      } else {
+        memberships = membershipService.getActiveMemberships();
+      }
     }
 
     Collections.sort(memberships);
@@ -77,7 +103,7 @@ public final class MembershipApiController {
    * @return A {@link Membership} that represents the {@link Membership} for the specified membership ID.
    */
   @RequestMapping(value = "/{membershipId}", method = RequestMethod.GET)
-  public Membership getMembership(final @PathVariable long membershipId) {
+  public Membership getMembership(final @PathVariable("membershipId") long membershipId) {
     LOGGER.info("Received request to retrieve membership [{}].", membershipId);
 
     if (membershipId == 0L) {
@@ -160,5 +186,29 @@ public final class MembershipApiController {
     } catch (Exception ex) {
       return new ResponseEntity<Membership>(membership, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  /**
+   * Handles the request and ...
+   */
+  @RequestMapping(value = "/close", method = RequestMethod.POST)
+  public ResponseEntity deleteMembership(final @RequestBody CloseMembership closeMemberships) {
+    LOGGER.info("Received request to delete memberships");
+
+    if (CollectionUtils.isEmpty(closeMemberships.getMemberships())) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    if (closeMemberships.getCloseReason() == null && StringUtils.isBlank(closeMemberships.getCloseText())) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    membershipService.closeMemberships(
+        closeMemberships.getMemberships(),
+        closeMemberships.getCloseReason(),
+        closeMemberships.getCloseText()
+    );
+
+    return new ResponseEntity(HttpStatus.OK);
   }
 }

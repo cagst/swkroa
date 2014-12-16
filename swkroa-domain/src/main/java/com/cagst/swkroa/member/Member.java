@@ -1,5 +1,12 @@
 package com.cagst.swkroa.member;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.contact.Address;
@@ -12,13 +19,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Representation of a Member within the system.
@@ -39,6 +39,9 @@ public final class Member implements Serializable, Comparable<Member> {
   private DateTime join_dt;
   private boolean mail_newsletter_ind = true;
   private boolean email_newsletter_ind = false;
+  private long close_reason_id;
+  private String close_reason_txt;
+  private DateTime close_dt_tm;
 
   private List<Address> addresses = new ArrayList<Address>();
   private List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
@@ -171,6 +174,30 @@ public final class Member implements Serializable, Comparable<Member> {
     this.email_newsletter_ind = emailNewsletter;
   }
 
+  public long getCloseReasonUID() {
+    return close_reason_id;
+  }
+
+  public void setCloseReasonUID(final long closeReasonUID) {
+    this.close_reason_id = closeReasonUID;
+  }
+
+  public String getCloseReasonText() {
+    return close_reason_txt;
+  }
+
+  public void setCloseReasonText(final String closeReasonText) {
+    this.close_reason_txt = closeReasonText;
+  }
+
+  public DateTime getCloseDate() {
+    return close_dt_tm;
+  }
+
+  public void setCloseDate(final DateTime closeDate) {
+    this.close_dt_tm = closeDate;
+  }
+
   public void clearAddresses() {
     addresses.clear();
   }
@@ -250,11 +277,6 @@ public final class Member implements Serializable, Comparable<Member> {
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.person.Person#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -264,11 +286,6 @@ public final class Member implements Serializable, Comparable<Member> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.person.Person#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -290,11 +307,6 @@ public final class Member implements Serializable, Comparable<Member> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.person.Person#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -304,11 +316,6 @@ public final class Member implements Serializable, Comparable<Member> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final Member rhs) {
     if (rhs == null) {

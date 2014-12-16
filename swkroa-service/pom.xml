@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.cagst.swkroa</groupId>
     <artifactId>swkroa-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>swkroa-service</artifactId>
@@ -21,14 +21,12 @@
     <dependency>
       <groupId>com.cagst</groupId>
       <artifactId>cagst-common-db</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.cagst</groupId>
       <artifactId>cagst-common-service</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -37,7 +35,7 @@
     <dependency>
       <groupId>com.cagst.swkroa</groupId>
       <artifactId>swkroa-domain</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.1.0-SNAPSHOT</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -100,14 +98,22 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- JSR-330 Dependencies -->
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
 
+    <!--                   -->
     <!-- Test Dependencies -->
+    <!--                   -->
 
     <!-- CAGST Test Dependencies -->
     <dependency>
       <groupId>com.cagst</groupId>
       <artifactId>cagst-test</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
       <type>jar</type>
       <scope>test</scope>
     </dependency>

@@ -21,6 +21,7 @@
 
       <div data-ng-show="share.user.addresses.length > 0">
         <h4 class="divider-bottom">Addresses</h4>
+
         <div data-ng-repeat="address in share.user.addresses" class="row">
           <div class="col-xs-4">
             <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
@@ -38,6 +39,7 @@
 
       <div data-ng-show="share.user.phoneNumbers.length > 0">
         <h4 class="divider-bottom">Phone Numbers</h4>
+
         <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
           <div class="col-xs-4">
             <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
@@ -55,6 +57,7 @@
 
       <div data-ng-show="share.user.emailAddresses.length > 0">
         <h4 class="divider-bottom">Email Addresses</h4>
+
         <div data-ng-repeat="email in share.user.emailAddresses" class="row">
           <div class="col-xs-4">
             <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>

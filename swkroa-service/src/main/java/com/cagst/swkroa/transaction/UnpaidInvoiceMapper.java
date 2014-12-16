@@ -1,10 +1,10 @@
 package com.cagst.swkroa.transaction;
 
-import com.cagst.common.util.CGTDateTimeUtils;
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.cagst.common.util.CGTDateTimeUtils;
+import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Maps a row in the resultset into an {@link UnpaidInvoice} object. Used to marshal / unmarshal an {@link UnpaidInvoice} to /
@@ -14,16 +14,16 @@ import java.sql.SQLException;
  * @version 1.0.0
  */
 /* package */ final class UnpaidInvoiceMapper implements RowMapper<UnpaidInvoice> {
-  private static final String TRANSACTION_ID        = "transaction_id";
-  private static final String MEMBERSHIP_ID         = "membership_id";
-  private static final String TRANSACTION_DT        = "transaction_dt";
+  private static final String TRANSACTION_ID = "transaction_id";
+  private static final String MEMBERSHIP_ID = "membership_id";
+  private static final String TRANSACTION_DT = "transaction_dt";
   private static final String TRANSACTION_TYPE_FLAG = "transaction_type_flag";
-  private static final String TRANSACTION_DESC      = "transaction_desc";
-  private static final String REF_NUM               = "ref_num";
-  private static final String MEMO_TXT              = "memo_txt";
-  private static final String TRANSACTION_AMOUNT    = "transaction_amount";
-  private static final String AMOUNT_PAID           = "amount_paid";
-  private static final String AMOUNT_REMAINING      = "amount_remaining";
+  private static final String TRANSACTION_DESC = "transaction_desc";
+  private static final String REF_NUM = "ref_num";
+  private static final String MEMO_TXT = "memo_txt";
+  private static final String TRANSACTION_AMOUNT = "transaction_amount";
+  private static final String AMOUNT_PAID = "amount_paid";
+  private static final String AMOUNT_REMAINING = "amount_remaining";
 
   @Override
   public UnpaidInvoice mapRow(ResultSet rs, int rowNum) throws SQLException {

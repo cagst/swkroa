@@ -1,5 +1,12 @@
 package com.cagst.swkroa.user;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
@@ -11,6 +18,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
@@ -24,22 +32,16 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * JDBC Template implementation of the {@link UserRepository} interface.
  *
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("userRepo")
 /* package */ final class UserRepositoryJdbc extends PersonRepositoryJdbc implements UserRepository, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryJdbc.class);
 
-  private static final String MSG_USERNAME_EXISTS     = "com.cagst.swkroa.username.exists";
+  private static final String MSG_USERNAME_EXISTS = "com.cagst.swkroa.username.exists";
 
   private static final String GET_USER_BY_USERNAME    = "GET_USER_BY_USERNAME";
   private static final String GET_USER_BY_UID         = "GET_USER_BY_UID";
@@ -65,9 +67,9 @@ import java.util.Map;
    * Primary constructor used to create an instance of <i>UserRepositoryJdbc</i>.
    *
    * @param dataSource
-   *      The {@link DataSource} used to retrieve / persist data objects.
+   *     The {@link DataSource} used to retrieve / persist data objects.
    * @param contactRepo
-   *      The {@link ContactRepository} to use to populate contact objects.
+   *     The {@link ContactRepository} to use to populate contact objects.
    */
   public UserRepositoryJdbc(final DataSource dataSource, final ContactRepository contactRepo) {
     super(dataSource, contactRepo);
@@ -384,7 +386,9 @@ import java.util.Map;
     return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ALL_USERS), new UserMapper());
   }
 
-  /** Place helper methods below this line. **/
+  /**
+   * Place helper methods below this line. *
+   */
 
   private User insertUser(final User newUser, final User user)
       throws IncorrectResultSizeDataAccessException, UsernameTakenException {
@@ -393,7 +397,7 @@ import java.util.Map;
 
     if (doesUsernameExist(newUser.getUsername())) {
       throw new UsernameTakenException(
-          messages.getMessage(MSG_USERNAME_EXISTS, new Object[] {newUser.getUsername()}, "Username {0} is already in use!"));
+          messages.getMessage(MSG_USERNAME_EXISTS, new Object[]{newUser.getUsername()}, "Username {0} is already in use!"));
     }
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -417,7 +421,7 @@ import java.util.Map;
 
     if (doesUsernameExist(updateUser.getUsername(), updateUser)) {
       throw new UsernameTakenException(
-          messages.getMessage(MSG_USERNAME_EXISTS, new Object[] {updateUser.getUsername()}, "Username {0} is already in use!"));
+          messages.getMessage(MSG_USERNAME_EXISTS, new Object[]{updateUser.getUsername()}, "Username {0} is already in use!"));
     }
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());

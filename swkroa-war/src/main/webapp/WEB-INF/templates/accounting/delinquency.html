@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/accounting/delinquency.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="delinquencyController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.delinquency.title}">zzz Delinquencies</h3>
+  </div>
+
+  <form name="reportForm" data-th-attr="action=@{/report/membership/delinquent}" target="_blank" method="post">
+    <div class="row" data-ng-show="delinquencies">
+      <div class="col-xs-3">
+        <div class="btn-group-vertical">
+          <input id="reportType" type="hidden" name="reportType" />
+          <a id="generatePdf" class="btn btn-default"
+             href="javascript:submitReportForm('pdf')"
+             data-ng-disabled="!canExport()"
+             data-th-text="#{com.cagst.swkroa.report.generate.report}">
+            zzz Report
+          </a>
+          <a id="generateCsv" class="btn btn-default"
+             href="javascript:submitReportForm('csv')"
+             data-ng-disabled="!canExport()"
+             data-th-text="#{com.cagst.swkroa.report.generate.export}">
+            zzz Export
+          </a>
+          <button type="button" class="btn btn-danger"
+                  data-ng-disabled="!canExport()"
+                  data-toggle="modal" data-target="#closeMembershipsDlg">
+            <i class="fa fa-power-off"></i>
+            <span data-th-text="#{com.cagst.swkroa.delinquency.close.button}">zzz Close</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>
+                <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
+              </th>
+              <th data-th-text="#{com.cagst.swkroa.delinquency.membership}">zzz Membership</th>
+              <th data-th-text="#{com.cagst.swkroa.delinquency.duesamount}">zzz Dues Amount</th>
+              <th data-th-text="#{com.cagst.swkroa.delinquency.balance}">zzz Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="mem in delinquencies">
+              <td>
+                <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox" data-ng-model="mem.selected" />
+              </td>
+              <td>{{mem.membershipName}}</td>
+              <td>{{mem.effectiveDuesAmount | currency}}</td>
+              <td>{{mem.balance | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-3"></div>
+    </div>
+
+    <!-- Close Memberships Dialog -->
+    <div class="modal fade" id="closeMembershipsDlg" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.delinquency.close.title}">zzz Please confirm</h4>
+          </div>
+          <div class="modal-body">
+            <p data-th-text="#{com.cagst.swkroa.delinquency.close.msg}">zzz Members</p>
+
+            <label class="control-label"
+                   data-ng-class="{'label-required': true}"
+                   data-th-text="#{com.cagst.swkroa.delinquency.close.reason}">
+              zzz Close Reason
+            </label>
+            <select class="form-control"
+                    data-ng-model="closeReason"
+                    data-ng-required="true"
+                    data-ng-options="reason.display for reason in closeReasons">
+            </select>
+            <label class="control-label"
+                   data-ng-class="{'label-required': closeReason.meaning == 'CLOSE_OTHER'}"
+                   data-th-text="#{com.cagst.swkroa.delinquency.close.text}">
+              zzz CloseText
+            </label>
+            <input type="text" class="form-control" name="companyName" maxlength="100"
+                   data-ng-model="closeText"
+                   data-ng-disabled="closeReason.meaning != 'CLOSE_OTHER'"
+                   data-ng-required="closeReason.meaning == 'CLOSE_OTHER'" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger"
+                    data-ng-click="closeMemberships()"
+                    data-ng-disabled="!canClose()"
+                    data-th-text="#{com.cagst.swkroa.delinquency.close.button}">
+              zzz Delete
+            </button>
+            <button type="button" class="btn btn-primary"
+                    data-dismiss="modal"
+                    data-th-text="#{com.cagst.swkroa.discard}">
+              zzz Keep
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+</body>
+</html>

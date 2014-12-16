@@ -70,42 +70,42 @@
                      data-ng-class="{active: mem.membershipUID === membership.membershipUID}"
                      data-ng-click="getMembership(mem.membershipUID)">
                   <div class="lead lead-in">
-                    <span data-ng-bind="mem.primaryMember.effectiveMemberName">zzz Membership Name</span>
-                    <span data-ng-show="mem.primaryMember.memberType.memberTypeMeaning == 'REGULAR'"
+                    <span data-ng-bind="mem.membershipName">zzz Membership Name</span>
+                    <span data-ng-show="mem.memberTypeMeaning == 'REGULAR'"
                           data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.regular}"
                           data-tooltip-placement="left"
                           class="pull-right">
                       <i class="fa fa-user"></i>
                     </span>
-                    <span data-ng-show="mem.primaryMember.memberType.memberTypeMeaning == 'FAMILY_HEAD'"
+                    <span data-ng-show="mem.memberTypeMeaning == 'FAMILY_HEAD'"
                           data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.family}"
                           data-tooltip-placement="left"
                           class="pull-right">
                       <i class="fa fa-users"></i>
                     </span>
                   </div>
-                  <div data-ng-if="mem.primaryMember.joinDate != null">
+                  <div data-ng-if="mem.joinDate != null">
                     <span data-th-text="#{com.cagst.swkroa.membership.member.since}">zzz Member Since</span>
                   </div>
                   <div>
-                    <span data-th-text="#{com.cagst.swkroa.membership.dues}">zzz Dues Of</span>
-                    <span data-th-text="#{com.cagst.swkroa.membership.cal.dues}" class="text-warning"
-                          data-ng-show="mem.effectiveDuesAmount != mem.calculatedDuesAmount">
+                    <span data-th-text="#{com.cagst.swkroa.membership.fixed.dues}">zzz Dues Of</span>
+                    <span data-th-text="#{com.cagst.swkroa.membership.calculated.dues}" class="text-warning"
+                          data-ng-show="mem.fixedDuesAmount != mem.calculatedDuesAmount">
                       zzz Calculated Dues
                     </span>
                     <span class="pull-right text-danger"
-                          data-ng-bind="mem.amountDue | currency"
-                          data-ng-show="mem.amountDue < 0">
+                          data-ng-bind="mem.balance | currency"
+                          data-ng-show="mem.balance < 0">
                       zzz Past Due
                     </span>
                     <span class="pull-right text-success"
-                          data-ng-bind="mem.amountDue | currency"
-                          data-ng-show="mem.amountDue > 0">
+                          data-ng-bind="mem.balance | currency"
+                          data-ng-show="mem.balance > 0">
                       zzz Credit
                     </span>
                     <span class="pull-right"
-                          data-ng-bind="mem.amountDue | currency"
-                          data-ng-show="mem.amountDue == 0">
+                          data-ng-bind="mem.balance | currency"
+                          data-ng-show="mem.balance == 0">
                       zzz Paid
                     </span>
                   </div>
@@ -119,7 +119,8 @@
         <div class="col-xs-7 divider-left stretch pull-right">
           <div data-ng-show="!membership">
             <em>
-              <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.membership.notselected}">
+              <label class="panel-body text-muted text-center"
+                     data-th-text="#{com.cagst.swkroa.membership.notselected}">
                 zzz No membership selected.
               </label>
             </em>
@@ -198,7 +199,8 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please confirm</h4>
+                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please
+                                                                                                     confirm</h4>
                 </div>
                 <div class="modal-body">
                   <span data-th-text="#{com.cagst.swkroa.membership.delete.message}">zzz Delete this?</span>
@@ -234,6 +236,7 @@
         zzz Add Membership
       </h3>
       <input id="membershipId" type="hidden" data-th-value="${membershipId}" />
+
       <h3 data-th-text="#{com.cagst.swkroa.membership.edit}" data-ng-show="membership.membershipUID > 0">
         zzz Edit Membership
       </h3>
@@ -263,7 +266,7 @@
             </button>
             <button type="button" class="btn btn-default"
                     data-ng-click="cancelChanges()"
-                    data-th-text="#{com.cagst.swkroa.membership.cancel}">
+                    data-th-text="#{com.cagst.swkroa.cancel}">
             </button>
           </div>
         </div>

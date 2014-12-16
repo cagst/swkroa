@@ -26,6 +26,7 @@
       <label class="control-label label-required" data-th-text="#{com.cagst.swkroa.membership.dueon}">
         zzz Due On
       </label>
+
       <p class="input-group">
         <input type="text" class="form-control" id="dueDate" name="dueDate"
                data-datepicker-popup="MM/dd/yyyy"
@@ -47,6 +48,7 @@
           <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
           <span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
         </label>
+
         <div class="input-group">
           <input type="number" class="form-control"
                  data-ng-model="membership.calculatedDuesAmount"
@@ -65,6 +67,7 @@
           <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
           <span data-th-text="#{com.cagst.swkroa.membership.dues.fixed}">(zzz Fixed)</span>
         </label>
+
         <div class="input-group">
           <input type="number" class="form-control"
                  data-ng-model="membership.duesAmount"
@@ -85,6 +88,7 @@
           <span data-th-text="#{com.cagst.swkroa.membership.duesamount}">zzz Dues Amount</span>
           <span data-th-text="#{com.cagst.swkroa.membership.dues.calculated}">(zzz calculated)</span>
         </label>
+
         <div>
           {{membership.calculatedDuesAmount | currency}}
         </div>
@@ -141,6 +145,7 @@
   <div class="row spacer-top">
     <div class="col-xs-2">
       <label data-th-text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
+
       <div class="input-group">
         <input type="text" class="form-control" id="primaryJoinDate" name="primaryJoinDate"
                data-datepicker-popup="MM/dd/yyyy"
@@ -169,12 +174,14 @@
     <div class="col-xs-2">
       <div>&nbsp;</div>
       <input id="primaryMailNewsletter" type="checkbox" data-ng-model="membership.primaryMember.mailNewsletter" />
-      <label for="primaryMailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.mail}">zzz Mail</label>
+      <label for="primaryMailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.mail}">zzz
+                                                                                                              Mail</label>
     </div>
     <div class="col-xs-2">
       <div>&nbsp;</div>
       <input id="primaryEmailNewsletter" type="checkbox" data-ng-model="membership.primaryMember.emailNewsletter" />
-      <label for="primaryEmailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.email}">zzz Email</label>
+      <label for="primaryEmailNewsletter" data-th-text="#{com.cagst.swkroa.membership.member.newsletter.email}">zzz
+                                                                                                                Email</label>
     </div>
   </div>
 </div>

@@ -1,5 +1,10 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
 import com.cagst.common.web.servlet.tags.StaticResourceTag;
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.Auditable;
@@ -18,11 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 /**
  * Handles and retrieves the authentication page(s) depending on the URI template.
@@ -130,6 +130,7 @@ public class AuthenticationController {
     if (user == null) {
       LOGGER.error("Unable to determine current user.");
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      return;
     }
 
     LOGGER.info("Changing password for user [{}]", user.getUsername());

@@ -10,31 +10,31 @@
  * Change the color of the navbar style to match SWKROA's color scheme.      *
 ============================================================================ */
 .navbar-inverse {
-	background-color: #428bca;
-	border-color: #357ebd;
+  background-color: #428bca;
+  border-color: #357ebd;
 }
 
 .navbar-inverse .navbar-collapse {
-	border-color: #357ebd;
+  border-color: #357ebd;
 }
 
 .navbar-inverse .navbar-nav > li:hover {
-	background-color: #3276b1;
-	border-color: #357ebd;
-	color: #fff;
+  background-color: #3276b1;
+  border-color: #357ebd;
+  color: #fff;
 }
 
 .navbar-inverse .navbar-brand > a {
-	color: #357ebd;
+  color: #357ebd;
 }
 
 .navbar-inverse .navbar-brand > a:hover {
-	color: #fff;
+  color: #fff;
 }
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
-	background-color: #3276B1;
-	color: #fff;
+  background-color: #3276B1;
+  color: #fff;
 }
 
 /* ========================================================================= *
@@ -45,7 +45,7 @@
  * Tweak/Customize CAGST styling.                                            *
 ============================================================================ */
 #page-header {
-  height:90px;
+  height: 90px;
 }
 
 /* ========================================================================= *

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * An exception to be thrown when the requested resource would not be located.
  *
  * @author Craig Gaskill
- *
  * @version 1.0.0
  */
 @ResponseStatus(value = HttpStatus.NOT_FOUND)

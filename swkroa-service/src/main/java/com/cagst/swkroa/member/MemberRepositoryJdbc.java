@@ -1,5 +1,12 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
@@ -20,14 +27,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * JDBC Template implementation of the {@link MemberRepository} interface.
@@ -35,7 +36,7 @@ import java.util.Map;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Repository("memberRepo")
+@Named("memberRepo")
 /* package */ final class MemberRepositoryJdbc extends PersonRepositoryJdbc implements MemberRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberRepositoryJdbc.class);
 
@@ -69,6 +70,7 @@ import java.util.Map;
    * @param contactRepo
    *     The {@link ContactRepository} to use to populate contact objects.
    */
+  @Inject
   public MemberRepositoryJdbc(final DataSource dataSource, final PersonRepository personRepo,
                               final MemberTypeRepository memberTypeRepo,
                               final CountyRepository countyRepo, final ContactRepository contactRepo) {

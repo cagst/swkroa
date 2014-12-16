@@ -1,12 +1,20 @@
 package com.cagst.swkroa.member;
 
-import com.cagst.common.db.DataSourceFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.List;
+
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.county.County;
 import com.cagst.swkroa.county.CountyRepository;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.person.PersonRepository;
+import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -14,15 +22,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import javax.sql.DataSource;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Test class for the MemberRepositoryJdbc class.
@@ -31,7 +32,7 @@ import static org.junit.Assert.*;
  * @version 1.0.0
  */
 @RunWith(JUnit4.class)
-public class MemberRepositoryJdbcTest {
+public class MemberRepositoryJdbcTest extends BaseTestRepository {
   private MemberRepositoryJdbc repo;
 
   private PersonRepository personRepo;
@@ -402,13 +403,5 @@ public class MemberRepositoryJdbcTest {
     county.setMembershipCountyUpdateCount(1L);
 
     repo.saveMembershipCounty(county, membership, user);
-  }
-
-  private DataSource createTestDataSource() {
-    Resource schemaLocation = new ClassPathResource("/testDb/schema.sql");
-    Resource testDataLocation = new ClassPathResource("/testDb/test_data.sql");
-
-    DataSourceFactory dsFactory = new DataSourceFactory("swkroadb", schemaLocation, testDataLocation);
-    return dsFactory.getDataSource();
   }
 }

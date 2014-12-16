@@ -1,5 +1,9 @@
 package com.cagst.swkroa.user;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
@@ -25,11 +29,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import java.util.List;
 
 /**
  * User Service that provides authentication for SWKROA.
@@ -37,7 +38,7 @@ import java.util.List;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Service("userService")
+@Named("userService")
 public class UserServiceImpl implements UserService, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -75,6 +76,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
    * @param passwordEncoder
    *     The {@link PasswordEncoder} to use to check / encode user passwords.
    */
+  @Inject
   public UserServiceImpl(final UserRepository userRepo,
                          final RoleRepository roleRepo,
                          final SecurityService securityService,

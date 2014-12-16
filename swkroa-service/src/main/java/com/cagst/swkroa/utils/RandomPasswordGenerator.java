@@ -1,8 +1,8 @@
 package com.cagst.swkroa.utils;
 
-import org.springframework.util.Assert;
-
 import java.util.Random;
+
+import org.springframework.util.Assert;
 
 /**
  * This class can be used to generate a random password of a specified size.
@@ -10,8 +10,7 @@ import java.util.Random;
  * The password will be AlphaNumeric.
  *
  * @author Craig Gaskill
- *
- * @version  1.0.0
+ * @version 1.0.0
  */
 public class RandomPasswordGenerator {
   private static final String CHAR_ARRAY = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

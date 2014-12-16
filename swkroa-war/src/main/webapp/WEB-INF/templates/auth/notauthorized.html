@@ -2,16 +2,16 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/auth" >
-      
-	<body>
-		<div data-layout-fragment="content">
-			<div class="container-center-medium container-outline">
-				<img alt="" data-th-src="@{/static/images/info_icon.png}" style="vertical-align:middle;"/>
+      layout:decorator="layouts/auth">
+
+<body>
+<div data-layout-fragment="content">
+  <div class="container-center-medium container-outline">
+    <img alt="" data-th-src="@{/static/images/info_icon.png}" style="vertical-align:middle;" />
 				<span style="padding-left:10px;" data-th-text="#{com.cagst.swkroa.notauthorized.message}">
 					zzz Not Authorized
 				</span>
-			</div>
-		</div>
-	</body>
+  </div>
+</div>
+</body>
 </html>

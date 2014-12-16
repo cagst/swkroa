@@ -50,8 +50,8 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
 });
 
 swkroaApp.controller('userController',
-  ['$scope', '$http', 'contactService', '$state',
-  function($scope, $http, contactService, $state) {
+  ['$scope', '$http', 'codesetService', 'contactService', '$state',
+  function($scope, $http, codesetService, contactService, $state) {
 
   $scope.contactService = contactService;
 
@@ -60,15 +60,15 @@ swkroaApp.controller('userController',
     $("#successMessage").hide();
   });
 
-  contactService.getAddressTypes().then(function(data) {
+  codesetService.getCodeValuesForCodeSet('ADDRESS_TYPE').success(function(data) {
     $scope.addressTypes = data;
   });
 
-  contactService.getPhoneTypes().then(function(data) {
+  codesetService.getCodeValuesForCodeSet('PHONE_TYPE').success(function(data) {
     $scope.phoneTypes = data;
   });
 
-  contactService.getEmailTypes().then(function(data) {
+  codesetService.getCodeValuesForCodeSet('EMAIL_TYPE').success(function(data) {
     $scope.emailTypes = data;
   });
 

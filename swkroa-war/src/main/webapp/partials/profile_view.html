@@ -14,11 +14,13 @@
   <div class="page-header">
     <h3>User Profile</h3>
 
-    <div id="successMessage" class="alert alert-success alert-dismissible" role="alert" data-ng-show="share.successMessage">
+    <div id="successMessage" class="alert alert-success alert-dismissible" role="alert"
+         data-ng-show="share.successMessage">
       <button type="button" class="close" data-dismiss="alert">
         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
       </button>
       <strong>Success!</strong>
+
       <div data-ng-bind="share.successMessage">User was updated!</div>
     </div>
   </div>
@@ -31,6 +33,7 @@
 
     <div data-ng-show="share.user.addresses.length > 0">
       <h4 class="divider-bottom">Addresses</h4>
+
       <div data-ng-repeat="address in share.user.addresses" class="row">
         <div class="col-xs-2">
           <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
@@ -48,6 +51,7 @@
 
     <div data-ng-show="share.user.phoneNumbers.length > 0">
       <h4 class="divider-bottom">Phone Numbers</h4>
+
       <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
         <div class="col-xs-2">
           <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
@@ -65,6 +69,7 @@
 
     <div data-ng-show="share.user.emailAddresses.length > 0">
       <h4 class="divider-bottom">Email Addresses</h4>
+
       <div data-ng-repeat="email in share.user.emailAddresses" class="row">
         <div class="col-xs-2">
           <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
@@ -100,9 +105,11 @@
             <span class="sr-only">Close</span>
           </button>
           <h4 class="modal-title">Change Password</h4>
+
           <div id="errorMessageAlert" class="alert alert-danger clear-bottom" role="alert"
                data-ng-show="errorMessage">
             <strong>Warning!</strong>
+
             <div data-ng-bind="errorMessage"></div>
           </div>
         </div>

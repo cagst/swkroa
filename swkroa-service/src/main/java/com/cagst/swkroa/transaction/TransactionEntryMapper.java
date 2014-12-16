@@ -1,14 +1,14 @@
 package com.cagst.swkroa.transaction;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link TransactionEntry} object. Used to marshal / unmarshal a {@link Transaction}
@@ -38,8 +38,10 @@ import java.sql.SQLException;
   /**
    * Primary Constructor used to create an instance of <i>TransactionEntryMapper</i>
    *
-   * @param codeValueRepo The {@link CodeValueRepository} to use to retrieve codified values associated with the transaction entry.
-   * @param memberRepo    The {@link MemberRepository} to use to retrieve the Member associate with this transaction entry.
+   * @param codeValueRepo
+   *     The {@link CodeValueRepository} to use to retrieve codified values associated with the transaction entry.
+   * @param memberRepo
+   *     The {@link MemberRepository} to use to retrieve the Member associate with this transaction entry.
    */
   public TransactionEntryMapper(final CodeValueRepository codeValueRepo,
                                 final MemberRepository memberRepo) {
@@ -91,8 +93,11 @@ import java.sql.SQLException;
   /**
    * Will marshal a {@link TransactionEntry} into a {@link MapSqlParameterSource} for inserting into the database.
    *
-   * @param entry The {@link TransactionEntry} to map into an insert statement.
-   * @param user  The {@link User} that performed the changes.
+   * @param entry
+   *     The {@link TransactionEntry} to map into an insert statement.
+   * @param user
+   *     The {@link User} that performed the changes.
+   *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
   public static MapSqlParameterSource mapInsertStatement(final TransactionEntry entry, final User user) {
@@ -106,8 +111,11 @@ import java.sql.SQLException;
   /**
    * Will marshal a {@link TransactionEntry} into a {@link MapSqlParameterSource} for updating into the database.
    *
-   * @param entry The {@link TransactionEntry} to map into an update statement.
-   * @param user  the {@link User} that performed the changes.
+   * @param entry
+   *     The {@link TransactionEntry} to map into an update statement.
+   * @param user
+   *     the {@link User} that performed the changes.
+   *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
   public static MapSqlParameterSource mapUpdateStatement(final TransactionEntry entry, final User user) {

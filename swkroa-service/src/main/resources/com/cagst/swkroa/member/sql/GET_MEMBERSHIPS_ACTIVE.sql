@@ -1,12 +1,22 @@
-SELECT m.membership_id
-      ,m.entity_type_cd
-      ,m.next_due_dt
-      ,m.dues_amount
---      ,SUM(t.transaction_amount) AS amount_due
-      ,0 AS amount_due
-      ,m.updt_cnt AS membership_updt_cnt
-      ,m.active_ind
-  FROM membership m LEFT OUTER JOIN transaction t ON
-                    (t.membership_id = m.membership_id AND t.active_ind = 1)
- WHERE m.active_ind = 1
-GROUP BY m.membership_id
+SELECT membership_id
+      ,entity_type_cd
+      ,next_due_dt
+      ,member_id
+      ,company_name
+      ,owner_ident
+      ,join_dt
+      ,member_type_id
+      ,active_ind
+      ,name_last
+      ,name_middle
+      ,name_first
+      ,fixed_dues
+      ,calculated_dues
+      ,balance
+      ,last_payment_dt
+      ,close_reason_id
+      ,close_reason_txt
+      ,close_dt_tm
+      ,membership_updt_cnt
+  FROM membership_summary
+ WHERE active_ind = 1;
