@@ -14,8 +14,10 @@ import com.cagst.swkroa.member.MemberTypeRepository;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
+import com.cagst.swkroa.model.CloseMembership;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,5 +186,29 @@ public final class MembershipApiController {
     } catch (Exception ex) {
       return new ResponseEntity<Membership>(membership, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  /**
+   * Handles the request and ...
+   */
+  @RequestMapping(value = "/close", method = RequestMethod.POST)
+  public ResponseEntity deleteMembership(final @RequestBody CloseMembership closeMemberships) {
+    LOGGER.info("Received request to delete memberships");
+
+    if (CollectionUtils.isEmpty(closeMemberships.getMemberships())) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    if (closeMemberships.getCloseReason() == null && StringUtils.isBlank(closeMemberships.getCloseText())) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    membershipService.closeMemberships(
+        closeMemberships.getMemberships(),
+        closeMemberships.getCloseReason(),
+        closeMemberships.getCloseText()
+    );
+
+    return new ResponseEntity(HttpStatus.OK);
   }
 }

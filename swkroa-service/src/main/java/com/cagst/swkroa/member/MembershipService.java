@@ -2,6 +2,7 @@ package com.cagst.swkroa.member;
 
 import java.util.List;
 
+import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -76,4 +77,19 @@ public interface MembershipService {
    *     if the query fails
    */
   public Membership saveMembership(final Membership membership, final User user);
+
+  /**
+   * Closes the memberships identifies by their unique identifier for the specified reason.
+   *
+   * @param membershipIds
+   *      A {@link List} of {@link Long} that uniquely identifies the memberships to close.
+   * @param closeReason
+   *      A {@link com.cagst.swkroa.codevalue.CodeValue} that specifies the reason for closure, if {@code null} then a closeText must be specified.
+   * @param closeText
+   *      A {@link String} that specifies the reason for closing if a closeReason is not specified.
+   *
+   * @return The number of memberships closed (modified)
+   */
+  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText)
+      throws DataAccessException;
 }

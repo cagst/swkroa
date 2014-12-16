@@ -13,6 +13,7 @@ import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -172,7 +173,7 @@ import org.springframework.util.Assert;
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("close_reason_id", closeReason.getCodeValueUID());
-    params.addValue("close_reason_txt", closeText);
+    params.addValue("close_reason_txt", StringUtils.trimToNull(closeText));
     params.addValue("memberships", membershipIds);
 
     return getJdbcTemplate().update(stmtLoader.load(CLOSE_MEMBERSHIPS), params);

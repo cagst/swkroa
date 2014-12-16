@@ -503,6 +503,39 @@ swkroaApp.service('membershipService', ['$http', function($http) {
 
     return promise;
   };
+
+  this.closeMemberships = function(membershipsArg, closeReasonArg, closeTextArg) {
+    var closeReasonText = "";
+    if (closeTextArg) {
+      closeReasonText = closeTextArg;
+    };
+
+    var data = {
+      memberships: membershipsArg,
+      closeReason: closeReasonArg,
+      closeText: closeReasonText
+    };
+
+    var promise = $http.post('/api/memberships/close', JSON.stringify(data));
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
 }]);
 
 // define a service for Transactions

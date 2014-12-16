@@ -5,6 +5,7 @@ import javax.inject.Named;
 import java.util.Collections;
 import java.util.List;
 
+import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.comment.CommentRepository;
 import com.cagst.swkroa.contact.Address;
@@ -137,5 +138,13 @@ public final class MembershipServiceImpl implements MembershipService {
     }
 
     return savedMembership;
+  }
+
+  @Override
+  @Transactional
+  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText) {
+    LOGGER.info("Calling closeMemberships");
+
+    return membershipRepo.closeMemberships(membershipIds, closeReason, closeText);
   }
 }

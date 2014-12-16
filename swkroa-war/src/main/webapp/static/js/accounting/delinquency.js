@@ -9,23 +9,41 @@
 swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'membershipService',
     function($scope, codesetService, membershipService) {
 
-  codesetService.getCodeValuesForCodeSet('CLOSE_REASONS').success(function(data) {
-    $scope.closeReasons = data;
-  });
+  $scope.getDelinquencies = function() {
+    membershipService.getDelinquentMemberships().success(function(data) {
+      $scope.delinquencies = data;
+      $scope.checkAll = true;
 
-  membershipService.getDelinquentMemberships().success(function(data) {
-    $scope.delinquencies = data;
-    $scope.checkAll = true;
-
-    for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
-        $scope.delinquencies[idx].selected = true;
-    }
-  });
+      for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
+          $scope.delinquencies[idx].selected = true;
+      }
+    });
+  };
 
   $scope.toggleCheckAll = function() {
     for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
         $scope.delinquencies[idx].selected = $scope.checkAll;
     }
   };
+
+  $scope.closeMemberships = function() {
+    var memberships = [];
+    for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
+      if ($scope.delinquencies[idx].selected) {
+        memberships.push($scope.delinquencies[idx].membershipUID);
+      }
+    };
+
+    membershipService.closeMemberships(memberships, $scope.closeReason, $scope.closeText).success(function(data) {
+      $('#closeMembershipsDlg').modal('hide');
+      $scope.getDelinquencies();
+    });
+  };
+
+  codesetService.getCodeValuesForCodeSet('CLOSE_REASONS').success(function(data) {
+    $scope.closeReasons = data;
+  });
+
+  $scope.getDelinquencies();
 
 }]);
