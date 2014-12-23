@@ -27,29 +27,29 @@ swkroaApp.controller('membershipController',
   $scope.getFilters = function() {
     var filterText = "";
 
-    if ($scope.filterStatus == 'active') {
+    if ($scope.filterStatus == 'ACTIVE') {
       if (filterText) {
         filterText = filterText + ", ";
       }
       filterText = filterText + "Active";
-    } else if ($scope.filterStatus == 'inactive') {
+    } else if ($scope.filterStatus == 'INACTIVE') {
       if (filterText) {
         filterText = filterText + ", ";
       }
       filterText = filterText + "Inactive";
     }
 
-    if ($scope.filterBalance == 'delinquent') {
+    if ($scope.filterBalance == 'DELINQUENT') {
       if (filterText) {
         filterText = filterText + ", ";
       }
       filterText = filterText + "Delinquent";
-    } else if ($scope.filterBalance == 'paid') {
+    } else if ($scope.filterBalance == 'PAID') {
       if (filterText) {
         filterText = filterText + ", ";
       }
       filterText = filterText + "Paid";
-    } else if ($scope.filterBalance == 'credit') {
+    } else if ($scope.filterBalance == 'CREDIT') {
       if (filterText) {
         filterText = filterText + ", ";
       }
@@ -66,7 +66,7 @@ swkroaApp.controller('membershipController',
   $scope.applyFilter = function() {
     $scope.filtering  = "off";
     $scope.filterText = $scope.getFilters();
-    if ($scope.query && $scope.query.length > 2) {
+    if ($scope.query && $scope.query.length > 0) {
       $scope.getMemberships();
     }
   };
@@ -431,8 +431,8 @@ swkroaApp.controller('membershipController',
 
   $scope.query         = "";
   $scope.view          = "listing";
-  $scope.filterStatus  = "active";
-  $scope.filterBalance = "all"
+  $scope.filterStatus  = "ACTIVE";
+  $scope.filterBalance = "ALL"
   $scope.filterText    = $scope.getFilters();
   $scope.filtering     = "off";
 

@@ -95,14 +95,14 @@ import org.springframework.transaction.annotation.Transactional;
   }
 
   @Override
-  public List<Membership> getMemberships(final String status, final String balance) {
+  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance) {
     LOGGER.info("Calling getActiveMemberships");
 
     return membershipRepo.getMemberships(status, balance);
   }
 
   @Override
-  public List<Membership> getMembershipsForName(final String name, final String status, final String balance) {
+  public List<Membership> getMembershipsForName(final String name, final MembershipStatus status, final MembershipBalance balance) {
     LOGGER.info("Calling getMembershipsByName for [{}]", name);
 
     return membershipRepo.getMembershipsByName(name, status, balance);

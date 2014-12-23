@@ -476,7 +476,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
   };
 
   this.getDelinquentMemberships = function() {
-    var promise = $http.get(rootUrl + "?balance=delinquent");
+    var promise = $http.get(rootUrl + "?balance=DELINQUENT");
 
     promise.success = function(fn) {
       promise.then(function(response) {

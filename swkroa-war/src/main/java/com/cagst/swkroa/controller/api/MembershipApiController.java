@@ -12,8 +12,10 @@ import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.member.MemberType;
 import com.cagst.swkroa.member.MemberTypeRepository;
 import com.cagst.swkroa.member.Membership;
+import com.cagst.swkroa.member.MembershipBalance;
 import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
+import com.cagst.swkroa.member.MembershipStatus;
 import com.cagst.swkroa.model.CloseMembership;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
@@ -79,9 +81,16 @@ public final class MembershipApiController {
     List<Membership> memberships;
 
     if (StringUtils.isNotBlank(query)) {
-      memberships = membershipService.getMembershipsForName(query, status, balance);
+      memberships = membershipService.getMembershipsForName(
+          query,
+          StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
+          StringUtils.isNotBlank(balance) ? MembershipBalance.valueOf(balance) : MembershipBalance.ALL
+      );
     } else {
-      memberships = membershipService.getMemberships(status, balance);
+      memberships = membershipService.getMemberships(
+          StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
+          StringUtils.isNotBlank(balance) ? MembershipBalance.valueOf(balance) : MembershipBalance.ALL
+      );
     }
 
     Collections.sort(memberships);

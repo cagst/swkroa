@@ -15,15 +15,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * @author Craig Gaskill
  */
 public interface MembershipRepository {
-  public static final String MEMBERSHIP_STATUS_ALL      = "all";
-  public static final String MEMBERSHIP_STATUS_ACTIVE   = "active";
-  public static final String MEMBERSHIP_STATUS_INACTIVE = "inactive";
-
-  public static final String MEMBERSHIP_BALANCE_ALL        = "all";
-  public static final String MEMBERSHIP_BALANCE_CREDIT     = "credit";
-  public static final String MEMBERSHIP_BALANCE_DELINQUENT = "delinquent";
-  public static final String MEMBERSHIP_BALANCE_PAID       = "paid";
-
   /**
    * Retrieves a {@link Membership} by its unique identifier.
    *
@@ -50,7 +41,7 @@ public interface MembershipRepository {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-  public List<Membership> getMemberships(final String status, final String balance);
+  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Retrieves all active {@link Membership Memberships} in the system that has the name in one of the following fields:
@@ -70,7 +61,7 @@ public interface MembershipRepository {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system that starts with the specified name.
    */
-  public List<Membership> getMembershipsByName(final String name, final String status, final String balance);
+  public List<Membership> getMembershipsByName(final String name, final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Commits the specified {@link Membership Membership} to persistent storage.

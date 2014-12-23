@@ -98,28 +98,35 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Membership> getMemberships(final String status, final String balance) {
+  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance) {
     LOGGER.info("Calling getMemberships with status [{}] and balance [{}]", status, balance);
+
+    Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
+    Assert.notNull(balance, "Assertion Failure - argument [balance] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     Map<String, String> params = new HashMap<String, String>(2);
-    params.put("status", StringUtils.defaultIfBlank(status, MEMBERSHIP_STATUS_ACTIVE));
-    params.put("balance", StringUtils.defaultIfBlank(balance, MEMBERSHIP_BALANCE_ALL));
+    params.put("status", status.toString());
+    params.put("balance", balance.toString());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS), params, new MembershipMapper(codeValueRepo));
   }
 
   @Override
-  public List<Membership> getMembershipsByName(final String name, final String status, final String balance) {
+  public List<Membership> getMembershipsByName(final String name, final MembershipStatus status, final MembershipBalance balance) {
     Assert.hasText(name, "[Assertion Failure] - argument [name] cannot be null or empty.");
 
     LOGGER.info("Calling getMembershipsByName for [{}].", name);
 
+    Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
+    Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
+    Assert.notNull(balance, "Assertion Failure - argument [balance] cannot be null");
+
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     Map<String, String> params = new HashMap<String, String>(3);
     params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
-    params.put("status", StringUtils.defaultIfBlank(status, MEMBERSHIP_STATUS_ACTIVE));
-    params.put("balance", StringUtils.defaultIfBlank(balance, MEMBERSHIP_BALANCE_ALL));
+    params.put("status", status.toString());
+    params.put("balance", balance.toString());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
   }

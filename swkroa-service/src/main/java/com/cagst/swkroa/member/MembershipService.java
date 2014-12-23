@@ -40,7 +40,7 @@ public interface MembershipService {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-  public List<Membership> getMemberships(final String status, final String balance);
+  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Retrieves a {@link List} of {@link Membership Memberships} that contain the specified <i>name</i> in one of
@@ -61,7 +61,7 @@ public interface MembershipService {
    *
    * @return A {@link List} of {@link Membership Memberships} that contain the specified name.
    */
-  public List<Membership> getMembershipsForName(final String name, final String status, final String balance);
+  public List<Membership> getMembershipsForName(final String name, final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Commits the specified {@link Membership Membership} to persistent storage.
