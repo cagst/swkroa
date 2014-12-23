@@ -78,7 +78,7 @@ public final class MembershipApiController {
 
     List<Membership> memberships;
 
-    if (StringUtils.isBlank(query)) {
+    if (StringUtils.isNotBlank(query)) {
       memberships = membershipService.getMembershipsForName(query, status, balance);
     } else {
       memberships = membershipService.getMemberships(status, balance);
