@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Craig Gaskill
  */
 @Named("membershipService")
-public final class MembershipServiceImpl implements MembershipService {
+/* package */ final class MembershipServiceImpl implements MembershipService {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipServiceImpl.class);
 
   private final MembershipRepository membershipRepo;
@@ -95,24 +95,17 @@ public final class MembershipServiceImpl implements MembershipService {
   }
 
   @Override
-  public List<Membership> getActiveMemberships() {
+  public List<Membership> getMemberships(final String status, final String balance) {
     LOGGER.info("Calling getActiveMemberships");
 
-    return membershipRepo.getActiveMemberships();
+    return membershipRepo.getMemberships(status, balance);
   }
 
   @Override
-  public List<Membership> getMembershipsForName(final String name) {
+  public List<Membership> getMembershipsForName(final String name, final String status, final String balance) {
     LOGGER.info("Calling getMembershipsByName for [{}]", name);
 
-    return membershipRepo.getMembershipsByName(name);
-  }
-
-  @Override
-  public List<Membership> getDelinquentMemberships() {
-    LOGGER.info("Calling getDelinquentMemberships");
-
-    return membershipRepo.getDelinquentMembership();
+    return membershipRepo.getMembershipsByName(name, status, balance);
   }
 
   @Override

@@ -32,14 +32,12 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link MembershipRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("membershipRepo")
 /* package */ final class MembershipRepositoryJdbc extends BaseRepositoryJdbc implements MembershipRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
-  private static final String GET_MEMBERSHIPS_ACTIVE     = "GET_MEMBERSHIPS_ACTIVE";
-  private static final String GET_MEMBERSHIPS_DELINQUENT = "GET_MEMBERSHIPS_DELINQUENT";
+  private static final String GET_MEMBERSHIPS            = "GET_MEMBERSHIPS";
   private static final String GET_MEMBERSHIPS_BY_NAME    = "GET_MEMBERSHIPS_BY_NAME";
   private static final String GET_MEMBERSHIP_BY_UID      = "GET_MEMBERSHIP_BY_UID";
 
@@ -100,33 +98,30 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Membership> getActiveMemberships() {
-    LOGGER.info("Calling getActiveMemberships.");
+  public List<Membership> getMemberships(final String status, final String balance) {
+    LOGGER.info("Calling getMemberships with status [{}] and balance [{}]", status, balance);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_MEMBERSHIPS_ACTIVE), new MembershipMapper(codeValueRepo));
+    Map<String, String> params = new HashMap<String, String>(2);
+    params.put("status", StringUtils.defaultIfBlank(status, MEMBERSHIP_STATUS_ACTIVE));
+    params.put("balance", StringUtils.defaultIfBlank(balance, MEMBERSHIP_BALANCE_ALL));
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS), params, new MembershipMapper(codeValueRepo));
   }
 
   @Override
-  public List<Membership> getMembershipsByName(final String name) {
+  public List<Membership> getMembershipsByName(final String name, final String status, final String balance) {
     Assert.hasText(name, "[Assertion Failure] - argument [name] cannot be null or empty.");
 
     LOGGER.info("Calling getMembershipsByName for [{}].", name);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(1);
+    Map<String, String> params = new HashMap<String, String>(3);
     params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.put("status", StringUtils.defaultIfBlank(status, MEMBERSHIP_STATUS_ACTIVE));
+    params.put("balance", StringUtils.defaultIfBlank(balance, MEMBERSHIP_BALANCE_ALL));
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
-  }
-
-  @Override
-  public List<Membership> getDelinquentMembership() {
-    LOGGER.info("Calling getDelinquentMemberships");
-
-    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DELINQUENT), new MembershipMapper(codeValueRepo));
   }
 
   @Override

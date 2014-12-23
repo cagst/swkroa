@@ -13,9 +13,17 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Definition of a repository that retrieves and persists {@link Membership} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface MembershipRepository {
+  public static final String MEMBERSHIP_STATUS_ALL      = "all";
+  public static final String MEMBERSHIP_STATUS_ACTIVE   = "active";
+  public static final String MEMBERSHIP_STATUS_INACTIVE = "inactive";
+
+  public static final String MEMBERSHIP_BALANCE_ALL        = "all";
+  public static final String MEMBERSHIP_BALANCE_CREDIT     = "credit";
+  public static final String MEMBERSHIP_BALANCE_DELINQUENT = "delinquent";
+  public static final String MEMBERSHIP_BALANCE_PAID       = "paid";
+
   /**
    * Retrieves a {@link Membership} by its unique identifier.
    *
@@ -35,9 +43,14 @@ public interface MembershipRepository {
   /**
    * Retrieves the active {@link Membership Memberships} in the system.
    *
+   * @param status
+   *      The status of the Memberships to search for; 'all', 'active' or 'inactive'.
+   * @param balance
+   *      The balance group of the Memberships to search for; 'all', 'delinquent', 'paid', or 'credit'.
+   *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-  public List<Membership> getActiveMemberships();
+  public List<Membership> getMemberships(final String status, final String balance);
 
   /**
    * Retrieves all active {@link Membership Memberships} in the system that has the name in one of the following fields:
@@ -49,16 +62,15 @@ public interface MembershipRepository {
    * </ul>
    *
    * @param name
-   *     The name to search for.
+   *      The name to search for.
+   * @param status
+   *      The status of the Memberships to search for; 'all', 'active' or 'inactive'.
+   * @param balance
+   *      The balance group of the Memberships to search for; 'all', 'delinquent', 'paid', or 'credit'.
    *
    * @return A {@link List} of {@link Membership Memberships} in the system that starts with the specified name.
    */
-  public List<Membership> getMembershipsByName(final String name);
-
-  /**
-   * @return A {@link List} of {@link Membership Memberships} that are delinquent (past due).
-   */
-  public List<Membership> getDelinquentMembership();
+  public List<Membership> getMembershipsByName(final String name, final String status, final String balance);
 
   /**
    * Commits the specified {@link Membership Membership} to persistent storage.

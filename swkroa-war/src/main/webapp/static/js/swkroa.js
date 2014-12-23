@@ -425,10 +425,19 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
-  this.getMemberships = function(query) {
-    var url = "/api/memberships?q=";
+  this.getMemberships = function(query, status, balance) {
+    var url = "/api/memberships";
+
     if (query && query.length > 0) {
-      url = url + query;
+      url = url + "?q=" + query;
+    }
+
+    if (status && status.length > 0) {
+      url = url + "?status=" + status;
+    }
+
+    if (balance && balance.length > 0) {
+      url = url + "?balance=" + balance;
     }
 
     var promise = $http.get(url);

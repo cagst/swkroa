@@ -48,8 +48,6 @@ import org.springframework.web.util.UriComponents;
 public final class MembershipApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipApiController.class);
 
-  private static final String MEMBERSHIP_TYPE_DELINQUENT = "delinquent";
-
   private final CodeValueRepository codeValueRepo;
   private final MembershipService membershipService;
   private final MemberRepository memberRepo;
@@ -73,20 +71,17 @@ public final class MembershipApiController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public List<Membership> getMemberships(final @RequestParam(value = "q", required = false) String query,
-                                         final @RequestParam(value= "type", required = false) String type) {
+                                         final @RequestParam(value = "status", required = false) String status,
+                                         final @RequestParam(value = "balance", required = false) String balance) {
 
-    LOGGER.info("Received request to retrieve memberships using query string [{}]", query);
+    LOGGER.info("Received request to retrieve memberships using query [{}], status [{}], and balance [{}]", query, status, balance);
 
     List<Membership> memberships;
 
-    if (StringUtils.equalsIgnoreCase(MEMBERSHIP_TYPE_DELINQUENT, type)) {
-      memberships = membershipService.getDelinquentMemberships();
+    if (StringUtils.isBlank(query)) {
+      memberships = membershipService.getMembershipsForName(query, status, balance);
     } else {
-      if (StringUtils.isNotBlank(query)) {
-        memberships = membershipService.getMembershipsForName(query);
-      } else {
-        memberships = membershipService.getActiveMemberships();
-      }
+      memberships = membershipService.getMemberships(status, balance);
     }
 
     Collections.sort(memberships);
