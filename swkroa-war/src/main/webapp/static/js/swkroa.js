@@ -403,8 +403,10 @@ swkroaApp.service('contactService', ['$http', function($http) {
 
 // define a service for Memberships
 swkroaApp.service('membershipService', ['$http', function($http) {
+  var rootUrl = "/api/memberships";
+
   this.getMembership = function(membershipUID) {
-    var promise = $http.get('/api/memberships/' + membershipUID);
+    var promise = $http.get(rootUrl + '/' + membershipUID);
 
     promise.success = function(fn) {
       promise.then(function(response) {
@@ -425,13 +427,34 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
-  this.getMemberships = function(query) {
-    var url = "/api/memberships?q=";
+  this.getMemberships = function(query, status, balance) {
+    var params = "";
+
     if (query && query.length > 0) {
-      url = url + query;
+      params = "?q=" + query;
     }
 
-    var promise = $http.get(url);
+    if (status && status.length > 0) {
+      if (params.length == 0) {
+        params = "?";
+      } else {
+        params = params + "&";
+      }
+
+      params = params + "status=" + status;
+    }
+
+    if (balance && balance.length > 0) {
+      if (params.length == 0) {
+        params = "?";
+      } else {
+        params = params + "&";
+      }
+
+      params = params + "balance=" + balance;
+    }
+
+    var promise = $http.get(rootUrl + params);
 
     promise.success = function(fn) {
       promise.then(function(response) {
@@ -453,7 +476,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
   };
 
   this.getDelinquentMemberships = function() {
-    var promise = $http.get("/api/memberships?type=delinquent");
+    var promise = $http.get(rootUrl + "?balance=DELINQUENT");
 
     promise.success = function(fn) {
       promise.then(function(response) {
@@ -475,7 +498,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
   };
 
   this.saveMembership = function(membership) {
-    var promise = $http.post('/api/memberships', membership);
+    var promise = $http.post(rootUrl, membership);
 
     promise.success = function(fn) {
       promise.then(function(response) {
@@ -497,7 +520,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
   }
 
   this.generateOwnerId = function(firstName, lastName) {
-    var promise = $http.get('/api/memberships/ownerId/' + firstName + "/" + lastName).then(function(response) {
+    var promise = $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName).then(function(response) {
       return JSON.parse(response.data);
     });
 
@@ -516,7 +539,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
       closeText: closeReasonText
     };
 
-    var promise = $http.post('/api/memberships/close', JSON.stringify(data));
+    var promise = $http.post(rootUrl + '/close', JSON.stringify(data));
 
     promise.success = function(fn) {
       promise.then(function(response) {

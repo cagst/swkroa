@@ -19,4 +19,10 @@ SELECT membership_id
       ,close_dt_tm
       ,membership_updt_cnt
   FROM membership_summary
- WHERE active_ind = 1;
+ WHERE (:status = 'ALL' OR
+       (:status = 'ACTIVE' AND active_ind = 1) OR
+       (:status = 'INACTIVE' AND active_ind = 2))
+   AND (:balance = 'ALL' OR
+       (:balance = 'DELINQUENT' AND balance < 0.0) OR
+       (:balance = 'PAID' AND balance = 0.0) OR
+       (:balance = 'CREDIT' AND balance > 0.0))

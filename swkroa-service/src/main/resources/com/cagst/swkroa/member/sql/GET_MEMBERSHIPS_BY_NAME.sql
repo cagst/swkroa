@@ -44,4 +44,10 @@ SELECT ms.membership_id
                                AND p.active_ind = 1
                                AND m.person_id  = p.person_id
                                AND m.active_ind = 1)
-   AND ms.active_ind = 1
+   AND (:status = 'ALL' OR
+       (:status = 'ACTIVE' AND ms.active_ind = 1) OR
+       (:status = 'INACTIVE' AND ms.active_ind = 2))
+   AND (:balance = 'ALL' OR
+       (:balance = 'DELINQUENT' AND ms.balance < 0.0) OR
+       (:balance = 'PAID' AND ms.balance = 0.0) OR
+       (:balance = 'CREDIT' AND ms.balance > 0.0))

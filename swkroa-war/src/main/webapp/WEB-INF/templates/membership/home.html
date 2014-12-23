@@ -29,8 +29,9 @@
       <div class="row row-inner">
         <!-- Listing (Quick View) -->
         <div class="col-xs-5 stretch">
-          <div class="split-header">
-            <div class="split-header-content form-group expand">
+          <!-- Search -->
+          <div class="split-header" data-ng-show="filtering == 'off'">
+            <div class="split-header-content expand">
               <div class="input-group">
                 <a class="input-group-addon add-btn"
                    data-ng-click="addMembership()"
@@ -49,8 +50,70 @@
                   zzz Search
                 </a>
               </div>
+
+              <div class="input-group">
+                <a class="input-group-addon btn"
+                   data-ng-click="showFilterOptions()">
+                  <i class="fa fa-filter"></i>
+                </a>
+                <input type="text" class="form-control filter" readonly
+                       data-ng-model="filterText" />
+              </div>
             </div>
           </div>
+
+          <!-- Filter Options -->
+          <div class="split-header" data-ng-show="filtering == 'on'">
+            <div class="split-header-content expand">
+              <div class="row">
+                <label class="col-xs-2">Status</label>
+                <select class="col-xs-8" data-ng-model="filterStatus">
+                  <option value="ALL" data-th-text="#{com.cagst.swkroa.membership.filter.all}">
+                    zzz All
+                  </option>
+                  <option value="ACTIVE" data-th-text="#{com.cagst.swkroa.membership.filter.active}">
+                    zzz Active
+                  </option>
+                  <option value="INACTIVE" data-th-text="#{com.cagst.swkroa.membership.filter.inactive}">
+                    zzz Inactive
+                  </option>
+                </select>
+              </div>
+              <div class="row">
+                <label class="col-xs-2">Balance</label>
+                <select class="col-xs-8" data-ng-model="filterBalance">
+                  <option value="ALL" data-th-text="#{com.cagst.swkroa.membership.filter.all}">
+                    zzz All
+                  </option>
+                  <option value="DELINQUENT" data-th-text="#{com.cagst.swkroa.membership.filter.delinquent}">
+                    zzz Credit
+                  </option>
+                  <option value="PAID" data-th-text="#{com.cagst.swkroa.membership.filter.paid}">
+                    zzz Delinquent
+                  </option>
+                  <option value="CREDIT" data-th-text="#{com.cagst.swkroa.membership.filter.credit}">
+                    zzz Paid
+                  </option>
+                </select>
+              </div>
+              <div class="row-inner">
+                <span class="col-xs-offset-2 col-xs-8">
+                  <button type="button" class="btn btn-primary btn-sm"
+                          data-ng-click="applyFilter()"
+                          data-th-text="#{com.cagst.swkroa.membership.filter.apply}">
+                    zzz Apply Filter
+                  </button>
+                  <button type="button" class="btn btn-default btn-sm"
+                          data-ng-click="cancelFilter()"
+                          data-th-text="#{com.cagst.swkroa.cancel}">
+                    zzz Cancel
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results -->
           <div class="list-group constrain-view divider-right">
             <div>
               <div class="panel-body text-muted" data-ng-show="!memberships.length">
@@ -116,7 +179,7 @@
         </div>
 
         <!-- Details (Summary) -->
-        <div class="col-xs-7 divider-left stretch pull-right">
+        <div class="col-xs-7 stretch pull-right">
           <div data-ng-show="!membership">
             <em>
               <label class="panel-body text-muted text-center"
@@ -199,8 +262,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please
-                                                                                                     confirm</h4>
+                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.delete.title}">zzz Please confirm</h4>
                 </div>
                 <div class="modal-body">
                   <span data-th-text="#{com.cagst.swkroa.membership.delete.message}">zzz Delete this?</span>

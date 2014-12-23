@@ -17,28 +17,62 @@ swkroaApp.controller('membershipController',
     function($scope, $http, codesetService, contactService, membershipService, transactionService, $filter, currencyFilter)
   {
 
-  $scope.codesetService = codesetService;
-  $scope.contactService = contactService;
-
-  $scope.query = "";
-  $scope.view  = "listing";
-
-  $scope.searched    = false;
-  $scope.fullyLoaded = false;
-  $scope.original    = null;
-  $scope.message     = null;
-
-  $('#createdMessage').hide();
-  $('#updatedMessage').hide();
-
-  codesetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
-    $scope.transactionEntryTypes = data;
-  });
-
+  // Define functions
   $scope.queryKeydown = function($event) {
     if ($event.keyCode == 13 && $scope.query.length >= 2) {
       $scope.getMemberships();
     }
+  };
+
+  $scope.getFilters = function() {
+    var filterText = "";
+
+    if ($scope.filterStatus == 'ACTIVE') {
+      if (filterText) {
+        filterText = filterText + ", ";
+      }
+      filterText = filterText + "Active";
+    } else if ($scope.filterStatus == 'INACTIVE') {
+      if (filterText) {
+        filterText = filterText + ", ";
+      }
+      filterText = filterText + "Inactive";
+    }
+
+    if ($scope.filterBalance == 'DELINQUENT') {
+      if (filterText) {
+        filterText = filterText + ", ";
+      }
+      filterText = filterText + "Delinquent";
+    } else if ($scope.filterBalance == 'PAID') {
+      if (filterText) {
+        filterText = filterText + ", ";
+      }
+      filterText = filterText + "Paid";
+    } else if ($scope.filterBalance == 'CREDIT') {
+      if (filterText) {
+        filterText = filterText + ", ";
+      }
+      filterText = filterText + "Credit";
+    }
+
+    return filterText;
+  };
+
+  $scope.showFilterOptions = function() {
+    $scope.filtering = 'on';
+  };
+
+  $scope.applyFilter = function() {
+    $scope.filtering  = "off";
+    $scope.filterText = $scope.getFilters();
+    if ($scope.query && $scope.query.length > 0) {
+      $scope.getMemberships();
+    }
+  };
+
+  $scope.cancelFilter = function() {
+    $scope.filtering = "off";
   };
 
   $scope.getMemberships = function() {
@@ -47,7 +81,7 @@ swkroaApp.controller('membershipController',
     $('#createdMessage').hide();
     $('#updatedMessage').hide();
 
-    membershipService.getMemberships($scope.query).then(function(response) {
+    membershipService.getMemberships($scope.query, $scope.filterStatus, $scope.filterBalance).then(function(response) {
       if (response.status == 200) {
         $scope.memberships = response.data;
         $scope.searched    = true;
@@ -390,6 +424,29 @@ swkroaApp.controller('membershipController',
       }
     });
   };
+
+  // Set initial values
+  $scope.codesetService = codesetService;
+  $scope.contactService = contactService;
+
+  $scope.query         = "";
+  $scope.view          = "listing";
+  $scope.filterStatus  = "ACTIVE";
+  $scope.filterBalance = "ALL"
+  $scope.filterText    = $scope.getFilters();
+  $scope.filtering     = "off";
+
+  $scope.searched    = false;
+  $scope.fullyLoaded = false;
+  $scope.original    = null;
+  $scope.message     = null;
+
+  $('#createdMessage').hide();
+  $('#updatedMessage').hide();
+
+  codesetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
+    $scope.transactionEntryTypes = data;
+  });
 }]);
 
 var syncTransactionEntryType = function(scope) {
