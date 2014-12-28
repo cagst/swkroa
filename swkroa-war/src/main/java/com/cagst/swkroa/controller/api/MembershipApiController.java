@@ -12,8 +12,10 @@ import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.member.MemberType;
 import com.cagst.swkroa.member.MemberTypeRepository;
 import com.cagst.swkroa.member.Membership;
+import com.cagst.swkroa.member.MembershipBalance;
 import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
+import com.cagst.swkroa.member.MembershipStatus;
 import com.cagst.swkroa.model.CloseMembership;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
@@ -48,8 +50,6 @@ import org.springframework.web.util.UriComponents;
 public final class MembershipApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipApiController.class);
 
-  private static final String MEMBERSHIP_TYPE_DELINQUENT = "delinquent";
-
   private final CodeValueRepository codeValueRepo;
   private final MembershipService membershipService;
   private final MemberRepository memberRepo;
@@ -73,20 +73,24 @@ public final class MembershipApiController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public List<Membership> getMemberships(final @RequestParam(value = "q", required = false) String query,
-                                         final @RequestParam(value= "type", required = false) String type) {
+                                         final @RequestParam(value = "status", required = false) String status,
+                                         final @RequestParam(value = "balance", required = false) String balance) {
 
-    LOGGER.info("Received request to retrieve memberships using query string [{}]", query);
+    LOGGER.info("Received request to retrieve memberships using query [{}], status [{}], and balance [{}]", query, status, balance);
 
     List<Membership> memberships;
 
-    if (StringUtils.equalsIgnoreCase(MEMBERSHIP_TYPE_DELINQUENT, type)) {
-      memberships = membershipService.getDelinquentMemberships();
+    if (StringUtils.isNotBlank(query)) {
+      memberships = membershipService.getMembershipsForName(
+          query,
+          StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
+          StringUtils.isNotBlank(balance) ? MembershipBalance.valueOf(balance) : MembershipBalance.ALL
+      );
     } else {
-      if (StringUtils.isNotBlank(query)) {
-        memberships = membershipService.getMembershipsForName(query);
-      } else {
-        memberships = membershipService.getActiveMemberships();
-      }
+      memberships = membershipService.getMemberships(
+          StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
+          StringUtils.isNotBlank(balance) ? MembershipBalance.valueOf(balance) : MembershipBalance.ALL
+      );
     }
 
     Collections.sort(memberships);

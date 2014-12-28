@@ -33,9 +33,14 @@ public interface MembershipService {
   /**
    * Retrieves the active {@link Membership Memberships} in the system.
    *
+   * @param status
+   *      The status of the Memberships to search for; 'all', 'active' or 'inactive'.
+   * @param balance
+   *      The balance group of the Memberships to search for; 'all', 'delinquent', 'paid', or 'credit'.
+   *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-  public List<Membership> getActiveMemberships();
+  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Retrieves a {@link List} of {@link Membership Memberships} that contain the specified <i>name</i> in one of
@@ -49,15 +54,14 @@ public interface MembershipService {
    *
    * @param name
    *     The name to search for.
+   * @param status
+   *      The status of the Memberships to search for; 'all', 'active' or 'inactive'.
+   * @param balance
+   *      The balance group of the Memberships to search for; 'all', 'delinquent', 'paid', or 'credit'.
    *
    * @return A {@link List} of {@link Membership Memberships} that contain the specified name.
    */
-  public List<Membership> getMembershipsForName(final String name);
-
-  /**
-   * @return A {@link List} of {@link Membership Memberships} that are delinquent (past due).
-   */
-  public List<Membership> getDelinquentMemberships();
+  public List<Membership> getMembershipsForName(final String name, final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Commits the specified {@link Membership Membership} to persistent storage.

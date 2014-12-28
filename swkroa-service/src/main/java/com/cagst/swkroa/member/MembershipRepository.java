@@ -13,7 +13,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Definition of a repository that retrieves and persists {@link Membership} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface MembershipRepository {
   /**
@@ -35,9 +34,14 @@ public interface MembershipRepository {
   /**
    * Retrieves the active {@link Membership Memberships} in the system.
    *
+   * @param status
+   *      The status of the Memberships to search for; 'all', 'active' or 'inactive'.
+   * @param balance
+   *      The balance group of the Memberships to search for; 'all', 'delinquent', 'paid', or 'credit'.
+   *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-  public List<Membership> getActiveMemberships();
+  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Retrieves all active {@link Membership Memberships} in the system that has the name in one of the following fields:
@@ -49,16 +53,15 @@ public interface MembershipRepository {
    * </ul>
    *
    * @param name
-   *     The name to search for.
+   *      The name to search for.
+   * @param status
+   *      The status of the Memberships to search for; 'all', 'active' or 'inactive'.
+   * @param balance
+   *      The balance group of the Memberships to search for; 'all', 'delinquent', 'paid', or 'credit'.
    *
    * @return A {@link List} of {@link Membership Memberships} in the system that starts with the specified name.
    */
-  public List<Membership> getMembershipsByName(final String name);
-
-  /**
-   * @return A {@link List} of {@link Membership Memberships} that are delinquent (past due).
-   */
-  public List<Membership> getDelinquentMembership();
+  public List<Membership> getMembershipsByName(final String name, final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Commits the specified {@link Membership Membership} to persistent storage.
