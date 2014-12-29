@@ -62,6 +62,11 @@ a:hover, a:focus {
   text-decoration: none;
 }
 
+.list-group-inner {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
 .list-group-item {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
@@ -77,6 +82,11 @@ a:hover, a:focus {
 .list-group-item:last-child {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
+}
+
+.list-group-hover > .list-group-item:hover {
+  background-color: #7cc144;
+  color: #fff;
 }
 
 .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
@@ -160,6 +170,18 @@ a:hover, a:focus {
 .clear-bottom {
   padding-bottom: 0px !important;
   margin-bottom: 0px !important;
+}
+
+.clear-padding {
+  padding: 0px !important;
+}
+
+.padding-5 {
+  padding: 5px;
+}
+
+.margin-5 {
+  margin: 5px;
 }
 
 label {
@@ -282,16 +304,6 @@ label {
   border-radius: 5px;
   background-color: #f5f5f5;
   padding: 5px;
-}
-
-.divider-inner-header {
-  border: 1px solid #ddd;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-bottom: none;
-  background-color: #f5f5f5;
-  padding: 5px;
-  margin: 15px;
 }
 
 .spacer-bottom {
@@ -431,12 +443,6 @@ div.list-group-item.active:hover {
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
-}
-
-.sub-header {
-  margin-left: 0px;
-  margin-right: 0px;
-  margin-bottom: 0px;
 }
 
 .comment-text {
