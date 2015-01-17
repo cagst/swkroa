@@ -33,11 +33,11 @@ CREATE VIEW membership_summary AS
                 AND t.transaction_type_flag = 1
                 AND t.active_ind = 1) AS last_payment_dt
        FROM membership ms
- INNER JOIN member m        ON (m.membership_id = ms.membership_id AND m.active_ind = 1)
+ INNER JOIN member m        ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind)
  INNER JOIN member_type mt  ON (mt.prev_member_type_id = m.member_type_id
                             AND mt.primary_ind = 1 AND mt.active_ind = 1
                             AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW()))
- INNER JOIN member m2       ON (m2.membership_id = ms.membership_id AND m2.active_ind = 1)
+ INNER JOIN member m2       ON (m2.membership_id = ms.membership_id AND m2.active_ind = ms.active_ind)
  INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m2.member_type_id AND mt2.active_ind = 1
                             AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
  LEFT OUTER JOIN person p   ON (p.person_id = m.person_id AND p.active_ind = 1)

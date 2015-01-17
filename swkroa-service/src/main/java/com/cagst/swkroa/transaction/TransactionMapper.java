@@ -104,7 +104,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
     return params;
   }
 
-  private static void mapCommonProperties(final MapSqlParameterSource params, final Transaction transaction,
+  private static void mapCommonProperties(final MapSqlParameterSource params,
+                                          final Transaction transaction,
                                           final User user) {
 
     params.addValue(MEMBERSHIP_ID, transaction.getMembershipUID());
