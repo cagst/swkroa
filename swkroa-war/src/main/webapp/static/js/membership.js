@@ -447,16 +447,44 @@ swkroaApp.controller('membershipController',
     });
   };
 
+  $scope.openMembership = function() {
+    $scope.membership.active          = true;
+    $scope.membership.closeReasonUID  = null;
+    $scope.membership.closeReasonText = null;
+    $scope.membership.closeDate       = null;
+
+    $('#openMembershipsDlg').modal('hide');
+
+    membershipService.saveMembership($scope.membership).then(function(response) {
+      if (response.status == 200) {
+        var idx = $scope.memberships.indexOf($scope.membership);
+        $scope.memberships.splice(idx, 1);
+        $scope.getMemberships();
+      } else {
+        $scope.membership.active = false;
+      }
+    });
+  };
+
+  $scope.toggleShowCalculations = function() {
+    if ($scope.showCalculations) {
+      $scope.showCalculations = false;
+    } else {
+      $scope.showCalculations = true;
+    }
+  };
+
   // Set initial values
   $scope.codesetService = codesetService;
   $scope.contactService = contactService;
 
-  $scope.query         = "";
-  $scope.view          = "listing";
-  $scope.filterStatus  = "ACTIVE";
-  $scope.filterBalance = "ALL"
-  $scope.filterText    = $scope.getFilters();
-  $scope.filtering     = "off";
+  $scope.query            = "";
+  $scope.view             = "listing";
+  $scope.filterStatus     = "ACTIVE";
+  $scope.filterBalance    = "ALL"
+  $scope.filterText       = $scope.getFilters();
+  $scope.filtering        = "off";
+  $scope.showCalculations = false;
 
   $scope.searched    = false;
   $scope.fullyLoaded = false;
@@ -514,7 +542,7 @@ var syncRelatedTransactions = function(scope) {
 
 var toggleTransactionDetails = function(transaction) {
   var img       = $(transaction).children()[0];
-  var collapsed = $(img).hasClass("fa-plus");
+  var collapsed = $(img).hasClass("fa-caret-right");
 
   var parentDiv = $(transaction).parent();
   var parentCol = $(parentDiv).parent();
@@ -522,12 +550,12 @@ var toggleTransactionDetails = function(transaction) {
 
   if (collapsed) {
     $(parentRow).siblings().removeClass("hide");
-    $(img).removeClass("fa-plus");
-    $(img).addClass("fa-minus");
+    $(img).removeClass("fa-caret-right");
+    $(img).addClass("fa-caret-down");
   } else {
     $(parentRow).siblings().addClass("hide");
-    $(img).addClass("fa-plus");
-    $(img).removeClass("fa-minus");
+    $(img).addClass("fa-caret-right");
+    $(img).removeClass("fa-caret-down");
   }
 };
 
