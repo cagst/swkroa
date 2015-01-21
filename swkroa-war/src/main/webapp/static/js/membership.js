@@ -447,6 +447,28 @@ swkroaApp.controller('membershipController',
     });
   };
 
+<<<<<<< HEAD
+=======
+  $scope.openMembership = function() {
+    $scope.membership.active          = true;
+    $scope.membership.closeReasonUID  = null;
+    $scope.membership.closeReasonText = null;
+    $scope.membership.closeDate       = null;
+
+    $('#openMembershipsDlg').modal('hide');
+
+    membershipService.saveMembership($scope.membership).then(function(response) {
+      if (response.status == 200) {
+        var idx = $scope.memberships.indexOf($scope.membership);
+        $scope.memberships.splice(idx, 1);
+        $scope.getMemberships();
+      } else {
+        $scope.membership.active = false;
+      }
+    });
+  };
+
+>>>>>>> master
   $scope.toggleShowCalculations = function() {
     if ($scope.showCalculations) {
       $scope.showCalculations = false;

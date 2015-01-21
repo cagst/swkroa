@@ -55,6 +55,9 @@
     <commons-lang-version>3.1</commons-lang-version>
     <commons-io-version>1.3.2</commons-io-version>
 
+    <!-- Google Guava Library -->
+    <google-guava-version>18.0</google-guava-version>
+
     <!-- CAGST Framework -->
     <cagst-version>1.1.0-SNAPSHOT</cagst-version>
 
@@ -122,6 +125,13 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-io</artifactId>
         <version>${commons-io-version}</version>
+      </dependency>
+
+      <!-- Google Guava Library Dependencies -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${google-guava-version}</version>
       </dependency>
 
       <!-- CAGST Dependencies -->

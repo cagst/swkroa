@@ -14,5 +14,5 @@ SELECT m.person_id
       ,m.updt_cnt AS member_updt_cnt
       ,m.active_ind
   FROM member m
- WHERE m.membership_id = :membership_id
-   AND m.active_ind = 1
+ WHERE m.membership_id  = :membership_id
+   AND m.active_ind     = 1

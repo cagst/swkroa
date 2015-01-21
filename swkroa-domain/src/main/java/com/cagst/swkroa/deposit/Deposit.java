@@ -15,10 +15,8 @@ import org.joda.time.DateTime;
  * Represents a Deposit within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class Deposit implements Serializable {
-
   private long deposit_id;
   private DateTime deposit_dt;
   private String deposit_ref;

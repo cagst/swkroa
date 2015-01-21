@@ -22,28 +22,22 @@ SELECT ms.membership_id
  WHERE ms.membership_id IN (SELECT m.membership_id
                               FROM member m
                              WHERE m.company_name_key LIKE :name
-                               AND m.active_ind = 1
                              UNION
                             SELECT m.membership_id
                               FROM member m
                              WHERE m.owner_ident LIKE :name
-                               AND m.active_ind = 1
                              UNION
                             SELECT m.membership_id
                               FROM person p
                                   ,member m
                              WHERE p.name_last_key LIKE :name
-                               AND p.active_ind = 1
                                AND m.person_id  = p.person_id
-                               AND m.active_ind = 1
                              UNION
                             SELECT m.membership_id
                               FROM person p
                                   ,member m
                              WHERE p.name_first_key LIKE :name
-                               AND p.active_ind = 1
-                               AND m.person_id  = p.person_id
-                               AND m.active_ind = 1)
+                               AND m.person_id  = p.person_id)
    AND (:status = 'ALL' OR
        (:status = 'ACTIVE' AND ms.active_ind = 1) OR
        (:status = 'INACTIVE' AND ms.active_ind = 0))
