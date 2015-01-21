@@ -28,8 +28,7 @@ public interface MembershipRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Membership was found.
    */
-  public Membership getMembershipByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  public Membership getMembershipByUID(final long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves the active {@link Membership Memberships} in the system.
@@ -81,10 +80,10 @@ public interface MembershipRepository {
    *     if the query fails
    */
   public Membership saveMembership(final Membership membership, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+      throws DataAccessException;
 
   /**
-   * Closes the memberships identifies by their unique identifier for the specified reason.
+   * Closes the memberships identified by their unique identifier for the specified reason.
    *
    * @param membershipIds
    *      A {@link List} of {@link Long} that uniquely identifies the memberships to close.
@@ -92,9 +91,12 @@ public interface MembershipRepository {
    *      A {@link CodeValue} that specifies the reason for closure, if {@code null} then a closeText must be specified.
    * @param closeText
    *      A {@link String} that specifies the reason for closing if a closeReason is not specified.
+   * @param user
+   *     The {@link User} that performed the changes.
    *
    * @return The number of memberships closed (modified)
    */
-  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText)
+  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException;
+
 }

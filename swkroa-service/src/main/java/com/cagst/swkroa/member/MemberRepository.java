@@ -2,6 +2,7 @@ package com.cagst.swkroa.member;
 
 import java.util.List;
 
+import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
@@ -41,8 +42,7 @@ public interface MemberRepository extends PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Member was found.
    */
-  public Member getMemberByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  public Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link List} of all {@link MembershipCounty Counties} associated with the specified
@@ -69,8 +69,7 @@ public interface MemberRepository extends PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MembershipCounty was found.
    */
-  public MembershipCounty getMembershipCountyByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  public MembershipCounty getMembershipCountyByUID(final long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Generates an Owner Id based upon the specified first-name and last-name.
@@ -105,7 +104,7 @@ public interface MemberRepository extends PersonRepository {
    *     if the query fails
    */
   public Member saveMember(final Member member, final Membership membership, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+      throws DataAccessException;
 
   /**
    * Commits the specified {@link MembershipCounty MembershipCounty} to persistent storage.
@@ -127,6 +126,23 @@ public interface MemberRepository extends PersonRepository {
    *     if the query fails
    */
   public MembershipCounty saveMembershipCounty(final MembershipCounty builder, final Membership membership,
-                                               final User user) throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException,
-      DataAccessException;
+                                               final User user) throws DataAccessException;
+
+  /**
+   * Closes the member for the specified reason.
+   *
+   * @param member
+   *      The {@link Member} to close.
+   * @param closeReason
+   *      A {@link com.cagst.swkroa.codevalue.CodeValue} that specifies the reason for closure, if {@code null} then a closeText must be specified.
+   * @param closeText
+   *      A {@link String} that specifies the reason for closing if a closeReason is not specified.
+   * @param user
+   *     The {@link User} that performed the changes.
+   *
+   * @return A {@link Member} once it has been closed.
+   */
+
+  public Member closeMember(final Member member, final CodeValue closeReason, final String closeText, final User user)
+      throws DataAccessException;
 }

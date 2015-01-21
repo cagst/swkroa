@@ -17,6 +17,7 @@ import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.member.MembershipStatus;
 import com.cagst.swkroa.model.CloseMembership;
+import com.cagst.swkroa.model.CloseMemberships;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -193,11 +194,11 @@ public final class MembershipApiController {
   }
 
   /**
-   * Handles the request and ...
+   * Handles the request and closes the memberships identified by the unique identifiers passed in.
    */
   @RequestMapping(value = "/close", method = RequestMethod.POST)
-  public ResponseEntity deleteMembership(final @RequestBody CloseMembership closeMemberships) {
-    LOGGER.info("Received request to delete memberships");
+  public ResponseEntity closeMemberships(final @RequestBody CloseMemberships closeMemberships) {
+    LOGGER.info("Received request to close memberships");
 
     if (CollectionUtils.isEmpty(closeMemberships.getMemberships())) {
       return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -210,7 +211,8 @@ public final class MembershipApiController {
     membershipService.closeMemberships(
         closeMemberships.getMemberships(),
         closeMemberships.getCloseReason(),
-        closeMemberships.getCloseText()
+        closeMemberships.getCloseText(),
+        WebAppUtils.getUser()
     );
 
     return new ResponseEntity(HttpStatus.OK);

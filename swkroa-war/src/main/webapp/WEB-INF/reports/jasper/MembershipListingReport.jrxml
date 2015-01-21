@@ -6,107 +6,55 @@
 	<property name="ireport.y" value="0"/>
 	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
 	<queryString>
-		<![CDATA[SELECT iq3.membership_id
-      ,iq3.fixed_dues_amount
-      ,iq3.calculated_dues_amount
-      ,iq3.member_count
-      ,iq3.member_id
-      ,iq3.company_name
-      ,iq3.full_name
-      ,iq3.membership_name
-      ,iq3.owner_ident
-      ,iq3.member_type_display
-      ,iq3.dues_amount
-      ,iq3.address_id
-      ,a.address1
-      ,a.address2
-      ,a.address3
-      ,a.city
-      ,a.state_code
-      ,a.postal_code
-      ,a.country_code
-  FROM (SELECT iq2.membership_id
-              ,iq2.fixed_dues_amount
-              ,iq2.calculated_dues_amount
-              ,iq2.member_count
-              ,iq2.member_id
-              ,iq2.company_name
-              ,iq2.full_name
-              ,COALESCE(iq2.company_name, iq2.full_name) AS membership_name
-              ,iq2.owner_ident
-              ,mt.member_type_display
-              ,mt.dues_amount
-              ,iq2.address_id
-         FROM (SELECT iq1.membership_id
-                     ,iq1.fixed_dues_amount
-                     ,iq1.calculated_dues_amount
-                     ,iq1.member_count
-                     ,m.member_id
-                     ,m.company_name
-                     ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
-                     ,m.member_type_id
-                     ,m.owner_ident
-                     ,MIN(a.address_id) AS address_id
-                FROM (SELECT ms.membership_id
-                            ,ms.dues_amount AS fixed_dues_amount
-                            ,SUM(mt.dues_amount) AS calculated_dues_amount
-                            ,COUNT(m.member_id) AS member_count
-                        FROM membership ms
-                            ,member m
-                            ,member_type mt
-                       WHERE ms.active_ind = 1
-                         AND m.membership_id = ms.membership_id
-                         AND m.active_ind = 1
-                         AND mt.prev_member_type_id = m.member_type_id
-                         AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
-                       GROUP BY m.membership_id
-                     )iq1
-                     ,member m
-                LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
-                LEFT OUTER JOIN address a ON (a.parent_entity_name = 'MEMBER' AND a.parent_entity_id = m.member_id AND a.active_ind = 1)
-               WHERE m.membership_id = iq1.membership_id
-                 AND m.active_ind = 1
-               GROUP BY membership_id
-                       ,fixed_dues_amount
-                       ,calculated_dues_amount
-                       ,member_count
-                       ,member_id
-                       ,company_name
-                       ,full_name
-                       ,member_type_id
-                       ,owner_ident
-             )iq2
-             ,member_type mt
-       WHERE mt.prev_member_type_id = iq2.member_type_id
-         AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW())
-       )iq3
-  LEFT OUTER JOIN address a ON (a.address_id = iq3.address_id)
-ORDER BY iq3.membership_name]]>
+		<![CDATA[SELECT ms.membership_id
+      ,COALESCE(ms.company_name, CONCAT_WS(', ', ms.name_last, ms.name_first)) AS membership_name
+      ,ms.fixed_dues
+      ,ms.calculated_dues
+      ,ms.balance
+      ,mt.member_type_display
+      ,m.member_id
+      ,m.owner_ident
+      ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS full_name
+      ,mt2.dues_amount
+      ,pa.address1
+      ,pa.address2
+      ,pa.address3
+      ,pa.city
+      ,pa.state_code
+      ,IF(LENGTH(pa.postal_code) > 5, CONCAT(LEFT(pa.postal_code, 5), "-", MID(pa.postal_code, 6)), pa.postal_code) AS postal_code
+      ,pa.country_code
+  FROM membership_summary ms
+ INNER JOIN member_type mt ON (mt.member_type_id = ms.member_type_id)
+ INNER JOIN member m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind)
+ INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m.member_type_id AND mt2.active_ind = 1 AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
+  LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
+  LEFT OUTER JOIN primary_addresses pa ON (pa.parent_entity_id = m.member_id AND pa.parent_entity_name = 'MEMBER')
+ WHERE ms.active_ind = 1
+ORDER BY membership_name ASC
+        ,mt2.primary_ind DESC;]]>
 	</queryString>
 	<field name="membership_id" class="java.math.BigInteger">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="fixed_dues_amount" class="java.math.BigDecimal"/>
-	<field name="calculated_dues_amount" class="java.math.BigDecimal"/>
-	<field name="member_count" class="java.lang.Long"/>
-	<field name="member_id" class="java.math.BigInteger">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="company_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="full_name" class="java.lang.String"/>
 	<field name="membership_name" class="java.lang.String"/>
-	<field name="owner_ident" class="java.lang.String">
+	<field name="fixed_dues" class="java.math.BigDecimal"/>
+	<field name="calculated_dues" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="balance" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="member_type_display" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="dues_amount" class="java.math.BigDecimal">
+	<field name="member_id" class="java.math.BigInteger">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="address_id" class="java.math.BigInteger">
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="full_name" class="java.lang.String"/>
+	<field name="dues_amount" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="address1" class="java.lang.String">
@@ -131,9 +79,9 @@ ORDER BY iq3.membership_name]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<variable name="total_dues" class="java.lang.String">
-		<variableExpression><![CDATA[($F{fixed_dues_amount}.equals( $F{calculated_dues_amount} )) ?
-"Total Dues Amount: " + $F{calculated_dues_amount}.toString()  :
-"Total Dues Amount: " + $F{fixed_dues_amount}.toString() + "(f) / " + $F{calculated_dues_amount}.toString() + "(c)"]]></variableExpression>
+		<variableExpression><![CDATA[($F{fixed_dues}.equals( $F{calculated_dues} )) ?
+"Total Dues Amount: " + $F{calculated_dues}.toString() :
+"Total Dues Amount: " + $F{fixed_dues}.toString() + "(fixed) / " + $F{calculated_dues}.toString() + "(calculated)"]]></variableExpression>
 	</variable>
 	<variable name="address" class="java.lang.String">
 		<variableExpression><![CDATA[($F{address1} == null ? "" : $F{address1}) +
@@ -142,6 +90,12 @@ ORDER BY iq3.membership_name]]>
 ($F{city} == null ? "" : ", " + $F{city}) +
 ($F{state_code} == null ? "" : ", " + $F{state_code}) +
 ($F{postal_code} == null ? "" : ", " + $F{postal_code})]]></variableExpression>
+	</variable>
+	<variable name="balance" class="java.lang.String">
+		<variableExpression><![CDATA[($F{balance}.doubleValue() < 0.0 ?
+$F{balance}.toString() + " Due" :
+($F{balance}.doubleValue() > 0.0 ?
+$F{balance}.toString() + " Credit" : "Paid"))]]></variableExpression>
 	</variable>
 	<group name="membership_group" keepTogether="true">
 		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
@@ -200,7 +154,7 @@ ORDER BY iq3.membership_name]]>
 				<textElement>
 					<font fontName="Verdana" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="70" y="20" width="402" height="20" isRemoveLineWhenBlank="true" uuid="3bba7e15-94ee-4339-9f7d-3bf35595bf9a"/>

@@ -135,9 +135,9 @@ import org.springframework.transaction.annotation.Transactional;
 
   @Override
   @Transactional
-  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText) {
+  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user) {
     LOGGER.info("Calling closeMemberships");
 
-    return membershipRepo.closeMemberships(membershipIds, closeReason, closeText);
+    return membershipRepo.closeMemberships(membershipIds, closeReason, closeText, user);
   }
 }

@@ -37,9 +37,9 @@ import org.springframework.util.Assert;
 /* package */ final class MembershipRepositoryJdbc extends BaseRepositoryJdbc implements MembershipRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
-  private static final String GET_MEMBERSHIPS            = "GET_MEMBERSHIPS";
-  private static final String GET_MEMBERSHIPS_BY_NAME    = "GET_MEMBERSHIPS_BY_NAME";
-  private static final String GET_MEMBERSHIP_BY_UID      = "GET_MEMBERSHIP_BY_UID";
+  private static final String GET_MEMBERSHIPS         = "GET_MEMBERSHIPS";
+  private static final String GET_MEMBERSHIPS_BY_NAME = "GET_MEMBERSHIPS_BY_NAME";
+  private static final String GET_MEMBERSHIP_BY_UID   = "GET_MEMBERSHIP_BY_UID";
 
   private static final String INSERT_MEMBERSHIP = "INSERT_MEMBERSHIP";
   private static final String UPDATE_MEMBERSHIP = "UPDATE_MEMBERSHIP";
@@ -71,7 +71,7 @@ import org.springframework.util.Assert;
   @Override
   @Cacheable(value = "memberships")
   public Membership getMembershipByUID(final long uid)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
+      throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMembershipByUID for [{}].", uid);
 
@@ -135,7 +135,7 @@ import org.springframework.util.Assert;
   @Transactional
   @CacheEvict(value = "memberships", key = "#membership.getMembershipUID()")
   public Membership saveMembership(final Membership membership, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -164,11 +164,12 @@ import org.springframework.util.Assert;
   @Override
   @Transactional
   @CacheEvict(value = "memberships", allEntries = true)
-  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText)
+  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException {
 
     Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
     Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
     LOGGER.info("Closing Memberships");
 
@@ -177,12 +178,13 @@ import org.springframework.util.Assert;
     params.addValue("close_reason_id", closeReason.getCodeValueUID());
     params.addValue("close_reason_txt", StringUtils.trimToNull(closeText));
     params.addValue("memberships", membershipIds);
+    params.addValue("updt_id", user.getUserUID());
 
     return getJdbcTemplate().update(stmtLoader.load(CLOSE_MEMBERSHIPS), params);
   }
 
   private Membership insertMembership(final Membership membership, final User user)
-      throws IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     LOGGER.info("Inserting new Membership [{}]", membership.getMembershipUID());
 
@@ -201,7 +203,7 @@ import org.springframework.util.Assert;
   }
 
   private Membership updateMembership(final Membership membership, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     LOGGER.info("Updating Membership [{}]", membership.getMembershipUID());
 

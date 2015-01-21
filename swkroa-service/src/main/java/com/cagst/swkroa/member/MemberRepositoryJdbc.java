@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
@@ -16,7 +17,9 @@ import com.cagst.swkroa.county.CountyRepository;
 import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.person.PersonRepositoryJdbc;
 import com.cagst.swkroa.user.User;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,6 +28,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +53,8 @@ import org.springframework.util.Assert;
 
   private static final String INSERT_MEMBER = "INSERT_MEMBER";
   private static final String UPDATE_MEMBER = "UPDATE_MEMBER";
+  private static final String CLOSE_MEMBER  = "CLOSE_MEMBER";
+
   private static final String INSERT_MEMBERSHIP_COUNTY = "INSERT_MEMBERSHIP_COUNTY";
   private static final String UPDATE_MEMBERSHIP_COUNTY = "UPDATE_MEMBERSHIP_COUNTY";
 
@@ -98,8 +104,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public Member getMemberByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException {
+  public Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMemberByUID for [{}].", uid);
 
@@ -138,8 +143,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public MembershipCounty getMembershipCountyByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException {
+  public MembershipCounty getMembershipCountyByUID(final long uid) throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMembershipCountyByUID for [{}].", uid);
 
@@ -176,7 +180,7 @@ import org.springframework.util.Assert;
     Map<String, String> params = new HashMap<String, String>();
     params.put("ownerIdent", partial + '%');
 
-    int cnt = getJdbcTemplate().queryForInt(stmtLoader.load(GET_PARTIAL_OWNERID_COUNT), params);
+    int cnt = getJdbcTemplate().queryForObject(stmtLoader.load(GET_PARTIAL_OWNERID_COUNT), params, Integer.class);
     return (partial + cnt);
   }
 
@@ -184,7 +188,7 @@ import org.springframework.util.Assert;
   @Transactional
   @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
   public Member saveMember(final Member member, final Membership membership, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
@@ -228,9 +232,10 @@ import org.springframework.util.Assert;
   @Override
   @Transactional
   @CacheEvict(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
-  public MembershipCounty saveMembershipCounty(final MembershipCounty county, final Membership membership,
+  public MembershipCounty saveMembershipCounty(final MembershipCounty county,
+                                               final Membership membership,
                                                final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     Assert.notNull(county, "Assertion Failed - argument [builder] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -244,8 +249,40 @@ import org.springframework.util.Assert;
     }
   }
 
+  @Override
+  @Transactional
+  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
+  public Member closeMember(final Member member, final CodeValue closeReason, final String closeText, final User user)
+      throws IncorrectResultSizeDataAccessException {
+
+    Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
+    Assert.notNull(member, "Assertion Failure - argument [member] cannot be null");
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+
+    LOGGER.info("Closing Member [{}]", member.getMemberUID());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("close_reason_id", closeReason.getCodeValueUID());
+    params.addValue("close_reason_txt", StringUtils.trimToNull(closeText));
+    params.addValue("member_id", Lists.newArrayList(member.getMemberUID()));
+    params.addValue("updt_id", user.getUserUID());
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(CLOSE_MEMBER), params);
+    if (cnt == 1) {
+      member.setActive(false);
+      member.setCloseReasonUID(closeReason.getCodeValueUID());
+      member.setCloseReasonText(closeText);
+      member.setCloseDate(new DateTime());
+
+      return member;
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+  }
+
   private Member insertMember(final Member member, final Membership membership, final User user)
-      throws IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     LOGGER.info("Inserting new Member [{}]", member.getEffectiveMemberName());
 
@@ -265,7 +302,7 @@ import org.springframework.util.Assert;
   }
 
   private Member updateMember(final Member member, final Membership membership, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     LOGGER.info("Updating Member [{}]", member.getEffectiveMemberName());
 
@@ -286,8 +323,10 @@ import org.springframework.util.Assert;
     return member;
   }
 
-  private MembershipCounty insertMembershipCounty(final MembershipCounty county, final Membership membership,
-                                                  final User user) throws IncorrectResultSizeDataAccessException, DataAccessException {
+  private MembershipCounty insertMembershipCounty(final MembershipCounty county,
+                                                  final Membership membership,
+                                                  final User user)
+      throws DataAccessException {
 
     LOGGER.info("Inserting new MembershipCounty [{}]", county.getCounty().getCountyName());
 
@@ -306,9 +345,10 @@ import org.springframework.util.Assert;
     return county;
   }
 
-  private MembershipCounty updateMembershipCounty(final MembershipCounty county, final Membership membership,
-                                                  final User user) throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException,
-      DataAccessException {
+  private MembershipCounty updateMembershipCounty(final MembershipCounty county,
+                                                  final Membership membership,
+                                                  final User user)
+      throws DataAccessException {
 
     LOGGER.info("Updating MembershipCounty [{}]", county.getCounty().getCountyName());
 
