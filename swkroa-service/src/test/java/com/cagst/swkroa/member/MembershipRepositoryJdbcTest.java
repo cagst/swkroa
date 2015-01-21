@@ -3,6 +3,7 @@ package com.cagst.swkroa.member;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -214,7 +215,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testCloseMemberships_Failed_NoMemberships() {
-    repo.closeMemberships(new ArrayList<Long>(), closeReason, null);
+    repo.closeMemberships(new ArrayList<Long>(), closeReason, null, user);
   }
 
   /**
@@ -227,7 +228,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     membershipIds.add(1L);
     membershipIds.add(2L);
 
-    repo.closeMemberships(membershipIds, null, null);
+    repo.closeMemberships(membershipIds, null, null, user);
   }
 
   /**
@@ -240,7 +241,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     membershipIds.add(1L);
     membershipIds.add(2L);
 
-    int closedMembers = repo.closeMemberships(membershipIds, closeReason, null);
+    int closedMembers = repo.closeMemberships(membershipIds, closeReason, null, user);
 
     assertEquals("Ensure the correct number of memberships were closed", 2, closedMembers);
   }

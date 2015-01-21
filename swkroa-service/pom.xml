@@ -17,6 +17,44 @@
   <packaging>jar</packaging>
 
   <dependencies>
+    <!-- Apache Commons Dependencies -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Google Guava Library Dependencies -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Log 4J Dependencies -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>integration</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Logback Dependencies -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
     <!-- CAGST Compile Dependencies -->
     <dependency>
       <groupId>com.cagst</groupId>
@@ -51,28 +89,6 @@
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jdbc-core</artifactId>
       <version>1.0.0.RELEASE</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- Log 4J Dependencies -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>integration</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- Logback Dependencies -->
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-core</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>

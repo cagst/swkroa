@@ -10,11 +10,12 @@
 	<queryString>
 		<![CDATA[SELECT mt.member_type_display, count(m.member_id)
   FROM member m
-      ,member_type mt
+ INNER JOIN membership ms ON (ms.membership_id = m.membership_id AND ms.active_ind = m.active_ind)
+ INNER JOIN member_type mt ON (mt.member_type_id = m.member_type_id)
  WHERE m.active_ind = 1
-   AND mt.member_type_id = m.member_type_id
 GROUP BY mt.member_type_display
-ORDER BY mt.member_type_display]]>
+ORDER BY mt.member_type_display
+]]>
 	</queryString>
 	<field name="member_type_display" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>

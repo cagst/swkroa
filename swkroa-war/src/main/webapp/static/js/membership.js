@@ -447,6 +447,16 @@ swkroaApp.controller('membershipController',
     });
   };
 
+  $scope.openMembership = function() {
+    var membershipIds = [];
+    membershipIds.push($scope.membership.membershipUID);
+
+    membershipService.openMemberships(membershipIds).success(function(data) {
+      $('#openMembershipsDlg').modal('hide');
+      $scope.getMemberships();
+    });
+  };
+
   $scope.toggleShowCalculations = function() {
     if ($scope.showCalculations) {
       $scope.showCalculations = false;
