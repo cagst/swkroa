@@ -559,32 +559,6 @@ swkroaApp.service('membershipService', ['$http', function($http) {
 
     return promise;
   };
-
-  this.openMemberships = function(membershipsArg) {
-    var data = {
-      memberships: membershipsArg
-    };
-
-    var promise = $http.post(rootUrl + '/open', JSON.stringify(data));
-
-    promise.success = function(fn) {
-      promise.then(function(response) {
-        if (responseSuccessful(response)) {
-          fn(response.data, response.status);
-        }
-      });
-    };
-
-    promise.error = function(fn) {
-      promise.then(function(response) {
-        if (!responseSuccessful(response)) {
-          fn(response.data, response.status);
-        }
-      });
-    };
-
-    return promise;
-  };
 }]);
 
 // define a service for Transactions

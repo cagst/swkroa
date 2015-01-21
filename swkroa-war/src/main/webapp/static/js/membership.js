@@ -448,12 +448,21 @@ swkroaApp.controller('membershipController',
   };
 
   $scope.openMembership = function() {
-    var membershipIds = [];
-    membershipIds.push($scope.membership.membershipUID);
+    $scope.membership.active          = true;
+    $scope.membership.closeReasonUID  = null;
+    $scope.membership.closeReasonText = null;
+    $scope.membership.closeDate       = null;
 
-    membershipService.openMemberships(membershipIds).success(function(data) {
-      $('#openMembershipsDlg').modal('hide');
-      $scope.getMemberships();
+    $('#openMembershipsDlg').modal('hide');
+
+    membershipService.saveMembership($scope.membership).then(function(response) {
+      if (response.status == 200) {
+        var idx = $scope.memberships.indexOf($scope.membership);
+        $scope.memberships.splice(idx, 1);
+        $scope.getMemberships();
+      } else {
+        $scope.membership.active = false;
+      }
     });
   };
 
