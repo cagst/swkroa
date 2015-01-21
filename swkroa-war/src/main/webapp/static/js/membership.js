@@ -447,8 +447,6 @@ swkroaApp.controller('membershipController',
     });
   };
 
-<<<<<<< HEAD
-=======
   $scope.openMembership = function() {
     $scope.membership.active          = true;
     $scope.membership.closeReasonUID  = null;
@@ -468,7 +466,6 @@ swkroaApp.controller('membershipController',
     });
   };
 
->>>>>>> master
   $scope.toggleShowCalculations = function() {
     if ($scope.showCalculations) {
       $scope.showCalculations = false;
