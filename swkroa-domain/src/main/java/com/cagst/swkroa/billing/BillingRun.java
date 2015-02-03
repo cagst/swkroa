@@ -2,11 +2,8 @@ package com.cagst.swkroa.billing;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
 
-import com.cagst.swkroa.transaction.Transaction;
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 
 /**
  * Represents a Billing Run within the system.
@@ -14,13 +11,17 @@ import org.joda.time.LocalDate;
  * @author Craig Gaskill
  */
 public final class BillingRun implements Serializable {
-  private LocalDate runDate;
+  private DateTime runDate;
   private String runDesc;
+  private long runCount;
   private BigDecimal runTotal;
-  private List<Transaction> transactions;
 
-  public LocalDate getRunDate() {
+  public DateTime getRunDate() {
     return runDate;
+  }
+
+  public void setRunDate(final DateTime runDate) {
+    this.runDate = runDate;
   }
 
   public String getRunDescription() {
@@ -31,8 +32,12 @@ public final class BillingRun implements Serializable {
     this.runDesc = runDescription;
   }
 
-  public void setRunDate(final LocalDate runDate) {
-    this.runDate = runDate;
+  public long getRunCount() {
+    return runCount;
+  }
+
+  public void setRunCount(final long count) {
+    this.runCount = count;
   }
 
   public BigDecimal getRunTotal() {
@@ -41,21 +46,5 @@ public final class BillingRun implements Serializable {
 
   public void setRunTotal(final BigDecimal total) {
     this.runTotal = total;
-  }
-
-  public List<Transaction> getTransactions() {
-    return Collections.unmodifiableList(transactions);
-  }
-
-  public void addTransaction(final Transaction transaction) {
-    this.transactions.add(transaction);
-  }
-
-  public void removeTransaction(final Transaction transaction) {
-    this.transactions.remove(transaction);
-  }
-
-  public void clearTransactions() {
-    this.transactions.clear();
   }
 }

@@ -18,7 +18,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * </ul>
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface ContactRepository {
   public static final String ENTITY_MEMBER = "MEMBER";

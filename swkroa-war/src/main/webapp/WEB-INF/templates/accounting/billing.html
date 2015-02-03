@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/accounting/billing.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="billingController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.billing.title}">zzz Billing Runs</h3>
+  </div>
+
+  <div class="row" data-ng-show="billingRuns">
+    <div class="col-xs-3">
+      <div class="btn-group-vertical">
+        <button type="button" class="btn btn-primary">
+          <span data-th-text="#{com.cagst.swkroa.billing.newrun}">zzz New Run</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <table class="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <th data-th-text="#{com.cagst.swkroa.billing.date}">zzz Date</th>
+            <th data-th-text="#{com.cagst.swkroa.billing.desc}">zzz Desc</th>
+            <th data-th-text="#{com.cagst.swkroa.billing.memberships}">zzz Memberships</th>
+            <th data-th-text="#{com.cagst.swkroa.billing.amount}">zzz Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="run in billingRuns | orderBy: 'runDate': true">
+            <td>{{run.runDate | date:'mediumDate'}}</td>
+            <td>{{run.runDescription}}</td>
+            <td>{{run.runCount}}</td>
+            <td>{{run.runTotal | currency}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-3"></div>
+  </div>
+</div>
+
+</body>
+</html>

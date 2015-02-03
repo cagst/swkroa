@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * {@link EmailAddress} to / from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public class EmailAddressMapper implements RowMapper<EmailAddress> {
   private static final String EMAIL_ID = "email_id";
