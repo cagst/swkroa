@@ -68,10 +68,10 @@ INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_
 INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_key, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (14, 'Mouse', 'MOUSE', 'Minni', 'MINNI', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO person (person_id, name_last, name_last_key, name_first, name_first_key, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (15, 'Doright', 'DORIGHT', 'Regular', 'REGULAR', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
-INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 1, '2011-01-23', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 1, '2012-01-23', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 1, '2013-10-23', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (4, 1, '2013-04-19', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 1, '2014-01-23', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 1, '2015-01-23', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 1, '2023-10-23', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (4, 1, '2023-04-19', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id, active_ind) VALUES (5, 1, '2010-01-23', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0, 0);
 INSERT INTO membership (membership_id, entity_type_cd, next_due_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (6, 1, '2010-01-23', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/accounting/billing_new.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="billingController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.billing.new.title}">zzz Billing Runs</h3>
+  </div>
+
+  <form name="newForm" class="form-inline spacer-bottom divider-bottom" data-th-attr="action=@{/accounting/billing/new}" target="_blank" method="post">
+    <div class="row-inner">
+      <div class="form-group pull-left">
+        <label class="control-label" data-th-text="#{com.cagst.swkroa.billing.new.due.in}">zzz Due In</label>
+        <input type="number" class="form-control" name="dueInDays" maxlength="3"
+               data-ng-model="days" />
+      </div>
+      <button type="button" class="btn btn-primary"
+              data-th-text="#{com.cagst.swkroa.billing.new.get.membersships}"
+              data-ng-click="getMemberhipsDueIn(days)">
+        zzz Memberships
+      </button>
+
+      <div class="pull-right" data-ng-show="membershipsDue">
+        <h4>
+          <span>{{totalMemberships}}</span>
+          <span>Memberships Totaling</span>
+          <span>{{totalAmount | currency}}</span>
+        </h4>
+      </div>
+    </div>
+  </form>
+
+  <div class="row spacer-top" data-ng-show="membershipsDue">
+    <div class="col-xs-2">
+      <div class="btn-group-vertical">
+        <a id="generateCsv" class="btn btn-default"
+           href="javascript:submitReportForm('csv')"
+           data-ng-disabled="!canExport()"
+           data-th-text="#{com.cagst.swkroa.report.generate.export}">
+          zzz Export
+        </a>
+        <button type="button" class="btn btn-primary">
+          <span data-th-text="#{com.cagst.swkroa.billing.new.generate}">zzz Generate</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-xs-10">
+      <table class="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <th>
+              <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
+            </th>
+            <th data-th-text="#{com.cagst.swkroa.billing.new.membership}">zzz Membership</th>
+            <th>Balance</th>
+            <th>Dues Amount</th>
+            <th>Next Due Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="mem in membershipsDue | orderBy: 'nextDueDate': false">
+            <td>
+              <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox"
+                     data-ng-model="mem.selected" data-ng-click="toggleCheck(mem)"/>
+            </td>
+            <td>{{mem.membershipName}}</td>
+            <td>{{mem.balance | currency}}</td>
+            <td>{{mem.effectiveDuesAmount | currency}}</td>
+            <td>{{mem.nextDueDate | date:'mediumDate'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-3"></div>
+  </div>
+</div>
+
+</body>
+</html>

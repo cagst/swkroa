@@ -18,9 +18,9 @@
   <div class="row" data-ng-show="billingRuns">
     <div class="col-xs-3">
       <div class="btn-group-vertical">
-        <button type="button" class="btn btn-primary">
-          <span data-th-text="#{com.cagst.swkroa.billing.newrun}">zzz New Run</span>
-        </button>
+        <a type="button" class="btn btn-primary" data-th-href="@{/accounting/billing/new}">
+          <span data-th-text="#{com.cagst.swkroa.billing.new.button}">zzz New Run</span>
+        </a>
       </div>
     </div>
     <div class="col-xs-6">

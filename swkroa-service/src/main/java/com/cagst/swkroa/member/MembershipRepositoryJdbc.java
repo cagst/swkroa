@@ -3,6 +3,7 @@ package com.cagst.swkroa.member;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,9 +39,10 @@ import org.springframework.util.Assert;
 /* package */ final class MembershipRepositoryJdbc extends BaseRepositoryJdbc implements MembershipRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
-  private static final String GET_MEMBERSHIPS         = "GET_MEMBERSHIPS";
-  private static final String GET_MEMBERSHIPS_BY_NAME = "GET_MEMBERSHIPS_BY_NAME";
-  private static final String GET_MEMBERSHIP_BY_UID   = "GET_MEMBERSHIP_BY_UID";
+  private static final String GET_MEMBERSHIP_BY_UID         = "GET_MEMBERSHIP_BY_UID";
+  private static final String GET_MEMBERSHIPS               = "GET_MEMBERSHIPS";
+  private static final String GET_MEMBERSHIPS_BY_NAME       = "GET_MEMBERSHIPS_BY_NAME";
+  private static final String GET_MEMBERSHIPS_DUE_IN_X_DAYS = "GET_MEMBERSHIPS_DUE_IN_X_DAYS";
 
   private static final String INSERT_MEMBERSHIP = "INSERT_MEMBERSHIP";
   private static final String UPDATE_MEMBERSHIP = "UPDATE_MEMBERSHIP";
@@ -114,8 +117,6 @@ import org.springframework.util.Assert;
 
   @Override
   public List<Membership> getMembershipsByName(final String name, final MembershipStatus status, final MembershipBalance balance) {
-    Assert.hasText(name, "[Assertion Failure] - argument [name] cannot be null or empty.");
-
     LOGGER.info("Calling getMembershipsByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
@@ -129,6 +130,19 @@ import org.springframework.util.Assert;
     params.put("balance", balance.toString());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
+  }
+
+  @Override
+  public List<Membership> getMembershipsDueInXDays(final int days) {
+    LOGGER.info("Calling getMembershipsDueInXDays for [{}]", days);
+
+    Assert.isTrue(days >= 0, "[Assertion Failure] - argument [days] must be greater than or equal to zero");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Date> params = new HashMap<String, Date>(1);
+    params.put("nextDueDate", DateTime.now().plusDays(days).toDate());
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS), params, new MembershipMapper(codeValueRepo));
   }
 
   @Override

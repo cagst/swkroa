@@ -497,6 +497,28 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
+  this.getMembershipsDueInXDays = function(days) {
+    var promise = $http.get(rootUrl + "?dueInDays=" + days);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
   this.saveMembership = function(membership) {
     var promise = $http.post(rootUrl, membership);
 

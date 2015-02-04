@@ -3,7 +3,6 @@ package com.cagst.swkroa.member;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -98,7 +98,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     Collection<Membership> memberships = repo.getMembershipsByName("zzz", MembershipStatus.ACTIVE, MembershipBalance.ALL);
 
     assertNotNull("Ensure the memberships collection is not null.", memberships);
-    assertTrue("Ensure the memberships collection is emtpy.", memberships.isEmpty());
+    assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
   }
 
   /**
@@ -120,7 +120,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
   }
 
   /**
-   * Test the getActiveMemberships method.
+   * Test the getMemberships method for Active memberships.
    */
   @Test
   public void testGetMemberships_Active_Found() {
@@ -141,6 +141,53 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure the memberships collection is not null!", memberships);
     assertFalse("Ensure the memberships collection is not empty!", memberships.isEmpty());
     assertEquals("Ensure we found the correct number of memberships!", 2, memberships.size());
+  }
+
+  /**
+   * Test the getMembershipsDueInXDays and not finding any.
+   */
+  @Test
+  public void testGetMemberships_DueInXDays_NoneFound() {
+    DateTime currentTime = new DateTime(2013, 2, 15, 0, 0);
+    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+
+    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    assertNotNull("Ensure the memberships collection is not null.", memberships);
+    assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
+
+    DateTimeUtils.setCurrentMillisSystem();
+  }
+
+  /**
+   * Test the getMembershipsDueInXDays and finding 1.
+   */
+  @Test
+  public void testGetMemberships_DueInXDays_Found1() {
+    DateTime currentTime = new DateTime(2014, 2, 15, 0, 0);
+    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+
+    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    assertNotNull("Ensure the memberships collection is not null.", memberships);
+    assertFalse("Ensure the memberships collection is not empty.", memberships.isEmpty());
+    assertEquals("Ensure the correct number of memberships are found due.", 1, memberships.size());
+
+    DateTimeUtils.setCurrentMillisSystem();
+  }
+
+  /**
+   * Test the getMembershipsDueInXDays and finding 2.
+   */
+  @Test
+  public void testGetMemberships_DueInXDays_Found2() {
+    DateTime currentTime = new DateTime(2015, 2, 15, 0, 0);
+    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+
+    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    assertNotNull("Ensure the memberships collection is not null.", memberships);
+    assertFalse("Ensure the memberships collection is not empty.", memberships.isEmpty());
+    assertEquals("Ensure the correct number of memberships are found due.", 2, memberships.size());
+
+    DateTimeUtils.setCurrentMillisSystem();
   }
 
   /**

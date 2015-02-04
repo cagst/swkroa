@@ -6,8 +6,8 @@
  * Author:  Craig Gaskill
  */
 
-swkroaApp.controller('billingController', ['$scope', '$http', 'codesetService', 'membershipService',
-    function($scope, $http, codesetService, membershipService) {
+swkroaApp.controller('billingController', ['$scope', '$http',
+    function($scope, $http) {
 
   $scope.billingRuns = [];
 
@@ -20,5 +20,4 @@ swkroaApp.controller('billingController', ['$scope', '$http', 'codesetService', 
   };
 
   $scope.getBillingRuns();
-
 }]);

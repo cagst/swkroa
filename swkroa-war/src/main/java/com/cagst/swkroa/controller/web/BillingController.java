@@ -18,12 +18,24 @@ public final class BillingController {
   /**
    * Handles and retrieves the Billing page.
    *
-   * @return The location and name fo the page template.
+   * @return The location and name of the page template.
    */
   @RequestMapping(value = "/accounting/billing", method = RequestMethod.GET)
   public String getBillingPage() {
     LOGGER.info("Received request to show billing page");
 
     return "accounting/billing";
+  }
+
+  /**
+   * Handles and retrieves the New Billing Run page.
+   *
+   * @return The location and name of the page template.
+   */
+  @RequestMapping(value = "/accounting/billing/new", method = RequestMethod.GET)
+  public String getNewBillingRunPage() {
+    LOGGER.info("Received request to show new billing run page");
+
+    return "accounting/billing_new";
   }
 }

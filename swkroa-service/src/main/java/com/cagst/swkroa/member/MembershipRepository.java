@@ -63,6 +63,16 @@ public interface MembershipRepository {
   public List<Membership> getMembershipsByName(final String name, final MembershipStatus status, final MembershipBalance balance);
 
   /**
+   * Retrieves all {@link Membership Memberships} that will be due in the following days.
+   *
+   * @param days
+   *      The number of days to look ahead for memberships that will be due.
+   *
+   * @return A {@link List} of {@link Membership Memberships} that will be due in the following days.
+   */
+  public List<Membership> getMembershipsDueInXDays(final int days);
+
+  /**
    * Commits the specified {@link Membership Membership} to persistent storage.
    *
    * @param membership

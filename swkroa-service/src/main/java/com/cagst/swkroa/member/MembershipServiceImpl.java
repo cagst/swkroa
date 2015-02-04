@@ -109,6 +109,13 @@ import org.springframework.transaction.annotation.Transactional;
   }
 
   @Override
+  public List<Membership> getMembershipsDueInXDays(final int days) {
+    LOGGER.info("Calling getMembershipsDueInXDays for [{}]", days);
+
+    return membershipRepo.getMembershipsDueInXDays(days);
+  }
+
+  @Override
   @Transactional
   public Membership saveMembership(final Membership membership, final User user) {
     LOGGER.info("Calling saveMembership for [{}]", membership.getMembershipUID());

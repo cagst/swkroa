@@ -16,7 +16,6 @@ import com.cagst.swkroa.member.MembershipBalance;
 import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.member.MembershipStatus;
-import com.cagst.swkroa.model.CloseMembership;
 import com.cagst.swkroa.model.CloseMemberships;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
@@ -44,7 +43,6 @@ import org.springframework.web.util.UriComponents;
  * template.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RestController
 @RequestMapping("/api/memberships")
@@ -74,6 +72,7 @@ public final class MembershipApiController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public List<Membership> getMemberships(final @RequestParam(value = "q", required = false) String query,
+                                         final @RequestParam(value = "dueInDays", required = false) Integer dueInDays,
                                          final @RequestParam(value = "status", required = false) String status,
                                          final @RequestParam(value = "balance", required = false) String balance) {
 
@@ -87,6 +86,8 @@ public final class MembershipApiController {
           StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
           StringUtils.isNotBlank(balance) ? MembershipBalance.valueOf(balance) : MembershipBalance.ALL
       );
+    } else if (dueInDays != null && dueInDays >= 0) {
+      memberships = membershipService.getMembershipsDueInXDays(dueInDays);
     } else {
       memberships = membershipService.getMemberships(
           StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
