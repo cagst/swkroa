@@ -23,16 +23,14 @@
                data-ng-model="days" />
       </div>
       <button type="button" class="btn btn-primary"
-              data-th-text="#{com.cagst.swkroa.billing.new.get.membersships}"
+              data-th-text="#{com.cagst.swkroa.billing.new.get.memberships}"
               data-ng-click="getMemberhipsDueIn(days)">
         zzz Memberships
       </button>
 
       <div class="pull-right" data-ng-show="membershipsDue">
-        <h4>
-          <span>{{totalMemberships}}</span>
-          <span>Memberships Totaling</span>
-          <span>{{totalAmount | currency}}</span>
+        <h4 data-th-text="#{com.cagst.swkroa.billing.new.totals}">
+          zzz Totals
         </h4>
       </div>
     </div>
@@ -47,7 +45,8 @@
            data-th-text="#{com.cagst.swkroa.report.generate.export}">
           zzz Export
         </a>
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary"
+                data-toggle="modal" data-target="#createTransactionDlg">
           <span data-th-text="#{com.cagst.swkroa.billing.new.generate}">zzz Generate</span>
         </button>
       </div>
@@ -60,9 +59,9 @@
               <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
             </th>
             <th data-th-text="#{com.cagst.swkroa.billing.new.membership}">zzz Membership</th>
-            <th>Balance</th>
-            <th>Dues Amount</th>
-            <th>Next Due Date</th>
+            <th data-th-text="#{com.cagst.swkroa.billing.new.balance}">zzz Balance</th>
+            <th data-th-text="#{com.cagst.swkroa.billing.new.duesamount}">zzz Dues Amount</th>
+            <th data-th-text="#{com.cagst.swkroa.billing.new.nextduedate}">zzz Next Due Date</th>
           </tr>
         </thead>
         <tbody>
@@ -80,6 +79,69 @@
       </table>
     </div>
     <div class="col-xs-3"></div>
+  </div>
+
+  <!-- Transaction Details Dialog -->
+  <div class="modal fade" id="createTransactionDlg" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.billing.new.transaction.title}">zzz Details</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-4">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.date}">
+                zzz Date
+              </label>
+              <div class="input-group">
+                <input type="text" class="form-control" name="transactionDate"
+                       data-datepicker-popup="MM/dd/yyyy"
+                       data-is-open="opened"
+                       data-show-button-bar="false"
+                       data-show-weeks="false"
+                       data-ng-model="transaction.transactionDate"
+                       data-ng-required="true" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" data-ng-click="open($event)">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+              </div>
+            </div>
+            <div class="col-xs-8">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.desc}">
+                zzz Desc
+              </label>
+              <input type="text" class="form-control" name="desc"
+                     data-ng-model="transaction.transactionDescription"
+                     data-ng-required="true"
+                     data-ng-options="type.display for type in transactionTypes" />
+            </div>
+          </div>
+          <div class="row spacer-top">
+            <div class="col-xs-12">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.memo}">
+                zzz Memo
+              </label>
+              <textarea class="form-control" rows="3" data-ng-model="transaction.memo"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"
+                  data-ng-click="generateTransactions()"
+                  data-th-text="#{com.cagst.swkroa.billing.new.generate}">
+            zzz Generate
+          </button>
+          <button type="button" class="btn btn-warning"
+                  data-dismiss="modal"
+                  data-th-text="#{com.cagst.swkroa.discard}">
+            zzz Disregard
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
