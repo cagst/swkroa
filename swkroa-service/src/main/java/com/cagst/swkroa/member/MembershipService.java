@@ -1,9 +1,11 @@
 package com.cagst.swkroa.member;
 
 import java.util.List;
+import java.util.Set;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.user.User;
+import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -108,4 +110,25 @@ public interface MembershipService {
    */
   public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException;
+
+  /**
+   * Creates invoice transactions for the specified memberships and updated the next due date for the membership.
+   *
+   * @param transactionDate
+   *        A {@link DateTime} that represents the date of the transaction.
+   * @param transactionDescription
+   *        A {@link String} that describes the transaction.
+   * @param transactionMemo
+   *        A {@link String} that provides additional information for the transaction.
+   * @param membershipIds
+   *        A {@link Set} of {@link Long Longs} that uniquely identify the membership to bill.
+   * @param user
+   *     The {@link User} that performed the changes.
+   */
+  public void createBillingInvoicesForMemberships(final DateTime transactionDate,
+                                                  final String transactionDescription,
+                                                  final String transactionMemo,
+                                                  final Set<Long> membershipIds,
+                                                  final User user)
+  throws DataAccessException;
 }

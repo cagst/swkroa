@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
  * Interface for retrieving / saving {@link CodeSet}s and {@link CodeValue}s from / to persistent storage.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Repository
 public interface CodeValueRepository {

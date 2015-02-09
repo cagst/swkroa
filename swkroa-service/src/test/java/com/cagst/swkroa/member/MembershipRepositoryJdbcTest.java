@@ -29,7 +29,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Test class for the MemberRepositoryJdbc class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class MembershipRepositoryJdbcTest extends BaseTestRepository {

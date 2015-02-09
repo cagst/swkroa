@@ -28,9 +28,8 @@ import org.springframework.util.CollectionUtils;
  * JDBC Template implementation of the {@link TransactionRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
-@Named("transactionRepository")
+@Named("transactionRepo")
 /* package */ final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implements TransactionRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(TransactionRepositoryJdbc.class);
 

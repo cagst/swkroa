@@ -16,7 +16,7 @@ import com.cagst.swkroa.member.MembershipBalance;
 import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.member.MembershipStatus;
-import com.cagst.swkroa.model.CloseMemberships;
+import com.cagst.swkroa.model.CloseMembershipsModel;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -198,7 +198,7 @@ public final class MembershipApiController {
    * Handles the request and closes the memberships identified by the unique identifiers passed in.
    */
   @RequestMapping(value = "/close", method = RequestMethod.POST)
-  public ResponseEntity closeMemberships(final @RequestBody CloseMemberships closeMemberships) {
+  public ResponseEntity closeMemberships(final @RequestBody CloseMembershipsModel closeMemberships) {
     LOGGER.info("Received request to close memberships");
 
     if (CollectionUtils.isEmpty(closeMemberships.getMemberships())) {
