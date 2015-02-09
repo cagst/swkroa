@@ -14,33 +14,20 @@
       ,p.name_first
       ,p.name_middle
       ,p.name_last
-      ,a.address1
-      ,a.address2
-      ,a.address3
-      ,a.city
-      ,a.state_code
-      ,IF(LENGTH(a.postal_code) > 5, CONCAT(LEFT(a.postal_code, 5), "-", MID(a.postal_code, 6)), a.postal_code) AS postal_code
-      ,a.country_code
+      ,pa.address1
+      ,pa.address2
+      ,pa.address3
+      ,pa.city
+      ,pa.state_code
+      ,IF(LENGTH(pa.postal_code) > 5, CONCAT(LEFT(pa.postal_code, 5), "-", MID(pa.postal_code, 6)), pa.postal_code) AS postal_code
+      ,pa.country_code
       ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
       ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS membership_name
-  FROM (SELECT a.parent_entity_id, a.address_id
-          FROM address a
-         WHERE a.parent_entity_name = 'MEMBER'
-           AND a.active_ind = 1
-           AND a.primary_ind = 1
-      GROUP BY a.parent_entity_id
-         UNION
-        SELECT a.parent_entity_id, a.address_id
-          FROM address a
-         WHERE a.parent_entity_name = 'MEMBER'
-           AND a.active_ind = 1
-           AND a.primary_ind = 0
-      GROUP BY a.parent_entity_id
-       )iq
-      INNER JOIN member m ON (m.member_id = iq.parent_entity_id)
-      INNER JOIN address a ON (a.address_id = iq.address_id)
- LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
- LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
+  FROM member m
+ INNER JOIN membership ms ON (ms.membership_id = m.membership_id AND ms.active_ind = m.active_ind)
+ INNER JOIN primary_addresses pa ON (pa.parent_entity_name = 'MEMBER' AND pa.parent_entity_id = m.member_id)
+  LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
+  LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
   WHERE m.active_ind = 1
     AND ($P{newsletters_only} = 0 OR m.mail_newsletter_ind = 1)
 ORDER BY membership_name]]>
