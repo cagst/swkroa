@@ -103,9 +103,9 @@ swkroaApp.factory('contextRootInterceptor', function() {
 
     'responseError': function(rejection) {
       if (rejection.status == 409) {
-        $('#optimisticErrorMessage').modal('show');
+        $('#optimisticErrorMessageDlg').modal('show');
       } else if (rejection.status == 500) {
-        $('#unknownErrorMessage').modal('show');
+        $('#optimisticErrorMessageDlg').modal('show');
       }
 
       return rejection;
@@ -675,3 +675,11 @@ swkroaApp.controller('dashboardController', function($scope, $http) {
     $scope.dashboard = data;
   });
 });
+
+showProcessingDialog = function() {
+  $('#pleaseWaitDlg').modal('show');
+};
+
+hideProcessingDialog = function() {
+  $('#pleaseWaitDlg').modal('hide');
+};

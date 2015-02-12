@@ -10,6 +10,8 @@ swkroaApp.controller('billingController', ['$scope', '$http', 'codesetService', 
     function($scope, $http, codesetService, membershipService) {
 
   $scope.getMemberhipsDueIn = function(days) {
+    showProcessingDialog();
+
     membershipService.getMembershipsDueInXDays(days).success(function(data) {
       $scope.membershipsDue = data;
       $scope.checkAll = true;
@@ -21,6 +23,8 @@ swkroaApp.controller('billingController', ['$scope', '$http', 'codesetService', 
       }
 
       $scope.totalMemberships = $scope.membershipsDue.length;
+
+      hideProcessingDialog();
     });
   };
 
@@ -47,11 +51,11 @@ swkroaApp.controller('billingController', ['$scope', '$http', 'codesetService', 
       }
     };
 
-    $('#pleaseWaitDlg').modal();
+    showProcessingDialog();
 
     membershipService.billMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo).success(function(data) {
-      $('#pleaseWaitDlg').modal('hide');
       $scope.getMemberhipsDueIn($scope.days);
+      hideProcessingDialog();
     });
   };
 
