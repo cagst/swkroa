@@ -1,6 +1,6 @@
 package com.cagst.swkroa.model;
 
-import java.util.List;
+import java.util.Set;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 
@@ -12,7 +12,7 @@ import com.cagst.swkroa.codevalue.CodeValue;
 public final class CloseMembershipsModel {
   private CodeValue closeReason;
   private String closeText;
-  private List<Long> memberships;
+  private Set<Long> memberships;
 
   public CodeValue getCloseReason() {
     return closeReason;
@@ -30,11 +30,11 @@ public final class CloseMembershipsModel {
     this.closeText = closeText;
   }
 
-  public List<Long> getMemberships() {
+  public Set<Long> getMembershipIds() {
     return memberships;
   }
 
-  public void setMemberships(final List<Long> memberships) {
+  public void setMembershipIds(final Set<Long> memberships) {
     this.memberships = memberships;
   }
 }

@@ -549,19 +549,59 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
-  this.closeMemberships = function(membershipsArg, closeReasonArg, closeTextArg) {
+  this.closeMemberships = function(membershipIdsArg, closeReasonArg, closeTextArg) {
     var closeReasonText = "";
     if (closeTextArg) {
       closeReasonText = closeTextArg;
     };
 
     var data = {
-      memberships: membershipsArg,
+      membershipIds: membershipIdsArg,
       closeReason: closeReasonArg,
       closeText: closeReasonText
     };
 
     var promise = $http.post(rootUrl + '/close', JSON.stringify(data));
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.billMemberships = function(membershipIdsArg, transDateArg, transDescArg, transMemoArg) {
+    var transDesc = "";
+    var transMemo = "";
+
+    if (transDescArg) {
+      transDesc = transDescArg;
+    };
+
+    if (transMemoArg) {
+      transMemo = transMemoArg;
+    };
+
+    var data = {
+      membershipIds: membershipIdsArg,
+      transactionDate: transDateArg,
+      transactionDescription: transDesc,
+      transactionMemo: transMemo
+    };
+
+    var promise = $http.post(rootUrl + '/bill', JSON.stringify(data));
 
     promise.success = function(fn) {
       promise.then(function(response) {

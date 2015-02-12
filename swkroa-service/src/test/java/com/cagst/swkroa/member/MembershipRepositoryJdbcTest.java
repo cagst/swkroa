@@ -5,15 +5,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import com.google.common.collect.Sets;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
@@ -261,7 +262,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testCloseMemberships_Failed_NoMemberships() {
-    repo.closeMemberships(new ArrayList<Long>(), closeReason, null, user);
+    repo.closeMemberships(new HashSet<Long>(), closeReason, null, user);
   }
 
   /**
@@ -269,7 +270,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testCloseMemberships_Failed_NoCloseReason() {
-    List<Long> membershipIds = new ArrayList<Long>(2);
+    Set<Long> membershipIds = Sets.newHashSetWithExpectedSize(2);
 
     membershipIds.add(1L);
     membershipIds.add(2L);
@@ -282,7 +283,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testCloseMemberships_Succeeded() {
-    List<Long> membershipIds = new ArrayList<Long>(2);
+    Set<Long> membershipIds = Sets.newHashSetWithExpectedSize(2);
 
     membershipIds.add(1L);
     membershipIds.add(2L);

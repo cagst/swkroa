@@ -25,7 +25,7 @@ public class BillingRunMapper implements RowMapper<BillingRun> {
     run.setRunDate(CGTDateTimeUtils.getDateTime(rs, TRANSACTION_DT));
     run.setRunDescription(rs.getString(TRANSACTION_DESC));
     run.setRunCount(rs.getLong(TRANSACTION_COUNT));
-    run.setRunTotal(rs.getBigDecimal(TRANSACTION_TOTAL));
+    run.setRunTotal(rs.getBigDecimal(TRANSACTION_TOTAL).negate());
 
     return run;
   }

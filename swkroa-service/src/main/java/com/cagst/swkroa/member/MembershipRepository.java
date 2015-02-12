@@ -1,6 +1,7 @@
 package com.cagst.swkroa.member;
 
 import java.util.List;
+import java.util.Set;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.user.User;
@@ -96,7 +97,7 @@ public interface MembershipRepository {
    * Closes the memberships identified by their unique identifier for the specified reason.
    *
    * @param membershipIds
-   *      A {@link List} of {@link Long} that uniquely identifies the memberships to close.
+   *      A {@link Set} of {@link Long} that uniquely identifies the memberships to close.
    * @param closeReason
    *      A {@link CodeValue} that specifies the reason for closure, if {@code null} then a closeText must be specified.
    * @param closeText
@@ -106,7 +107,7 @@ public interface MembershipRepository {
    *
    * @return The number of memberships closed (modified)
    */
-  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
+  public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException;
 
 }

@@ -1,5 +1,6 @@
 CREATE VIEW membership_summary AS
      SELECT ms.membership_id
+           ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS membership_name
            ,ms.entity_type_cd
            ,m.member_id
            ,mt.member_type_id
@@ -20,6 +21,7 @@ CREATE VIEW membership_summary AS
            ,ms.dues_amount AS fixed_dues
            ,ms.updt_cnt AS membership_updt_cnt
            ,COALESCE(SUM(mt2.dues_amount), 0) AS calculated_dues
+           ,COALESCE(ms.dues_amount, COALESCE(SUM(mt2.dues_amount), 0)) AS effective_dues
            ,(SELECT SUM(te.transaction_entry_amount) AS balance
                FROM transaction t
                    ,transaction_entry te
@@ -42,6 +44,7 @@ CREATE VIEW membership_summary AS
                             AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
  LEFT OUTER JOIN person p   ON (p.person_id = m.person_id AND p.active_ind = 1)
    GROUP BY membership_id
+           ,membership_name
            ,entity_type_cd
            ,member_id
            ,member_type_id

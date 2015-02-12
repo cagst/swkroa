@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
@@ -178,7 +179,7 @@ import org.springframework.util.Assert;
   @Override
   @Transactional
   @CacheEvict(value = "memberships", allEntries = true)
-  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
+  public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException {
 
     Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");

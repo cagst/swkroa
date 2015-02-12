@@ -2,14 +2,9 @@ package com.cagst.swkroa.controller.api;
 
 import javax.inject.Inject;
 
-import java.util.List;
-
-import com.cagst.swkroa.exception.BadRequestException;
 import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
-import com.cagst.swkroa.transaction.UnpaidInvoice;
 import com.cagst.swkroa.web.util.WebAppUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.OptimisticLockingFailureException;

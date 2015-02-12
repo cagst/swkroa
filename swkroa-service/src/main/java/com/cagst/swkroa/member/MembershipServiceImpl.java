@@ -160,7 +160,7 @@ public final class MembershipServiceImpl implements MembershipService {
 
   @Override
   @Transactional
-  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user) {
+  public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user) {
     LOGGER.info("Calling closeMemberships for [{}]", closeReason.getDisplay());
 
     return membershipRepo.closeMemberships(membershipIds, closeReason, closeText, user);
@@ -168,11 +168,11 @@ public final class MembershipServiceImpl implements MembershipService {
 
   @Override
   @Transactional
-  public void createBillingInvoicesForMemberships(final DateTime transactionDate,
-                                                  final String transactionDescription,
-                                                  final String transactionMemo,
-                                                  final Set<Long> membershipIds,
-                                                  final User user)
+  public void billMemberships(final DateTime transactionDate,
+                              final String transactionDescription,
+                              final String transactionMemo,
+                              final Set<Long> membershipIds,
+                              final User user)
       throws DataAccessException {
     LOGGER.info("Calling createBillingInvoicesForMemberships [{}]", transactionDescription);
 

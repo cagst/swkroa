@@ -1,6 +1,6 @@
 package com.cagst.swkroa.model;
 
-import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -13,7 +13,7 @@ public class BillingRunModel {
   private DateTime transactionDt;
   private String transactionDesc;
   private String transactionMemo;
-  private List<Long> membershipIds;
+  private Set<Long> membershipIds;
 
   public DateTime getTransactionDate() {
     return transactionDt;
@@ -39,11 +39,11 @@ public class BillingRunModel {
     this.transactionMemo = memo;
   }
 
-  public List<Long> getMembershipIds() {
+  public Set<Long> getMembershipIds() {
     return membershipIds;
   }
 
-  public void setMembershipIds(final List<Long> ids) {
+  public void setMembershipIds(final Set<Long> ids) {
     this.membershipIds = ids;
   }
 }

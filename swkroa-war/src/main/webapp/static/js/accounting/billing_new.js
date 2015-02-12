@@ -37,6 +37,24 @@ swkroaApp.controller('billingController', ['$scope', '$http', 'codesetService', 
     calculateTotals($scope);
   };
 
+  $scope.billMemberships = function() {
+    $('#billMembershipsDlg').modal('hide');
+
+    var memberships = [];
+    for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
+      if ($scope.membershipsDue[idx].selected) {
+        memberships.push($scope.membershipsDue[idx].membershipUID);
+      }
+    };
+
+    $('#pleaseWaitDlg').modal();
+
+    membershipService.billMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo).success(function(data) {
+      $('#pleaseWaitDlg').modal('hide');
+      $scope.getMemberhipsDueIn($scope.days);
+    });
+  };
+
   $scope.days = 30;
   $scope.totalMemberships = 0;
   $scope.totalAmount = 0;

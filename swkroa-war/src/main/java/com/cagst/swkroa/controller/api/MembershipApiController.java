@@ -16,6 +16,7 @@ import com.cagst.swkroa.member.MembershipBalance;
 import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.member.MembershipStatus;
+import com.cagst.swkroa.model.BillingRunModel;
 import com.cagst.swkroa.model.CloseMembershipsModel;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
@@ -196,12 +197,17 @@ public final class MembershipApiController {
 
   /**
    * Handles the request and closes the memberships identified by the unique identifiers passed in.
+   *
+   * @param closeMemberships
+   *        The {@link CloseMembershipsModel} that contains the membership ids to close.
+   *
+   * @return A {@link ResponseEntity} that indicates if the memberships were closed successfully.
    */
   @RequestMapping(value = "/close", method = RequestMethod.POST)
   public ResponseEntity closeMemberships(final @RequestBody CloseMembershipsModel closeMemberships) {
     LOGGER.info("Received request to close memberships");
 
-    if (CollectionUtils.isEmpty(closeMemberships.getMemberships())) {
+    if (CollectionUtils.isEmpty(closeMemberships.getMembershipIds())) {
       return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
@@ -210,9 +216,40 @@ public final class MembershipApiController {
     }
 
     membershipService.closeMemberships(
-        closeMemberships.getMemberships(),
+        closeMemberships.getMembershipIds(),
         closeMemberships.getCloseReason(),
         closeMemberships.getCloseText(),
+        WebAppUtils.getUser()
+    );
+
+    return new ResponseEntity(HttpStatus.OK);
+  }
+
+  /**
+   * Handles the request and bills the memberships identified by the unique identifiers passed in.
+   *
+   * @param billingMemberships
+   *        The {@link BillingRunModel} that contains the membership ids to bill.
+   *
+   * @return A {@link ResponseEntity} that indicates if the memberships were billed successfully.
+   */
+  @RequestMapping(value = "/bill", method = RequestMethod.POST)
+  public ResponseEntity billMemberships(final @RequestBody BillingRunModel billingMemberships) {
+    LOGGER.info("Received request to bill memberships");
+
+    if (CollectionUtils.isEmpty(billingMemberships.getMembershipIds())) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    if (billingMemberships.getTransactionDate() == null) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    membershipService.billMemberships(
+        billingMemberships.getTransactionDate(),
+        billingMemberships.getTransactionDescription(),
+        billingMemberships.getTransactionMemo(),
+        billingMemberships.getMembershipIds(),
         WebAppUtils.getUser()
     );
 

@@ -108,7 +108,10 @@ public interface MembershipService {
    *
    * @return The number of memberships closed (modified)
    */
-  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
+  public int closeMemberships(final Set<Long> membershipIds,
+                              final CodeValue closeReason,
+                              final String closeText,
+                              final User user)
       throws DataAccessException;
 
   /**
@@ -125,10 +128,10 @@ public interface MembershipService {
    * @param user
    *     The {@link User} that performed the changes.
    */
-  public void createBillingInvoicesForMemberships(final DateTime transactionDate,
-                                                  final String transactionDescription,
-                                                  final String transactionMemo,
-                                                  final Set<Long> membershipIds,
-                                                  final User user)
+  public void billMemberships(final DateTime transactionDate,
+                              final String transactionDescription,
+                              final String transactionMemo,
+                              final Set<Long> membershipIds,
+                              final User user)
   throws DataAccessException;
 }

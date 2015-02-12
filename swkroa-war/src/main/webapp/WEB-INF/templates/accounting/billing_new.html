@@ -46,7 +46,7 @@
           zzz Export
         </a>
         <button type="button" class="btn btn-primary"
-                data-toggle="modal" data-target="#createTransactionDlg">
+                data-toggle="modal" data-target="#billMembershipsDlg">
           <span data-th-text="#{com.cagst.swkroa.billing.new.generate}">zzz Generate</span>
         </button>
       </div>
@@ -65,7 +65,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr data-ng-repeat="mem in membershipsDue | orderBy: 'nextDueDate': false">
+          <tr data-ng-repeat="mem in membershipsDue">
             <td>
               <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox"
                      data-ng-model="mem.selected" data-ng-click="toggleCheck(mem)"/>
@@ -82,7 +82,7 @@
   </div>
 
   <!-- Transaction Details Dialog -->
-  <div class="modal fade" id="createTransactionDlg" tabindex="-1">
+  <div class="modal" id="billMembershipsDlg" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -100,7 +100,7 @@
                        data-is-open="opened"
                        data-show-button-bar="false"
                        data-show-weeks="false"
-                       data-ng-model="transaction.transactionDate"
+                       data-ng-model="transactionDate"
                        data-ng-required="true" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default" data-ng-click="open($event)">
@@ -114,7 +114,7 @@
                 zzz Desc
               </label>
               <input type="text" class="form-control" name="desc"
-                     data-ng-model="transaction.transactionDescription"
+                     data-ng-model="transactionDescription"
                      data-ng-required="true"
                      data-ng-options="type.display for type in transactionTypes" />
             </div>
@@ -124,13 +124,13 @@
               <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.memo}">
                 zzz Memo
               </label>
-              <textarea class="form-control" rows="3" data-ng-model="transaction.memo"></textarea>
+              <textarea class="form-control" rows="3" data-ng-model="transactionMemo"></textarea>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary"
-                  data-ng-click="generateTransactions()"
+                  data-ng-click="billMemberships()"
                   data-th-text="#{com.cagst.swkroa.billing.new.generate}">
             zzz Generate
           </button>
@@ -140,6 +140,18 @@
             zzz Disregard
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Processing Dialog -->
+  <div class="modal" id="pleaseWaitDlg" data-backdrop="static" data-keyboard="false">
+    <div class="modal-header">
+      <h1>Processing...</h1>
+    </div>
+    <div class="modal-body">
+      <div class="progress progress-striped active">
+        <div class="bar" style="width: 100%;"></div>
       </div>
     </div>
   </div>
