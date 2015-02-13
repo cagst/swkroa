@@ -181,7 +181,7 @@ public final class MembershipServiceImpl implements MembershipService {
     CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_BASE");
 
     for (Long membershipId : membershipIds) {
-      Membership membership = getMembershipByUID(membershipId);
+      Membership membership = membershipRepo.getMembershipByUID(membershipId);
       if (membership == null) {
         throw new NotFoundException("Membership [" + membershipId + "] was not found.");
       }
@@ -228,10 +228,9 @@ public final class MembershipServiceImpl implements MembershipService {
 
       // Save the Invoice (transaction)
       transactionRepo.saveTransaction(invoice, user);
-
-      // Update Membership (next_due_dt)
-      membership.setNextDueDate(membership.getNextDueDate().plusYears(1));
-      membershipRepo.saveMembership(membership, user);
     }
+
+    // Update Membership (next_due_dt)
+    membershipRepo.updateNextDueDate(membershipIds, user);
   }
 }

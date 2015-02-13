@@ -45,9 +45,10 @@ import org.springframework.util.Assert;
   private static final String GET_MEMBERSHIPS_BY_NAME       = "GET_MEMBERSHIPS_BY_NAME";
   private static final String GET_MEMBERSHIPS_DUE_IN_X_DAYS = "GET_MEMBERSHIPS_DUE_IN_X_DAYS";
 
-  private static final String INSERT_MEMBERSHIP = "INSERT_MEMBERSHIP";
-  private static final String UPDATE_MEMBERSHIP = "UPDATE_MEMBERSHIP";
-  private static final String CLOSE_MEMBERSHIPS = "CLOSE_MEMBERSHIPS";
+  private static final String INSERT_MEMBERSHIP    = "INSERT_MEMBERSHIP";
+  private static final String UPDATE_MEMBERSHIP    = "UPDATE_MEMBERSHIP";
+  private static final String CLOSE_MEMBERSHIPS    = "CLOSE_MEMBERSHIPS";
+  private static final String UPDATE_NEXT_DUE_DATE = "UPDATE_NEXT_DUE_DATE";
 
   private final MemberRepository memberRepo;
   private final CodeValueRepository codeValueRepo;
@@ -182,8 +183,8 @@ import org.springframework.util.Assert;
   public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException {
 
-    Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
     Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
+    Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
     LOGGER.info("Closing Memberships");
@@ -196,6 +197,23 @@ import org.springframework.util.Assert;
     params.addValue("updt_id", user.getUserUID());
 
     return getJdbcTemplate().update(stmtLoader.load(CLOSE_MEMBERSHIPS), params);
+  }
+
+  @Override
+  @Transactional
+  @CacheEvict(value = "memberships", allEntries = true)
+  public int updateNextDueDate(final Set<Long> membershipIds, final User user) throws DataAccessException {
+    Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+
+    LOGGER.info("Billing Memberships");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("memberships", membershipIds);
+    params.addValue("updt_id", user.getUserUID());
+
+    return getJdbcTemplate().update(stmtLoader.load(UPDATE_NEXT_DUE_DATE), params);
   }
 
   private Membership insertMembership(final Membership membership, final User user)

@@ -288,8 +288,33 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     membershipIds.add(1L);
     membershipIds.add(2L);
 
-    int closedMembers = repo.closeMemberships(membershipIds, closeReason, null, user);
+    int closedMemberships = repo.closeMemberships(membershipIds, closeReason, null, user);
 
-    assertEquals("Ensure the correct number of memberships were closed", 2, closedMembers);
+    assertEquals("Ensure the correct number of memberships were closed", 2, closedMemberships);
+  }
+
+  /**
+   * Test the updateNextDueDate method.
+   */
+  @Test
+  public void testUpdateNextDueDate() {
+    Membership membership1 = repo.getMembershipByUID(1L);
+    Membership membership2 = repo.getMembershipByUID(2L);
+
+    assertNotNull("Ensure we found the memberships (membership1)", membership1);
+    assertNotNull("Ensure we found the memberships (membership2)", membership2);
+    assertEquals("Ensure the next due date is correct (membership1)", "01/23/2014", membership1.getNextDueDate().toString("MM/dd/yyyy"));
+    assertEquals("Ensure the next due date is correct (membership2)", "01/23/2015", membership2.getNextDueDate().toString("MM/dd/yyyy"));
+
+    Set<Long> ids = Sets.newHashSet(membership1.getMembershipUID(), membership2.getMembershipUID());
+
+    int updatedMemberships = repo.updateNextDueDate(ids, user);
+
+    assertEquals("Ensure the correct number of memberships were updated", 2, updatedMemberships);
+
+    Membership membership = repo.getMembershipByUID(1L);
+
+    assertNotNull("Ensure we found the membership", membership);
+    assertEquals("Ensure the next due date was updated correctly", "01/23/2015", membership.getNextDueDate().toString("MM/dd/yyyy"));
   }
 }

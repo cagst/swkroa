@@ -106,8 +106,23 @@ public interface MembershipRepository {
    *     The {@link User} that performed the changes.
    *
    * @return The number of memberships closed (modified)
+   *
+   * @throws DataAccessException if the query fails
    */
   public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException;
 
+  /**
+   * Updates the next due date by 1 year for the specified memberships.
+   *
+   * @param membershipIds
+   *      A {@link Set} of {@link Long} that uniquely identify the memberships to update.
+   * @param user
+   *      The {@link User} that performed the changes.
+   *
+   * @return The number of memberships updated (modified)
+   *
+   * @throws DataAccessException if the query fails
+   */
+  public int updateNextDueDate(final Set<Long> membershipIds, final User user) throws DataAccessException;
 }
