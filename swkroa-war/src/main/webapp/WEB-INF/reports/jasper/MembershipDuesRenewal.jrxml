@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ba60f7ca-6087-4616-9f69-0585c4aa7ca0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT ms.membership_id
+      ,ms.membership_name
+      ,ms.fixed_dues
+      ,ms.calculated_dues
+      ,ms.effective_dues
+      ,ms.balance
+      ,mt.member_type_meaning
+      ,ms.member_id
+      ,ms.owner_ident
+      ,pe.email_address AS primary_email
+      ,pa.address1 AS primary_adress1
+      ,pa.address2 AS primary_address2
+      ,pa.address3 AS primary_address3
+      ,pa.city AS primary_city
+      ,pa.state_code AS primary_state
+      ,IF(LENGTH(pa.postal_code) > 5, CONCAT(LEFT(pa.postal_code, 5), "-", MID(pa.postal_code, 6)), pa.postal_code) AS primary_postal_code
+      ,pa.country_code AS primary_country
+      ,NULLIF(s.member_name, '') AS spouse_name
+      ,NULLIF(m.member_name, '') AS member_name
+      ,mpe.email_address AS member_email
+      ,mpa.address1 AS member_address1
+      ,mpa.address2 AS member_address2
+      ,mpa.address3 AS member_address3
+      ,mpa.city AS member_city
+      ,mpa.state_code AS member_state
+      ,IF(LENGTH(mpa.postal_code) > 5, CONCAT(LEFT(mpa.postal_code, 5), "-", MID(mpa.postal_code, 6)), mpa.postal_code) AS member_postal_code
+      ,mpa.country_code AS member_country
+  FROM membership_summary ms
+ INNER JOIN member_type mt ON (mt.member_type_id = ms.member_type_id)
+  LEFT OUTER JOIN primary_addresses pa ON (pa.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
+  LEFT OUTER JOIN primary_email pe ON (pe.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
+  LEFT OUTER JOIN member_summary s ON (s.membership_id = ms.membership_id AND s.member_type_meaning = 'SPOUSE' AND s.active_ind = ms.active_ind)
+  LEFT OUTER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind AND m.member_id != ms.member_id AND m.member_id != s.member_id)
+  LEFT OUTER JOIN primary_addresses mpa ON (mpa.parent_entity_id = m.member_id AND mpa.parent_entity_name = 'MEMBER')
+  LEFT OUTER JOIN primary_email mpe ON (mpe.parent_entity_id = m.member_id AND mpe.parent_entity_name = 'MEMBER')
+ WHERE ms.active_ind = 1
+ORDER BY ms.membership_name ASC;
+]]>
+	</queryString>
+	<field name="membership_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="membership_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fixed_dues" class="java.math.BigDecimal"/>
+	<field name="calculated_dues" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="effective_dues" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="balance" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_type_meaning" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="primary_email" class="java.lang.String"/>
+	<field name="primary_adress1" class="java.lang.String"/>
+	<field name="primary_address2" class="java.lang.String"/>
+	<field name="primary_address3" class="java.lang.String"/>
+	<field name="primary_city" class="java.lang.String"/>
+	<field name="primary_state" class="java.lang.String"/>
+	<field name="primary_postal_code" class="java.lang.String"/>
+	<field name="primary_country" class="java.lang.String"/>
+	<field name="spouse_name" class="java.lang.String"/>
+	<field name="member_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_email" class="java.lang.String"/>
+	<field name="member_address1" class="java.lang.String"/>
+	<field name="member_address2" class="java.lang.String"/>
+	<field name="member_address3" class="java.lang.String"/>
+	<field name="member_city" class="java.lang.String"/>
+	<field name="member_state" class="java.lang.String"/>
+	<field name="member_postal_code" class="java.lang.String"/>
+	<field name="member_country" class="java.lang.String"/>
+	<group name="membership">
+		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
+		<groupHeader>
+			<band height="50"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="227" splitType="Stretch">
+			<elementGroup>
+				<staticText>
+					<reportElement x="13" y="49" width="278" height="20" uuid="d5086ccd-545c-49e1-8f0d-28f1b39d9077"/>
+					<textElement textAlignment="Center">
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<text><![CDATA[(620) 544-4333]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="13" y="29" width="278" height="20" uuid="b3081545-0929-4348-b1e9-fc0a3afdc226"/>
+					<textElement textAlignment="Center">
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<text><![CDATA[209 E 6th Street, Hugoton, KS 67951]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="13" y="11" width="278" height="18" uuid="9ef3b1c8-6689-4c92-872e-c4e7b8f2290c"/>
+					<textElement textAlignment="Center">
+						<font fontName="Verdana" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SWKROA]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement key="addressBox" mode="Transparent" x="13" y="11" width="278" height="58" uuid="9e6cbc91-e221-487e-82d9-c162da06b074"/>
+				</rectangle>
+			</elementGroup>
+			<rectangle>
+				<reportElement mode="Transparent" x="291" y="11" width="267" height="58" uuid="f6922a91-39c1-4ab9-89c3-1f22513e3a27"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="291" y="11" width="267" height="20" uuid="151740a9-567d-4b09-99fc-7a4ab26ba479"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Membership Renewal Form]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="291" y="31" width="267" height="20" uuid="20b00272-fe1b-4de8-850e-c542def0f7ed"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<text><![CDATA[(2015 - 2016)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="85" width="545" height="129" uuid="2c495fad-ce5b-4755-8b06-06a0309f113d"/>
+				<textElement verticalAlignment="Top" markup="styled">
+					<paragraph firstLineIndent="25"/>
+				</textElement>
+				<text><![CDATA[It is time to renew your membership in the Southwest Kansas Royalty Owners Association. Your membership renewal fee for the period from March 1, 2015 to March 1, 2016 is shown below. Please make your check payable to SWKROA and return this form along with your payments to SWKROA. We have enclosed a self-addressed envelope for your convenience.
+(Please note, we no longer have a post office box and mail should be sent to SWKROA at 209 E 6<sup>th</sup> Street, Hugoton, KS 67951.)
+]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>
