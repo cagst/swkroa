@@ -7,15 +7,15 @@
 	<parameter name="memberships" class="java.util.Collection"/>
 	<queryString>
 		<![CDATA[SELECT ms.company_name
-	  ,ms.membership_name
+      ,ms.membership_name
       ,ms.owner_ident
       ,ms.greeting
       ,ms.in_care_of
-      ,cv.codevalue_display AS title
+      ,ms.title_display
       ,ms.name_first
       ,ms.name_middle
       ,ms.name_last
-      ,ms.full_name_lf AS full_name
+      ,ms.name_full
       ,pa.address1
       ,pa.address2
       ,pa.address3
@@ -27,10 +27,13 @@
       ,balance AS amount_due
   FROM membership_summary ms
 INNER JOIN primary_address pa ON (pa.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
-LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = ms.title_cd)
- WHERE $X{IN, ms.membership_id, memberships}ORDER BY membership_name]]>
+ WHERE $X{IN, ms.membership_id, memberships}
+ORDER BY membership_name]]>
 	</queryString>
 	<field name="company_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="membership_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="owner_ident" class="java.lang.String">
@@ -42,7 +45,7 @@ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = ms.title_cd)
 	<field name="in_care_of" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="title" class="java.lang.String"/>
+	<field name="title_display" class="java.lang.String"/>
 	<field name="name_first" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -50,6 +53,9 @@ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = ms.title_cd)
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="name_last" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name_full" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="address1" class="java.lang.String">
@@ -73,8 +79,6 @@ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = ms.title_cd)
 	<field name="country_code" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="full_name" class="java.lang.String"/>
-	<field name="membership_name" class="java.lang.String"/>
 	<field name="dues_amount" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -83,7 +87,7 @@ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = ms.title_cd)
 		<variableExpression><![CDATA[$F{city} + ", " + $F{state_code} + " " + $F{postal_code}]]></variableExpression>
 	</variable>
 	<variable name="Greeting" class="java.lang.String">
-		<variableExpression><![CDATA[$F{greeting} == null || $F{greeting}.isEmpty() ? ($F{title} == null || $F{title}.isEmpty() ? $F{name_first} : ($F{name_last} == null || $F{name_last}.isEmpty() ? "" : $F{title} + " " + $F{name_last})) : $F{greeting}]]></variableExpression>
+		<variableExpression><![CDATA[$F{greeting} == null || $F{greeting}.isEmpty() ? ($F{title_display} == null || $F{title_display}.isEmpty() ? $F{name_first} : ($F{name_last} == null || $F{name_last}.isEmpty() ? "" : $F{title_display} + " " + $F{name_last})) : $F{greeting}]]></variableExpression>
 	</variable>
 	<columnHeader>
 		<band height="23" splitType="Stretch">
@@ -161,7 +165,7 @@ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = ms.title_cd)
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="300" y="0" width="50" height="20" uuid="ef0cdd54-083c-4d48-9c6d-3cf8db4f4e1c"/>
-				<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{title_display}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="400" y="0" width="50" height="20" uuid="cbbdddb5-8cc6-4092-99f5-e909cbb1eee3"/>
@@ -185,7 +189,7 @@ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = ms.title_cd)
 			</textField>
 			<textField>
 				<reportElement x="100" y="0" width="50" height="20" uuid="ff47b7f2-d9d7-4eb5-93fc-5d9e415e944e"/>
-				<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{name_full}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="0" width="50" height="20" uuid="f032f840-63c4-42e7-ad8c-d1d6d20a8e46"/>
