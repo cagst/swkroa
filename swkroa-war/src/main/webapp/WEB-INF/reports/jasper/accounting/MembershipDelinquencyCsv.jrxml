@@ -7,6 +7,7 @@
 	<parameter name="memberships" class="java.util.Collection"/>
 	<queryString>
 		<![CDATA[SELECT ms.company_name
+	  ,ms.membership_name
       ,ms.owner_ident
       ,ms.greeting
       ,ms.in_care_of
@@ -14,19 +15,18 @@
       ,ms.name_first
       ,ms.name_middle
       ,ms.name_last
+      ,ms.full_name_lf AS full_name
       ,pa.address1
       ,pa.address2
       ,pa.address3
       ,pa.city
       ,pa.state_code
-      ,IF(LENGTH(pa.postal_code) > 5, CONCAT(LEFT(pa.postal_code, 5), "-", MID(pa.postal_code, 6)), pa.postal_code) AS postal_code
+      ,pa.postal_code_formatted AS postal_code
       ,pa.country_code
-      ,CONCAT_WS(', ', ms.name_last, ms.name_first) AS full_name
-      ,COALESCE(ms.company_name, CONCAT_WS(', ', ms.name_last, ms.name_first)) AS membership_name
       ,fixed_dues AS dues_amount
       ,balance AS amount_due
   FROM membership_summary ms
-INNER JOIN primary_addresses pa ON (pa.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
+INNER JOIN primary_address pa ON (pa.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
 LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = ms.title_cd)
  WHERE $X{IN, ms.membership_id, memberships}ORDER BY membership_name]]>
 	</queryString>

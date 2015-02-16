@@ -13,32 +13,34 @@
 	<parameter name="newsletters_only" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[SELECT m.company_name
+      ,m.member_name
       ,m.owner_ident
       ,m.greeting
       ,m.in_care_of
-      ,cv.codevalue_display AS title
-      ,p.name_first
-      ,p.name_middle
-      ,p.name_last
+      ,m.title_display
+      ,m.name_first
+      ,m.name_middle
+      ,m.name_last
+      ,m.name_full
       ,pa.address1
       ,pa.address2
       ,pa.address3
       ,pa.city
       ,pa.state_code
-      ,IF(LENGTH(pa.postal_code) > 5, CONCAT(LEFT(pa.postal_code, 5), "-", MID(pa.postal_code, 6)), pa.postal_code) AS postal_code
+      ,pa.postal_code_formatted AS postal_code
       ,pa.country_code
-      ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
-      ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS membership_name
-  FROM member m
+  FROM member_summary m
+ INNER JOIN member m1 ON (m1.member_id = m.member_id)
  INNER JOIN membership ms ON (ms.membership_id = m.membership_id AND ms.active_ind = m.active_ind)
- INNER JOIN primary_addresses pa ON (pa.parent_entity_name = 'MEMBER' AND pa.parent_entity_id = m.member_id)
- LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
- LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
+ INNER JOIN primary_address pa ON (pa.parent_entity_name = 'MEMBER' AND pa.parent_entity_id = m.member_id)
   WHERE m.active_ind = 1
-    AND ($P{newsletters_only} = 0 OR m.mail_newsletter_ind = 1)
-ORDER BY membership_name]]>
+    AND ($P{newsletters_only} = 0 OR m1.mail_newsletter_ind = 1)
+ORDER BY m.member_name]]>
 	</queryString>
 	<field name="company_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="owner_ident" class="java.lang.String">
@@ -50,7 +52,7 @@ ORDER BY membership_name]]>
 	<field name="in_care_of" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="title" class="java.lang.String"/>
+	<field name="title_display" class="java.lang.String"/>
 	<field name="name_first" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -58,6 +60,9 @@ ORDER BY membership_name]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="name_last" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name_full" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="address1" class="java.lang.String">
@@ -81,8 +86,6 @@ ORDER BY membership_name]]>
 	<field name="country_code" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="full_name" class="java.lang.String"/>
-	<field name="membership_name" class="java.lang.String"/>
 	<variable name="CSZ" class="java.lang.String">
 		<variableExpression><![CDATA[$F{city} + ", " + $F{state_code} + " " + $F{postal_code}]]></variableExpression>
 	</variable>
@@ -102,7 +105,7 @@ ORDER BY membership_name]]>
 				<textElement>
 					<paragraph leftIndent="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="40" width="572" height="20" isRemoveLineWhenBlank="true" uuid="4d3c9069-a0b9-4844-a850-0ddc387f8783"/>
