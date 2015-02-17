@@ -2,13 +2,18 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="81"/>
+	<property name="ireport.y" value="0"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.membership_name
       ,ms.fixed_dues
       ,ms.calculated_dues
       ,ms.effective_dues
+      ,(SELECT SUM(m1.dues_amount)
+          FROM member_summary m1
+         WHERE m1.membership_id = ms.membership_id
+           AND m1.member_id != ms.member_id
+           AND m1.active_ind = ms.active_ind) AS family_dues
       ,ms.balance
       ,p.dues_amount AS primary_dues_amount
       ,p.member_type_meaning AS primary_member_type_meaning
@@ -25,7 +30,6 @@
       ,pa.state_code AS primary_state
       ,pa.postal_code_formatted AS primary_postal_code
       ,pa.country_code AS primary_country
-      ,NULLIF(s.member_name, '') AS spouse_name
       ,NULLIF(m.member_name, '') AS member_name
       ,m.name_full
       ,mpe.email_address AS member_email
@@ -36,18 +40,25 @@
       ,mpa.state_code AS member_state
       ,mpa.postal_code_formatted AS member_postal_code
       ,mpa.country_code AS member_country
-      ,m.dues_amount AS member_dues_amount
       ,NULLIF(CONCAT_WS(', ', mpa.address1, mpa.address2, mpa.address3, mpa.city, CONCAT_WS(' ', mpa.state_code, mpa.postal_code_formatted)), '') AS member_address
+      ,m.dues_amount AS member_dues_amount
+      ,(SELECT m2.name_full
+          FROM member_summary m2
+         WHERE m2.membership_id = ms.membership_id
+           AND m2.member_id != ms.member_id
+           AND m2.active_ind = ms.active_ind
+           AND m2.member_type_meaning = 'SPOUSE'
+         LIMIT 1) AS spouse_name
   FROM membership_summary ms
  INNER JOIN member_summary p ON (p.membership_id = ms.membership_id AND p.member_id = ms.member_id)
  INNER JOIN member pm ON (pm.member_id = ms.member_id)
   LEFT OUTER JOIN primary_address pa ON (pa.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
   LEFT OUTER JOIN primary_email pe ON (pe.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
-  LEFT OUTER JOIN member_summary s ON (s.membership_id = ms.membership_id AND s.member_type_meaning = 'SPOUSE' AND s.active_ind = ms.active_ind)
-  LEFT OUTER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind AND m.member_id != ms.member_id AND m.member_id != s.member_id)
+  LEFT OUTER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind AND m.member_id != ms.member_id AND m.member_type_meaning != 'SPOUSE')
   LEFT OUTER JOIN primary_address mpa ON (mpa.parent_entity_id = m.member_id AND mpa.parent_entity_name = 'MEMBER')
   LEFT OUTER JOIN primary_email mpe ON (mpe.parent_entity_id = m.member_id AND mpe.parent_entity_name = 'MEMBER')
  WHERE ms.active_ind = 1
+   AND ms.effective_dues > 0
 ORDER BY ms.membership_name ASC;]]>
 	</queryString>
 	<field name="membership_id" class="java.math.BigInteger">
@@ -63,6 +74,7 @@ ORDER BY ms.membership_name ASC;]]>
 	<field name="effective_dues" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="family_dues" class="java.math.BigDecimal"/>
 	<field name="balance" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -89,7 +101,6 @@ ORDER BY ms.membership_name ASC;]]>
 	<field name="primary_state" class="java.lang.String"/>
 	<field name="primary_postal_code" class="java.lang.String"/>
 	<field name="primary_country" class="java.lang.String"/>
-	<field name="spouse_name" class="java.lang.String"/>
 	<field name="member_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -104,15 +115,13 @@ ORDER BY ms.membership_name ASC;]]>
 	<field name="member_state" class="java.lang.String"/>
 	<field name="member_postal_code" class="java.lang.String"/>
 	<field name="member_country" class="java.lang.String"/>
-	<field name="member_dues_amount" class="java.math.BigDecimal"/>
 	<field name="member_address" class="java.lang.String"/>
-	<variable name="CSZ" class="java.lang.String">
-		<variableExpression><![CDATA[$F{primary_city} + ", " + $F{primary_state} + " " + $F{primary_postal_code}]]></variableExpression>
-	</variable>
+	<field name="member_dues_amount" class="java.math.BigDecimal"/>
+	<field name="spouse_name" class="java.lang.String"/>
 	<group name="membership">
 		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
 		<groupHeader>
-			<band height="213">
+			<band height="281">
 				<textField isBlankWhenNull="true">
 					<reportElement x="40" y="0" width="246" height="20" isRemoveLineWhenBlank="true" uuid="c53bf91b-9457-4581-b4c6-5f4da289c1e5"/>
 					<textElement>
@@ -156,49 +165,149 @@ ORDER BY ms.membership_name ASC;]]>
 					<textFieldExpression><![CDATA[$F{primary_city} + ", " + $F{primary_state} + " " + $F{primary_postal_code}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="40" y="142" width="188" height="20" uuid="0453e350-ab03-4093-aa12-ec6f6d9bf052"/>
+					<reportElement x="0" y="142" width="188" height="20" uuid="0453e350-ab03-4093-aa12-ec6f6d9bf052"/>
 					<textElement>
 						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<text><![CDATA[Spouse listed on membership: ]]></text>
 				</staticText>
 				<textField isBlankWhenNull="false">
-					<reportElement x="228" y="142" width="129" height="20" uuid="9c285073-f625-418c-9ce2-f00379c20d6b"/>
+					<reportElement x="188" y="142" width="129" height="20" uuid="9c285073-f625-418c-9ce2-f00379c20d6b"/>
 					<textElement>
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{spouse_name} == null ? "None" : $F{spouse_name}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="40" y="162" width="188" height="20" uuid="61003a05-1b22-484b-b832-f51db64412e0"/>
+					<reportElement x="0" y="162" width="188" height="20" uuid="61003a05-1b22-484b-b832-f51db64412e0"/>
 					<textElement>
 						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<text><![CDATA[Email:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="228" y="162" width="129" height="20" uuid="ce4546f6-28c1-46a0-b481-3eed5eb37c96"/>
+					<reportElement x="188" y="162" width="129" height="20" uuid="ce4546f6-28c1-46a0-b481-3eed5eb37c96"/>
 					<textElement>
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{primary_email} == null ? "None" : $F{primary_email}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="40" y="182" width="317" height="20" uuid="f3a65cac-7c42-472e-b2a2-7539387a4160"/>
+					<reportElement x="0" y="182" width="317" height="20" uuid="f3a65cac-7c42-472e-b2a2-7539387a4160"/>
 					<textElement>
 						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<text><![CDATA[Newsletter to be delivered via email listed above:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="357" y="182" width="100" height="20" uuid="23f778f4-3780-4a86-9224-23bfb28fce6a"/>
+					<reportElement x="317" y="182" width="100" height="20" uuid="23f778f4-3780-4a86-9224-23bfb28fce6a"/>
 					<textElement>
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{email_newsletter_ind} ? "Yes" : "No"]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="40" y="238" width="320" height="20" uuid="a0f94513-280e-45ad-87c2-fc8dac0d6141"/>
+					<textElement>
+						<font fontName="Verdana" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Base membership fee]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="218" width="320" height="20" uuid="3f4bacaf-17fd-4112-9236-39cb28da4b9f"/>
+					<textElement>
+						<font fontName="Verdana" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Previous balance]]></text>
+				</staticText>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="360" y="218" width="140" height="20" uuid="3e1b2a2e-bcbe-4087-9d73-95cb9fa54bec"/>
+					<textElement textAlignment="Right">
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="360" y="238" width="140" height="20" uuid="4bf41553-4dd8-4ede-81bf-688e31506d96"/>
+					<textElement textAlignment="Right">
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{primary_dues_amount}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="40" y="258" width="320" height="20" uuid="06845c73-8e31-49d8-abb1-1bd2aea2d164"/>
+					<textElement>
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<text><![CDATA[Mineral membership fees]]></text>
+				</staticText>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="360" y="258" width="140" height="20" uuid="cd3b1c15-4b6c-4264-b43c-87dc1a610f09"/>
+					<textElement textAlignment="Right">
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{effective_dues} - $F{primary_dues_amount} - ($F{family_dues} == null ? 0 : $F{family_dues})]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
+		<groupFooter>
+			<band height="150">
+				<staticText>
+					<reportElement x="74" y="0" width="286" height="20" uuid="bc3d67ed-3796-454b-bc45-f6b0e957ed07"/>
+					<textElement>
+						<font fontName="Verdana" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sub-Total Membership Fees Due]]></text>
+				</staticText>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="360" y="0" width="140" height="20" uuid="98cdd6d8-225f-4047-8680-2bdd6ab6a797"/>
+					<textElement textAlignment="Right">
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{effective_dues} + $F{balance}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="360" y="0" width="140" height="1" uuid="55293aae-8e1f-4a4d-9b96-d6242ea71970"/>
+				</line>
+				<staticText>
+					<reportElement x="40" y="34" width="320" height="66" uuid="3bc0cbb9-2d72-4c6d-ab85-5fcfc97c807d"/>
+					<textElement>
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<text><![CDATA[I would like to make a voluntary contribution to the Special Fund. Such fund is used for special projects or litigation to promote or protect the interests of our members.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="360" y="80" width="140" height="20" uuid="414b6f17-340e-43e2-8139-0f70b9eba161"/>
+					<textElement>
+						<font fontName="Verdana" size="12" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[$]]></text>
+				</staticText>
+				<line>
+					<reportElement x="360" y="100" width="140" height="1" uuid="1a4a689b-9446-4e35-ad23-18608f6a911c"/>
+				</line>
+				<staticText>
+					<reportElement x="74" y="114" width="286" height="20" uuid="5e8d8f34-5a89-4e42-b55d-1c2f1abc7ea1"/>
+					<textElement>
+						<font fontName="Verdana" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL ENCLOSED]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="360" y="114" width="140" height="20" uuid="eb7bb06a-45b0-40fa-9cdd-f85038f2fcf7"/>
+					<textElement>
+						<font fontName="Verdana" size="12"/>
+					</textElement>
+					<text><![CDATA[$]]></text>
+				</staticText>
+				<line>
+					<reportElement x="360" y="134" width="140" height="1" uuid="e9741f16-7ae7-4b2a-89c5-17c70f07ca4e"/>
+					<graphicElement>
+						<pen lineStyle="Double"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
 	</group>
 	<pageHeader>
 		<band height="220" splitType="Stretch">
@@ -211,12 +320,92 @@ ORDER BY ms.membership_name ASC;]]>
 
 Please review and confirm the following membership information. <b>ONLY USE Membership New/Change Form for other changes to your membership.]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="213" height="20" uuid="f299c483-d4de-42cd-b9e9-29b3b408277f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[SWKROA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="213" height="20" uuid="cc1d8adb-b1a2-44fa-8af3-490405562dd9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana"/>
+				</textElement>
+				<text><![CDATA[209E 6th St, Hugoton, KS  67951]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="20" uuid="9ac31149-7568-4965-83ea-e00befe77db8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana"/>
+				</textElement>
+				<text><![CDATA[620-544-4333]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="40" width="113" height="20" uuid="bec624d3-947d-4c65-835d-5af11e3632c6"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana"/>
+				</textElement>
+				<text><![CDATA[swkroa.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="254" y="0" width="318" height="20" uuid="e4dbe7a1-4c38-4275-81b2-2596ede3dd4f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Membership Renewal Form]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="254" y="20" width="318" height="20" uuid="b61b1d30-a84f-468b-bc3f-ba39fb719885"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<text><![CDATA[(2015 - 2016)]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="125" splitType="Stretch"/>
+		<band height="44" splitType="Stretch">
+			<printWhenExpression><![CDATA[$F{member_name} != null]]></printWhenExpression>
+			<textField>
+				<reportElement x="40" y="0" width="320" height="20" uuid="a86f3238-4b80-45ca-b94e-3e3e39289b57"/>
+				<textElement>
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Family membership fee (" + $F{member_name} + ")"]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="360" y="0" width="140" height="20" uuid="ebaa8abe-3c07-469c-8ed8-0867dd2e0b3c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{member_dues_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="74" y="20" width="426" height="20" uuid="a2af04a5-3409-46bd-b1a4-13cf9aeef000"/>
+				<textElement>
+					<font fontName="Verdana"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{member_address}]]></textFieldExpression>
+			</textField>
+		</band>
 	</detail>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="82" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="572" height="54" uuid="cd2facf9-6d38-4752-a88a-23dfb703a66f"/>
+				<textElement markup="styled">
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<text><![CDATA[Contributions or gifts to <i>SWKROA</i> are not deductible as charitable contributions for federal income tax purposes. However, they may be tax deductible as an ordinary and necessary business expense. Please consult your tax advisor.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="62" width="100" height="20" uuid="a5f55bae-47fd-41ec-8393-011c582aa83a"/>
+				<textElement>
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{owner_ident}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 </jasperReport>
