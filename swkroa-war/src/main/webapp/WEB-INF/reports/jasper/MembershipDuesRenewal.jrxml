@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="142"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.membership_name
@@ -118,10 +118,10 @@ ORDER BY ms.membership_name ASC;]]>
 	<field name="member_address" class="java.lang.String"/>
 	<field name="member_dues_amount" class="java.math.BigDecimal"/>
 	<field name="spouse_name" class="java.lang.String"/>
-	<group name="membership">
+	<group name="membership" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
 		<groupHeader>
-			<band height="281">
+			<band height="259">
 				<textField isBlankWhenNull="true">
 					<reportElement x="40" y="0" width="246" height="20" isRemoveLineWhenBlank="true" uuid="c53bf91b-9457-4581-b4c6-5f4da289c1e5"/>
 					<textElement>
@@ -165,84 +165,84 @@ ORDER BY ms.membership_name ASC;]]>
 					<textFieldExpression><![CDATA[$F{primary_city} + ", " + $F{primary_state} + " " + $F{primary_postal_code}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="142" width="188" height="20" uuid="0453e350-ab03-4093-aa12-ec6f6d9bf052"/>
+					<reportElement x="0" y="132" width="188" height="20" uuid="0453e350-ab03-4093-aa12-ec6f6d9bf052"/>
 					<textElement>
 						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<text><![CDATA[Spouse listed on membership: ]]></text>
 				</staticText>
 				<textField isBlankWhenNull="false">
-					<reportElement x="188" y="142" width="129" height="20" uuid="9c285073-f625-418c-9ce2-f00379c20d6b"/>
+					<reportElement x="188" y="132" width="129" height="20" uuid="9c285073-f625-418c-9ce2-f00379c20d6b"/>
 					<textElement>
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{spouse_name} == null ? "None" : $F{spouse_name}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="162" width="188" height="20" uuid="61003a05-1b22-484b-b832-f51db64412e0"/>
+					<reportElement x="0" y="152" width="188" height="20" uuid="61003a05-1b22-484b-b832-f51db64412e0"/>
 					<textElement>
 						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<text><![CDATA[Email:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="188" y="162" width="129" height="20" uuid="ce4546f6-28c1-46a0-b481-3eed5eb37c96"/>
+					<reportElement x="188" y="152" width="129" height="20" uuid="ce4546f6-28c1-46a0-b481-3eed5eb37c96"/>
 					<textElement>
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{primary_email} == null ? "None" : $F{primary_email}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="182" width="317" height="20" uuid="f3a65cac-7c42-472e-b2a2-7539387a4160"/>
+					<reportElement x="0" y="172" width="317" height="20" uuid="f3a65cac-7c42-472e-b2a2-7539387a4160"/>
 					<textElement>
 						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<text><![CDATA[Newsletter to be delivered via email listed above:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="317" y="182" width="100" height="20" uuid="23f778f4-3780-4a86-9224-23bfb28fce6a"/>
+					<reportElement x="317" y="172" width="100" height="20" uuid="23f778f4-3780-4a86-9224-23bfb28fce6a"/>
 					<textElement>
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{email_newsletter_ind} ? "Yes" : "No"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="40" y="238" width="320" height="20" uuid="a0f94513-280e-45ad-87c2-fc8dac0d6141"/>
+					<reportElement x="40" y="218" width="320" height="20" uuid="a0f94513-280e-45ad-87c2-fc8dac0d6141"/>
 					<textElement>
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Base membership fee]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="40" y="218" width="320" height="20" uuid="3f4bacaf-17fd-4112-9236-39cb28da4b9f"/>
+					<reportElement x="40" y="198" width="320" height="20" uuid="3f4bacaf-17fd-4112-9236-39cb28da4b9f"/>
 					<textElement>
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Previous balance]]></text>
 				</staticText>
-				<textField pattern="¤ #,##0.00">
-					<reportElement x="360" y="218" width="140" height="20" uuid="3e1b2a2e-bcbe-4087-9d73-95cb9fa54bec"/>
+				<textField pattern="¤ #,##0.00;(#,##0.00)">
+					<reportElement x="360" y="198" width="140" height="20" uuid="3e1b2a2e-bcbe-4087-9d73-95cb9fa54bec"/>
 					<textElement textAlignment="Right">
 						<font fontName="Verdana" size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{balance} * -1.0]]></textFieldExpression>
 				</textField>
-				<textField pattern="¤ #,##0.00">
-					<reportElement x="360" y="238" width="140" height="20" uuid="4bf41553-4dd8-4ede-81bf-688e31506d96"/>
+				<textField pattern="¤ #,##0.00;(#,##0.00)">
+					<reportElement x="360" y="218" width="140" height="20" uuid="4bf41553-4dd8-4ede-81bf-688e31506d96"/>
 					<textElement textAlignment="Right">
 						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{primary_dues_amount}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="40" y="258" width="320" height="20" uuid="06845c73-8e31-49d8-abb1-1bd2aea2d164"/>
+					<reportElement x="40" y="238" width="320" height="20" uuid="06845c73-8e31-49d8-abb1-1bd2aea2d164"/>
 					<textElement>
 						<font fontName="Verdana" size="12"/>
 					</textElement>
 					<text><![CDATA[Mineral membership fees]]></text>
 				</staticText>
-				<textField pattern="¤ #,##0.00">
-					<reportElement x="360" y="258" width="140" height="20" uuid="cd3b1c15-4b6c-4264-b43c-87dc1a610f09"/>
+				<textField pattern="¤ #,##0.00;(#,##0.00)">
+					<reportElement x="360" y="238" width="140" height="20" uuid="cd3b1c15-4b6c-4264-b43c-87dc1a610f09"/>
 					<textElement textAlignment="Right">
 						<font fontName="Verdana" size="12"/>
 					</textElement>
@@ -253,18 +253,18 @@ ORDER BY ms.membership_name ASC;]]>
 		<groupFooter>
 			<band height="150">
 				<staticText>
-					<reportElement x="74" y="0" width="286" height="20" uuid="bc3d67ed-3796-454b-bc45-f6b0e957ed07"/>
-					<textElement>
+					<reportElement x="40" y="0" width="320" height="20" uuid="bc3d67ed-3796-454b-bc45-f6b0e957ed07"/>
+					<textElement verticalAlignment="Middle">
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Sub-Total Membership Fees Due]]></text>
 				</staticText>
-				<textField pattern="¤ #,##0.00">
+				<textField pattern="¤ #,##0.00;(#,##0.00)">
 					<reportElement x="360" y="0" width="140" height="20" uuid="98cdd6d8-225f-4047-8680-2bdd6ab6a797"/>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Verdana" size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{effective_dues} + $F{balance}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{effective_dues} + $F{balance} * -1.0]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="360" y="0" width="140" height="1" uuid="55293aae-8e1f-4a4d-9b96-d6242ea71970"/>
@@ -288,7 +288,7 @@ ORDER BY ms.membership_name ASC;]]>
 				</line>
 				<staticText>
 					<reportElement x="74" y="114" width="286" height="20" uuid="5e8d8f34-5a89-4e42-b55d-1c2f1abc7ea1"/>
-					<textElement>
+					<textElement verticalAlignment="Bottom">
 						<font fontName="Verdana" size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[TOTAL ENCLOSED]]></text>
@@ -310,7 +310,7 @@ ORDER BY ms.membership_name ASC;]]>
 		</groupFooter>
 	</group>
 	<pageHeader>
-		<band height="237" splitType="Stretch">
+		<band height="238" splitType="Stretch">
 			<rectangle>
 				<reportElement mode="Opaque" x="0" y="0" width="572" height="97" forecolor="#333333" backcolor="#CCCCCD" uuid="b97fdae2-fead-4742-895f-e85999851636"/>
 				<graphicElement>
@@ -324,13 +324,14 @@ ORDER BY ms.membership_name ASC;]]>
 				<reportElement mode="Opaque" x="270" y="13" width="266" height="71" forecolor="#333333" uuid="ba2f3b42-ee27-4d92-bb2c-581db0d2985b"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="0" y="110" width="572" height="127" uuid="3f3bbeea-2cdc-468c-b37a-8103e059caf3"/>
+				<reportElement x="0" y="110" width="572" height="120" uuid="3f3bbeea-2cdc-468c-b37a-8103e059caf3"/>
 				<textElement markup="styled">
 					<font fontName="Verdana" size="12"/>
+					<paragraph firstLineIndent="25"/>
 				</textElement>
-				<text><![CDATA[It is time to renew your membership in the Southwest Kansas Royalty Owners Association. Your membership renewal fee for the period from <b>March 1, 2014</b> to <b>March 1, 2015</b> is shown below. Please make your check payable to <i>SWKROA</i> and return this form along with your payments to SWKROA. We have enclosed a self-addressed envelope for your convenience.
+				<text><![CDATA[It is time to renew your membership in the Southwest Kansas Royalty Owners Association. Your membership renewal fee for the period from <b>March 1, 2015</b> to <b>March 1, 2016</b> is shown below. Please make your check payable to <i>SWKROA</i> and return this form along with your payments to SWKROA. We have enclosed a self-addressed envelope for your convenience.
 
-Please review and confirm the following membership information. <b>ONLY USE Membership New/Change Form for other changes to your membership.]]></text>
+Please review and confirm the following membership information. <b>ONLY USE Membership New/Change Form</b> for other changes to your membership.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Transparent" x="270" y="44" width="266" height="40" uuid="b61b1d30-a84f-468b-bc3f-ba39fb719885"/>
@@ -377,7 +378,7 @@ Please review and confirm the following membership information. <b>ONLY USE Memb
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="44" splitType="Stretch">
+		<band height="36" splitType="Stretch">
 			<printWhenExpression><![CDATA[$F{member_name} != null]]></printWhenExpression>
 			<textField>
 				<reportElement x="40" y="0" width="320" height="20" uuid="a86f3238-4b80-45ca-b94e-3e3e39289b57"/>
@@ -394,7 +395,7 @@ Please review and confirm the following membership information. <b>ONLY USE Memb
 				<textFieldExpression><![CDATA[$F{member_dues_amount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="74" y="20" width="426" height="20" uuid="a2af04a5-3409-46bd-b1a4-13cf9aeef000"/>
+				<reportElement x="74" y="20" width="426" height="14" uuid="a2af04a5-3409-46bd-b1a4-13cf9aeef000"/>
 				<textElement>
 					<font fontName="Verdana"/>
 				</textElement>
