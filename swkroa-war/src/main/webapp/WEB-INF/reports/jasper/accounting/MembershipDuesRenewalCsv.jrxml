@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewalCsv" pageWidth="1000" pageHeight="612" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="0b79281c-c950-4cf4-a772-c170aab664f9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<parameter name="memberships" class="java.util.Collection"/>
+	<queryString>
+		<![CDATA[SELECT ms.membership_id
+      ,ms.membership_name
+      ,ms.fixed_dues
+      ,ms.calculated_dues
+      ,ms.effective_dues
+      ,(SELECT SUM(m1.dues_amount)
+          FROM member_summary m1
+         WHERE m1.membership_id = ms.membership_id
+           AND m1.member_id != ms.member_id
+           AND m1.active_ind = ms.active_ind) AS family_dues
+      ,ms.balance
+      ,p.dues_amount AS primary_dues_amount
+      ,p.member_type_meaning AS primary_member_type_meaning
+      ,ms.member_id
+      ,ms.owner_ident
+      ,ms.company_name
+      ,ms.name_full AS primary_member_name
+      ,ms.name_first
+      ,ms.name_last
+      ,ms.greeting
+      ,ms.in_care_of
+      ,pe.email_address AS primary_email
+      ,pm.email_newsletter_ind
+      ,pa.address1 AS primary_adress1
+      ,pa.address2 AS primary_address2
+      ,pa.address3 AS primary_address3
+      ,pa.city AS primary_city
+      ,pa.state_code AS primary_state
+      ,pa.postal_code_formatted AS primary_postal_code
+      ,pa.country_code AS primary_country
+      ,NULLIF(m.member_name, '') AS member_name
+      ,m.name_full
+      ,mpe.email_address AS member_email
+      ,mpa.address1 AS member_address1
+      ,mpa.address2 AS member_address2
+      ,mpa.address3 AS member_address3
+      ,mpa.city AS member_city
+      ,mpa.state_code AS member_state
+      ,mpa.postal_code_formatted AS member_postal_code
+      ,mpa.country_code AS member_country
+      ,NULLIF(CONCAT_WS(', ', mpa.address1, mpa.address2, mpa.address3, mpa.city, CONCAT_WS(' ', mpa.state_code, mpa.postal_code_formatted)), '') AS member_address
+      ,m.dues_amount AS member_dues_amount
+      ,(SELECT m2.name_full
+          FROM member_summary m2
+         WHERE m2.membership_id = ms.membership_id
+           AND m2.member_id != ms.member_id
+           AND m2.active_ind = ms.active_ind
+           AND m2.member_type_meaning = 'SPOUSE'
+         LIMIT 1) AS spouse_name
+  FROM membership_summary ms
+ INNER JOIN member_summary p ON (p.membership_id = ms.membership_id AND p.member_id = ms.member_id)
+ INNER JOIN member pm ON (pm.member_id = ms.member_id)
+  LEFT OUTER JOIN primary_address pa ON (pa.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
+  LEFT OUTER JOIN primary_email pe ON (pe.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
+  LEFT OUTER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind AND m.member_id != ms.member_id AND m.member_type_meaning != 'SPOUSE')
+  LEFT OUTER JOIN primary_address mpa ON (mpa.parent_entity_id = m.member_id AND mpa.parent_entity_name = 'MEMBER')
+  LEFT OUTER JOIN primary_email mpe ON (mpe.parent_entity_id = m.member_id AND mpe.parent_entity_name = 'MEMBER')
+ WHERE ms.active_ind = 1
+   AND $X{IN, ms.membership_id, memberships}
+   AND ms.effective_dues > 0
+ORDER BY ms.membership_name ASC;]]>
+	</queryString>
+	<field name="membership_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="membership_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fixed_dues" class="java.math.BigDecimal"/>
+	<field name="calculated_dues" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="effective_dues" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="family_dues" class="java.math.BigDecimal"/>
+	<field name="balance" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="primary_dues_amount" class="java.math.BigDecimal"/>
+	<field name="primary_member_type_meaning" class="java.lang.String"/>
+	<field name="member_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="company_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="primary_member_name" class="java.lang.String"/>
+	<field name="name_first" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name_last" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="greeting" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="in_care_of" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="primary_email" class="java.lang.String"/>
+	<field name="email_newsletter_ind" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="primary_adress1" class="java.lang.String"/>
+	<field name="primary_address2" class="java.lang.String"/>
+	<field name="primary_address3" class="java.lang.String"/>
+	<field name="primary_city" class="java.lang.String"/>
+	<field name="primary_state" class="java.lang.String"/>
+	<field name="primary_postal_code" class="java.lang.String"/>
+	<field name="primary_country" class="java.lang.String"/>
+	<field name="member_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name_full" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_email" class="java.lang.String"/>
+	<field name="member_address1" class="java.lang.String"/>
+	<field name="member_address2" class="java.lang.String"/>
+	<field name="member_address3" class="java.lang.String"/>
+	<field name="member_city" class="java.lang.String"/>
+	<field name="member_state" class="java.lang.String"/>
+	<field name="member_postal_code" class="java.lang.String"/>
+	<field name="member_country" class="java.lang.String"/>
+	<field name="member_address" class="java.lang.String"/>
+	<field name="member_dues_amount" class="java.math.BigDecimal"/>
+	<field name="spouse_name" class="java.lang.String"/>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="50" y="0" width="50" height="20" uuid="da6911da-3e60-4451-9706-1d5cd5f2afb4"/>
+				<text><![CDATA[Company Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="50" height="20" uuid="fc9a0777-b840-4290-ae1c-fbdb4e1d3ae5"/>
+				<text><![CDATA[Owner ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="0" width="50" height="20" uuid="7377366f-0f4c-4309-9d29-ce63a8255548"/>
+				<text><![CDATA[Member Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="50" height="20" uuid="84e5e584-94a2-4337-88b7-5527e300282e"/>
+				<text><![CDATA[Membership Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="50" height="20" uuid="8a3474d1-4eb7-4da4-9c51-0502c9830eb6"/>
+				<text><![CDATA[Address1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="0" width="50" height="20" uuid="8140b2da-1a64-441a-8cb4-b845f1547129"/>
+				<text><![CDATA[Address2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="50" height="20" uuid="a5d41274-7881-449e-a593-7454c93fe175"/>
+				<text><![CDATA[Address3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="0" width="50" height="20" uuid="566d43fe-09d5-432f-8125-66163d893782"/>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="50" height="20" uuid="e2aaba00-1988-4483-9f45-c8b0bf1f9131"/>
+				<text><![CDATA[State]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="0" width="50" height="20" uuid="ca450919-df96-4142-b269-d096f72ab98c"/>
+				<text><![CDATA[Zip]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="0" width="50" height="20" uuid="f3b986b0-9ab5-4aef-bae2-2b55838b9cbe"/>
+				<text><![CDATA[Spouse]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="550" y="0" width="50" height="20" uuid="6de51912-acd9-4cd4-bf07-98d3433a9acd"/>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="50" y="0" width="50" height="20" uuid="046c3a47-bfb0-46af-8b44-ca8570289dc1"/>
+				<textFieldExpression><![CDATA[$F{company_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="50" height="20" uuid="46f3d153-ee36-415d-ba30-69d81d8adc73"/>
+				<textFieldExpression><![CDATA[$F{owner_ident}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="150" y="0" width="50" height="20" uuid="ff47b7f2-d9d7-4eb5-93fc-5d9e415e944e"/>
+				<textFieldExpression><![CDATA[$F{name_full}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="50" height="20" uuid="f032f840-63c4-42e7-ad8c-d1d6d20a8e46"/>
+				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="0" width="50" height="20" uuid="4d06b501-6395-4320-97b3-440139d4ad38"/>
+				<textFieldExpression><![CDATA[$F{primary_address2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="0" width="50" height="20" uuid="4f9bd236-532e-4930-8554-ad7e03d88362"/>
+				<textFieldExpression><![CDATA[$F{primary_adress1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="50" height="20" uuid="9a6f387c-13d2-4bdc-b7fb-357fda029b47"/>
+				<textFieldExpression><![CDATA[$F{primary_address3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="350" y="0" width="50" height="20" uuid="ff82fb22-c834-4be9-b41d-2c480c8b2147"/>
+				<textFieldExpression><![CDATA[$F{primary_city}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="50" height="20" uuid="c371480c-4088-4251-a959-e369b4da0c11"/>
+				<textFieldExpression><![CDATA[$F{primary_state}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="0" width="50" height="20" uuid="cbe67f81-63cc-4ea2-975f-63d42bdbc221"/>
+				<textFieldExpression><![CDATA[$F{primary_postal_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="500" y="0" width="50" height="20" uuid="33b4afc5-da68-49be-a697-8d8d5e103bae"/>
+				<textFieldExpression><![CDATA[$F{spouse_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="550" y="0" width="50" height="20" uuid="21e0e261-7290-49ba-a8cb-5e516b12cc8b"/>
+				<textFieldExpression><![CDATA[$F{primary_email}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
