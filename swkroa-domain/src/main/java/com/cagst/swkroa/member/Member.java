@@ -1,8 +1,5 @@
 package com.cagst.swkroa.member;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +67,6 @@ public final class Member implements Serializable, Comparable<Member> {
     this.member_id = uid;
   }
 
-  @Size(max = 250)
   public String getCompanyName() {
     return company_name;
   }
@@ -106,8 +102,6 @@ public final class Member implements Serializable, Comparable<Member> {
    *
    * @return A {@link String} that identifies a Member for the user.
    */
-  @NotNull
-  @Size(min = 1, max = 15)
   public String getOwnerIdent() {
     return owner_ident;
   }
@@ -122,7 +116,6 @@ public final class Member implements Serializable, Comparable<Member> {
     this.owner_ident = CGTStringUtils.normalizeToKey(ownerIdent);
   }
 
-  @NotNull
   public MemberType getMemberType() {
     return member_type;
   }
@@ -210,7 +203,6 @@ public final class Member implements Serializable, Comparable<Member> {
     addresses.remove(address);
   }
 
-  @Valid
   public List<Address> getAddresses() {
     return addresses;
   }
@@ -231,7 +223,6 @@ public final class Member implements Serializable, Comparable<Member> {
     emailAddresses.remove(email);
   }
 
-  @Valid
   public List<EmailAddress> getEmailAddresses() {
     return emailAddresses;
   }
@@ -252,7 +243,6 @@ public final class Member implements Serializable, Comparable<Member> {
     phoneNumbers.remove(phone);
   }
 
-  @Valid
   public List<PhoneNumber> getPhoneNumbers() {
     return phoneNumbers;
   }

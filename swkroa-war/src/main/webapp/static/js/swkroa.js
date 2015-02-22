@@ -104,8 +104,9 @@ swkroaApp.factory('contextRootInterceptor', function() {
     'responseError': function(rejection) {
       if (rejection.status == 409) {
         $('#optimisticErrorMessageDlg').modal('show');
-      } else if (rejection.status == 500) {
-        $('#optimisticErrorMessageDlg').modal('show');
+      } else if (rejection.status >= 400 && rejection.status <= 599) {
+        $('#unknownErrorMessage').text(rejection.data.message);
+        $('#unknownErrorMessageDlg').modal('show');
       }
 
       return rejection;

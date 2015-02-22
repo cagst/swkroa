@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -171,28 +170,22 @@ public final class MembershipApiController {
   public ResponseEntity<Membership> saveMembership(final @RequestBody Membership membership, final HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
-    try {
-      // determine if this is a new membership before we save it (since we will update the membership after the save)
-      boolean newMembership = (membership.getMembershipUID() == 0);
+    // determine if this is a new membership before we save it (since we will update the membership after the save)
+    boolean newMembership = (membership.getMembershipUID() == 0);
 
-      // save the membership
-      Membership savedMembership = membershipService.saveMembership(membership, WebAppUtils.getUser());
+    // save the membership
+    Membership savedMembership = membershipService.saveMembership(membership, WebAppUtils.getUser());
 
-      // specify the location of the resource
-      UriComponents locationUri = ServletUriComponentsBuilder
-          .fromContextPath(request)
-          .path("/api/memberships/{membershipUID}")
-          .buildAndExpand(savedMembership.getMembershipUID());
+    // specify the location of the resource
+    UriComponents locationUri = ServletUriComponentsBuilder
+        .fromContextPath(request)
+        .path("/api/memberships/{membershipUID}")
+        .buildAndExpand(savedMembership.getMembershipUID());
 
-      HttpHeaders headers = new HttpHeaders();
-      headers.setLocation(locationUri.toUri());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setLocation(locationUri.toUri());
 
-      return new ResponseEntity<Membership>(savedMembership, headers, newMembership ? HttpStatus.CREATED : HttpStatus.OK);
-    } catch (OptimisticLockingFailureException ex) {
-      return new ResponseEntity<Membership>(membership, HttpStatus.CONFLICT);
-    } catch (Exception ex) {
-      return new ResponseEntity<Membership>(membership, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return new ResponseEntity<Membership>(savedMembership, headers, newMembership ? HttpStatus.CREATED : HttpStatus.OK);
   }
 
   /**

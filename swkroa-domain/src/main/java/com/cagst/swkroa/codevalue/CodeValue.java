@@ -1,7 +1,5 @@
 package com.cagst.swkroa.codevalue;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 import com.cagst.common.util.CGTCollatorBuilder;
@@ -70,8 +68,6 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
   /**
    * @return The display / name of the CodeValue.
    */
-  @NotNull
-  @Size(min = 1, max = 50)
   public String getDisplay() {
     return codevalue_display;
   }
@@ -144,11 +140,6 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -158,11 +149,6 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -184,11 +170,6 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -198,11 +179,6 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final CodeValue rhs) {
     CGTCollatorBuilder builder = new CGTCollatorBuilder();

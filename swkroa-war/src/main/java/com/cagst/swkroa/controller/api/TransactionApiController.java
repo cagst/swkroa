@@ -7,7 +7,6 @@ import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,18 +40,12 @@ public final class TransactionApiController {
   public ResponseEntity<Transaction> saveTransaction(final @RequestBody Transaction transaction) {
     LOGGER.info("Received request to save transaction.");
 
-    try {
-      // determine if this is a new transaction
-      boolean newTransaction = (transaction.getTransactionUID() == 0);
+    // determine if this is a new transaction
+    boolean newTransaction = (transaction.getTransactionUID() == 0);
 
-      // save the transaction
-      Transaction savedTransaction = transactionRepo.saveTransaction(transaction, WebAppUtils.getUser());
+    // save the transaction
+    Transaction savedTransaction = transactionRepo.saveTransaction(transaction, WebAppUtils.getUser());
 
-      return new ResponseEntity<Transaction>(savedTransaction, newTransaction ? HttpStatus.CREATED : HttpStatus.OK);
-    } catch (OptimisticLockingFailureException ex) {
-      return new ResponseEntity<Transaction>(transaction, HttpStatus.CONFLICT);
-    } catch (Exception ex) {
-      return new ResponseEntity<Transaction>(transaction, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return new ResponseEntity<Transaction>(savedTransaction, newTransaction ? HttpStatus.CREATED : HttpStatus.OK);
   }
 }

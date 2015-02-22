@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -168,10 +167,6 @@ public final class UserApiController {
     } catch (UsernameTakenException ex) {
       LOGGER.debug("Unable to save user due to [{}]", ex.getLocalizedMessage());
       throw new BadRequestException(ex.getLocalizedMessage(), ex);
-    } catch (OptimisticLockingFailureException ex) {
-      return new ResponseEntity<User>(user, HttpStatus.CONFLICT);
-    } catch (Exception ex) {
-      return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

@@ -1,7 +1,5 @@
 package com.cagst.swkroa.role;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.text.Collator;
 
@@ -33,8 +31,6 @@ public final class Privilege implements Serializable, Comparable<Privilege> {
     this.privilege_id = uid;
   }
 
-  @NotNull
-  @Size(min = 1, max = 25)
   public String getPrivilegeKey() {
     return privilege_key;
   }
@@ -43,8 +39,6 @@ public final class Privilege implements Serializable, Comparable<Privilege> {
     this.privilege_key = key;
   }
 
-  @NotNull
-  @Size(min = 1, max = 50)
   public String getPrivilegeName() {
     return privilege_name;
   }
@@ -69,11 +63,6 @@ public final class Privilege implements Serializable, Comparable<Privilege> {
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -83,11 +72,6 @@ public final class Privilege implements Serializable, Comparable<Privilege> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -96,11 +80,6 @@ public final class Privilege implements Serializable, Comparable<Privilege> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -121,11 +100,6 @@ public final class Privilege implements Serializable, Comparable<Privilege> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final Privilege rhs) {
     Collator collator = Collator.getInstance();

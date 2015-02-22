@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="512" leftMargin="50" rightMargin="50" topMargin="50" bottomMargin="50" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="144"/>
+	<property name="ireport.y" value="232"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.membership_name
@@ -125,42 +125,42 @@ ORDER BY ms.membership_name ASC;]]>
 				<frame>
 					<reportElement x="0" y="0" width="286" height="90" uuid="6424a402-4f3e-41ec-bd69-f82bf2f834e1"/>
 					<textField isBlankWhenNull="true">
-						<reportElement x="40" y="0" width="246" height="15" isRemoveLineWhenBlank="true" uuid="c53bf91b-9457-4581-b4c6-5f4da289c1e5"/>
+						<reportElement x="40" y="0" width="246" height="12" isRemoveLineWhenBlank="true" uuid="c53bf91b-9457-4581-b4c6-5f4da289c1e5"/>
 						<textElement>
 							<font fontName="Times New Roman" size="10" isBold="true"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{company_name}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="40" y="15" width="246" height="15" isRemoveLineWhenBlank="true" uuid="92dfff3c-dd61-418a-8e35-25fd0b51a532"/>
+						<reportElement x="40" y="12" width="246" height="15" isRemoveLineWhenBlank="true" uuid="92dfff3c-dd61-418a-8e35-25fd0b51a532"/>
 						<textElement>
 							<font fontName="Times New Roman" size="10" isBold="true"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_member_name}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="40" y="30" width="246" height="15" isRemoveLineWhenBlank="true" uuid="bee39d5c-b93c-4191-bf18-a7a536384434"/>
+						<reportElement x="40" y="24" width="246" height="12" isRemoveLineWhenBlank="true" uuid="bee39d5c-b93c-4191-bf18-a7a536384434"/>
 						<textElement>
 							<font fontName="Times New Roman" size="10" isBold="true"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_adress1}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="40" y="45" width="246" height="15" isRemoveLineWhenBlank="true" uuid="db1cccde-6b60-4cdb-aa91-692f1af60e87"/>
+						<reportElement x="40" y="36" width="246" height="12" isRemoveLineWhenBlank="true" uuid="db1cccde-6b60-4cdb-aa91-692f1af60e87"/>
 						<textElement>
 							<font fontName="Times New Roman" size="10" isBold="true"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_address2}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="40" y="60" width="246" height="15" isRemoveLineWhenBlank="true" uuid="bf32c4b4-429c-4b25-99e5-4058b3ab2da1"/>
+						<reportElement x="40" y="48" width="246" height="12" isRemoveLineWhenBlank="true" uuid="bf32c4b4-429c-4b25-99e5-4058b3ab2da1"/>
 						<textElement>
 							<font fontName="Times New Roman" size="10" isBold="true"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_address3}]]></textFieldExpression>
 					</textField>
 					<textField>
-						<reportElement x="40" y="75" width="246" height="15" uuid="91adad05-990c-4e71-a81a-926d738dbd0e"/>
+						<reportElement x="40" y="60" width="246" height="12" uuid="91adad05-990c-4e71-a81a-926d738dbd0e"/>
 						<textElement>
 							<font fontName="Times New Roman" size="10" isBold="true"/>
 						</textElement>
@@ -182,14 +182,14 @@ ORDER BY ms.membership_name ASC;]]>
 					<textFieldExpression><![CDATA[$F{spouse_name} == null ? "None" : $F{spouse_name}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="117" width="125" height="15" uuid="61003a05-1b22-484b-b832-f51db64412e0"/>
+					<reportElement x="0" y="117" width="40" height="15" uuid="61003a05-1b22-484b-b832-f51db64412e0"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Email:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="125" y="117" width="161" height="15" uuid="ce4546f6-28c1-46a0-b481-3eed5eb37c96"/>
+					<reportElement x="40" y="117" width="246" height="15" uuid="ce4546f6-28c1-46a0-b481-3eed5eb37c96"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10" isBold="true"/>
 					</textElement>
@@ -385,7 +385,7 @@ ORDER BY ms.membership_name ASC;]]>
 		</groupFooter>
 	</group>
 	<pageHeader>
-		<band height="168" splitType="Stretch">
+		<band height="165" splitType="Stretch">
 			<rectangle>
 				<reportElement mode="Opaque" x="0" y="0" width="512" height="72" forecolor="#333333" backcolor="#CCCCCD" uuid="b97fdae2-fead-4742-895f-e85999851636"/>
 				<graphicElement>
@@ -401,7 +401,7 @@ ORDER BY ms.membership_name ASC;]]>
 			<staticText>
 				<reportElement mode="Transparent" x="17" y="13" width="188" height="19" uuid="f299c483-d4de-42cd-b9e9-29b3b408277f"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[SWKROA]]></text>
 			</staticText>
@@ -441,12 +441,12 @@ ORDER BY ms.membership_name ASC;]]>
 				<text><![CDATA[(2015 - 2016)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="72" width="512" height="92" uuid="3f3bbeea-2cdc-468c-b37a-8103e059caf3"/>
+				<reportElement x="0" y="72" width="512" height="90" uuid="3f3bbeea-2cdc-468c-b37a-8103e059caf3"/>
 				<textElement verticalAlignment="Middle" markup="styled">
 					<font fontName="Times New Roman" size="10"/>
 					<paragraph firstLineIndent="25"/>
 				</textElement>
-				<text><![CDATA[It is time to renew your membership in the Southwest Kansas Royalty Owners Association. Your membership renewal fee for the period from <b>March 1, 2015</b> to <b>March 1, 2016</b> is shown below. Please make your check payable to <i>SWKROA</i> and return this form along with your payments to SWKROA. We have enclosed a self-addressed envelope for your convenience.
+				<text><![CDATA[It is time to renew your membership in the Southwest Kansas Royalty Owners Association. Your membership renewal fee for the period from <b>March 1, 2015</b> to <b>March 1, 2016</b> is shown below. Please make your check payable to SWKROA and return this form along with your payments to SWKROA. We have enclosed a self-addressed envelope for your convenience.
 
 Please review and confirm the following membership information. <b>ONLY USE Membership New/Change Form</b> for other changes to your membership.]]></text>
 			</staticText>
@@ -485,7 +485,7 @@ Please review and confirm the following membership information. <b>ONLY USE Memb
 				<textElement markup="styled">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Contributions or gifts to <i>SWKROA</i> are not deductible as charitable contributions for federal income tax purposes. However, they may be tax deductible as an ordinary and necessary business expense. Please consult your tax advisor.]]></text>
+				<text><![CDATA[Contributions or gifts to SWKROA are not deductible as charitable contributions for federal income tax purposes. However, they may be tax deductible as an ordinary and necessary business expense. Please consult your tax advisor.]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="62" width="100" height="20" uuid="a5f55bae-47fd-41ec-8393-011c582aa83a"/>
