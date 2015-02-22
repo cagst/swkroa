@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewal" language="groovy" pageWidth="612" pageHeight="792" columnWidth="512" leftMargin="50" rightMargin="50" topMargin="50" bottomMargin="50" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewalPdf" pageWidth="612" pageHeight="792" columnWidth="512" leftMargin="50" rightMargin="50" topMargin="50" bottomMargin="50" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="232"/>
+	<property name="ireport.y" value="75"/>
+	<parameter name="memberships" class="java.util.Collection"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.membership_name
@@ -58,6 +59,7 @@
   LEFT OUTER JOIN primary_address mpa ON (mpa.parent_entity_id = m.member_id AND mpa.parent_entity_name = 'MEMBER')
   LEFT OUTER JOIN primary_email mpe ON (mpe.parent_entity_id = m.member_id AND mpe.parent_entity_name = 'MEMBER')
  WHERE ms.active_ind = 1
+   AND $X{IN, ms.membership_id, memberships}
    AND ms.effective_dues > 0
 ORDER BY ms.membership_name ASC;]]>
 	</queryString>
@@ -132,7 +134,7 @@ ORDER BY ms.membership_name ASC;]]>
 						<textFieldExpression><![CDATA[$F{company_name}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="40" y="12" width="246" height="15" isRemoveLineWhenBlank="true" uuid="92dfff3c-dd61-418a-8e35-25fd0b51a532"/>
+						<reportElement x="40" y="12" width="246" height="12" isRemoveLineWhenBlank="true" uuid="92dfff3c-dd61-418a-8e35-25fd0b51a532"/>
 						<textElement>
 							<font fontName="Times New Roman" size="10" isBold="true"/>
 						</textElement>
@@ -160,7 +162,7 @@ ORDER BY ms.membership_name ASC;]]>
 						<textFieldExpression><![CDATA[$F{primary_address3}]]></textFieldExpression>
 					</textField>
 					<textField>
-						<reportElement x="40" y="60" width="246" height="12" uuid="91adad05-990c-4e71-a81a-926d738dbd0e"/>
+						<reportElement x="40" y="60" width="246" height="12" isRemoveLineWhenBlank="true" uuid="91adad05-990c-4e71-a81a-926d738dbd0e"/>
 						<textElement>
 							<font fontName="Times New Roman" size="10" isBold="true"/>
 						</textElement>
@@ -235,7 +237,7 @@ ORDER BY ms.membership_name ASC;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{effective_dues} - $F{primary_dues_amount} - ($F{family_dues} == null ? 0 : $F{family_dues})]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{family_dues} == null ? $F{effective_dues}.subtract($F{primary_dues_amount}) : $F{effective_dues}.subtract($F{primary_dues_amount}).subtract($F{family_dues})]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="286" y="0" width="226" height="162" backcolor="#CDCDCD" uuid="ac548eda-e633-4cef-bde4-edf72ccee653"/>
@@ -308,7 +310,7 @@ ORDER BY ms.membership_name ASC;]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{effective_dues} + $F{balance} * -1.0]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{effective_dues}.add($F{balance}.negate())]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="40" y="78" width="246" height="46" uuid="3bc0cbb9-2d72-4c6d-ab85-5fcfc97c807d"/>
@@ -359,7 +361,7 @@ ORDER BY ms.membership_name ASC;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{balance} < 0.0 ? $F{balance} : 0.0]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{balance}.doubleValue() < 0.0 ? $F{balance} : 0.0]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="40" y="15" width="246" height="15" uuid="3a77592b-b0e0-4eb8-81fe-ad0361146ce8"/>
@@ -373,7 +375,7 @@ ORDER BY ms.membership_name ASC;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{balance} > 0.0 ? $F{balance} : 0.0]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{balance}.doubleValue() > 0.0 ? $F{balance} : 0.0]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="286" y="30" width="100" height="1" uuid="b21a9d2d-fd00-4099-8a92-2568eb02bf4d"/>

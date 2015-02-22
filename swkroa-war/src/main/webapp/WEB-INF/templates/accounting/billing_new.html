@@ -6,6 +6,7 @@
 
 <head>
   <script type="text/javascript" data-th-src="@{/static/js/accounting/billing_new.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
 </head>
 
 <body>
@@ -36,50 +37,59 @@
     </div>
   </form>
 
-  <div class="row spacer-top" data-ng-show="membershipsDue">
-    <div class="col-xs-2">
-      <div class="btn-group-vertical">
-        <a id="generateCsv" class="btn btn-default"
-           href="javascript:submitReportForm('csv')"
-           data-ng-disabled="!canExport()"
-           data-th-text="#{com.cagst.swkroa.report.generate.export}">
-          zzz Export
-        </a>
-        <button type="button" class="btn btn-primary"
-                data-toggle="modal" data-target="#billMembershipsDlg">
-          <span data-th-text="#{com.cagst.swkroa.billing.new.generate}">zzz Generate</span>
-        </button>
+  <form name="reportForm" data-th-attr="action=@{/report/membership/renewal}" target="_blank" method="post">
+    <div class="row spacer-top" data-ng-show="membershipsDue">
+      <div class="col-xs-2">
+        <div class="btn-group-vertical">
+          <input id="reportType" type="hidden" name="reportType" />
+          <a id="generatePdf" class="btn btn-default"
+             href="javascript:submitReportForm('pdf')"
+             data-ng-disabled="!canExport()"
+             data-th-text="#{com.cagst.swkroa.report.generate.report}">
+            zzz Report
+          </a>
+          <a id="generateCsv" class="btn btn-default"
+             href="javascript:submitReportForm('csv')"
+             data-ng-disabled="!canExport()"
+             data-th-text="#{com.cagst.swkroa.report.generate.export}">
+            zzz Export
+          </a>
+          <button type="button" class="btn btn-primary"
+                  data-toggle="modal" data-target="#billMembershipsDlg">
+            <span data-th-text="#{com.cagst.swkroa.billing.new.generate}">zzz Generate</span>
+          </button>
+        </div>
       </div>
+      <div class="col-xs-10">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>
+                <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
+              </th>
+              <th data-th-text="#{com.cagst.swkroa.billing.new.membership}">zzz Membership</th>
+              <th data-th-text="#{com.cagst.swkroa.billing.new.balance}">zzz Balance</th>
+              <th data-th-text="#{com.cagst.swkroa.billing.new.duesamount}">zzz Dues Amount</th>
+              <th data-th-text="#{com.cagst.swkroa.billing.new.nextduedate}">zzz Next Due Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="mem in membershipsDue">
+              <td>
+                <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox"
+                       data-ng-model="mem.selected" data-ng-click="toggleCheck(mem)"/>
+              </td>
+              <td>{{mem.membershipName}}</td>
+              <td>{{mem.balance | currency}}</td>
+              <td>{{mem.effectiveDuesAmount | currency}}</td>
+              <td>{{mem.nextDueDate | date:'mediumDate'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-3"></div>
     </div>
-    <div class="col-xs-10">
-      <table class="table table-hover table-bordered">
-        <thead>
-          <tr>
-            <th>
-              <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
-            </th>
-            <th data-th-text="#{com.cagst.swkroa.billing.new.membership}">zzz Membership</th>
-            <th data-th-text="#{com.cagst.swkroa.billing.new.balance}">zzz Balance</th>
-            <th data-th-text="#{com.cagst.swkroa.billing.new.duesamount}">zzz Dues Amount</th>
-            <th data-th-text="#{com.cagst.swkroa.billing.new.nextduedate}">zzz Next Due Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr data-ng-repeat="mem in membershipsDue">
-            <td>
-              <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox"
-                     data-ng-model="mem.selected" data-ng-click="toggleCheck(mem)"/>
-            </td>
-            <td>{{mem.membershipName}}</td>
-            <td>{{mem.balance | currency}}</td>
-            <td>{{mem.effectiveDuesAmount | currency}}</td>
-            <td>{{mem.nextDueDate | date:'mediumDate'}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="col-xs-3"></div>
-  </div>
+  </form>
 
   <!-- Transaction Details Dialog -->
   <div class="modal" id="billMembershipsDlg" tabindex="-1">

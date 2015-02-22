@@ -9,6 +9,8 @@
 swkroaApp.controller('billingController', ['$scope', '$http', 'codesetService', 'membershipService',
     function($scope, $http, codesetService, membershipService) {
 
+  $scope.membershipsDue = [];
+
   $scope.getMemberhipsDueIn = function(days) {
     showProcessingDialog();
 
@@ -39,6 +41,17 @@ swkroaApp.controller('billingController', ['$scope', '$http', 'codesetService', 
   $scope.toggleCheck = function(membership) {
     membership.selected = !membership.selected;
     calculateTotals($scope);
+  };
+
+  $scope.canExport = function() {
+    var membershipsSelected = false;
+    for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
+      if ($scope.membershipsDue[idx].selected) {
+        membershipsSelected = true;
+      }
+    };
+
+    return membershipsSelected;
   };
 
   $scope.billMemberships = function() {
