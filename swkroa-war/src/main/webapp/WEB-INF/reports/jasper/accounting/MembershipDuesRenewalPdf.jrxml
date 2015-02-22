@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewalPdf" pageWidth="612" pageHeight="792" columnWidth="512" leftMargin="50" rightMargin="50" topMargin="50" bottomMargin="50" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewalPdf" pageWidth="612" pageHeight="792" columnWidth="532" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="75"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="memberships" class="java.util.Collection"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
@@ -129,113 +129,92 @@ ORDER BY ms.membership_name ASC;]]>
 					<textField isBlankWhenNull="true">
 						<reportElement x="40" y="0" width="246" height="12" isRemoveLineWhenBlank="true" uuid="c53bf91b-9457-4581-b4c6-5f4da289c1e5"/>
 						<textElement>
-							<font fontName="Times New Roman" size="10" isBold="true"/>
+							<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{company_name}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
 						<reportElement x="40" y="12" width="246" height="12" isRemoveLineWhenBlank="true" uuid="92dfff3c-dd61-418a-8e35-25fd0b51a532"/>
 						<textElement>
-							<font fontName="Times New Roman" size="10" isBold="true"/>
+							<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_member_name}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
 						<reportElement x="40" y="24" width="246" height="12" isRemoveLineWhenBlank="true" uuid="bee39d5c-b93c-4191-bf18-a7a536384434"/>
 						<textElement>
-							<font fontName="Times New Roman" size="10" isBold="true"/>
+							<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_adress1}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
 						<reportElement x="40" y="36" width="246" height="12" isRemoveLineWhenBlank="true" uuid="db1cccde-6b60-4cdb-aa91-692f1af60e87"/>
 						<textElement>
-							<font fontName="Times New Roman" size="10" isBold="true"/>
+							<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_address2}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
 						<reportElement x="40" y="48" width="246" height="12" isRemoveLineWhenBlank="true" uuid="bf32c4b4-429c-4b25-99e5-4058b3ab2da1"/>
 						<textElement>
-							<font fontName="Times New Roman" size="10" isBold="true"/>
+							<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_address3}]]></textFieldExpression>
 					</textField>
 					<textField>
 						<reportElement x="40" y="60" width="246" height="12" isRemoveLineWhenBlank="true" uuid="91adad05-990c-4e71-a81a-926d738dbd0e"/>
 						<textElement>
-							<font fontName="Times New Roman" size="10" isBold="true"/>
+							<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{primary_city} + ", " + $F{primary_state} + " " + $F{primary_postal_code}]]></textFieldExpression>
 					</textField>
 				</frame>
-				<staticText>
-					<reportElement x="0" y="102" width="125" height="15" uuid="0453e350-ab03-4093-aa12-ec6f6d9bf052"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<text><![CDATA[Spouse listed on membership: ]]></text>
-				</staticText>
 				<textField isBlankWhenNull="false">
-					<reportElement x="125" y="102" width="161" height="15" uuid="9c285073-f625-418c-9ce2-f00379c20d6b"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10" isBold="true"/>
+					<reportElement x="0" y="102" width="286" height="15" uuid="9c285073-f625-418c-9ce2-f00379c20d6b"/>
+					<textElement markup="styled">
+						<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Times-Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{spouse_name} == null ? "None" : $F{spouse_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Spouse listed on membership: <b>" + ($F{spouse_name} == null ? "None" : $F{spouse_name}) + "</b>"]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="0" y="117" width="40" height="15" uuid="61003a05-1b22-484b-b832-f51db64412e0"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<text><![CDATA[Email:]]></text>
-				</staticText>
 				<textField>
-					<reportElement x="40" y="117" width="246" height="15" uuid="ce4546f6-28c1-46a0-b481-3eed5eb37c96"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10" isBold="true"/>
+					<reportElement x="0" y="117" width="286" height="15" uuid="ce4546f6-28c1-46a0-b481-3eed5eb37c96"/>
+					<textElement markup="styled">
+						<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Times-Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{primary_email} == null ? "None" : $F{primary_email}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Email: <b>" + ($F{primary_email} == null ? "None" : $F{primary_email}) + "</b>"]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="0" y="132" width="200" height="15" uuid="f3a65cac-7c42-472e-b2a2-7539387a4160"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<text><![CDATA[Newsletter to be delivered via email listed above:]]></text>
-				</staticText>
 				<textField>
-					<reportElement x="205" y="132" width="81" height="15" uuid="23f778f4-3780-4a86-9224-23bfb28fce6a"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10" isBold="true"/>
+					<reportElement x="0" y="132" width="286" height="15" uuid="23f778f4-3780-4a86-9224-23bfb28fce6a"/>
+					<textElement markup="styled">
+						<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Times-Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{email_newsletter_ind} ? "Yes" : "No"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Newsletter to be delivered via email listed above: <b>" + ($F{email_newsletter_ind} ? "Yes" : "No") + "</b>"]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="40" y="175" width="246" height="15" uuid="a0f94513-280e-45ad-87c2-fc8dac0d6141"/>
 					<textElement>
-						<font fontName="Times New Roman" size="10" isBold="true"/>
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[Base membership fee]]></text>
 				</staticText>
 				<textField pattern="¤ #,##0.00;(#,##0.00)">
 					<reportElement x="286" y="175" width="100" height="15" uuid="4bf41553-4dd8-4ede-81bf-688e31506d96"/>
 					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="10"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{primary_dues_amount}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="40" y="190" width="246" height="15" uuid="06845c73-8e31-49d8-abb1-1bd2aea2d164"/>
 					<textElement>
-						<font fontName="Times New Roman" size="10" isBold="true"/>
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[Incremental membership fees]]></text>
 				</staticText>
 				<textField pattern="¤ #,##0.00;(#,##0.00)">
 					<reportElement x="286" y="190" width="100" height="15" uuid="cd3b1c15-4b6c-4264-b43c-87dc1a610f09"/>
 					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="10"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{family_dues} == null ? $F{effective_dues}.subtract($F{primary_dues_amount}) : $F{effective_dues}.subtract($F{primary_dues_amount}).subtract($F{family_dues})]]></textFieldExpression>
 				</textField>
@@ -244,8 +223,8 @@ ORDER BY ms.membership_name ASC;]]>
 				</rectangle>
 				<staticText>
 					<reportElement x="286" y="0" width="226" height="15" uuid="13c800f1-558c-47f0-856d-ee32148987ad"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" isBold="true"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[Changes]]></text>
 				</staticText>
@@ -267,14 +246,14 @@ ORDER BY ms.membership_name ASC;]]>
 				<staticText>
 					<reportElement x="300" y="102" width="60" height="15" uuid="675c5bb5-2b11-4625-90e3-c9ca49f88da0"/>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[Add spouse]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="300" y="117" width="100" height="15" uuid="ff3eb9c6-0d54-49aa-9f7e-99928f74ae45"/>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[New Email]]></text>
 				</staticText>
@@ -285,15 +264,12 @@ ORDER BY ms.membership_name ASC;]]>
 					<reportElement x="360" y="131" width="140" height="1" uuid="b6a41300-d32b-48e2-a3da-542d9d275106"/>
 				</line>
 				<staticText>
-					<reportElement x="300" y="132" width="189" height="15" uuid="e166b206-bb22-450f-b49f-e0c40c4b12e4"/>
-					<textElement verticalAlignment="Bottom">
-						<font fontName="Times New Roman"/>
+					<reportElement x="300" y="132" width="200" height="15" uuid="e166b206-bb22-450f-b49f-e0c40c4b12e4"/>
+					<textElement verticalAlignment="Bottom" markup="styled">
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
-					<text><![CDATA[Add me to list for emailed newsletters. Yes]]></text>
+					<text><![CDATA[Add me to list for emailed newsletters. <b>Yes / No</b>]]></text>
 				</staticText>
-				<line>
-					<reportElement x="480" y="146" width="19" height="1" uuid="e3f0b67c-59f6-4289-8467-fce0994280b7"/>
-				</line>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -301,28 +277,28 @@ ORDER BY ms.membership_name ASC;]]>
 				<staticText>
 					<reportElement x="40" y="40" width="246" height="20" uuid="bc3d67ed-3796-454b-bc45-f6b0e957ed07"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="true"/>
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[Sub-Total Membership Fees Due]]></text>
 				</staticText>
 				<textField pattern="¤ #,##0.00;(#,##0.00)">
 					<reportElement x="286" y="40" width="100" height="20" uuid="98cdd6d8-225f-4047-8680-2bdd6ab6a797"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{effective_dues}.add($F{balance}.negate())]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="40" y="78" width="246" height="46" uuid="3bc0cbb9-2d72-4c6d-ab85-5fcfc97c807d"/>
 					<textElement>
-						<font fontName="Times New Roman" size="10"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[I would like to make a voluntary contribution to the Special Fund. Such fund is used for special projects or litigation to promote or protect the interests of our members.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="286" y="104" width="100" height="20" uuid="414b6f17-340e-43e2-8139-0f70b9eba161"/>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Times New Roman" size="10" isUnderline="false"/>
+						<font fontName="Times New Roman" size="10" isUnderline="false" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[$]]></text>
 				</staticText>
@@ -332,14 +308,14 @@ ORDER BY ms.membership_name ASC;]]>
 				<staticText>
 					<reportElement x="74" y="124" width="212" height="20" uuid="5e8d8f34-5a89-4e42-b55d-1c2f1abc7ea1"/>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Times New Roman" size="10" isBold="true"/>
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[TOTAL ENCLOSED]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="286" y="124" width="100" height="20" uuid="eb7bb06a-45b0-40fa-9cdd-f85038f2fcf7"/>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Times New Roman" size="10"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[$]]></text>
 				</staticText>
@@ -352,28 +328,28 @@ ORDER BY ms.membership_name ASC;]]>
 				<staticText>
 					<reportElement x="40" y="0" width="246" height="15" uuid="9b1f2c0a-3043-4cae-86f9-bbec9636e2ff"/>
 					<textElement>
-						<font fontName="Times New Roman" isBold="true"/>
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[Plus unpaid membership fees]]></text>
 				</staticText>
 				<textField pattern="¤ #,##0.00">
 					<reportElement x="286" y="0" width="100" height="15" uuid="ce843237-a2e4-4aa2-8f53-473d26363535"/>
 					<textElement textAlignment="Right">
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{balance}.doubleValue() < 0.0 ? $F{balance} : 0.0]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="40" y="15" width="246" height="15" uuid="3a77592b-b0e0-4eb8-81fe-ad0361146ce8"/>
 					<textElement>
-						<font fontName="Times New Roman" isBold="true"/>
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 					</textElement>
 					<text><![CDATA[Less pre-paid membership fees]]></text>
 				</staticText>
 				<textField pattern="¤ #,##0.00">
 					<reportElement x="286" y="15" width="100" height="15" uuid="14e7f6a6-7f10-4b5e-8be0-99833396252f"/>
 					<textElement textAlignment="Right">
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{balance}.doubleValue() > 0.0 ? $F{balance} : 0.0]]></textFieldExpression>
 				</textField>
@@ -389,68 +365,67 @@ ORDER BY ms.membership_name ASC;]]>
 	<pageHeader>
 		<band height="165" splitType="Stretch">
 			<rectangle>
-				<reportElement mode="Opaque" x="0" y="0" width="512" height="72" forecolor="#333333" backcolor="#CCCCCD" uuid="b97fdae2-fead-4742-895f-e85999851636"/>
+				<reportElement mode="Opaque" x="0" y="0" width="512" height="70" forecolor="#333333" backcolor="#CCCCCD" uuid="b97fdae2-fead-4742-895f-e85999851636"/>
 				<graphicElement>
 					<pen lineWidth="1.5"/>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Opaque" x="17" y="13" width="188" height="49" forecolor="#333333" uuid="8f0b641a-8d33-4ee8-b237-8a49454b9398"/>
+				<reportElement mode="Opaque" x="17" y="10" width="188" height="47" forecolor="#333333" uuid="8f0b641a-8d33-4ee8-b237-8a49454b9398"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Opaque" x="219" y="13" width="270" height="49" forecolor="#333333" uuid="ba2f3b42-ee27-4d92-bb2c-581db0d2985b"/>
+				<reportElement mode="Opaque" x="219" y="10" width="270" height="47" forecolor="#333333" uuid="ba2f3b42-ee27-4d92-bb2c-581db0d2985b"/>
 			</rectangle>
 			<staticText>
-				<reportElement mode="Transparent" x="17" y="13" width="188" height="19" uuid="f299c483-d4de-42cd-b9e9-29b3b408277f"/>
+				<reportElement mode="Transparent" x="17" y="10" width="188" height="20" uuid="f299c483-d4de-42cd-b9e9-29b3b408277f"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false"/>
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[SWKROA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="17" y="32" width="188" height="15" uuid="cc1d8adb-b1a2-44fa-8af3-490405562dd9"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="Times New Roman"/>
+				<reportElement mode="Transparent" x="17" y="30" width="188" height="12" uuid="cc1d8adb-b1a2-44fa-8af3-490405562dd9"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[209 E 6th St, Hugoton, KS  67951]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="40" y="47" width="60" height="15" uuid="9ac31149-7568-4965-83ea-e00befe77db8"/>
+				<reportElement mode="Transparent" x="40" y="42" width="72" height="12" uuid="9ac31149-7568-4965-83ea-e00befe77db8"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[620-544-4333]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="112" y="47" width="70" height="15" uuid="bec624d3-947d-4c65-835d-5af11e3632c6"/>
+				<reportElement mode="Transparent" x="112" y="42" width="70" height="12" uuid="bec624d3-947d-4c65-835d-5af11e3632c6"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[swkroa.com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="219" y="13" width="270" height="19" uuid="e4dbe7a1-4c38-4275-81b2-2596ede3dd4f"/>
+				<reportElement mode="Transparent" x="219" y="10" width="270" height="20" uuid="e4dbe7a1-4c38-4275-81b2-2596ede3dd4f"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[Membership Renewal Form]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="219" y="32" width="270" height="15" uuid="b61b1d30-a84f-468b-bc3f-ba39fb719885"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="10"/>
+				<reportElement mode="Transparent" x="219" y="30" width="270" height="15" uuid="b61b1d30-a84f-468b-bc3f-ba39fb719885"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[(2015 - 2016)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="72" width="512" height="90" uuid="3f3bbeea-2cdc-468c-b37a-8103e059caf3"/>
+				<reportElement x="0" y="70" width="512" height="90" uuid="3f3bbeea-2cdc-468c-b37a-8103e059caf3"/>
 				<textElement verticalAlignment="Middle" markup="styled">
-					<font fontName="Times New Roman" size="10"/>
-					<paragraph firstLineIndent="25"/>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[It is time to renew your membership in the Southwest Kansas Royalty Owners Association. Your membership renewal fee for the period from <b>March 1, 2015</b> to <b>March 1, 2016</b> is shown below. Please make your check payable to SWKROA and return this form along with your payments to SWKROA. We have enclosed a self-addressed envelope for your convenience.
 
-Please review and confirm the following membership information. <b>ONLY USE Membership New/Change Form</b> for other changes to your membership.]]></text>
+Please review and confirm the following membership information. <b>ONLY USE Membership Change Form</b> for other changes to your membership.]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -460,21 +435,21 @@ Please review and confirm the following membership information. <b>ONLY USE Memb
 			<textField>
 				<reportElement x="40" y="0" width="246" height="15" uuid="a86f3238-4b80-45ca-b94e-3e3e39289b57"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Family membership fee (" + $F{member_name} + ")"]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="286" y="0" width="100" height="15" uuid="ebaa8abe-3c07-469c-8ed8-0867dd2e0b3c"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{member_dues_amount}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="74" y="15" width="386" height="15" uuid="a2af04a5-3409-46bd-b1a4-13cf9aeef000"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{member_address}]]></textFieldExpression>
 			</textField>
@@ -485,14 +460,14 @@ Please review and confirm the following membership information. <b>ONLY USE Memb
 			<staticText>
 				<reportElement x="0" y="0" width="512" height="54" uuid="cd2facf9-6d38-4752-a88a-23dfb703a66f"/>
 				<textElement markup="styled">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[Contributions or gifts to SWKROA are not deductible as charitable contributions for federal income tax purposes. However, they may be tax deductible as an ordinary and necessary business expense. Please consult your tax advisor.]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="62" width="100" height="20" uuid="a5f55bae-47fd-41ec-8393-011c582aa83a"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{owner_ident}]]></textFieldExpression>
 			</textField>
