@@ -48,8 +48,11 @@
   </modules>
 
   <properties>
+    <!-- Build Properties -->
+    <jdk.version>1.6</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <site.url>scp://repo.rele</site.url>
 
     <!-- Common Utilities -->
     <commons-lang-version>3.1</commons-lang-version>
@@ -460,6 +463,105 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <build>
+    <plugins>
+      <!-- Maven Compiler Plugin Settings -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <showDeprecation>true</showDeprecation>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+          <compilerVersion>${jdk.version}</compilerVersion>
+        </configuration>
+      </plugin>
+
+      <!-- Maven Enforcer Plugin Settings -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[${jdk.version}, 1.7)</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[3.0.4, 4.0)</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Maven Dependency Plugin Settings -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <executions>
+          <execution>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Maven Surefire Plugin Settings -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18.1</version>
+      </plugin>
+
+      <!-- Maven Release Plugin Settings -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <pushChanges>false</pushChanges>
+          <tagNameFormat>@{project.version}</tagNameFormat>
+        </configuration>
+      </plugin>
+
+      <!-- Maven Site Plugin Settings -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.4</version>
+        <dependencies>
+          <!-- allows us to use markdown instead of apt -->
+          <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-module-markdown</artifactId>
+            <version>1.6</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <stagingSiteURL>${site.url}</stagingSiteURL>
+        </configuration>
+      </plugin>
+
+      <!-- Maven JavaDoc Plugin Settings -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.1</version>
+      </plugin>
+    </plugins>
+  </build>
 
   <distributionManagement>
     <repository>
