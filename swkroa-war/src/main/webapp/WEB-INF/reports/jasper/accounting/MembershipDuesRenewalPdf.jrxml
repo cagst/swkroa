@@ -30,17 +30,8 @@
       ,pa.city AS primary_city
       ,pa.state_code AS primary_state
       ,pa.postal_code_formatted AS primary_postal_code
-      ,pa.country_code AS primary_country
       ,NULLIF(m.member_name, '') AS member_name
       ,m.name_full
-      ,mpe.email_address AS member_email
-      ,mpa.address1 AS member_address1
-      ,mpa.address2 AS member_address2
-      ,mpa.address3 AS member_address3
-      ,mpa.city AS member_city
-      ,mpa.state_code AS member_state
-      ,mpa.postal_code_formatted AS member_postal_code
-      ,mpa.country_code AS member_country
       ,NULLIF(CONCAT_WS(', ', mpa.address1, mpa.address2, mpa.address3, mpa.city, CONCAT_WS(' ', mpa.state_code, mpa.postal_code_formatted)), '') AS member_address
       ,m.dues_amount AS member_dues_amount
       ,(SELECT m2.name_full
@@ -57,7 +48,6 @@
   LEFT OUTER JOIN primary_email pe ON (pe.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
   LEFT OUTER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind AND m.member_id != ms.member_id AND m.member_type_meaning != 'SPOUSE')
   LEFT OUTER JOIN primary_address mpa ON (mpa.parent_entity_id = m.member_id AND mpa.parent_entity_name = 'MEMBER')
-  LEFT OUTER JOIN primary_email mpe ON (mpe.parent_entity_id = m.member_id AND mpe.parent_entity_name = 'MEMBER')
  WHERE ms.active_ind = 1
    AND $X{IN, ms.membership_id, memberships}
    AND ms.effective_dues > 0
@@ -102,21 +92,12 @@ ORDER BY ms.membership_name ASC;]]>
 	<field name="primary_city" class="java.lang.String"/>
 	<field name="primary_state" class="java.lang.String"/>
 	<field name="primary_postal_code" class="java.lang.String"/>
-	<field name="primary_country" class="java.lang.String"/>
 	<field name="member_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="name_full" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="member_email" class="java.lang.String"/>
-	<field name="member_address1" class="java.lang.String"/>
-	<field name="member_address2" class="java.lang.String"/>
-	<field name="member_address3" class="java.lang.String"/>
-	<field name="member_city" class="java.lang.String"/>
-	<field name="member_state" class="java.lang.String"/>
-	<field name="member_postal_code" class="java.lang.String"/>
-	<field name="member_country" class="java.lang.String"/>
 	<field name="member_address" class="java.lang.String"/>
 	<field name="member_dues_amount" class="java.math.BigDecimal"/>
 	<field name="spouse_name" class="java.lang.String"/>
