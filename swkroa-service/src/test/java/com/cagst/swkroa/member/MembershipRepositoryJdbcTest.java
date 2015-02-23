@@ -3,19 +3,20 @@ package com.cagst.swkroa.member;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import com.google.common.collect.Sets;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,7 +30,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Test class for the MemberRepositoryJdbc class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class MembershipRepositoryJdbcTest extends BaseTestRepository {
@@ -98,7 +98,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     Collection<Membership> memberships = repo.getMembershipsByName("zzz", MembershipStatus.ACTIVE, MembershipBalance.ALL);
 
     assertNotNull("Ensure the memberships collection is not null.", memberships);
-    assertTrue("Ensure the memberships collection is emtpy.", memberships.isEmpty());
+    assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
   }
 
   /**
@@ -120,7 +120,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
   }
 
   /**
-   * Test the getActiveMemberships method.
+   * Test the getMemberships method for Active memberships.
    */
   @Test
   public void testGetMemberships_Active_Found() {
@@ -141,6 +141,53 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure the memberships collection is not null!", memberships);
     assertFalse("Ensure the memberships collection is not empty!", memberships.isEmpty());
     assertEquals("Ensure we found the correct number of memberships!", 2, memberships.size());
+  }
+
+  /**
+   * Test the getMembershipsDueInXDays and not finding any.
+   */
+  @Test
+  public void testGetMemberships_DueInXDays_NoneFound() {
+    DateTime currentTime = new DateTime(2013, 2, 15, 0, 0);
+    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+
+    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    assertNotNull("Ensure the memberships collection is not null.", memberships);
+    assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
+
+    DateTimeUtils.setCurrentMillisSystem();
+  }
+
+  /**
+   * Test the getMembershipsDueInXDays and finding 1.
+   */
+  @Test
+  public void testGetMemberships_DueInXDays_Found1() {
+    DateTime currentTime = new DateTime(2014, 2, 15, 0, 0);
+    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+
+    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    assertNotNull("Ensure the memberships collection is not null.", memberships);
+    assertFalse("Ensure the memberships collection is not empty.", memberships.isEmpty());
+    assertEquals("Ensure the correct number of memberships are found due.", 1, memberships.size());
+
+    DateTimeUtils.setCurrentMillisSystem();
+  }
+
+  /**
+   * Test the getMembershipsDueInXDays and finding 2.
+   */
+  @Test
+  public void testGetMemberships_DueInXDays_Found2() {
+    DateTime currentTime = new DateTime(2015, 2, 15, 0, 0);
+    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+
+    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    assertNotNull("Ensure the memberships collection is not null.", memberships);
+    assertFalse("Ensure the memberships collection is not empty.", memberships.isEmpty());
+    assertEquals("Ensure the correct number of memberships are found due.", 2, memberships.size());
+
+    DateTimeUtils.setCurrentMillisSystem();
   }
 
   /**
@@ -215,7 +262,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testCloseMemberships_Failed_NoMemberships() {
-    repo.closeMemberships(new ArrayList<Long>(), closeReason, null, user);
+    repo.closeMemberships(new HashSet<Long>(), closeReason, null, user);
   }
 
   /**
@@ -223,7 +270,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testCloseMemberships_Failed_NoCloseReason() {
-    List<Long> membershipIds = new ArrayList<Long>(2);
+    Set<Long> membershipIds = Sets.newHashSetWithExpectedSize(2);
 
     membershipIds.add(1L);
     membershipIds.add(2L);
@@ -236,13 +283,38 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testCloseMemberships_Succeeded() {
-    List<Long> membershipIds = new ArrayList<Long>(2);
+    Set<Long> membershipIds = Sets.newHashSetWithExpectedSize(2);
 
     membershipIds.add(1L);
     membershipIds.add(2L);
 
-    int closedMembers = repo.closeMemberships(membershipIds, closeReason, null, user);
+    int closedMemberships = repo.closeMemberships(membershipIds, closeReason, null, user);
 
-    assertEquals("Ensure the correct number of memberships were closed", 2, closedMembers);
+    assertEquals("Ensure the correct number of memberships were closed", 2, closedMemberships);
+  }
+
+  /**
+   * Test the updateNextDueDate method.
+   */
+  @Test
+  public void testUpdateNextDueDate() {
+    Membership membership1 = repo.getMembershipByUID(1L);
+    Membership membership2 = repo.getMembershipByUID(2L);
+
+    assertNotNull("Ensure we found the memberships (membership1)", membership1);
+    assertNotNull("Ensure we found the memberships (membership2)", membership2);
+    assertEquals("Ensure the next due date is correct (membership1)", "01/23/2014", membership1.getNextDueDate().toString("MM/dd/yyyy"));
+    assertEquals("Ensure the next due date is correct (membership2)", "01/23/2015", membership2.getNextDueDate().toString("MM/dd/yyyy"));
+
+    Set<Long> ids = Sets.newHashSet(membership1.getMembershipUID(), membership2.getMembershipUID());
+
+    int updatedMemberships = repo.updateNextDueDate(ids, user);
+
+    assertEquals("Ensure the correct number of memberships were updated", 2, updatedMemberships);
+
+    Membership membership = repo.getMembershipByUID(1L);
+
+    assertNotNull("Ensure we found the membership", membership);
+    assertEquals("Ensure the next due date was updated correctly", "01/23/2015", membership.getNextDueDate().toString("MM/dd/yyyy"));
   }
 }

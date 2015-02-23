@@ -1,8 +1,6 @@
 package com.cagst.swkroa.member;
 
 import javax.annotation.Nullable;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -66,7 +64,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.membership_id = membershipID;
   }
 
-  @NotNull
   public CodeValue getEntityType() {
     return entity_type;
   }
@@ -75,7 +72,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.entity_type = entityType;
   }
 
-  @NotNull
   public DateTime getNextDueDate() {
     return next_due_dt;
   }
@@ -265,7 +261,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
     members.remove(member);
   }
 
-  @Valid
   public List<Member> getMembers() {
     return Collections.unmodifiableList(members);
   }

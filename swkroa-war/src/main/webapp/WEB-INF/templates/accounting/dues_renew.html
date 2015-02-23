@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/accounting/dues_renew.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="duesController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.dues.renew.title}">zzz Renew Memberships</h3>
+  </div>
+
+  <form name="newForm" class="form-inline spacer-bottom divider-bottom" data-th-attr="action=@{/accounting/dues/renew}" target="_blank" method="post">
+    <div class="row-inner">
+      <div class="form-group pull-left">
+        <label class="control-label" data-th-text="#{com.cagst.swkroa.dues.renew.due.in}">zzz Due In</label>
+        <input type="number" class="form-control" name="dueInDays" maxlength="3"
+               data-ng-model="days" />
+      </div>
+      <button type="button" class="btn btn-primary"
+              data-th-text="#{com.cagst.swkroa.dues.renew.get.memberships}"
+              data-ng-click="getMemberhipsDueIn(days)">
+        zzz Memberships
+      </button>
+
+      <div class="pull-right" data-ng-show="membershipsDue">
+        <h4 data-th-text="#{com.cagst.swkroa.dues.renew.totals}">
+          zzz Totals
+        </h4>
+      </div>
+    </div>
+  </form>
+
+  <form name="reportForm" data-th-attr="action=@{/report/membership/renew}" target="_blank" method="post">
+    <div class="row spacer-top" data-ng-show="membershipsDue">
+      <div class="col-xs-2">
+        <div class="btn-group-vertical">
+          <input id="reportType" type="hidden" name="reportType" />
+          <a id="generatePdf" class="btn btn-default"
+             href="javascript:submitReportForm('pdf')"
+             data-ng-disabled="!canExport()"
+             data-th-text="#{com.cagst.swkroa.dues.renew.generate.renewals}">
+            zzz Report
+          </a>
+          <a id="generateCsv" class="btn btn-default"
+             href="javascript:submitReportForm('csv')"
+             data-ng-disabled="!canExport()"
+             data-th-text="#{com.cagst.swkroa.report.generate.export}">
+            zzz Export
+          </a>
+          <button type="button" class="btn btn-primary"
+                  data-toggle="modal" data-target="#renewMembershipsDlg">
+            <span data-th-text="#{com.cagst.swkroa.dues.renew.generate.transactions}">zzz Generate</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-xs-10">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>
+                <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
+              </th>
+              <th data-th-text="#{com.cagst.swkroa.dues.renew.membership}">zzz Membership</th>
+              <th data-th-text="#{com.cagst.swkroa.dues.renew.balance}">zzz Balance</th>
+              <th data-th-text="#{com.cagst.swkroa.dues.renew.duesamount}">zzz Dues Amount</th>
+              <th data-th-text="#{com.cagst.swkroa.dues.renew.nextduedate}">zzz Next Due Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="mem in membershipsDue">
+              <td>
+                <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox"
+                       data-ng-model="mem.selected" data-ng-click="toggleCheck(mem)"/>
+              </td>
+              <td>{{mem.membershipName}}</td>
+              <td>{{mem.balance | currency}}</td>
+              <td>{{mem.effectiveDuesAmount | currency}}</td>
+              <td>{{mem.nextDueDate | date:'mediumDate'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-3"></div>
+    </div>
+  </form>
+
+  <!-- Transaction Details Dialog -->
+  <div class="modal" id="renewMembershipsDlg" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.dues.renew.transaction.title}">zzz Details</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-5">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.date}">
+                zzz Date
+              </label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="transactionDate" name="transactionDate"
+                       data-datepicker-popup="MM/dd/yyyy"
+                       data-is-open="openedTransactionDate"
+                       data-show-button-bar="false"
+                       data-show-weeks="false"
+                       data-ng-model="transactionDate"
+                       data-ng-required="true" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" data-ng-click="openTransactionDate($event)">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+              </div>
+            </div>
+            <div class="col-xs-7">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.desc}">
+                zzz Desc
+              </label>
+              <input type="text" class="form-control" name="desc"
+                     data-ng-model="transactionDescription"
+                     data-ng-required="true"
+                     data-ng-options="type.display for type in transactionTypes" />
+            </div>
+          </div>
+          <div class="row spacer-top">
+            <div class="col-xs-12">
+              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.memo}">
+                zzz Memo
+              </label>
+              <textarea class="form-control" rows="3" data-ng-model="transactionMemo"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"
+                  data-ng-click="renewingMemberships()"
+                  data-th-text="#{com.cagst.swkroa.dues.renew.generate.transactions}">
+            zzz Generate
+          </button>
+          <button type="button" class="btn btn-warning"
+                  data-dismiss="modal"
+                  data-th-text="#{com.cagst.swkroa.discard}">
+            zzz Disregard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

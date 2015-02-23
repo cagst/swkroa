@@ -14,25 +14,12 @@
       ,p.name_first
       ,p.name_middle
       ,p.name_last
-      ,e.email_address
+      ,pe.email_address
       ,CONCAT_WS(', ', p.name_last, p.name_first) AS full_name
       ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS membership_name
-  FROM (SELECT e.parent_entity_id, e.email_id
-          FROM email e
-         WHERE e.parent_entity_name = 'MEMBER'
-           AND e.active_ind = 1
-           AND e.primary_ind = 1
-      GROUP BY e.parent_entity_id
-         UNION
-        SELECT e.parent_entity_id, e.email_id
-          FROM email e
-         WHERE e.parent_entity_name = 'MEMBER'
-           AND e.active_ind = 1
-           AND e.primary_ind = 0
-      GROUP BY e.parent_entity_id
-       )iq
-      INNER JOIN member m ON (m.member_id = iq.parent_entity_id)
-      INNER JOIN email e ON (e.email_id = iq.email_id)
+  FROM member m
+ INNER JOIN membership ms ON (ms.membership_id = m.membership_id AND ms.active_ind = m.active_ind)
+ INNER JOIN primary_email pe ON (pe.parent_entity_name = 'MEMBER' AND pe.parent_entity_id = m.member_id)
  LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
  LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
   WHERE m.active_ind = 1

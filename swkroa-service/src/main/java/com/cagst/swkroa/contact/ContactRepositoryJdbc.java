@@ -24,7 +24,6 @@ import org.springframework.util.Assert;
  * A JDBC Template implementation of the {@link ContactRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("contactRepository")
 public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements ContactRepository {
@@ -42,7 +41,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
   private static final String UPDATE_EMAIL = "UPDATE_EMAIL";
 
   /**
-   * Primary Constructor used to create an instance of <i>PersonRepositoryJdbc</i>.
+   * Primary Constructor used to create an instance of <i>ContactRepositoryJdbc</i>.
    *
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.

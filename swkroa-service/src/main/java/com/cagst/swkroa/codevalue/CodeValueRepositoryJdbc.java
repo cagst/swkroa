@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  * @version 1.0.0
  */
-@Named("codeValueRepository")
+@Named("codeValueRepo")
 /* package */class CodeValueRepositoryJdbc extends BaseRepositoryJdbc implements CodeValueRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(CodeValueRepositoryJdbc.class);
 

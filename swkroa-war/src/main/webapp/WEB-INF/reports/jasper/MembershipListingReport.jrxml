@@ -7,36 +7,37 @@
 	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
-      ,COALESCE(ms.company_name, CONCAT_WS(', ', ms.name_last, ms.name_first)) AS membership_name
+      ,ms.membership_name
       ,ms.fixed_dues
       ,ms.calculated_dues
       ,ms.balance
       ,mt.member_type_display
       ,m.member_id
       ,m.owner_ident
-      ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS full_name
+      ,m.member_name
       ,mt2.dues_amount
       ,pa.address1
       ,pa.address2
       ,pa.address3
       ,pa.city
       ,pa.state_code
-      ,IF(LENGTH(pa.postal_code) > 5, CONCAT(LEFT(pa.postal_code, 5), "-", MID(pa.postal_code, 6)), pa.postal_code) AS postal_code
+      ,pa.postal_code_formatted AS postal_code
       ,pa.country_code
   FROM membership_summary ms
  INNER JOIN member_type mt ON (mt.member_type_id = ms.member_type_id)
- INNER JOIN member m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind)
+ INNER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind)
  INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m.member_type_id AND mt2.active_ind = 1 AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
-  LEFT OUTER JOIN person p ON (p.person_id = m.person_id)
-  LEFT OUTER JOIN primary_addresses pa ON (pa.parent_entity_id = m.member_id AND pa.parent_entity_name = 'MEMBER')
+  LEFT OUTER JOIN primary_address pa ON (pa.parent_entity_id = m.member_id AND pa.parent_entity_name = 'MEMBER')
  WHERE ms.active_ind = 1
-ORDER BY membership_name ASC
+ORDER BY ms.membership_name ASC
         ,mt2.primary_ind DESC;]]>
 	</queryString>
 	<field name="membership_id" class="java.math.BigInteger">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="membership_name" class="java.lang.String"/>
+	<field name="membership_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="fixed_dues" class="java.math.BigDecimal"/>
 	<field name="calculated_dues" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -53,7 +54,9 @@ ORDER BY membership_name ASC
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="full_name" class="java.lang.String"/>
+	<field name="member_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="dues_amount" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -154,7 +157,7 @@ $F{balance}.toString() + " Credit" : "Paid"))]]></variableExpression>
 				<textElement>
 					<font fontName="Verdana" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="70" y="20" width="402" height="20" isRemoveLineWhenBlank="true" uuid="3bba7e15-94ee-4339-9f7d-3bf35595bf9a"/>

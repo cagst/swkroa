@@ -1,7 +1,5 @@
 package com.cagst.swkroa.transaction;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -59,7 +57,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     this.membership_id = uid;
   }
 
-  @NotNull
   public DateTime getTransactionDate() {
     return transaction_dt;
   }
@@ -68,7 +65,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     this.transaction_dt = transactionDate;
   }
 
-  @NotNull
   public TransactionType getTransactionType() {
     return transaction_type;
   }
@@ -112,7 +108,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
 //    return balance;
 //  }
 
-  @Size(max = 50)
   public String getTransactionDescription() {
     return transaction_desc;
   }
@@ -129,7 +124,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     }
   }
 
-  @Size(max = 50)
   public String getReferenceNumber() {
     return ref_num;
   }
@@ -138,7 +132,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     this.ref_num = refNum;
   }
 
-  @Size(max = 250)
   public String getMemo() {
     return memo_txt;
   }
@@ -159,7 +152,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     entries.remove(entry);
   }
 
-  @Size(min = 1)
   public List<TransactionEntry> getTransactionEntries() {
     return Collections.unmodifiableList(entries);
   }

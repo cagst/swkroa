@@ -29,16 +29,12 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Test class for the MemberRepositoryJdbc class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class MemberRepositoryJdbcTest extends BaseTestRepository {
   private MemberRepositoryJdbc repo;
 
-  private PersonRepository personRepo;
   private MemberTypeRepository memberTypeRepo;
-  private CountyRepository countyRepo;
-  private ContactRepository contactRepo;
 
   private User user;
 
@@ -49,10 +45,11 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     user = new User();
     user.setUserUID(1L);
 
-    personRepo = Mockito.mock(PersonRepository.class);
+    PersonRepository personRepo = Mockito.mock(PersonRepository.class);
+    CountyRepository countyRepo = Mockito.mock(CountyRepository.class);
+    ContactRepository contactRepo = Mockito.mock(ContactRepository.class);
+
     memberTypeRepo = Mockito.mock(MemberTypeRepository.class);
-    countyRepo = Mockito.mock(CountyRepository.class);
-    contactRepo = Mockito.mock(ContactRepository.class);
 
     MemberType regularMember = new MemberType();
     regularMember.setMemberTypeUID(1L);

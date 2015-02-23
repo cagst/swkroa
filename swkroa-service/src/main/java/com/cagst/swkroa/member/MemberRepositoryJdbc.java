@@ -38,7 +38,6 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link MemberRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("memberRepo")
 /* package */ final class MemberRepositoryJdbc extends PersonRepositoryJdbc implements MemberRepository {

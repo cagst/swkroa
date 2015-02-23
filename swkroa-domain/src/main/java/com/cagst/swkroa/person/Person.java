@@ -1,8 +1,5 @@
 package com.cagst.swkroa.person;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +79,6 @@ public class Person implements Serializable, Comparable<Person> {
    *
    * @return {@link String} the Persons last name.
    */
-  @NotNull
-  @Size(min = 1, max = 100)
   public String getLastName() {
     return name_last;
   }
@@ -103,8 +98,6 @@ public class Person implements Serializable, Comparable<Person> {
    *
    * @return {@link String} the Persons first name.
    */
-  @NotNull
-  @Size(min = 1, max = 100)
   public String getFirstName() {
     return name_first;
   }
@@ -124,8 +117,6 @@ public class Person implements Serializable, Comparable<Person> {
    *
    * @return {@link String} the Persons middle name.
    */
-
-  @Size(max = 100)
   public String getMiddleName() {
     return name_middle;
   }
@@ -202,7 +193,6 @@ public class Person implements Serializable, Comparable<Person> {
     addresses.remove(address);
   }
 
-  @Valid
   public List<Address> getAddresses() {
     return addresses;
   }
@@ -223,7 +213,6 @@ public class Person implements Serializable, Comparable<Person> {
     emailAddresses.remove(email);
   }
 
-  @Valid
   public List<EmailAddress> getEmailAddresses() {
     return emailAddresses;
   }
@@ -244,7 +233,6 @@ public class Person implements Serializable, Comparable<Person> {
     phoneNumbers.remove(phone);
   }
 
-  @Valid
   public List<PhoneNumber> getPhoneNumbers() {
     return phoneNumbers;
   }
@@ -292,11 +280,6 @@ public class Person implements Serializable, Comparable<Person> {
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -306,11 +289,6 @@ public class Person implements Serializable, Comparable<Person> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -332,11 +310,6 @@ public class Person implements Serializable, Comparable<Person> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -349,11 +322,6 @@ public class Person implements Serializable, Comparable<Person> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final Person rhs) {
     if (rhs == null) {

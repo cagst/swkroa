@@ -11,7 +11,6 @@ import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,27 +91,21 @@ public final class CodeSetApiController {
 
     LOGGER.info("Received request to save codevalue [{}]", codeValue.getDisplay());
 
-    try {
-      // determine if this is a new CodeValue
-      boolean newCodeValue = (codeValue.getCodeValueUID() == 0);
+    // determine if this is a new CodeValue
+    boolean newCodeValue = (codeValue.getCodeValueUID() == 0);
 
-      // save the CodeValue
-      CodeValue savedCodeValue = codeValueRepo.saveCodeValueForCodeSet(codeValue, WebAppUtils.getUser());
+    // save the CodeValue
+    CodeValue savedCodeValue = codeValueRepo.saveCodeValueForCodeSet(codeValue, WebAppUtils.getUser());
 
-      // specify the location of the resource
-      UriComponents locationUri = ServletUriComponentsBuilder
-          .fromContextPath(request)
-          .path("/api/codesets/{codeSetMeaning}/{codeValueUID}")
-          .buildAndExpand(new Object[] {codeSetMeaning, savedCodeValue.getCodeValueUID()});
+    // specify the location of the resource
+    UriComponents locationUri = ServletUriComponentsBuilder
+        .fromContextPath(request)
+        .path("/api/codesets/{codeSetMeaning}/{codeValueUID}")
+        .buildAndExpand(new Object[] {codeSetMeaning, savedCodeValue.getCodeValueUID()});
 
-      HttpHeaders headers = new HttpHeaders();
-      headers.setLocation(locationUri.toUri());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setLocation(locationUri.toUri());
 
-      return new ResponseEntity<CodeValue>(savedCodeValue, headers, newCodeValue ? HttpStatus.CREATED : HttpStatus.OK);
-    } catch (OptimisticLockingFailureException ex) {
-      return new ResponseEntity<CodeValue>(codeValue, HttpStatus.CONFLICT);
-    } catch (Exception ex) {
-      return new ResponseEntity<CodeValue>(codeValue, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return new ResponseEntity<CodeValue>(savedCodeValue, headers, newCodeValue ? HttpStatus.CREATED : HttpStatus.OK);
   }
 }

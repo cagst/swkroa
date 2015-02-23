@@ -1,7 +1,5 @@
 package com.cagst.swkroa.transaction;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -73,7 +71,6 @@ public final class TransactionEntry implements Serializable {
     this.member = member;
   }
 
-  @DecimalMin(value = "0.01")
   public BigDecimal getTransactionEntryAmount() {
     return transaction_entry_amount;
   }
@@ -82,7 +79,6 @@ public final class TransactionEntry implements Serializable {
     this.transaction_entry_amount = amount;
   }
 
-  @NotNull
   public CodeValue getTransactionEntryType() {
     return transaction_entry_type;
   }

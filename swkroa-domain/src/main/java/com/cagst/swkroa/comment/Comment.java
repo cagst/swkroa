@@ -1,8 +1,5 @@
 package com.cagst.swkroa.comment;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 import com.cagst.common.util.CGTCollatorBuilder;
@@ -57,8 +54,6 @@ public final class Comment implements Serializable, Comparable<Comment> {
     this.parent_entity_name = name;
   }
 
-  @NotNull
-  @Past
   public DateTime getCommentDate() {
     return comment_dt;
   }
@@ -67,8 +62,6 @@ public final class Comment implements Serializable, Comparable<Comment> {
     this.comment_dt = dt;
   }
 
-  @NotNull
-  @Size(min = 1, max = 1000)
   public String getCommentText() {
     return comment_txt;
   }
@@ -93,11 +86,6 @@ public final class Comment implements Serializable, Comparable<Comment> {
     this.updt_cnt = count;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -107,11 +95,6 @@ public final class Comment implements Serializable, Comparable<Comment> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -133,11 +116,6 @@ public final class Comment implements Serializable, Comparable<Comment> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -147,11 +125,6 @@ public final class Comment implements Serializable, Comparable<Comment> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final Comment rhs) {
     if (rhs == null) {

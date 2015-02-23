@@ -137,7 +137,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     params.addValue(ACTIVE_IND, membership.isActive());
     params.addValue(CLOSE_REASON_ID, membership.getCloseReasonUID() > 0 ? membership.getCloseReasonUID() : null);
     params.addValue(CLOSE_REASON_TXT, membership.getCloseReasonText());
-    params.addValue(CLOSE_DT_TM, membership.getCloseDate());
+    params.addValue(CLOSE_DT_TM, CGTDateTimeUtils.convertDateTimeToTimestamp(membership.getCloseDate()));
     params.addValue(UPDT_ID, user.getUserUID());
   }
 }

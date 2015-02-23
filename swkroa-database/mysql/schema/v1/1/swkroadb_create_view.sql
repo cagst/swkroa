@@ -1,17 +1,22 @@
 CREATE VIEW membership_summary AS
      SELECT ms.membership_id
+           ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS membership_name
            ,ms.entity_type_cd
            ,m.member_id
            ,mt.member_type_id
+           ,mt.member_type_meaning
            ,m.company_name
+           ,ms.next_due_dt
            ,m.owner_ident
            ,m.greeting
            ,m.in_care_of
            ,p.title_cd
+           ,cv.codevalue_meaning AS title_meaning
+           ,cv.codevalue_display AS title_display
            ,p.name_last
            ,p.name_middle
            ,p.name_first
-           ,ms.next_due_dt
+           ,NULLIF(CONCAT_WS(' ', p.name_first, p.name_last), '') AS name_full
            ,m.join_dt
            ,ms.close_reason_id
            ,ms.close_reason_txt
@@ -20,6 +25,7 @@ CREATE VIEW membership_summary AS
            ,ms.dues_amount AS fixed_dues
            ,ms.updt_cnt AS membership_updt_cnt
            ,COALESCE(SUM(mt2.dues_amount), 0) AS calculated_dues
+           ,COALESCE(ms.dues_amount, COALESCE(SUM(mt2.dues_amount), 0)) AS effective_dues
            ,(SELECT SUM(te.transaction_entry_amount) AS balance
                FROM transaction t
                    ,transaction_entry te
@@ -41,7 +47,9 @@ CREATE VIEW membership_summary AS
  INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m2.member_type_id AND mt2.active_ind = 1
                             AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
  LEFT OUTER JOIN person p   ON (p.person_id = m.person_id AND p.active_ind = 1)
+ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
    GROUP BY membership_id
+           ,membership_name
            ,entity_type_cd
            ,member_id
            ,member_type_id
@@ -62,7 +70,38 @@ CREATE VIEW membership_summary AS
            ,fixed_dues
            ,membership_updt_cnt;
 
-CREATE VIEW base_primary_addresses AS
+CREATE VIEW member_summary AS
+     SELECT m.membership_id
+           ,m.member_id
+           ,NULLIF(COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)), '') AS member_name
+           ,mt.member_type_id
+           ,mt.member_type_meaning
+           ,mt.member_type_display
+           ,m.company_name
+           ,m.owner_ident
+           ,m.greeting
+           ,m.in_care_of
+           ,p.title_cd
+           ,cv.codevalue_meaning AS title_meaning
+           ,cv.codevalue_display AS title_display
+           ,p.name_last
+           ,p.name_middle
+           ,p.name_first
+           ,NULLIF(CONCAT_WS(' ', p.name_first, p.name_last), '') AS name_full
+           ,m.join_dt
+           ,m.close_reason_id
+           ,m.close_reason_txt
+           ,m.close_dt_tm
+           ,m.active_ind
+           ,mt.dues_amount
+           ,m.updt_cnt AS member_updt_cnt
+       FROM member m
+ INNER JOIN member_type mt  ON (mt.prev_member_type_id = m.member_type_id AND mt.active_ind = 1
+                            AND mt.beg_eff_dt_tm < NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm > NOW()))
+ LEFT OUTER JOIN person p   ON (p.person_id = m.person_id AND p.active_ind = 1)
+ LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd);
+
+CREATE VIEW base_primary_address AS
      SELECT a.parent_entity_id
            ,a.parent_entity_name
            ,MIN(a.address_id) AS address_id
@@ -77,7 +116,7 @@ CREATE VIEW base_primary_addresses AS
       WHERE a.active_ind = 1 AND a.primary_ind = 0
    GROUP BY a.parent_entity_id, a.parent_entity_name;
 
-CREATE VIEW primary_addresses AS
+CREATE VIEW primary_address AS
      SELECT ba.parent_entity_id
            ,ba.parent_entity_name
            ,a.address_type_cd
@@ -88,7 +127,8 @@ CREATE VIEW primary_addresses AS
            ,a.state_code
            ,a.country_code
            ,a.postal_code
-       FROM base_primary_addresses ba INNER JOIN address a USING (address_id);
+           ,IF(LENGTH(a.postal_code) > 5, CONCAT(LEFT(a.postal_code, 5), "-", MID(a.postal_code, 6)), a.postal_code) AS postal_code_formatted
+       FROM base_primary_address ba INNER JOIN address a USING (address_id);
 
 CREATE VIEW base_primary_email AS
      SELECT e.parent_entity_id

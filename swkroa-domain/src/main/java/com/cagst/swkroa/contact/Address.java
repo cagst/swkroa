@@ -1,7 +1,5 @@
 package com.cagst.swkroa.contact;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -63,7 +61,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.parent_entity_name = name;
   }
 
-  @NotNull
   public long getAddressTypeCD() {
     return address_type_cd;
   }
@@ -72,8 +69,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.address_type_cd = address_type_cd;
   }
 
-  @NotNull
-  @Size(min = 1, max = 50)
   public String getAddressLine1() {
     return address1;
   }
@@ -82,7 +77,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.address1 = address1;
   }
 
-  @Size(max = 50)
   public String getAddressLine2() {
     return address2;
   }
@@ -91,7 +85,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.address2 = address2;
   }
 
-  @Size(max = 50)
   public String getAddressLine3() {
     return address3;
   }
@@ -100,8 +93,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.address3 = address3;
   }
 
-  @NotNull
-  @Size(min = 1, max = 50)
   public String getCity() {
     return city;
   }
@@ -110,8 +101,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.city = city;
   }
 
-  @NotNull
-  @Size(min = 1, max = 2)
   public String getState() {
     return state_code;
   }
@@ -120,8 +109,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.state_code = stateCode;
   }
 
-  @NotNull
-  @Size(min = 1, max = 15)
   public String getPostalCode() {
     return postal_code;
   }
@@ -130,8 +117,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.postal_code = postalCode;
   }
 
-  @NotNull
-  @Size(min = 1, max = 2)
   public String getCountry() {
     return country_code;
   }
@@ -164,11 +149,6 @@ public final class Address implements Serializable, Comparable<Address> {
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -183,11 +163,6 @@ public final class Address implements Serializable, Comparable<Address> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -214,11 +189,6 @@ public final class Address implements Serializable, Comparable<Address> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -233,11 +203,6 @@ public final class Address implements Serializable, Comparable<Address> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final Address rhs) {
     CompareToBuilder builder = new CompareToBuilder();

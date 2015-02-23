@@ -67,7 +67,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
     List<CodeSet> codeSets = repo.getActiveCodeSets();
     assertNotNull("Ensure the codesets were found.", codeSets);
     assertFalse("Ensure the codeset list isn't empty.", codeSets.isEmpty());
-    assertEquals("Ensure we found the correct number of code sets.", 3, codeSets.size());
+    assertEquals("Ensure we found the correct number of code sets.", 4, codeSets.size());
   }
 
   /**

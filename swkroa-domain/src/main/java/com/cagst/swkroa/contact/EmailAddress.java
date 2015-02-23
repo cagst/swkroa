@@ -1,7 +1,5 @@
 package com.cagst.swkroa.contact;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.text.Collator;
 
@@ -57,7 +55,6 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
     this.parent_entity_name = name;
   }
 
-  @NotNull
   public long getEmailTypeCD() {
     return email_type_cd;
   }
@@ -66,8 +63,6 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
     this.email_type_cd = email_type_cd;
   }
 
-  @NotNull
-  @Size(min = 1, max = 256)
   public String getEmailAddress() {
     return email_address;
   }
@@ -100,11 +95,6 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -113,11 +103,6 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -138,11 +123,6 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -151,11 +131,6 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final EmailAddress rhs) {
     Collator collator = Collator.getInstance();

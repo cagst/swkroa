@@ -103,9 +103,10 @@ swkroaApp.factory('contextRootInterceptor', function() {
 
     'responseError': function(rejection) {
       if (rejection.status == 409) {
-        $('#optimisticErrorMessage').modal('show');
-      } else if (rejection.status == 500) {
-        $('#unknownErrorMessage').modal('show');
+        $('#optimisticErrorMessageDlg').modal('show');
+      } else if (rejection.status >= 400 && rejection.status <= 599) {
+        $('#unknownErrorMessage').text(rejection.data.message);
+        $('#unknownErrorMessageDlg').modal('show');
       }
 
       return rejection;
@@ -497,6 +498,28 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
+  this.getMembershipsDueInXDays = function(days) {
+    var promise = $http.get(rootUrl + "?dueInDays=" + days);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
   this.saveMembership = function(membership) {
     var promise = $http.post(rootUrl, membership);
 
@@ -527,19 +550,59 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
-  this.closeMemberships = function(membershipsArg, closeReasonArg, closeTextArg) {
+  this.closeMemberships = function(membershipIdsArg, closeReasonArg, closeTextArg) {
     var closeReasonText = "";
     if (closeTextArg) {
       closeReasonText = closeTextArg;
     };
 
     var data = {
-      memberships: membershipsArg,
+      membershipIds: membershipIdsArg,
       closeReason: closeReasonArg,
       closeText: closeReasonText
     };
 
     var promise = $http.post(rootUrl + '/close', JSON.stringify(data));
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.renewMemberships = function(membershipIdsArg, transDateArg, transDescArg, transMemoArg) {
+    var transDesc = "";
+    var transMemo = "";
+
+    if (transDescArg) {
+      transDesc = transDescArg;
+    };
+
+    if (transMemoArg) {
+      transMemo = transMemoArg;
+    };
+
+    var data = {
+      membershipIds: membershipIdsArg,
+      transactionDate: transDateArg,
+      transactionDescription: transDesc,
+      transactionMemo: transMemo
+    };
+
+    var promise = $http.post(rootUrl + '/bill', JSON.stringify(data));
 
     promise.success = function(fn) {
       promise.then(function(response) {
@@ -613,3 +676,11 @@ swkroaApp.controller('dashboardController', function($scope, $http) {
     $scope.dashboard = data;
   });
 });
+
+showProcessingDialog = function() {
+  $('#pleaseWaitDlg').modal('show');
+};
+
+hideProcessingDialog = function() {
+  $('#pleaseWaitDlg').modal('hide');
+};

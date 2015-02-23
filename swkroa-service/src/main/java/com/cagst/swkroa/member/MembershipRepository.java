@@ -1,6 +1,7 @@
 package com.cagst.swkroa.member;
 
 import java.util.List;
+import java.util.Set;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.user.User;
@@ -63,6 +64,16 @@ public interface MembershipRepository {
   public List<Membership> getMembershipsByName(final String name, final MembershipStatus status, final MembershipBalance balance);
 
   /**
+   * Retrieves all {@link Membership Memberships} that will be due in the following days.
+   *
+   * @param days
+   *      The number of days to look ahead for memberships that will be due.
+   *
+   * @return A {@link List} of {@link Membership Memberships} that will be due in the following days.
+   */
+  public List<Membership> getMembershipsDueInXDays(final int days);
+
+  /**
    * Commits the specified {@link Membership Membership} to persistent storage.
    *
    * @param membership
@@ -86,7 +97,7 @@ public interface MembershipRepository {
    * Closes the memberships identified by their unique identifier for the specified reason.
    *
    * @param membershipIds
-   *      A {@link List} of {@link Long} that uniquely identifies the memberships to close.
+   *      A {@link Set} of {@link Long} that uniquely identifies the memberships to close.
    * @param closeReason
    *      A {@link CodeValue} that specifies the reason for closure, if {@code null} then a closeText must be specified.
    * @param closeText
@@ -95,8 +106,23 @@ public interface MembershipRepository {
    *     The {@link User} that performed the changes.
    *
    * @return The number of memberships closed (modified)
+   *
+   * @throws DataAccessException if the query fails
    */
-  public int closeMemberships(final List<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
+  public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException;
 
+  /**
+   * Updates the next due date by 1 year for the specified memberships.
+   *
+   * @param membershipIds
+   *      A {@link Set} of {@link Long} that uniquely identify the memberships to update.
+   * @param user
+   *      The {@link User} that performed the changes.
+   *
+   * @return The number of memberships updated (modified)
+   *
+   * @throws DataAccessException if the query fails
+   */
+  public int updateNextDueDate(final Set<Long> membershipIds, final User user) throws DataAccessException;
 }

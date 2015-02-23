@@ -1,7 +1,5 @@
 package com.cagst.swkroa.role;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Collection;
@@ -39,8 +37,6 @@ public final class Role implements Serializable, Comparable<Role> {
     this.role_id = roleUid;
   }
 
-  @NotNull
-  @Size(min = 1, max = 25)
   public String getRoleKey() {
     return role_key;
   }
@@ -49,8 +45,6 @@ public final class Role implements Serializable, Comparable<Role> {
     this.role_key = key;
   }
 
-  @NotNull
-  @Size(min = 1, max = 50)
   public String getRoleName() {
     return role_name;
   }
@@ -113,11 +107,6 @@ public final class Role implements Serializable, Comparable<Role> {
     return privileges.values();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -127,11 +116,6 @@ public final class Role implements Serializable, Comparable<Role> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -140,11 +124,6 @@ public final class Role implements Serializable, Comparable<Role> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -165,11 +144,6 @@ public final class Role implements Serializable, Comparable<Role> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final Role rhs) {
     Collator collator = Collator.getInstance();

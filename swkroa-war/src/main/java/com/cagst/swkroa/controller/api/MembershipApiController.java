@@ -16,8 +16,8 @@ import com.cagst.swkroa.member.MembershipBalance;
 import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.member.MembershipStatus;
-import com.cagst.swkroa.model.CloseMembership;
-import com.cagst.swkroa.model.CloseMemberships;
+import com.cagst.swkroa.model.BillingRunModel;
+import com.cagst.swkroa.model.CloseMembershipsModel;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +43,6 @@ import org.springframework.web.util.UriComponents;
  * template.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RestController
 @RequestMapping("/api/memberships")
@@ -74,6 +72,7 @@ public final class MembershipApiController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public List<Membership> getMemberships(final @RequestParam(value = "q", required = false) String query,
+                                         final @RequestParam(value = "dueInDays", required = false) Integer dueInDays,
                                          final @RequestParam(value = "status", required = false) String status,
                                          final @RequestParam(value = "balance", required = false) String balance) {
 
@@ -87,6 +86,8 @@ public final class MembershipApiController {
           StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
           StringUtils.isNotBlank(balance) ? MembershipBalance.valueOf(balance) : MembershipBalance.ALL
       );
+    } else if (dueInDays != null && dueInDays >= 0) {
+      memberships = membershipService.getMembershipsDueInXDays(dueInDays);
     } else {
       memberships = membershipService.getMemberships(
           StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
@@ -169,38 +170,37 @@ public final class MembershipApiController {
   public ResponseEntity<Membership> saveMembership(final @RequestBody Membership membership, final HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
-    try {
-      // determine if this is a new membership before we save it (since we will update the membership after the save)
-      boolean newMembership = (membership.getMembershipUID() == 0);
+    // determine if this is a new membership before we save it (since we will update the membership after the save)
+    boolean newMembership = (membership.getMembershipUID() == 0);
 
-      // save the membership
-      Membership savedMembership = membershipService.saveMembership(membership, WebAppUtils.getUser());
+    // save the membership
+    Membership savedMembership = membershipService.saveMembership(membership, WebAppUtils.getUser());
 
-      // specify the location of the resource
-      UriComponents locationUri = ServletUriComponentsBuilder
-          .fromContextPath(request)
-          .path("/api/memberships/{membershipUID}")
-          .buildAndExpand(savedMembership.getMembershipUID());
+    // specify the location of the resource
+    UriComponents locationUri = ServletUriComponentsBuilder
+        .fromContextPath(request)
+        .path("/api/memberships/{membershipUID}")
+        .buildAndExpand(savedMembership.getMembershipUID());
 
-      HttpHeaders headers = new HttpHeaders();
-      headers.setLocation(locationUri.toUri());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setLocation(locationUri.toUri());
 
-      return new ResponseEntity<Membership>(savedMembership, headers, newMembership ? HttpStatus.CREATED : HttpStatus.OK);
-    } catch (OptimisticLockingFailureException ex) {
-      return new ResponseEntity<Membership>(membership, HttpStatus.CONFLICT);
-    } catch (Exception ex) {
-      return new ResponseEntity<Membership>(membership, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return new ResponseEntity<Membership>(savedMembership, headers, newMembership ? HttpStatus.CREATED : HttpStatus.OK);
   }
 
   /**
    * Handles the request and closes the memberships identified by the unique identifiers passed in.
+   *
+   * @param closeMemberships
+   *        The {@link CloseMembershipsModel} that contains the membership ids to close.
+   *
+   * @return A {@link ResponseEntity} that indicates if the memberships were closed successfully.
    */
   @RequestMapping(value = "/close", method = RequestMethod.POST)
-  public ResponseEntity closeMemberships(final @RequestBody CloseMemberships closeMemberships) {
+  public ResponseEntity closeMemberships(final @RequestBody CloseMembershipsModel closeMemberships) {
     LOGGER.info("Received request to close memberships");
 
-    if (CollectionUtils.isEmpty(closeMemberships.getMemberships())) {
+    if (CollectionUtils.isEmpty(closeMemberships.getMembershipIds())) {
       return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
@@ -209,9 +209,40 @@ public final class MembershipApiController {
     }
 
     membershipService.closeMemberships(
-        closeMemberships.getMemberships(),
+        closeMemberships.getMembershipIds(),
         closeMemberships.getCloseReason(),
         closeMemberships.getCloseText(),
+        WebAppUtils.getUser()
+    );
+
+    return new ResponseEntity(HttpStatus.OK);
+  }
+
+  /**
+   * Handles the request and bills the memberships identified by the unique identifiers passed in.
+   *
+   * @param billingMemberships
+   *        The {@link BillingRunModel} that contains the membership ids to bill.
+   *
+   * @return A {@link ResponseEntity} that indicates if the memberships were billed successfully.
+   */
+  @RequestMapping(value = "/bill", method = RequestMethod.POST)
+  public ResponseEntity billMemberships(final @RequestBody BillingRunModel billingMemberships) {
+    LOGGER.info("Received request to bill memberships");
+
+    if (CollectionUtils.isEmpty(billingMemberships.getMembershipIds())) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    if (billingMemberships.getTransactionDate() == null) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    membershipService.billMemberships(
+        billingMemberships.getTransactionDate(),
+        billingMemberships.getTransactionDescription(),
+        billingMemberships.getTransactionMemo(),
+        billingMemberships.getMembershipIds(),
         WebAppUtils.getUser()
     );
 

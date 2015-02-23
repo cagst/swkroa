@@ -82,6 +82,12 @@
               zzz Delinquencies
             </a>
           </li>
+          <li>
+            <a data-th-href="@{/accounting/dues}"
+               data-th-text="#{com.cagst.swkroa.accounting.menu.dues}">
+              zzz Dues
+            </a>
+          </li>
         </ul>
       </li>
       <li class="dropdown">
@@ -154,14 +160,15 @@
   </div>
 </div>
 
-<div class="modal fade" id="optimisticErrorMessage" tabindex="-1">
+<!-- Locking Error Dialog -->
+<div class="modal fade" id="optimisticErrorMessageDlg" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.save.failed.caption}">zzz Optimistic</h4>
       </div>
       <div class="modal-body">
-        <span data-th-text="#{com.cagst.swkroa.save.failed.message.optimistic}">zzz Update Failed?</span>
+        <div data-th-text="#{com.cagst.swkroa.save.failed.message.optimistic}">zzz Update Failed?</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary"
@@ -174,14 +181,16 @@
   </div>
 </div>
 
-<div class="modal fade" id="unknownErrorMessage" tabindex="-1">
+<!-- Unknown Error Dialog -->
+<div class="modal fade" id="unknownErrorMessageDlg" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.save.failed.caption}">zzz Unknown</h4>
       </div>
       <div class="modal-body">
-        <span data-th-text="#{com.cagst.swkroa.save.failed.message.unknown}">zzz Update Failed?</span>
+        <div data-th-text="#{com.cagst.swkroa.save.failed.message.unknown}">zzz Update Failed?</div>
+        <div id="unknownErrorMessage"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary"
@@ -194,9 +203,26 @@
   </div>
 </div>
 
+<!-- Processing Dialog -->
+<div class="modal fade" id="pleaseWaitDlg" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.processing}">zzz Processing</h4>
+      </div>
+      <div class="modal-body">
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped active" style="width: 100%">
+            <div class="bar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript" data-th-src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js}"></script>
-<script type="text/javascript"
-        data-th-src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js}"></script>
+<script type="text/javascript" data-th-src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js}"></script>
 
 </body>
 </html>

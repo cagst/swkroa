@@ -1,17 +1,18 @@
 package com.cagst.swkroa.model;
 
+import java.util.Set;
+
 import com.cagst.swkroa.codevalue.CodeValue;
-import com.cagst.swkroa.member.Membership;
 
 /**
- * A model that contains information need to close a membership.
+ * A model that contains information need to close memberships.
  *
  * @author Craig Gaskill
  */
-public final class CloseMembership {
+public final class CloseMembershipsModel {
   private CodeValue closeReason;
   private String closeText;
-  private Membership membership;
+  private Set<Long> memberships;
 
   public CodeValue getCloseReason() {
     return closeReason;
@@ -29,11 +30,11 @@ public final class CloseMembership {
     this.closeText = closeText;
   }
 
-  public Membership getMembership() {
-    return membership;
+  public Set<Long> getMembershipIds() {
+    return memberships;
   }
 
-  public void setMembership(final Membership membership) {
-    this.membership = membership;
+  public void setMembershipIds(final Set<Long> memberships) {
+    this.memberships = memberships;
   }
 }

@@ -1,7 +1,5 @@
 package com.cagst.swkroa.contact;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -58,7 +56,6 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
     this.parent_entity_name = name;
   }
 
-  @NotNull
   public long getPhoneTypeCD() {
     return phone_type_cd;
   }
@@ -67,8 +64,6 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
     this.phone_type_cd = phone_type_cd;
   }
 
-  @NotNull
-  @Size(min = 1, max = 25)
   public String getPhoneNumber() {
     return phone_number;
   }
@@ -85,7 +80,6 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
     return phone_extension;
   }
 
-  @Size(max = 10)
   public void setPhoneExtension(final String extension) {
     this.phone_extension = extension;
   }
@@ -114,11 +108,6 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -128,11 +117,6 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -155,11 +139,6 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -169,11 +148,6 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final PhoneNumber rhs) {
     CompareToBuilder builder = new CompareToBuilder();

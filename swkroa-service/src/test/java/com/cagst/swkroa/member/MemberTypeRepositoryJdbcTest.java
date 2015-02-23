@@ -22,7 +22,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
  * Test class for the MemberTypeRepositoryJdbc class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
