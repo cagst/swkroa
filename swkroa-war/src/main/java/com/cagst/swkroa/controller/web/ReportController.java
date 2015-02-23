@@ -123,7 +123,7 @@ public final class ReportController {
    *
    * @return The generated report.
    */
-  @RequestMapping(value = "/membership/renewal", method = RequestMethod.POST)
+  @RequestMapping(value = "/membership/renew", method = RequestMethod.POST)
   public ModelAndView generateMembershipDuesRenewalReport(final @RequestParam("reportType") String reportType,
                                                           final HttpServletRequest request) {
 

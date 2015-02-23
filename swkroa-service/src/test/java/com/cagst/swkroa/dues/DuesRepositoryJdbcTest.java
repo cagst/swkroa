@@ -1,4 +1,4 @@
-package com.cagst.swkroa.billing;
+package com.cagst.swkroa.dues;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -13,26 +13,26 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Test class for {@link BillingRepositoryJdbc} class.
+ * Test class for {@link DuesRepositoryJdbc} class.
  *
  * @author Craig Gaskill
  */
 @RunWith(JUnit4.class)
-public class BillingRepositoryJdbcTest extends BaseTestRepository {
-  private BillingRepositoryJdbc repo;
+public class DuesRepositoryJdbcTest extends BaseTestRepository {
+  private DuesRepositoryJdbc repo;
 
   @Before
   public void setUp() {
-    repo = new BillingRepositoryJdbc(createTestDataSource());
+    repo = new DuesRepositoryJdbc(createTestDataSource());
     repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
   }
 
   /**
-   * Test the getBillingRuns method.
+   * Test the getDuesRuns method.
    */
   @Test
-  public void testGetBillingRuns() {
-    List<BillingRun> runs = repo.getBillingRuns();
+  public void testGetDuesRuns() {
+    List<DuesRun> runs = repo.getDuesRuns();
 
     assertNotNull("Ensure billing runs were found.", runs);
     assertEquals("Ensure we found the correct number of runs.", 1L, runs.size());

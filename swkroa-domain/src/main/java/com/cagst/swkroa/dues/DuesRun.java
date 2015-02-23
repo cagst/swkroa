@@ -1,4 +1,4 @@
-package com.cagst.swkroa.billing;
+package com.cagst.swkroa.dues;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -6,11 +6,11 @@ import java.math.BigDecimal;
 import org.joda.time.DateTime;
 
 /**
- * Represents a Billing Run within the system.
+ * Represents a Dues Run within the system.
  *
  * @author Craig Gaskill
  */
-public final class BillingRun implements Serializable {
+public final class DuesRun implements Serializable {
   private DateTime runDate;
   private String runDesc;
   private long runCount;
