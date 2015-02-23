@@ -72,9 +72,17 @@ swkroaApp.controller('duesController', ['$scope', '$http', 'codesetService', 'me
     });
   };
 
+  $scope.openTransactionDate = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.openedTransactionDate = true;
+  };
+
   $scope.days = 30;
   $scope.totalMemberships = 0;
   $scope.totalAmount = 0;
+  $scope.transactionDate = new Date();
 }]);
 
 var calculateTotals = function($scope) {
