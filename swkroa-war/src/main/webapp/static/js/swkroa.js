@@ -583,7 +583,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
-  this.billMemberships = function(membershipIdsArg, transDateArg, transDescArg, transMemoArg) {
+  this.renewMemberships = function(membershipIdsArg, transDateArg, transDescArg, transMemoArg) {
     var transDesc = "";
     var transMemo = "";
 

@@ -55,7 +55,7 @@
             zzz Export
           </a>
           <button type="button" class="btn btn-primary"
-                  data-toggle="modal" data-target="#billMembershipsDlg">
+                  data-toggle="modal" data-target="#renewMembershipsDlg">
             <span data-th-text="#{com.cagst.swkroa.dues.renew.generate.transactions}">zzz Generate</span>
           </button>
         </div>
@@ -92,7 +92,7 @@
   </form>
 
   <!-- Transaction Details Dialog -->
-  <div class="modal" id="billMembershipsDlg" tabindex="-1">
+  <div class="modal" id="renewMembershipsDlg" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -140,7 +140,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary"
-                  data-ng-click="billMemberships()"
+                  data-ng-click="renewingMemberships()"
                   data-th-text="#{com.cagst.swkroa.dues.renew.generate.transactions}">
             zzz Generate
           </button>

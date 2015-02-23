@@ -1,7 +1,7 @@
 /**
  * (c) 2014 CAGST Solutions: http://www.cagst.com/solutions
  *
- * Provides functionality needed for the Deposit pages.
+ * Provides functionality needed for the Dues Renewal pages.
  *
  * Author:  Craig Gaskill
  */
@@ -54,8 +54,8 @@ swkroaApp.controller('duesController', ['$scope', '$http', 'codesetService', 'me
     return membershipsSelected;
   };
 
-  $scope.billMemberships = function() {
-    $('#billMembershipsDlg').modal('hide');
+  $scope.renewingMemberships = function() {
+    $('#renewMembershipsDlg').modal('hide');
 
     var memberships = [];
     for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
@@ -66,7 +66,7 @@ swkroaApp.controller('duesController', ['$scope', '$http', 'codesetService', 'me
 
     showProcessingDialog();
 
-    membershipService.billMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo).success(function(data) {
+    membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo).success(function(data) {
       $scope.getMemberhipsDueIn($scope.days);
       hideProcessingDialog();
     });
