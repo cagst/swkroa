@@ -497,7 +497,7 @@ swkroaApp.controller('membershipController',
   $('#updatedMessage').hide();
 
   codesetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
-    $scope.transactionEntryTypes = data;
+    $scope.entryTypes = data;
   });
 
   codesetService.getCodeValuesForCodeSet('CLOSE_REASONS').success(function(data) {
@@ -507,9 +507,9 @@ swkroaApp.controller('membershipController',
 
 var syncTransactionEntryType = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
-    for (var idx2 = 0; idx2 < scope.transactionEntryTypes.length; idx2++) {
-      if (scope.transaction.transactionEntries[idx1].transactionEntryType.codeValueUID == scope.transactionEntryTypes[idx2].codeValueUID) {
-        scope.transaction.transactionEntries[idx1].transactionEntryType = scope.transactionEntryTypes[idx2];
+    for (var idx2 = 0; idx2 < scope.entryTypes.length; idx2++) {
+      if (scope.transaction.transactionEntries[idx1].transactionEntryType.codeValueUID == scope.entryTypes[idx2].codeValueUID) {
+        scope.transaction.transactionEntries[idx1].transactionEntryType = scope.entryTypes[idx2];
         break;
       }
     }

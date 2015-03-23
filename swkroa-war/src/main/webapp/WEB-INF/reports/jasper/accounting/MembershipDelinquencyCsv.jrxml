@@ -23,8 +23,8 @@
       ,pa.state_code
       ,pa.postal_code_formatted AS postal_code
       ,pa.country_code
-      ,fixed_dues AS dues_amount
-      ,balance AS amount_due
+      ,effective_dues
+      ,balance
   FROM membership_summary ms
 INNER JOIN primary_address pa ON (pa.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
  WHERE $X{IN, ms.membership_id, memberships}
@@ -79,10 +79,12 @@ ORDER BY membership_name]]>
 	<field name="country_code" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="dues_amount" class="java.math.BigDecimal">
+	<field name="effective_dues" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="amount_due" class="java.math.BigDecimal"/>
+	<field name="balance" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<variable name="CSZ" class="java.lang.String">
 		<variableExpression><![CDATA[$F{city} + ", " + $F{state_code} + " " + $F{postal_code}]]></variableExpression>
 	</variable>
@@ -149,7 +151,7 @@ ORDER BY membership_name]]>
 			</staticText>
 			<staticText>
 				<reportElement x="700" y="0" width="50" height="20" uuid="3101e24f-fae7-4d79-9beb-67bea223eb76"/>
-				<text><![CDATA[Amount Due]]></text>
+				<text><![CDATA[Balance]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -197,11 +199,11 @@ ORDER BY membership_name]]>
 			</textField>
 			<textField>
 				<reportElement x="650" y="0" width="50" height="20" uuid="4540a75f-0328-40bb-9fe5-9a2222e4e518"/>
-				<textFieldExpression><![CDATA[$F{dues_amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{effective_dues}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="700" y="0" width="50" height="20" uuid="61cbe9da-b40f-4172-8742-84e37d8bc62a"/>
-				<textFieldExpression><![CDATA[$F{amount_due}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="250" y="0" width="50" height="20" uuid="b86e2a99-7588-4310-b239-056875979fa8"/>

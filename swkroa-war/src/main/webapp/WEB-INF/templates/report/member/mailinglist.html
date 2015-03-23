@@ -25,30 +25,15 @@
     </div>
 
     <div class="row">
-      <div class="col-xs-2 btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-            <span data-th-text="#{com.cagst.swkroa.report.generate.report}">
-              zzz Generate Report
-            </span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <a id="generatePdf"
-               href="javascript:submitReportForm('pdf')"
-               data-th-text="#{com.cagst.swkroa.report.generate.pdf}">
-              zzz PDF
-            </a>
-          </li>
-          <li>
-            <a id="generateCsv"
-               href="javascript:submitReportForm('csv')"
-               data-th-text="#{com.cagst.swkroa.report.generate.csv}">
-              zzz CSV
-            </a>
-          </li>
-        </ul>
-      </div>
+      <div class="col-xs-2">
+        <a id="generatePdf" class="btn btn-primary form-control" href="javascript:submitReportForm('pdf')">
+          <i class="fa fa-print"></i>
+          <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
+        </a>
+        <a id="generateCsv" class="btn btn-default form-control" href="javascript:submitReportForm('csv')">
+          <i class="fa fa-download"></i>
+          <span data-th-text="#{com.cagst.swkroa.export}">zzz Export</span>
+        </a>
     </div>
   </form>
 </div>

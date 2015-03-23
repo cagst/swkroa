@@ -21,7 +21,6 @@ import org.springframework.util.CollectionUtils;
  * Representation of a Membership within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class Membership implements Serializable, Comparable<Membership> {
   private static final long serialVersionUID = 5583617519331577882L;
@@ -38,7 +37,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private String name_middle;
   private String name_first;
   private BigDecimal fixed_dues;
-  private BigDecimal calculated_dues;
+  private BigDecimal incremental_dues;
   private BigDecimal balance;
   private DateTime last_payment_dt_tm;
   private long close_reason_id;
@@ -164,16 +163,25 @@ public final class Membership implements Serializable, Comparable<Membership> {
     return fixed_dues;
   }
 
-  public void setFixedDuesAmount(final BigDecimal fixedDues) {
-    this.fixed_dues = fixedDues;
+  public void setFixedDuesAmount(final BigDecimal dues) {
+    this.fixed_dues = dues;
   }
 
   public BigDecimal getCalculatedDuesAmount() {
-    return calculated_dues;
+    BigDecimal memberDues = BigDecimal.ZERO;
+    for (Member member : members) {
+      memberDues = memberDues.add(member.getMemberType().getDuesAmount());
+    }
+
+    return memberDues.add(incremental_dues != null ? incremental_dues : BigDecimal.ZERO);
   }
 
-  public void setCalculatedDuesAmount(final BigDecimal calculatedDues) {
-    this.calculated_dues = calculatedDues;
+  public BigDecimal getIncrementalDues() {
+    return incremental_dues;
+  }
+
+  public void setIncrementalDues(final BigDecimal dues) {
+    this.incremental_dues = dues;
   }
 
   /**
@@ -186,11 +194,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
       return getFixedDuesAmount();
     }
 
-    if (getCalculatedDuesAmount() != null) {
-      return getCalculatedDuesAmount();
-    }
-
-    return BigDecimal.ZERO;
+    return getCalculatedDuesAmount();
   }
 
   public BigDecimal getBalance() {

@@ -7,25 +7,19 @@ import java.util.Collections;
 import java.util.List;
 
 import com.cagst.common.util.CGTCollatorBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Representation of a Transaction within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public class Transaction implements Serializable, Comparable<Transaction> {
   private static final long serialVersionUID = -5519051342330445823L;
-
-  private static final DateTimeFormatter dateFormatter = DateTimeFormat.mediumDate();
 
   private long transaction_id;
   private long membership_id;
@@ -82,46 +76,12 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return amount;
   }
 
-//  public BigDecimal getUnrelatedAmount() {
-//    BigDecimal amount = new BigDecimal(0d);
-//    if (transaction_type == TransactionType.PAYMENT) {
-//      for (TransactionEntry entry : entries) {
-//        if (entry.getRelatedTransactionUID() == 0l) {
-//          amount = amount.add(entry.getTransactionEntryAmount());
-//        }
-//      }
-//    }
-//
-//    return amount;
-//  }
-
-//  public BigDecimal getBalance() {
-//    BigDecimal balance = getTransactionAmount();
-//    if (transaction_type == TransactionType.PAYMENT) {
-//      for (TransactionEntry entry : entries) {
-//        if (entry.getRelatedTransactionUID() != 0l) {
-//          balance = balance.add(entry.getTransactionEntryAmount());
-//        }
-//      }
-//    }
-//
-//    return balance;
-//  }
-
   public String getTransactionDescription() {
     return transaction_desc;
   }
 
   public void setTransactionDescription(final String desc) {
     this.transaction_desc = desc;
-  }
-
-  public String getRelatedDescription() {
-    if (StringUtils.isNotEmpty(getTransactionDescription())) {
-      return dateFormatter.print(getTransactionDate()) + " " + getTransactionDescription() + " " + getTransactionAmount();
-    } else {
-      return dateFormatter.print(getTransactionDate()) + " " + getTransactionAmount();
-    }
   }
 
   public String getReferenceNumber() {

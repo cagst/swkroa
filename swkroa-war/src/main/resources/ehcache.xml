@@ -15,7 +15,8 @@
   <!-- Maintains a Cache of CodeValues for a CodeSet by UID or Meaning -->
   <cache name="codeValueLists"
          maxElementsInMemory="10"
-         eternal="true"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
          statistics="true"
          diskPersistent="false"
          overflowToDisk="false">
@@ -33,8 +34,9 @@
 
   <!-- Maintains a Cache of active Counties -->
   <cache name="countyLists"
-         maxElementsInMemory="1"
-         eternal="true"
+         maxElementsInMemory="10"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
          statistics="true"
          diskPersistent="false"
          overflowToDisk="false">
@@ -52,8 +54,9 @@
 
   <!-- Maintains a Cache of the active MemberType in a collection -->
   <cache name="memberTypeList"
-         maxElementsInMemory="1"
-         eternal="true"
+         maxElementsInMemory="10"
+         timeToLiveSeconds="172800"
+         timeToIdleSeconds="172800"
          statistics="true"
          diskPersistent="false"
          overflowToDisk="false">

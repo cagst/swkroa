@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.deposit.Deposit;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.member.Membership;
@@ -119,6 +120,44 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
       assertFalse("Ensure the transaction entries are not empty", trans.getTransactionEntries().isEmpty());
       assertEquals("Ensure each transaction has 2 entries", 2, trans.getTransactionEntries().size());
     }
+  }
+
+  /**
+   * Test the getTransactionGroupsForType method and finding TransactionGroups for invoices.
+   */
+  @Test
+  public void testGetTransactionGroupsForType() {
+    List<TransactionGroup> groups = repo.getTransactionGroupsForType(TransactionType.INVOICE, 0, 20);
+
+    assertNotNull("Ensure invoice transaction groups were found.", groups);
+    assertEquals("Ensure we found the correct number of groups.", 1L, groups.size());
+  }
+
+  /**
+   * Test the getTransactionsForDeposit method and not finding any Transactions.
+   */
+  @Test
+  public void testGetTransactionsForDeposit_NoneFound() {
+    Deposit deposit = new Deposit();
+    deposit.setDepositUID(3L);
+
+    List<Transaction> transactions = repo.getTransactionsForDeposit(deposit);
+    assertNotNull("Ensure the transaction list exists.", transactions);
+    assertTrue("Ensure the transaction list is empty.", transactions.isEmpty());
+  }
+
+  /**
+   * Test the getTransactionsForDeposit method and finding Transactions.
+   */
+  @Test
+  public void testGetTransactionsForDeposit_Found() {
+    Deposit deposit = new Deposit();
+    deposit.setDepositUID(1L);
+
+    List<Transaction> transactions = repo.getTransactionsForDeposit(deposit);
+    assertNotNull("Ensure the transaction list exists.", transactions);
+    assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
+    assertEquals("Ensure we found the correct number of transactions.", 2, transactions.size());
   }
 
   /**

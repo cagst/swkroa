@@ -17,24 +17,23 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * @version 1.0.0
  */
 /* package */final class MembershipMapper implements RowMapper<Membership> {
-  private static final String MEMBERSHIP_ID    = "membership_id";
-  private static final String MEMBER_ID        = "member_id";
-  private static final String ENTITY_TYPE_CD   = "entity_type_cd";
-  private static final String NEXT_DUE_DT      = "next_due_dt";
-  private static final String COMPANY_NAME     = "company_name";
-  private static final String OWNER_IDENT      = "owner_ident";
-  private static final String JOIN_DT          = "join_dt";
-  private static final String NAME_LAST        = "name_last";
-  private static final String NAME_MIDDLE      = "name_middle";
-  private static final String NAME_FIRST       = "name_first";
-  private static final String FIXED_DUES       = "fixed_dues";
-  private static final String CALCULATED_DUES  = "calculated_dues";
-  private static final String BALANCE          = "balance";
-  private static final String LAST_PAYMENT_DT  = "last_payment_dt";
-  private static final String DUES_AMOUNT      = "dues_amount";
-  private static final String CLOSE_REASON_ID  = "close_reason_id";
-  private static final String CLOSE_REASON_TXT = "close_reason_txt";
-  private static final String CLOSE_DT_TM      = "close_dt_tm";
+  private static final String MEMBERSHIP_ID           = "membership_id";
+  private static final String MEMBER_ID               = "member_id";
+  private static final String ENTITY_TYPE_CD          = "entity_type_cd";
+  private static final String NEXT_DUE_DT             = "next_due_dt";
+  private static final String COMPANY_NAME            = "company_name";
+  private static final String OWNER_IDENT             = "owner_ident";
+  private static final String JOIN_DT                 = "join_dt";
+  private static final String NAME_LAST               = "name_last";
+  private static final String NAME_MIDDLE             = "name_middle";
+  private static final String NAME_FIRST              = "name_first";
+  private static final String FIXED_DUES              = "fixed_dues";
+  private static final String INCREMENTAL_DUES        = "incremental_dues";
+  private static final String BALANCE                 = "balance";
+  private static final String LAST_PAYMENT_DT         = "last_payment_dt";
+  private static final String CLOSE_REASON_ID         = "close_reason_id";
+  private static final String CLOSE_REASON_TXT        = "close_reason_txt";
+  private static final String CLOSE_DT_TM             = "close_dt_tm";
 
   // meta-data
   private static final String ACTIVE_IND          = "active_ind";
@@ -71,7 +70,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     membership.setFirstName(rs.getString(NAME_FIRST));
 
     membership.setFixedDuesAmount(rs.getBigDecimal(FIXED_DUES));
-    membership.setCalculatedDuesAmount(rs.getBigDecimal(CALCULATED_DUES));
+    membership.setIncrementalDues(rs.getBigDecimal(INCREMENTAL_DUES));
+
     BigDecimal balance = rs.getBigDecimal(BALANCE);
     if (balance != null) {
       membership.setBalance(balance);
@@ -133,7 +133,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
     params.addValue(NEXT_DUE_DT, CGTDateTimeUtils.convertDateTimeToTimestamp(membership.getNextDueDate()));
     params.addValue(ENTITY_TYPE_CD, membership.getEntityType().getCodeValueUID());
-    params.addValue(DUES_AMOUNT, membership.getFixedDuesAmount());
+    params.addValue(FIXED_DUES, membership.getFixedDuesAmount());
+    params.addValue(INCREMENTAL_DUES, membership.getIncrementalDues());
     params.addValue(ACTIVE_IND, membership.isActive());
     params.addValue(CLOSE_REASON_ID, membership.getCloseReasonUID() > 0 ? membership.getCloseReasonUID() : null);
     params.addValue(CLOSE_REASON_TXT, membership.getCloseReasonText());

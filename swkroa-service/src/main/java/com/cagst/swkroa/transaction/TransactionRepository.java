@@ -2,9 +2,9 @@ package com.cagst.swkroa.transaction;
 
 import java.util.List;
 
+import com.cagst.swkroa.deposit.Deposit;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
-import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -30,7 +30,7 @@ public interface TransactionRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 {@link Transaction} was found.
    */
-  public Transaction getTransactionByUID(final long uid) throws EmptyResultDataAccessException,
+  Transaction getTransactionByUID(final long uid) throws EmptyResultDataAccessException,
       IncorrectResultSizeDataAccessException;
 
   /**
@@ -42,7 +42,38 @@ public interface TransactionRepository {
    *
    * @return A {@link List} of {@link Transaction Transactions} associated with the specified Membership.
    */
-  public List<Transaction> getTransactionsForMembership(final Membership membership);
+  List<Transaction> getTransactionsForMembership(final Membership membership);
+
+  /**
+   * @return The number of {@link TransactionGroup} defined in the system for the specified {@link TransactionType}.
+   */
+  long getCountOfTransactionGroupsForType(final TransactionType type);
+
+  /**
+   * Retrieves a {@link List} of {@link TransactionGroup TransactionGroups} representing a group of transactions
+   * for a given types defined within the system.
+   *
+   * @param type
+   *      The {@link TransactionType} to retrieve {@link TransactionGroup TransactionGroups} for.
+   * @param start
+   *      An {@link int} that defines the first element to retrieve.
+   * @param limit
+   *      An {@link int} that defines the number of elements to retrieve.
+   *
+   * @return A {@link List} of {@link TransactionGroup} representing a group of invoices created in the system.
+   */
+  List<TransactionGroup> getTransactionGroupsForType(final TransactionType type, final int start, final int limit);
+
+  /**
+   * Retrieves a {@link List} of {@link Transaction Transactions} defined within the system for the specified
+   * {@link Deposit}.
+   *
+   * @param deposit
+   *    The {@link Deposit} to retrieve transactions for.
+   *
+   * @return A {@link List} of {@link Transaction Transactions} associated with the specified Deposit.
+   */
+  List<Transaction> getTransactionsForDeposit(final Deposit deposit);
 
   /**
    * Retrieves a {@link List} of {@link Transaction Transactions} that have not been paid in full for the specified
@@ -53,7 +84,7 @@ public interface TransactionRepository {
    *
    * @return A {@link List} of {@link Transaction Transactions} that have not been paid in null for the specified membership.
    */
-  public List<UnpaidInvoice> getUnpaidInvoicesForMembership(final long id);
+  List<UnpaidInvoice> getUnpaidInvoicesForMembership(final long id);
 
   /**
    * Persists the specified {@link Transaction}.
@@ -72,6 +103,6 @@ public interface TransactionRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public Transaction saveTransaction(final Transaction transaction, final User user)
+  Transaction saveTransaction(final Transaction transaction, final User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
 }

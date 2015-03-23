@@ -37,12 +37,17 @@ public final class ReportController {
 
   private static final String BASE_PATH = "/WEB-INF/reports/jasper/";
 
-  private static final String MEMBERSHIP_LISTING        = BASE_PATH + "MembershipListingReport.jasper";
+  private static final String MEMBERSHIP_LISTING_PDF    = BASE_PATH + "MembershipListingPdf.jasper";
+  private static final String MEMBERSHIP_LISTING_CSV    = BASE_PATH + "MembershipListingCsv.jasper";
   private static final String MEMBERSHIP_STATUS         = BASE_PATH + "MembershipStatusReport.jasper";
   private static final String MEMBERSHIP_DELINQUENT_CSV = BASE_PATH + "accounting/MembershipDelinquencyCsv.jasper";
   private static final String MEMBERSHIP_DELINQUENT_PDF = BASE_PATH + "accounting/MembershipDelinquencyPdf.jasper";
   private static final String MEMBERSHIP_RENEWAL_PDF    = BASE_PATH + "accounting/MembershipDuesRenewalPdf.jasper";
   private static final String MEMBERSHIP_RENEWAL_CSV    = BASE_PATH + "accounting/MembershipDuesRenewalCsv.jasper";
+  private static final String MEMBERSHIP_PAYMENTS_PDF   = BASE_PATH + "accounting/MembershipPaymentsPdf.jasper";
+  private static final String MEMBERSHIP_PAYMENTS_CSV   = BASE_PATH + "accounting/MembershipPaymentsCsv.jasper";
+  private static final String MEMBERSHIP_INVOICES_PDF   = BASE_PATH + "accounting/MembershipInvoicesPdf.jasper";
+  private static final String MEMBERSHIP_INVOICES_CSV   = BASE_PATH + "accounting/MembershipInvoicesCsv.jasper";
 
   private static final String MEMBER_MAILINGLIST_CSV = BASE_PATH + "MemberMailingListCsv.jasper";
   private static final String MEMBER_MAILINGLIST_PDF = BASE_PATH + "MemberMailingListPdf.jasper";
@@ -71,13 +76,22 @@ public final class ReportController {
    *
    * @return The generated report.
    */
-  @RequestMapping(value = "/membership/listing.pdf", method = RequestMethod.GET)
-  public ModelAndView generateMembershipListingReportAsPdf(final HttpServletRequest request) {
+  @RequestMapping(value = "/membership/listing", method = RequestMethod.POST)
+  public ModelAndView generateMembershipListingReportAsPdf(final @RequestParam("reportType") String reportType,
+                                                           final HttpServletRequest request) {
+
     LOGGER.info("Received request to generate Membership Listing report.");
 
     String reportFilename = "Membership_Listing_" + dateFormat.format(new Date());
 
-    return getReportModalAndView(request, MEMBERSHIP_LISTING, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    ModelAndView mav = null;
+    if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_LISTING_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_LISTING_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    }
+
+    return mav;
   }
 
   /**
@@ -149,8 +163,73 @@ public final class ReportController {
       }
     }
 
+    String[] periods = params.get("membershipPeriod");
+
     if (mav != null) {
       mav.addObject("memberships", membershipIds);
+      mav.addObject("membershipPeriod", periods[0]);
+    }
+
+    return mav;
+  }
+
+  /**
+   * Handles the request to run/generate the Membership Payments report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/membership/payments", method = RequestMethod.POST)
+  public ModelAndView generateMembershipPaymentsReport(final @RequestParam("reportType") String reportType,
+                                                       final HttpServletRequest request) {
+
+    LOGGER.info("Received request to generate Membership Payments report as [{}]", reportType);
+
+    String reportFilename = "Membership_Payments_" + dateFormat.format(new Date());
+
+    ModelAndView mav = null;
+    if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_PAYMENTS_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_PAYMENTS_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    }
+
+    String startDate = request.getParameter("start_date");
+    String endDate   = request.getParameter("end_date");
+
+    if (mav != null) {
+      mav.addObject("start_date", new Date(Long.valueOf(startDate)));
+      mav.addObject("end_date", new Date(Long.valueOf(endDate)));
+    }
+
+    return mav;
+  }
+
+  /**
+   * Handles the request to run/generate the Membership Invoices report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/membership/invoices", method = RequestMethod.POST)
+  public ModelAndView generateMembershipInvoicesReport(final @RequestParam("reportType") String reportType,
+                                                       final HttpServletRequest request) {
+
+    LOGGER.info("Received request to generate Membership Invoices report as [{}]", reportType);
+
+    String reportFilename = "Membership_Invoices_" + dateFormat.format(new Date());
+
+    ModelAndView mav = null;
+    if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_INVOICES_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_INVOICES_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    }
+
+    String startDate = request.getParameter("start_date");
+    String endDate   = request.getParameter("end_date");
+
+    if (mav != null) {
+      mav.addObject("start_date", new Date(Long.valueOf(startDate)));
+      mav.addObject("end_date", new Date(Long.valueOf(endDate)));
     }
 
     return mav;

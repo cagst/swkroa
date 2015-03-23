@@ -64,9 +64,9 @@ import org.springframework.util.Assert;
    *     The {@link CodeValueRepository} to use to retrieve codified information.
    */
   @Inject
-  /* package */MembershipRepositoryJdbc(final DataSource dataSource,
-                                        final MemberRepository memberRepo,
-                                        final CodeValueRepository codeValueRepo) {
+  /* package */ MembershipRepositoryJdbc(final DataSource dataSource,
+                                         final MemberRepository memberRepo,
+                                         final CodeValueRepository codeValueRepo) {
     super(dataSource);
 
     this.memberRepo = memberRepo;
@@ -74,7 +74,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  @Cacheable(value = "memberships")
+//  @Cacheable(value = "memberships")
   public Membership getMembershipByUID(final long uid)
       throws IncorrectResultSizeDataAccessException {
 
@@ -149,7 +149,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-  @CacheEvict(value = "memberships", key = "#membership.getMembershipUID()")
+//  @CacheEvict(value = "memberships", key = "#membership.getMembershipUID()")
   public Membership saveMembership(final Membership membership, final User user)
       throws DataAccessException {
 
@@ -179,7 +179,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-  @CacheEvict(value = "memberships", allEntries = true)
+//  @CacheEvict(value = "memberships", allEntries = true)
   public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException {
 
@@ -201,7 +201,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-  @CacheEvict(value = "memberships", allEntries = true)
+//  @CacheEvict(value = "memberships", allEntries = true)
   public int updateNextDueDate(final Set<Long> membershipIds, final User user) throws DataAccessException {
     Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");

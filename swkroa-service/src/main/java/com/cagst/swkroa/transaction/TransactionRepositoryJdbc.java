@@ -10,6 +10,7 @@ import java.util.Map;
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.deposit.Deposit;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
@@ -38,6 +39,10 @@ import org.springframework.util.CollectionUtils;
   private static final String GET_TRANSACTIONS_FOR_DEPOSIT       = "GET_TRANSACTIONS_FOR_DEPOSIT";
   private static final String GET_UNPAID_INVOICES_FOR_MEMBERSHIP = "GET_UNPAID_INVOICES_FOR_MEMBERSHIP";
   private static final String GET_UNPAID_INVOICES                = "GET_UNPAID_INVOICES";
+
+  private static final String GET_COUNT_OF_TRANSACTIONGROUPS_FOR_TYPE = "GET_COUNT_OF_TRANSACTIONGROUPS_FOR_TYPE";
+  private static final String GET_TRANACTIONLGROUPS_FOR_TYPE          = "GET_TRANACTIONLGROUPS_FOR_TYPE";
+
 
   private static final String INSERT_TRANSACTION = "INSERT_TRANSACTION";
   private static final String UPDATE_TRANSACTION = "UPDATE_TRANSACTION";
@@ -105,7 +110,60 @@ import org.springframework.util.CollectionUtils;
     Map<String, Long> params = new HashMap<String, Long>(1);
     params.put("membership_id", membership.getMembershipUID());
 
-    return (List<Transaction>) getJdbcTemplate().query(stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP), params, new TransactionListExtractor(codeValueRepo, memberRepo));
+    return getJdbcTemplate().query
+        (stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP),
+            params,
+            new TransactionListExtractor(codeValueRepo, memberRepo)
+        );
+  }
+
+  @Override
+  public long getCountOfTransactionGroupsForType(final TransactionType type) {
+    LOGGER.info("Calling getCountOfTransactionGroupsForInvoices");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Integer> params = new HashMap<String, Integer>(1);
+    params.put("transaction_type", type.ordinal());
+
+    return getJdbcTemplate().queryForObject(
+        stmtLoader.load(GET_COUNT_OF_TRANSACTIONGROUPS_FOR_TYPE),
+        params,
+        Long.class
+    );
+  }
+
+  @Override
+  public List<TransactionGroup> getTransactionGroupsForType(final TransactionType type, final int start, final int limit) {
+    LOGGER.info("Calling getTransactionListForInvoices");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Integer> params =  new HashMap<String, Integer>(3);
+    params.put("transaction_type", type.ordinal());
+    params.put("start", start);
+    params.put("limit", limit);
+
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_TRANACTIONLGROUPS_FOR_TYPE),
+        params,
+        new TransactionGroupMapper()
+    );
+  }
+
+  @Override
+  public List<Transaction> getTransactionsForDeposit(final Deposit deposit) {
+    Assert.notNull(deposit, "Assertion Failed - argument [deposit] cannot be null.");
+
+    LOGGER.info("Calling getTransactionsForDeposit [{}].", deposit.getDepositNumber());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Long> params = new HashMap<String, Long>(1);
+    params.put("deposit_id", deposit.getDepositUID());
+
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_TRANSACTIONS_FOR_DEPOSIT),
+        params,
+        new TransactionListExtractor(codeValueRepo, memberRepo)
+    );
   }
 
   @Override
@@ -145,6 +203,14 @@ import org.springframework.util.CollectionUtils;
     for (TransactionEntry entry : transaction.getTransactionEntries()) {
       // ensure the entry is associated with the transaction
       entry.setTransaction(trans);
+
+      // ensure the entry has the appropriate polarity (invoices are negative / payments are positive)
+      if (TransactionType.INVOICE.equals(trans.getTransactionType())) {
+        entry.setTransactionEntryAmount(entry.getTransactionEntryAmount().abs().negate());
+      } else {
+        entry.setTransactionEntryAmount(entry.getTransactionEntryAmount().abs());
+      }
+
       saveTransactionEntry(entry, user);
     }
 

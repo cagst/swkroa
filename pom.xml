@@ -6,7 +6,7 @@
 
   <groupId>com.cagst.swkroa</groupId>
   <artifactId>swkroa-parent</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <name>SWKROA</name>
   <packaging>pom</packaging>
 
@@ -61,6 +61,9 @@
     <!-- Google Guava Library -->
     <google-guava-version>18.0</google-guava-version>
 
+    <!-- Google AutoValue Library -->
+    <google-autovalue-version>1.0</google-autovalue-version>
+
     <!-- CAGST Framework -->
     <cagst-version>1.1.0-SNAPSHOT</cagst-version>
 
@@ -93,6 +96,9 @@
     <!-- MySQL -->
     <mysql-version>5.1.30</mysql-version>
 
+    <!-- Flyway DB Migration Framework -->
+    <flyway-version>3.2</flyway-version>
+
     <!-- JUnit/Mockito/PowerMock Testing Framework -->
     <junit-version>4.11</junit-version>
     <mockito-version>1.9.5</mockito-version>
@@ -102,7 +108,7 @@
     <hsqldb-version>2.3.2</hsqldb-version>
 
     <!-- Jasper Reporting Engine -->
-    <jasper-version>5.5.2</jasper-version>
+    <jasper-version>5.6.1</jasper-version>
 
     <!-- Miscellaneous -->
     <servlet-api-version>3.0.1</servlet-api-version>
@@ -132,6 +138,13 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${google-guava-version}</version>
+      </dependency>
+
+      <!-- Google AutoValue Library Dependencies -->
+      <dependency>
+        <groupId>com.google.auto.value</groupId>
+        <artifactId>auto-value</artifactId>
+        <version>${google-autovalue-version}</version>
       </dependency>
 
       <!-- CAGST Dependencies -->
@@ -382,6 +395,11 @@
         <artifactId>jasperreports</artifactId>
         <version>${jasper-version}</version>
       </dependency>
+      <dependency>
+        <groupId>net.sf.jasperreports</groupId>
+        <artifactId>jasperreports-fonts-timesnewroman</artifactId>
+        <version>1.0.0</version>
+      </dependency>
 
       <!-- Google JSR-305 Annotations -->
       <dependency>
@@ -394,6 +412,13 @@
         <groupId>ro.isdc.wro4j</groupId>
         <artifactId>wro4j-core</artifactId>
         <version>${wro4j-version}</version>
+      </dependency>
+
+      <!-- Flyway DB Migration Framework -->
+      <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>${flyway-version}</version>
       </dependency>
 
       <!-- Testing Dependencies -->
@@ -440,6 +465,14 @@
       <id>cagst-release</id>
       <name>CAGST Release Repository</name>
       <url>http://repo.cagst.com/content/repositories/releases</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>cagst-public</id>
+      <name>CAGST Public Repository</name>
+      <url>http://repo.cagst.com/content/groups/public/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>

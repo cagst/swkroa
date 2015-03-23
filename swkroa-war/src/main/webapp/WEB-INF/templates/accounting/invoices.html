@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/accounting/invoices.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="invoiceController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.invoices.title}">zzz Invoices</h3>
+  </div>
+  <form name="reportForm" data-th-attr="action=@{/report/membership/invoices}" target="_blank" method="post">
+    <div class="row" data-ng-show="invoiceGroups">
+      <div class="col-xs-2">
+        <!--
+        <div class="btn-group-vertical">
+          <a type="button" class="btn btn-primary" data-th-href="@{/accounting/dues/renew}">
+            <span data-th-text="#{com.cagst.swkroa.invoices.renew.button}">zzz Renew Membership</span>
+          </a>
+        </div>
+        -->
+      </div>
+      <div class="col-xs-8">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th data-th-text="#{com.cagst.swkroa.invoices.date}">zzz Date</th>
+              <th data-th-text="#{com.cagst.swkroa.invoices.count}">zzz Count</th>
+              <th data-th-text="#{com.cagst.swkroa.invoices.amount}">zzz Amount</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="group in invoiceGroups" class="hover-buttons">
+              <td data-ng-bind="group.transactionDate | date:'mediumDate'" style="width:25%"></td>
+              <td data-ng-bind="group.transactionCount" style="width:25%"></td>
+              <td data-ng-bind="group.transactionAmount | currency" style="width:25%"></td>
+              <td style="width:25%">
+                <div class="btn-group">
+                  <a type="button" class="btn btn-info btn-xs" data-ng-click="generateInvoicesReport('pdf', group.transactionDate, group.transactionDate)">
+                    <i class="fa fa-print"></i>
+                    <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
+                  </a>
+                  <a type="button" class="btn btn-default btn-xs" data-ng-click="generateInvoicesReport('csv', group.transactionDate, group.transactionDate)">
+                    <i class="fa fa-download"></i>
+                    <span data-th-text="#{com.cagst.swkroa.export}">zzz Export</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">
+                <ul class="pagination clear-top clear-bottom">
+                  <li id="firstPage"
+                      data-ng-class="{'disabled': page == 1}"
+                      data-ng-click="firstPage()">
+                    <a href="#"><i class="fa fa-angle-double-left"></i></a>
+                  </li>
+                  <li id="prevPage"
+                      data-ng-class="{'disabled': page == 1}"
+                      data-ng-click="prevPage()">
+                    <a><i class="fa fa-angle-left"></i></a>
+                  </li>
+                  <li data-ng-repeat="increment in increments"
+                      data-ng-attr-id="{{'page' + increment}}"
+                      data-ng-class="{'active': page == increment}"
+                      data-ng-click="setPage(increment)">
+                    <a href="#">{{increment}}</a>
+                  </li>
+                  <li id="nextPage"
+                      data-ng-class="{'disabled': page == pages}"
+                      data-ng-click="nextPage()">
+                    <a href="#"><i class="fa fa-angle-right"></i></a>
+                  </li>
+                  <li id="lastPage"
+                      data-ng-class="{'disabled': page == pages}"
+                      data-ng-click="lastPage()">
+                    <a href="#"><i class="fa fa-angle-double-right"></i></a>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="col-xs-2">
+        <input id="reportType" type="hidden" name="reportType" />
+        <input id="start_date" type="hidden" name="start_date" />
+        <input id="end_date" type="hidden" name="end_date" />
+      </div>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

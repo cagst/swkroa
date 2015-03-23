@@ -3,9 +3,9 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
-	<style name="Text Body" fontName="Verdana" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-	<style name="ColumnHeader" fontName="Verdana" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="ReportTitle" fontName="TimesNewRoman" fontSize="18"/>
+	<style name="Text Body" fontName="TimesNewRoman" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="ColumnHeader" fontName="TimesNewRoman" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<parameter name="newsletters_only" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[SELECT m.company_name
@@ -59,76 +59,93 @@ ORDER BY membership_name;]]>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="35" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement style="ReportTitle" x="13" y="0" width="538" height="35" uuid="e5766f19-62d5-4d18-bd9f-e013e0d384e0"/>
-				<textElement textAlignment="Center"/>
+				<reportElement style="ReportTitle" x="13" y="0" width="538" height="30" uuid="e5766f19-62d5-4d18-bd9f-e013e0d384e0"/>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
 				<text><![CDATA[Member Email List Report]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="26" splitType="Stretch">
+		<band height="13" splitType="Stretch">
 			<staticText>
-				<reportElement style="ColumnHeader" x="0" y="0" width="228" height="20" uuid="c9c569f8-8ddb-4c70-9a2d-9f2e9992425a"/>
+				<reportElement style="ColumnHeader" x="0" y="0" width="228" height="12" uuid="c9c569f8-8ddb-4c70-9a2d-9f2e9992425a"/>
 				<textElement>
-					<font isBold="true"/>
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Membership Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="ColumnHeader" x="247" y="0" width="228" height="20" uuid="1cf4e564-be7f-4695-93cb-c933e887741a"/>
+				<reportElement style="ColumnHeader" x="247" y="0" width="228" height="12" uuid="1cf4e564-be7f-4695-93cb-c933e887741a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
 				<text><![CDATA[Email Address]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="19" width="572" height="1" uuid="5e0aeb9d-230f-4ee6-a896-0db0df25bd76"/>
+				<reportElement x="0" y="12" width="572" height="1" uuid="5e0aeb9d-230f-4ee6-a896-0db0df25bd76"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
 			</line>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
+		<band height="13" splitType="Stretch">
 			<textField>
-				<reportElement style="Text Body" x="0" y="0" width="228" height="20" uuid="f7c123ff-cf2a-46eb-8c8b-b8201e5bcacf"/>
+				<reportElement style="Text Body" x="0" y="0" width="228" height="12" uuid="f7c123ff-cf2a-46eb-8c8b-b8201e5bcacf"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Text Body" x="247" y="0" width="228" height="20" uuid="c5884be0-daa1-45d5-b59d-eb2d2784340b"/>
+				<reportElement style="Text Body" x="247" y="0" width="228" height="12" uuid="c5884be0-daa1-45d5-b59d-eb2d2784340b"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{email_address}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="25" splitType="Stretch">
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="89" height="12" uuid="08a2905f-f514-4e52-af01-7cf43c507c9b"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+			<textField pattern="EEE, MMM d, yyyy h:mm a">
+				<reportElement x="89" y="0" width="267" height="12" uuid="9b9d135d-f9dc-4ee9-882a-dfd9a8b5c0f7"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 			<textField>
-				<reportElement x="452" y="0" width="80" height="20" uuid="62cd3d47-bdd6-43be-908e-354a66eb250e"/>
+				<reportElement x="452" y="0" width="80" height="12" uuid="62cd3d47-bdd6-43be-908e-354a66eb250e"/>
 				<textElement textAlignment="Right">
-					<font fontName="Verdana"/>
+					<font fontName="TimesNewRoman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="532" y="0" width="40" height="20" uuid="2ec73769-d29d-4255-a37f-0449baf3437e"/>
+				<reportElement x="532" y="0" width="40" height="12" uuid="2ec73769-d29d-4255-a37f-0449baf3437e"/>
 				<textElement>
-					<font fontName="Verdana"/>
+					<font fontName="TimesNewRoman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
-			<textField pattern="EEE, MMM d, yyyy h:mm a">
-				<reportElement x="89" y="0" width="267" height="20" uuid="9b9d135d-f9dc-4ee9-882a-dfd9a8b5c0f7"/>
-				<textElement>
-					<font fontName="Verdana"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="0" width="89" height="20" uuid="08a2905f-f514-4e52-af01-7cf43c507c9b"/>
-				<textElement>
-					<font fontName="Verdana"/>
-				</textElement>
-				<text><![CDATA[Generated on:]]></text>
-			</staticText>
 			<line>
 				<reportElement x="0" y="0" width="572" height="1" uuid="f91b45b8-7c58-4394-9b79-d2cc7b58d712"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
 			</line>
 		</band>
 	</pageFooter>

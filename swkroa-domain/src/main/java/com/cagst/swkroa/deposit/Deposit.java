@@ -32,7 +32,7 @@ public final class Deposit implements Serializable {
     return deposit_id;
   }
 
-  /* package */ void setDepositUID(final long uid) {
+  public void setDepositUID(final long uid) {
     this.deposit_id = uid;
   }
 

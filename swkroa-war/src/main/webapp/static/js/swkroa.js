@@ -626,6 +626,50 @@ swkroaApp.service('membershipService', ['$http', function($http) {
 
 // define a service for Transactions
 swkroaApp.service('transactionService', ['$http', function($http) {
+  this.getInvoiceGroups = function(start, limit) {
+    var promise = $http.get('/api/transactions/invoices?start=' + start + '&limit=' + limit);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.getPaymentGroups = function(start, limit) {
+    var promise = $http.get('/api/transactions/payments?start=' + start + '&limit=' + limit);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
   this.getUnpaidTransactions = function() {
     var promise = $http.get('/api/transactions?type=unpaid');
 

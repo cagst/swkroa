@@ -77,15 +77,21 @@
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a data-th-href="@{/accounting/delinquencies}"
-               data-th-text="#{com.cagst.swkroa.accounting.menu.delinquencies}">
-              zzz Delinquencies
+            <a data-th-href="@{/accounting/invoices}"
+               data-th-text="#{com.cagst.swkroa.accounting.menu.invoices}">
+              zzz Invoices
             </a>
           </li>
           <li>
-            <a data-th-href="@{/accounting/dues}"
-               data-th-text="#{com.cagst.swkroa.accounting.menu.dues}">
-              zzz Dues
+            <a data-th-href="@{/accounting/payments}"
+               data-th-text="#{com.cagst.swkroa.accounting.menu.payments}">
+              zzz Invoices
+            </a>
+          </li>
+          <li>
+            <a data-th-href="@{/accounting/delinquencies}"
+               data-th-text="#{com.cagst.swkroa.accounting.menu.delinquencies}">
+              zzz Delinquencies
             </a>
           </li>
         </ul>
@@ -186,10 +192,11 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.save.failed.caption}">zzz Unknown</h4>
+        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.unknown.failure.caption}">zzz Unknown</h4>
       </div>
       <div class="modal-body">
-        <div data-th-text="#{com.cagst.swkroa.save.failed.message.unknown}">zzz Update Failed?</div>
+        <div data-th-text="#{com.cagst.swkroa.unknown.failure.message.unknown}">zzz Update Failed?</div>
+        <br/>
         <div id="unknownErrorMessage"></div>
       </div>
       <div class="modal-footer">

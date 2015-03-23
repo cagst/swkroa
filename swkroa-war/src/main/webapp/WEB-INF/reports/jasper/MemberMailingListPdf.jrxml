@@ -3,8 +3,8 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
-	<style name="ZebraStrips" mode="Transparent" fontName="Verdana" fontSize="12">
+	<style name="ReportTitle" fontName="TimesNewRoman" fontSize="18"/>
+	<style name="ZebraStrips" mode="Transparent" fontName="TimesNewRoman" fontSize="12">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 1]]></conditionExpression>
 			<style backcolor="#DDDDDD"/>
@@ -90,92 +90,103 @@ ORDER BY m.member_name]]>
 		<variableExpression><![CDATA[$F{city} + ", " + $F{state_code} + " " + $F{postal_code}]]></variableExpression>
 	</variable>
 	<pageHeader>
-		<band height="35" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement style="ReportTitle" x="0" y="0" width="538" height="35" uuid="52468bee-a90a-487d-915e-7cf70ac0c2ef"/>
-				<textElement textAlignment="Center"/>
+				<reportElement style="ReportTitle" x="0" y="0" width="538" height="30" uuid="52468bee-a90a-487d-915e-7cf70ac0c2ef"/>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
 				<text><![CDATA[Member Mailing List Report]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="121" splitType="Stretch">
+		<band height="72" splitType="Stretch">
 			<textField>
-				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="0" width="572" height="20" uuid="9d509358-c1d3-4500-b68e-b904f6973688"/>
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="0" width="572" height="12" uuid="9d509358-c1d3-4500-b68e-b904f6973688"/>
 				<textElement>
+					<font size="10"/>
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="40" width="572" height="20" isRemoveLineWhenBlank="true" uuid="4d3c9069-a0b9-4844-a850-0ddc387f8783"/>
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="12" width="572" height="12" isRemoveLineWhenBlank="true" uuid="cb918ef9-b6a8-495c-a0bb-cf957069e52e"/>
 				<textElement>
+					<font size="10"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{in_care_of}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="24" width="572" height="12" isRemoveLineWhenBlank="true" uuid="4d3c9069-a0b9-4844-a850-0ddc387f8783"/>
+				<textElement>
+					<font size="10"/>
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="60" width="572" height="20" isRemoveLineWhenBlank="true" uuid="d54f3424-5ed6-45fd-a6b5-abab66025989"/>
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="36" width="572" height="12" isRemoveLineWhenBlank="true" uuid="d54f3424-5ed6-45fd-a6b5-abab66025989"/>
 				<textElement>
+					<font size="10"/>
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="80" width="572" height="20" isRemoveLineWhenBlank="true" uuid="8a14b5b1-d0e7-4430-b4fe-6ea825ad2768"/>
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="48" width="572" height="12" isRemoveLineWhenBlank="true" uuid="8a14b5b1-d0e7-4430-b4fe-6ea825ad2768"/>
 				<textElement>
+					<font size="10"/>
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address3}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="100" width="572" height="20" isRemoveLineWhenBlank="true" uuid="91cd7db4-24e5-4e0c-9770-5d20cd071220"/>
+				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="60" width="572" height="12" isRemoveLineWhenBlank="true" uuid="91cd7db4-24e5-4e0c-9770-5d20cd071220"/>
 				<textElement>
+					<font size="10"/>
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{CSZ}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement style="ZebraStrips" mode="Opaque" x="0" y="20" width="572" height="20" isRemoveLineWhenBlank="true" uuid="cb918ef9-b6a8-495c-a0bb-cf957069e52e"/>
-				<textElement>
-					<paragraph leftIndent="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{in_care_of}]]></textFieldExpression>
-			</textField>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="21" splitType="Stretch">
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="89" height="12" uuid="16618f41-960f-40d7-a563-1789c70b7807"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+			<textField pattern="EEE, MMM d, yyyy h:mm a">
+				<reportElement x="89" y="0" width="267" height="12" uuid="7162e8f0-c032-4a2c-ad8f-5c9ac412e1dd"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 			<textField>
-				<reportElement x="452" y="0" width="80" height="20" uuid="b9f7be1d-e77b-4c34-a2ec-5fb9d4f3cbaf"/>
+				<reportElement x="452" y="0" width="80" height="12" uuid="b9f7be1d-e77b-4c34-a2ec-5fb9d4f3cbaf"/>
 				<textElement textAlignment="Right">
-					<font fontName="Verdana"/>
+					<font fontName="TimesNewRoman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="532" y="0" width="40" height="20" uuid="1d5c2d9e-08f0-43db-96d4-2326e180b650"/>
+				<reportElement x="532" y="0" width="40" height="12" uuid="1d5c2d9e-08f0-43db-96d4-2326e180b650"/>
 				<textElement>
-					<font fontName="Verdana"/>
+					<font fontName="TimesNewRoman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
-			<textField pattern="EEE, MMM d, yyyy h:mm a">
-				<reportElement x="89" y="0" width="267" height="20" uuid="7162e8f0-c032-4a2c-ad8f-5c9ac412e1dd"/>
-				<textElement>
-					<font fontName="Verdana"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="0" width="89" height="20" uuid="16618f41-960f-40d7-a563-1789c70b7807"/>
-				<textElement>
-					<font fontName="Verdana"/>
-				</textElement>
-				<text><![CDATA[Generated on:]]></text>
-			</staticText>
 			<line>
 				<reportElement x="0" y="0" width="572" height="1" uuid="3145958b-7f30-4c68-a958-26dc277dfb26"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
 			</line>
 		</band>
 	</pageFooter>

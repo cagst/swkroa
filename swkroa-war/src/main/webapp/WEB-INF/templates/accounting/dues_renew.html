@@ -42,12 +42,12 @@
       <div class="col-xs-2">
         <div class="btn-group-vertical">
           <input id="reportType" type="hidden" name="reportType" />
-          <a id="generatePdf" class="btn btn-default"
-             href="javascript:submitReportForm('pdf')"
-             data-ng-disabled="!canExport()"
-             data-th-text="#{com.cagst.swkroa.dues.renew.generate.renewals}">
+          <button type="button" class="btn btn-default"
+                  data-ng-disabled="!canExport()"
+                  data-toggle="modal" data-target="#renewalLetterDlg"
+                  data-th-text="#{com.cagst.swkroa.dues.renew.generate.renewals}">
             zzz Report
-          </a>
+          </button>
           <a id="generateCsv" class="btn btn-default"
              href="javascript:submitReportForm('csv')"
              data-ng-disabled="!canExport()"
@@ -88,6 +88,41 @@
         </table>
       </div>
       <div class="col-xs-3"></div>
+    </div>
+
+    <!-- Renewal Letter Details Dialog -->
+    <div class="modal" id="renewalLetterDlg" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.dues.renew.letter.title}">zzz Details</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-xs-12">
+                <label class="form-label" data-th-text="#{com.cagst.swkroa.dues.renew.letter.years}">
+                  zzz Period
+                </label>
+                <input type="text" class="form-control" id="membershipPeriod" name="membershipPeriod"
+                       data-ng-model="membershipRenewalPeriod"
+                       data-ng-required="true" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a id="generatePdf" class="btn btn-primary"
+               href="javascript:generateMembershipRenewalLetters('pdf')"
+               data-th-text="#{com.cagst.swkroa.dues.renew.generate.renewals}">
+              zzz Generate
+            </a>
+            <button type="button" class="btn btn-warning"
+                    data-dismiss="modal"
+                    data-th-text="#{com.cagst.swkroa.discard}">
+              zzz Disregard
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </form>
 

@@ -14,7 +14,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  * from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */final class TransactionMapper implements RowMapper<Transaction> {
   /* package */ static final String TRANSACTION_ID = "transaction_id";

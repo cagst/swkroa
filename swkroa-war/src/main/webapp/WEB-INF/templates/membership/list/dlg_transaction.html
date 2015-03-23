@@ -22,7 +22,6 @@
               <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.date}">
                 zzz Date
               </label>
-
               <div class="input-group">
                 <input type="text" class="form-control" name="transactionDate"
                        data-datepicker-popup="MM/dd/yyyy"
@@ -82,7 +81,7 @@
               <input type="text" class="form-control" name="desc"
                      data-ng-model="transaction.transactionDescription"
                      data-ng-required="true"
-                     data-ng-options="type.display for type in transactionTypes" />
+                     data-ng-options="type.display for type in entryTypes" />
             </div>
             <div class="col-xs-4" data-ng-class="{'has-error': amount.$invalid}">
               <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.amount}">
@@ -121,7 +120,7 @@
                 <select class="form-control select2" name="entryType"
                         data-ng-model="entry.transactionEntryType"
                         data-ng-required="true"
-                        data-ng-options="type.display for type in transactionEntryTypes">
+                        data-ng-options="type.display for type in entryTypes">
                 </select>
               </td>
               <td class="col-xs-4">
@@ -145,13 +144,13 @@
               </td>
             </tr>
             <tr data-ng-show="entry.relatedTransactionUID > 0 ||
-                                entry.transactionEntryType.meaning == 'TRANS_CREDIT' ||
-                                entry.transactionEntryType.meaning == 'TRANS_PAYMENT'">
+                              (transaction.transactionType == 'PAYMENT' &&
+                               entry.transactionEntryType.meaning != 'TRANS_SPECIAL_FUNDS')">
               <td></td>
               <td colspan="2">
                 <select class="form-control" name="relatedTransaction"
                         data-ng-model="entry.relatedTransaction"
-                        data-ng-options="tran.relatedDescription for tran in membership.transactions | filter:{transactionType:'INVOICE'}">
+                        data-ng-options="tran.transactionDescription for tran in membership.transactions | filter:{transactionType:'INVOICE'}">
                 </select>
               </td>
             </tr>

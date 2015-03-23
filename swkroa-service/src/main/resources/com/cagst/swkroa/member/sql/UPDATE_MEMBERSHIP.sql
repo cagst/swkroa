@@ -1,7 +1,8 @@
 UPDATE membership
    SET entity_type_cd     = :entity_type_cd
       ,next_due_dt        = :next_due_dt
-      ,dues_amount        = :dues_amount
+      ,fixed_dues         = :fixed_dues
+      ,incremental_dues   = :incremental_dues
       ,active_ind         = :active_ind
       ,close_reason_id    = :close_reason_id
       ,close_reason_txt   = :close_reason_txt

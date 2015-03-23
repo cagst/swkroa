@@ -158,7 +158,7 @@
                   <div>
                     <span data-th-text="#{com.cagst.swkroa.membership.fixed.dues}">zzz Dues Of</span>
                     <span data-th-text="#{com.cagst.swkroa.membership.calculated.dues}" class="text-warning"
-                          data-ng-show="mem.fixedDuesAmount != mem.calculatedDuesAmount">
+                          data-ng-show="mem.effectiveDuesAmount != mem.calculatedDuesAmount">
                       zzz Calculated Dues
                     </span>
                     <span class="pull-right text-danger"
@@ -223,6 +223,14 @@
                       <span class="col-xs-4">
                         <span class="pull-right">
                           {{member.memberType.duesAmount | currency}}
+                        </span>
+                      </span>
+                    </div>
+                    <div class="row row-inner" data-ng-show="membership.incrementalDues > 0">
+                      <span class="col-xs-8" data-th-text="#{com.cagst.swkroa.membership.calc.incremental}">zzz Incremental Dues</span>
+                      <span class="col-xs-4">
+                        <span class="pull-right">
+                          {{membership.incrementalDues | currency}}
                         </span>
                       </span>
                     </div>

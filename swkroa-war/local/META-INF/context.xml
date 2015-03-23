@@ -27,4 +27,32 @@
   <!-- url:
   The JDBC connection url for connecting to your MySQL database.
   -->
+
+  <Resource name="jdbc/SWKROADataSource"
+            auth="Container"
+            type="javax.sql.DataSource"
+
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            testWhileIdle="true"
+            testOnBorrow="true"
+            testOnReturn="false"
+            validationQuery="SELECT 1"
+            validationInterval="30000"
+            timesBetweenEvictionRunsMillis="30000"
+            maxWait="10000"
+            initialSize="10"
+            removeAbandonedTimeout="60"
+            removeAbandoned="true"
+            logAbandoned="true"
+            minEvictableIdelTimeMillis="30000"
+            jmxEnabled="true"
+            jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState
+                             ;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
+
+            username="swkroaadmin"
+            password="cagst23824"
+            driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/swkroadb"
+            maxActive="100"
+            maxIdle="10"/>
 </Context>

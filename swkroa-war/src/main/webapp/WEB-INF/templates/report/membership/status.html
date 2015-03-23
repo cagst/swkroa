@@ -18,10 +18,9 @@
   <form name="reportForm" data-th-attr="action=@{/report/membership/status}" target="_blank" method="post">
     <div class="row">
       <div class="col-xs-2">
-        <a class="btn btn-primary" href="javascript:submitReportForm('pdf')">
-          <span data-th-text="#{com.cagst.swkroa.report.generate.report}">
-            zzz Generate Report
-          </span>
+        <a class="btn btn-primary form-control" href="javascript:submitReportForm('pdf')">
+          <i class="fa fa-print"></i>
+          <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
         </a>
       </div>
     </div>

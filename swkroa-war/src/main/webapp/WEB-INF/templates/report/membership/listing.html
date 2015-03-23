@@ -4,6 +4,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+</head>
+
 <body>
 
 <div data-layout-fragment="content">
@@ -11,15 +15,21 @@
     <h3 data-th-text="#{com.cagst.swkroa.report.membership.listing.report}">zzz Membership Listing Report</h3>
   </div>
 
-  <div class="row">
-    <div class="col-xs-2">
-      <a class="btn btn-primary form-control"
-         data-th-href="@{/report/membership/listing.pdf}" target="_blank"
-         data-th-text="#{com.cagst.swkroa.report.generate.report}">
-        zzz Generate Report
-      </a>
+  <form name="reportForm" data-th-attr="action=@{/report/membership/listing}" target="_blank" method="post">
+    <div class="row">
+      <input id="reportType" type="hidden" name="reportType" />
+      <div class="col-xs-2">
+        <a class="btn btn-primary form-control" href="javascript:submitReportForm('pdf')">
+          <i class="fa fa-print"></i>
+          <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
+        </a>
+        <a class="btn btn-default form-control" href="javascript:submitReportForm('csv')">
+          <i class="fa fa-download"></i>
+          <span data-th-text="#{com.cagst.swkroa.export}">zzz Export</span>
+        </a>
+      </div>
     </div>
-  </div>
+  </form>
 </div>
 
 </body>

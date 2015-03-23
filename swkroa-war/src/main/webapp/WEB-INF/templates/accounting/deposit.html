@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/deposit.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="depositController">
+  <!-- Deposit Listing Page -->
+  <div data-ng-show="view == 'listing'">
+    <div class="page-header">
+      <h3 data-th-text="#{com.cagst.swkroa.deposit.title}">zzz Deposit Overview</h3>
+      <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
+        <strong>Success!</strong>
+        <div data-th-text="#{com.cagst.swkroa.deposit.save.created}">zzz Created</div>
+      </div>
+      <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
+        <strong>Success!</strong>
+        <div data-th-text="#{com.cagst.swkroa.deposit.save.updated}">zzz Updated</div>
+      </div>
+    </div>
+    <div class="row" data-ng-show="deposits">
+      <div class="col-xs-3"></div>
+      <div class="col-xs-6">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th data-th-text="#{com.cagst.swkroa.deposit.date}">zzz Date</th>
+              <th data-th-text="#{com.cagst.swkroa.deposit.number}">zzz Ref Num</th>
+              <th data-th-text="#{com.cagst.swkroa.deposit.amount}">zzz Amount</th>
+              <th style="width: 24%">
+                <a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="addDeposit()">
+                  <i class="fa fa-plus"></i>
+                  <span data-th-text="#{com.cagst.swkroa.deposit.add}">zzz Add</span>
+                </a>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="hover-buttons"
+                data-ng-repeat="deposit in deposits | orderBy: 'depositDate': true"
+                data-ng-show="deposit.active">
+              <td>{{deposit.depositDate | date:'mediumDate'}}</td>
+              <td>
+                {{deposit.depositNumber}}
+              </td>
+              <td>{{deposit.depositAmount | currency}}</td>
+              <td>
+                <div class="btn-group pull-right">
+                  <button type="button" class="btn btn-primary btn-xs" data-ng-click="editDeposit(deposit)">
+                    <i class="fa fa-edit"></i>
+                    <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                  </button>
+                  <button type="button" class="btn btn-danger btn-xs"
+                          data-ng-click="selectedDeposit(deposit)"
+                          data-toggle="modal" data-target="#confirmDeletion">
+                    <i class="fa fa-trash-o"></i>
+                    <span data-th-text="#{com.cagst.swkroa.delete}">zzz Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-3"></div>
+    </div>
+  </div>
+
+  <!-- Modify (Add/Edit) Deposit Page -->
+  <div data-ng-show="view == 'add' || view == 'edit'">
+    <div class="page-header">
+      <h3 data-th-text="#{com.cagst.swkroa.deposit.add}" data-ng-show="deposit.depositUID == 0">
+        zzz Add Deposit
+      </h3>
+      <h3 data-th-text="#{com.cagst.swkroa.deposit.edit}" data-ng-show="deposit.depositUID > 0">
+        zzz Edit Deposit
+      </h3>
+    </div>
+
+    <form method="POST" name="depositForm" novalidate data-ng-submit="save()" class="css-form">
+      <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-2">
+          <label class="control-label label-required"
+                 data-th-text="#{com.cagst.swkroa.deposit.date}">
+            zzz Date
+          </label>
+          <p class="input-group">
+            <input type="text" class="form-control" id="depositDate" name="depositDate"
+                   data-datepicker-popup="MM/dd/yyyy"
+                   data-is-open="openDepositDate"
+                   data-show-button-bar="false"
+                   data-show-weeks="false"
+                   data-ng-model="deposit.depositDate"
+                   data-ng-required="true" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" data-ng-click="openDepositDate($event)">
+                <i class="fa fa-calendar"></i>
+              </button>
+            </span>
+          </p>
+        </div>
+        <div class="col-xs-2">
+          <label class="control-label label-required"
+                 data-th-text="#{com.cagst.swkroa.deposit.number}">
+            zzz Deposit Number
+          </label>
+          <input type="text" class="form-control" name="depositNumber" maxlength="25"
+                 data-th-placeholder="#{com.cagst.swkroa.deposit.number.prompt}"
+                 data-ng-model="deposit.depositNumber"
+                 data-ng-required="true" />
+        </div>
+        <div class="col-xs-2">
+          <label data-th-text="#{com.cagst.swkroa.deposit.amount}">zzz Amount</label>
+          <h3 class="clear-top"
+              data-ng-bind="deposit.depositAmount | currency">
+            zzz Deposit Amount
+          </h3>
+        </div>
+        <div class="col-xs-4"></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-2"></div>
+        <div class="col-xs-8">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th></th>
+                <th data-th-text="#{com.cagst.swkroa.deposit.transaction.date}">zzz Date</th>
+                <th data-th-text="#{com.cagst.swkroa.deposit.transaction.membership}">zzz Membership</th>
+                <th data-th-text="#{com.cagst.swkroa.deposit.transaction.amount}">zzz Amount</th>
+                <th data-th-text="#{com.cagst.swkroa.deposit.transaction.remaining}">zzz Remaining</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-ng-repeat="inv in unpaid | orderBy: ['transactionDate', 'membershipName']">
+                <td>
+                  <input type="checkbox" data-ng-model="inv.transactionInDeposit"/>
+                </td>
+                <td>{{inv.transactionDate | date: 'mediumDate'}}</td>
+                <td>{{inv.membershipName}}</td>
+                <td>{{inv.transactionAmount * -1 | currency}}</td>
+                <td>{{inv.amountRemaining * -1 | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-xs-2"></div>
+      </div>
+      <div class="spacer-top">
+        <div class="divider-top">
+          <div class="spacer-top">
+            <button type="submit"
+                    class="btn btn-primary"
+                    data-th-text="#{com.cagst.swkroa.deposit.create}"
+                    data-ng-show="deposit.depositUID == 0"
+                    data-ng-disabled="depositForm.$invalid">
+            </button>
+            <button type="submit"
+                    class="btn btn-primary"
+                    data-th-text="#{com.cagst.swkroa.deposit.update}"
+                    data-ng-show="deposit.depositUID > 0"
+                    data-ng-disabled="hasChanges(deposit) || depositForm.$invalid">
+            </button>
+            <button type="button" class="btn btn-default"
+                    data-ng-click="cancelChanges()"
+                    data-th-text="#{com.cagst.swkroa.cancel}">
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

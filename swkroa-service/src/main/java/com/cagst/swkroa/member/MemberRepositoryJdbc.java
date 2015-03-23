@@ -88,7 +88,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  @Cacheable(value = "membersList", key = "#membership.getMembershipUID()")
+//  @Cacheable(value = "membersList", key = "#membership.getMembershipUID()")
   public List<Member> getMembersForMembership(final Membership membership) {
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
 
@@ -126,7 +126,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  @Cacheable(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
+//  @Cacheable(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
   public List<MembershipCounty> getMembershipCountiesForMembership(final Membership membership) {
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
 
@@ -185,7 +185,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
+//  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
   public Member saveMember(final Member member, final Membership membership, final User user)
       throws DataAccessException {
 
@@ -230,7 +230,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-  @CacheEvict(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
+//  @CacheEvict(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
   public MembershipCounty saveMembershipCounty(final MembershipCounty county,
                                                final Membership membership,
                                                final User user)
@@ -250,7 +250,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
+//  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
   public Member closeMember(final Member member, final CodeValue closeReason, final String closeText, final User user)
       throws IncorrectResultSizeDataAccessException {
 

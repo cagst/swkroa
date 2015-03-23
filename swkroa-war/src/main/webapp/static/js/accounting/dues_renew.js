@@ -79,6 +79,8 @@ swkroaApp.controller('duesController', ['$scope', '$http', 'codesetService', 'me
     $scope.openedTransactionDate = true;
   };
 
+  determineRenewalPeriod($scope);
+
   $scope.days = 30;
   $scope.totalMemberships = 0;
   $scope.totalAmount = 0;
@@ -95,4 +97,15 @@ var calculateTotals = function($scope) {
           $scope.totalMemberships += 1;
         }
     }
+};
+
+var determineRenewalPeriod = function($scope) {
+  var currentYear = new Date().getFullYear();
+
+  $scope.membershipRenewalPeriod = "(" + currentYear + " - " + (currentYear + 1) + ")";
+};
+
+var generateMembershipRenewalLetters = function(reportyType) {
+  $('#renewalLetterDlg').modal('hide');
+  submitReportForm(reportyType);
 };

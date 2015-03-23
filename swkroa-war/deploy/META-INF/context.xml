@@ -49,8 +49,8 @@
             jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState
                              ;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
 
-            username="swkroauser"
-            password="swkroadbuser"
+            username="swkroaadmin"
+            password="cagst23824"
             driverClassName="com.mysql.jdbc.Driver"
             url="jdbc:mysql://localhost:3306/swkroadb"
             maxActive="100"

@@ -177,8 +177,8 @@ public final class MembershipServiceImpl implements MembershipService {
     LOGGER.info("Calling createBillingInvoicesForMemberships [{}]", transactionDescription);
 
     CodeValue baseDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_BASE");
-    CodeValue familyDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_BASE");
-    CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_BASE");
+    CodeValue familyDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_FAMILY");
+    CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_INC");
 
     for (Long membershipId : membershipIds) {
       Membership membership = membershipRepo.getMembershipByUID(membershipId);

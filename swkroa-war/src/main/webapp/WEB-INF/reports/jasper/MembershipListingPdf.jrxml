@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipListingPdf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ff1417b-b07f-4412-9ad0-03b68e9852f0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="ReportTitle" fontName="TimesNewRoman" fontSize="18"/>
+	<queryString>
+		<![CDATA[SELECT ms.membership_id
+      ,ms.membership_name
+      ,ms.fixed_dues
+      ,ms.calculated_dues
+      ,ms.effective_dues
+      ,ms.balance
+      ,mt.member_type_display
+      ,m.member_id
+      ,m.owner_ident
+      ,m.member_name
+      ,mt2.dues_amount
+      ,pa.address1
+      ,pa.address2
+      ,pa.address3
+      ,pa.city
+      ,pa.state_code
+      ,pa.postal_code_formatted AS postal_code
+      ,pa.country_code
+  FROM membership_summary ms
+ INNER JOIN member_type mt ON (mt.member_type_id = ms.member_type_id)
+ INNER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind)
+ INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m.member_type_id AND mt2.active_ind = 1 AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
+  LEFT OUTER JOIN primary_address pa ON (pa.parent_entity_id = m.member_id AND pa.parent_entity_name = 'MEMBER')
+ WHERE ms.active_ind = 1
+ORDER BY ms.membership_name ASC
+        ,mt2.primary_ind DESC;]]>
+	</queryString>
+	<field name="membership_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="membership_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fixed_dues" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="calculated_dues" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="effective_dues" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="balance" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_type_display" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="member_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dues_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address3" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="state_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="postal_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="country_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="address" class="java.lang.String">
+		<variableExpression><![CDATA[($F{address1} == null ? "" : $F{address1}) +
+($F{address2} == null ? "" : ", " + $F{address2}) +
+($F{address3} == null ? "" : ", " + $F{address3}) +
+($F{city} == null ? "" : ", " + $F{city}) +
+($F{state_code} == null ? "" : ", " + $F{state_code}) +
+($F{postal_code} == null ? "" : ", " + $F{postal_code})]]></variableExpression>
+	</variable>
+	<variable name="total_dues" class="java.lang.String">
+		<variableExpression><![CDATA[$F{fixed_dues} != null ? (
+$F{fixed_dues}.equals( $F{calculated_dues} ) ?
+"Total Dues Amount: " + $F{calculated_dues}.toString() :
+"Total Dues Amount: " + $F{fixed_dues}.toString() + " (fixed) / " + $F{calculated_dues}.toString() + " (calculated)") :
+"Total Dues Amount: " + $F{calculated_dues}]]></variableExpression>
+	</variable>
+	<group name="membership_group" keepTogether="true">
+		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement x="0" y="0" width="286" height="20" uuid="72d49b3c-f7af-4b4f-b795-e798c32ae6da"/>
+					<textElement>
+						<font fontName="TimesNewRoman" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="12">
+				<textField pattern="¤ #,##0.00;(¤ #,##0.00)">
+					<reportElement x="70" y="0" width="502" height="12" uuid="7ec13e06-7a06-4f62-8ee3-ed555d9ecd04"/>
+					<textElement textAlignment="Right">
+						<font fontName="TimesNewRoman" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{total_dues}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement style="ReportTitle" x="0" y="0" width="572" height="30" uuid="ccff0a75-d35f-4f5a-b922-25e24c7033fd"/>
+				<textElement textAlignment="Center">
+					<font fontName="TimesNewRoman" size="18"/>
+				</textElement>
+				<text><![CDATA[Membership Listing]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="70" y="2" width="179" height="12" uuid="33181344-8d31-4cb1-9aac-82a6315c659e"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00;(¤ #,##0.00)">
+				<reportElement x="472" y="0" width="100" height="12" uuid="9747d626-d157-493a-84d0-533f248ef730"/>
+				<textElement textAlignment="Right">
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dues_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="2" width="59" height="12" forecolor="#999999" uuid="a46c03f8-40a7-41ca-96f7-1416787e860c"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(" + $F{owner_ident} + ")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="12" width="502" height="12" isRemoveLineWhenBlank="true" uuid="3bba7e15-94ee-4339-9f7d-3bf35595bf9a"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{address}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="89" height="20" uuid="32ab96e5-105b-4bc4-9d90-74c64f756d67"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+			<textField pattern="EEE, MMM d, yyyy h:mm a">
+				<reportElement x="89" y="2" width="267" height="20" uuid="191f7e67-4f61-4200-9b6f-0b790c7b57a6"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="452" y="2" width="80" height="20" uuid="e4255344-85da-40d3-b972-efad84653233"/>
+				<textElement textAlignment="Right">
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="532" y="2" width="40" height="20" uuid="b3bffb09-4b85-419c-b1a0-af6ae571c964"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="2" width="572" height="1" uuid="fe3f9fa0-d731-47b9-b593-066d4e61bd19"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -3,10 +3,10 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<style name="ReportTitle" fontName="Verdana" fontSize="18"/>
-	<style name="Text Body" isDefault="true" fontName="Verdana" fontSize="12"/>
-	<style name="ColumnHeader" fontName="Verdana" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-	<style name="PageFooter" fontName="Verdana" fontSize="10"/>
+	<style name="ReportTitle" fontName="TimesNewRoman" fontSize="18"/>
+	<style name="Text Body" isDefault="true" fontName="TimesNewRoman" fontSize="12"/>
+	<style name="ColumnHeader" fontName="TimesNewRoman" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="PageFooter" fontName="TimesNewRoman" fontSize="10"/>
 	<queryString>
 		<![CDATA[SELECT mt.member_type_display, count(m.member_id)
   FROM member m
@@ -14,8 +14,7 @@
  INNER JOIN member_type mt ON (mt.member_type_id = m.member_type_id)
  WHERE m.active_ind = 1
 GROUP BY mt.member_type_display
-ORDER BY mt.member_type_display
-]]>
+ORDER BY mt.member_type_display]]>
 	</queryString>
 	<field name="member_type_display" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -29,7 +28,7 @@ ORDER BY mt.member_type_display
 			<staticText>
 				<reportElement style="ReportTitle" x="75" y="0" width="430" height="35" uuid="869c8b72-ad0e-4864-990c-7bfec79bbf05"/>
 				<textElement textAlignment="Center">
-					<font fontName="Verdana" size="18"/>
+					<font fontName="TimesNewRoman" size="18"/>
 				</textElement>
 				<text><![CDATA[Membership Status Report]]></text>
 			</staticText>
@@ -49,6 +48,9 @@ ORDER BY mt.member_type_display
 			</staticText>
 			<line>
 				<reportElement x="75" y="49" width="430" height="1" uuid="25f72674-1e01-43b6-ba7a-5b5520285cd0"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
 			</line>
 		</band>
 	</columnHeader>
@@ -78,19 +80,22 @@ ORDER BY mt.member_type_display
 			<textField>
 				<reportElement style="PageFooter" x="453" y="2" width="80" height="20" uuid="ffe2da10-fc01-4f1c-ab6e-05cb14f6c303"/>
 				<textElement textAlignment="Right">
-					<font fontName="Verdana"/>
+					<font fontName="TimesNewRoman"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement style="PageFooter" x="533" y="2" width="40" height="20" uuid="7d5cb804-6d95-487b-ba9e-e1e92cb805aa"/>
 				<textElement>
-					<font fontName="Verdana"/>
+					<font fontName="TimesNewRoman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="1" y="0" width="572" height="1" uuid="a1b84312-c94f-4101-8b26-2b6cf32825dd"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
 			</line>
 		</band>
 	</pageFooter>
@@ -98,6 +103,9 @@ ORDER BY mt.member_type_display
 		<band height="50">
 			<line>
 				<reportElement x="75" y="0" width="430" height="1" uuid="86f22a03-fdc6-4c76-be0f-4ebfeb3c6e8a"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
 			</line>
 			<textField pattern="#,##0">
 				<reportElement style="ColumnHeader" x="325" y="1" width="102" height="20" uuid="3435718a-b0c6-4639-9a29-0e5dbf6e1544"/>
