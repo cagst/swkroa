@@ -303,7 +303,9 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
 
     assertNotNull("Ensure we found the memberships (membership1)", membership1);
     assertNotNull("Ensure we found the memberships (membership2)", membership2);
-    assertEquals("Ensure the next due date is correct (membership1)", "01/23/2014", membership1.getNextDueDate().toString("MM/dd/yyyy"));
+    assertEquals(
+        "Ensure the next due date is correct (membership1)", "01/23/2014",
+        membership1.getNextDueDate().toString("MM/dd/yyyy"));
     assertEquals("Ensure the next due date is correct (membership2)", "01/23/2015", membership2.getNextDueDate().toString("MM/dd/yyyy"));
 
     Set<Long> ids = Sets.newHashSet(membership1.getMembershipUID(), membership2.getMembershipUID());

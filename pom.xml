@@ -175,6 +175,23 @@
         <scope>test</scope>
       </dependency>
 
+      <!-- SWKROA Dependencies -->
+      <dependency>
+        <groupId>com.cagst.swkroa</groupId>
+        <artifactId>swkroa-domain</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.cagst.swkroa</groupId>
+        <artifactId>swkroa-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.cagst.swkroa</groupId>
+        <artifactId>swkroa-war</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- Joda Time Dependencies -->
       <dependency>
         <groupId>joda-time</groupId>

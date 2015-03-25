@@ -25,8 +25,8 @@ CREATE VIEW membership_summary AS
            ,ms.updt_cnt AS membership_updt_cnt
            ,ms.fixed_dues
            ,ms.incremental_dues
-           ,(COALESCE(SUM(mt2.dues_amount), 0) + ms.incremental_dues) AS calculated_ues
-           ,COALESCE(ms.fixed_dues, (COALESCE(SUM(mt2.dues_amount), 0) + ms.incremental_dues)) as effective_dues
+           ,(COALESCE(SUM(mt2.dues_amount), 0) + COALESCE(ms.incremental_dues, 0)) AS calculated_dues
+           ,COALESCE(ms.fixed_dues, (COALESCE(SUM(mt2.dues_amount), 0) + COALESCE(ms.incremental_dues, 0))) as effective_dues
            ,(SELECT SUM(te.transaction_entry_amount) AS balance
                FROM transaction t
                    ,transaction_entry te
@@ -50,29 +50,29 @@ CREATE VIEW membership_summary AS
                             AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
  LEFT OUTER JOIN person p   ON (p.person_id = m.person_id AND p.active_ind = 1)
  LEFT OUTER JOIN codevalue cv ON (cv.codevalue_id = p.title_cd)
-   GROUP BY membership_id
+   GROUP BY ms.membership_id
            ,membership_name
-           ,entity_type_cd
-           ,member_id
+           ,ms.entity_type_cd
+           ,m.member_id
            ,mt.member_type_id
-           ,member_type_meaning
-           ,company_name
-           ,next_due_dt
-           ,owner_ident
-           ,greeting
-           ,in_care_of
-           ,title_cd
+           ,mt.member_type_meaning
+           ,m.company_name
+           ,ms.next_due_dt
+           ,m.owner_ident
+           ,m.greeting
+           ,m.in_care_of
+           ,p.title_cd
            ,title_meaning
            ,title_display
-           ,name_last
-           ,name_middle
-           ,name_first
+           ,p.name_last
+           ,p.name_middle
+           ,p.name_first
            ,name_full
-           ,join_dt
-           ,close_reason_id
-           ,close_reason_txt
-           ,close_dt_tm
-           ,active_ind
+           ,m.join_dt
+           ,ms.close_reason_id
+           ,ms.close_reason_txt
+           ,ms.close_dt_tm
+           ,ms.active_ind
            ,membership_updt_cnt
            ,fixed_dues
            ,incremental_dues;

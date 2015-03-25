@@ -149,7 +149,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    * Tests the lockUserAccount method.
    */
   @Test
-  public void testLockUserAccount() {
+  public void testLockUserAccount() throws Exception {
     User user1 = repo.getUserByUsername("cgaskill");
     assertNotNull("Ensure user was found.", user1);
     assertTrue("Ensure user account is not locked.", user1.isAccountNonLocked());
@@ -168,7 +168,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    * Tests the unlockUserAccount method.
    */
   @Test
-  public void testUnlockUserAccount() {
+  public void testUnlockUserAccount() throws Exception {
     User user1 = repo.getUserByUsername("locked");
     assertNotNull("Ensure user was found.", user1);
     assertFalse("Ensure user account is locked.", user1.isAccountNonLocked());
