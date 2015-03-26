@@ -63,7 +63,7 @@
     <google-autovalue-version>1.0</google-autovalue-version>
 
     <!-- CAGST Framework -->
-    <cagst-version>1.1.0-SNAPSHOT</cagst-version>
+    <cagst-version>1.1.0</cagst-version>
 
     <!-- Spring Frameworks -->
     <spring-version>4.1.0.RELEASE</spring-version>
@@ -149,27 +149,27 @@
       <dependency>
         <groupId>com.cagst</groupId>
         <artifactId>cagst-common-db</artifactId>
-        <version>1.1.0</version>
+        <version>${cagst-version}</version>
       </dependency>
       <dependency>
         <groupId>com.cagst</groupId>
         <artifactId>cagst-common-util</artifactId>
-        <version>1.1.0</version>
+        <version>${cagst-version}</version>
       </dependency>
       <dependency>
         <groupId>com.cagst</groupId>
         <artifactId>cagst-common-service</artifactId>
-        <version>1.1.0</version>
+        <version>${cagst-version}</version>
       </dependency>
       <dependency>
         <groupId>com.cagst</groupId>
         <artifactId>cagst-common-web</artifactId>
-        <version>1.1.0</version>
+        <version>${cagst-version}</version>
       </dependency>
       <dependency>
         <groupId>com.cagst</groupId>
         <artifactId>cagst-test</artifactId>
-        <version>1.1.0</version>
+        <version>${cagst-version}</version>
         <scope>test</scope>
       </dependency>
 
