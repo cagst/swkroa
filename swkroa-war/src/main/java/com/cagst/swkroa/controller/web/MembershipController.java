@@ -15,14 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
  * Handles and retrieves the membership page(s) depending on the URI template.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Controller
 public final class MembershipController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipController.class);
-
-  @Autowired
-  private MembershipRepository membershipRepo;
 
   /**
    * Handles and retrieves the Membership Home / Listing page.
@@ -33,6 +29,7 @@ public final class MembershipController {
   public String getMembershipListingPage() {
     LOGGER.info("Received request to show membership listing page.");
 
+//    return "membership/home";
     return "membership2/listing";
   }
 
@@ -41,15 +38,15 @@ public final class MembershipController {
    *
    * @return The location and name of the page template.
    */
-  @RequestMapping(value = "/memberships/add", method = RequestMethod.GET)
-  public ModelAndView getMembershipAddPage() {
-    LOGGER.info("Received request to show add membership page.");
-
-    ModelAndView mav = new ModelAndView("membership/modify");
-    mav.addObject("membershipId", 0L);
-
-    return mav;
-  }
+//  @RequestMapping(value = "/memberships/add", method = RequestMethod.GET)
+//  public ModelAndView getMembershipAddPage() {
+//    LOGGER.info("Received request to show add membership page.");
+//
+//    ModelAndView mav = new ModelAndView("membership/modify");
+//    mav.addObject("membershipId", 0L);
+//
+//    return mav;
+//  }
 
   /**
    * Handles and retrieves the Edit Membership page.
@@ -59,11 +56,29 @@ public final class MembershipController {
    *
    * @return The location and name of the page template.
    */
-  @RequestMapping(value = "/memberships/edit/{membershipId}", method = RequestMethod.GET)
-  public ModelAndView getMembershipEditPage(final @PathVariable long membershipId) {
+//  @RequestMapping(value = "/memberships/edit/{membershipId}", method = RequestMethod.GET)
+//  public ModelAndView getMembershipEditPage(final @PathVariable long membershipId) {
+//    LOGGER.info("Received request to show edit membership page.");
+//
+//    ModelAndView mav = new ModelAndView("membership/modify");
+//    mav.addObject("membershipId", membershipId);
+//
+//    return mav;
+//  }
+
+  /**
+   * Handles and retrieves the Membership Details page.
+   *
+   * @param membershipId
+   *     A {@link long} that uniquely identifies the {@link Membership} to retrieve.
+   *
+   * @return The location and name of the page template.
+   */
+  @RequestMapping(value = "/memberships/{membershipId}", method = RequestMethod.GET)
+  public ModelAndView getMembershipDetailsPage(final @PathVariable long membershipId) {
     LOGGER.info("Received request to show edit membership page.");
 
-    ModelAndView mav = new ModelAndView("membership/modify");
+    ModelAndView mav = new ModelAndView("membership2/details");
     mav.addObject("membershipId", membershipId);
 
     return mav;

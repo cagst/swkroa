@@ -90,7 +90,7 @@ a:hover, a:focus {
 }
 
 .list-group-item-condensed {
-  padding: 5px 10px;
+  padding: 7px 15px;
 }
 
 .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
@@ -365,7 +365,7 @@ label {
   background-color: #f5f5f5;
   border-bottom: 1px solid #ddd;
   padding-left: 0px;
-  height: 55px;
+  height: 50px;
 }
 
 .split-footer-content {
@@ -428,8 +428,8 @@ div.list-group-item.active:hover {
 }
 
 .constrain-view {
-  min-height: 250px;
-  max-height: 450px;
+  min-height: 500px;
+  max-height: 500px;
   overflow: auto;
   margin-bottom: 0px;
 }

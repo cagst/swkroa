@@ -246,7 +246,7 @@ swkroaApp.controller('membershipController',
   $scope.fullyLoaded   = false;
   $scope.original      = null;
   $scope.message       = null;
-  $scope.increment     = 11;
+  $scope.increment     = 10;
   $scope.increments    = [];
   $scope.start         = 0;
   $scope.page          = 0;
