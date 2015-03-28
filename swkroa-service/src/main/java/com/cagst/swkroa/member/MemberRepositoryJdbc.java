@@ -23,8 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -46,6 +44,7 @@ import org.springframework.util.Assert;
 
   private static final String GET_MEMBERS_FOR_MEMBERSHIP = "GET_MEMBERS_FOR_MEMBERSHIP";
   private static final String GET_MEMBERS_BY_NAME        = "GET_MEMBERS_BY_NAME";
+  private static final String GET_MEMBERS_BY_NAME_COUNT  = "GET_MEMBERS_BY_NAME_COUNT";
   private static final String GET_MEMBER_BY_UID          = "GET_MEMBER_BY_UID";
 
   private static final String GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP = "GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP";
@@ -106,19 +105,35 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Member> getMembersByName(final String name, final MembershipStatus status) {
+  public List<Member> getMembersByName(final String name, final Status status, final int start, final int limit) {
     LOGGER.info("Calling getMembersByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(2);
+    Map<String, Object> params = new HashMap<String, Object>(4);
+    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.put("status", status.toString());
+    params.put("start", start);
+    params.put("limit", limit);
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_BY_NAME), params, new MemberMapper(personRepo, memberTypeRepo));
+  }
+
+  @Override
+  public long getMembersByNameCount(final String name, final Status status) {
+    LOGGER.info("Calling getMembersByName for [{}].", name);
+
+    Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
+    Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Object> params = new HashMap<String, Object>(2);
     params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
     params.put("status", status.toString());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_BY_NAME), params, new MemberMapper(personRepo, memberTypeRepo));
-
+    return getJdbcTemplate().queryForObject(stmtLoader.load(GET_MEMBERS_BY_NAME_COUNT), params, Long.class);
   }
 
   @Override
@@ -212,7 +227,7 @@ import org.springframework.util.Assert;
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Saving Member [{}]", member.getEffectiveMemberName());
+    LOGGER.info("Saving Member [{}]", member.getMembershipUID());
 
     // save the Person portion of the Member
     if (member.getPerson() != null) {
@@ -302,7 +317,7 @@ import org.springframework.util.Assert;
   private Member insertMember(final Member member, final Membership membership, final User user)
       throws DataAccessException {
 
-    LOGGER.info("Inserting new Member [{}]", member.getEffectiveMemberName());
+    LOGGER.info("Inserting new Member [{}]", member.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -322,7 +337,7 @@ import org.springframework.util.Assert;
   private Member updateMember(final Member member, final Membership membership, final User user)
       throws DataAccessException {
 
-    LOGGER.info("Updating Member [{}]", member.getEffectiveMemberName());
+    LOGGER.info("Updating Member [{}]", member.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 

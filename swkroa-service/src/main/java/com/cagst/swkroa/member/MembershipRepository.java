@@ -41,7 +41,7 @@ public interface MembershipRepository {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-   List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance);
+   List<Membership> getMemberships(final Status status, final MembershipBalance balance);
 
   /**
    * Retrieves all active {@link Membership Memberships} in the system that has the name in one of the following fields:
@@ -61,7 +61,7 @@ public interface MembershipRepository {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system that starts with the specified name.
    */
-   List<Membership> getMembershipsByName(final String name, final MembershipStatus status, final MembershipBalance balance);
+   List<Membership> getMembershipsByName(final String name, final Status status, final MembershipBalance balance);
 
   /**
    * Retrieves all {@link Membership Memberships} that will be due in the following days.

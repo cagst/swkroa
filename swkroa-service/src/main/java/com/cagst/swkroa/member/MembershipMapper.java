@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  */
 /* package */final class MembershipMapper implements RowMapper<Membership> {
   private static final String MEMBERSHIP_ID           = "membership_id";
+  private static final String MEMBERSHIP_NAME         = "membership_name";
   private static final String MEMBER_ID               = "member_id";
   private static final String ENTITY_TYPE_CD          = "entity_type_cd";
   private static final String NEXT_DUE_DT             = "next_due_dt";
@@ -59,6 +60,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     Membership membership = new Membership();
 
     membership.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
+    membership.setMembershipName(rs.getString(MEMBERSHIP_NAME));
     membership.setMemberUID(rs.getLong(MEMBER_ID));
     membership.setEntityType(codeValueRepo.getCodeValueByUID(rs.getLong(ENTITY_TYPE_CD)));
     membership.setNextDueDate(CGTDateTimeUtils.getDateTime(rs, NEXT_DUE_DT));

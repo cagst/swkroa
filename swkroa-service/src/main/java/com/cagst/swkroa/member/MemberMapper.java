@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  */
 /* package */final class MemberMapper implements RowMapper<Member> {
   private static final String MEMBER_ID            = "member_id";
+  private static final String MEMBER_NAME          = "member_name";
   private static final String MEMBERSHIP_ID        = "membership_id";
   private static final String PERSON_ID            = "person_id";
   private static final String COMPANY_NAME         = "company_name";
@@ -66,6 +67,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     }
 
     member.setMemberUID(rs.getLong(MEMBER_ID));
+    member.setMemberName(rs.getString(MEMBER_NAME));
     member.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
     member.setCompanyName(rs.getString(COMPANY_NAME));
     member.setOwnerIdent(rs.getString(OWNER_IDENT));

@@ -113,14 +113,14 @@ public final class MembershipServiceImpl implements MembershipService {
   }
 
   @Override
-  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance) {
+  public List<Membership> getMemberships(final Status status, final MembershipBalance balance) {
     LOGGER.info("Calling getActiveMemberships");
 
     return membershipRepo.getMemberships(status, balance);
   }
 
   @Override
-  public List<Membership> getMembershipsForName(final String name, final MembershipStatus status, final MembershipBalance balance) {
+  public List<Membership> getMembershipsForName(final String name, final Status status, final MembershipBalance balance) {
     LOGGER.info("Calling getMembershipsByName for [{}]", name);
 
     return membershipRepo.getMembershipsByName(name, status, balance);

@@ -89,6 +89,10 @@ a:hover, a:focus {
   color: #fff;
 }
 
+.list-group-item-condensed {
+  padding: 5px 10px;
+}
+
 .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
   background-color: #d1e9be;
 }

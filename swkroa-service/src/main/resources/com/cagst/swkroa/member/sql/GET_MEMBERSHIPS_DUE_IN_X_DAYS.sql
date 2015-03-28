@@ -1,4 +1,5 @@
 SELECT membership_id
+      ,membership_name
       ,entity_type_cd
       ,next_due_dt
       ,member_id

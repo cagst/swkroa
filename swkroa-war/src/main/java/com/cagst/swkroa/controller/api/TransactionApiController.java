@@ -13,6 +13,7 @@ import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,9 +64,9 @@ public final class TransactionApiController {
   /**
    * Handles the request to retrieve the {@link List} of {@link TransactionGroup} for payments in the system.
    *
-   * @return The {@link List} of {@link TransactionGroup} for payments in the system.
+   * @return A JSON representation of the {@link TransactionGroup TransactionGroups} defined within the system.
    */
-  @RequestMapping(value = "/payments", method = RequestMethod.GET)
+  @RequestMapping(value = "/payments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ListModel<TransactionGroup>> getTransactionGroupsForPayments(
       final @RequestParam(value = "start", required = false) Integer start,
       final @RequestParam(value = "limit", required = false) Integer limit) {

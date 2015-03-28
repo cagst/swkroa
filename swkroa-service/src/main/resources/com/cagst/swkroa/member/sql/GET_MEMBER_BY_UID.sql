@@ -1,6 +1,7 @@
 SELECT m.person_id
       ,m.member_id
       ,m.membership_id
+      ,m.member_name
       ,m.company_name
       ,m.owner_ident
       ,m.member_type_id
@@ -12,7 +13,7 @@ SELECT m.person_id
       ,m.close_reason_id
       ,m.close_reason_txt
       ,m.close_dt_tm
-      ,m.updt_cnt AS member_updt_cnt
+      ,m.member_updt_cnt
       ,m.active_ind
-  FROM member m
+  FROM member_summary m
  WHERE m.member_id = :member_id

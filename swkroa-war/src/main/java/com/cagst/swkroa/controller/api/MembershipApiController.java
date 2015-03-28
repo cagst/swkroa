@@ -15,7 +15,7 @@ import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.member.MembershipBalance;
 import com.cagst.swkroa.member.MembershipCounty;
 import com.cagst.swkroa.member.MembershipService;
-import com.cagst.swkroa.member.MembershipStatus;
+import com.cagst.swkroa.member.Status;
 import com.cagst.swkroa.model.BillingRunModel;
 import com.cagst.swkroa.model.CloseMembershipsModel;
 import com.cagst.swkroa.person.Person;
@@ -83,14 +83,14 @@ public final class MembershipApiController {
     if (StringUtils.isNotBlank(query)) {
       memberships = membershipService.getMembershipsForName(
           query,
-          StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
+          StringUtils.isNotBlank(status) ? Status.valueOf(status) : Status.ACTIVE,
           StringUtils.isNotBlank(balance) ? MembershipBalance.valueOf(balance) : MembershipBalance.ALL
       );
     } else if (dueInDays != null && dueInDays >= 0) {
       memberships = membershipService.getMembershipsDueInXDays(dueInDays);
     } else {
       memberships = membershipService.getMemberships(
-          StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE,
+          StringUtils.isNotBlank(status) ? Status.valueOf(status) : Status.ACTIVE,
           StringUtils.isNotBlank(balance) ? MembershipBalance.valueOf(balance) : MembershipBalance.ALL
       );
     }

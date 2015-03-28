@@ -2,16 +2,18 @@ package com.cagst.swkroa.controller.api;
 
 import javax.inject.Inject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
-import com.cagst.swkroa.member.MembershipStatus;
+import com.cagst.swkroa.member.Status;
+import com.cagst.swkroa.model.ListModel;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,25 +43,32 @@ public final class MemberApiController {
    *        A {@link String} that represents the Name (first or last), OwnerId, or Company to search for Members.
    * @param status
    *        A {@link String} that represents the status (Active / Inactive) to search for Members.
+   * @param start
+   *      An {@link int} that defines the first Member to retrieve.
+   * @param limit
+   *      An {@link int} that defines the number of Members to retrieve.
    *
    * @return A JSON representation of the {@link Member Members} within the system matching the specific parameters.
    */
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<Member> getMembers(final @RequestParam(value = "q", required = false) String query,
-                                 final @RequestParam(value = "status", required = false) String status) {
+  public ResponseEntity<ListModel<Member>> getMembers(
+      final @RequestParam(value = "q", required = true) String query,
+      final @RequestParam(value = "status", required = false) String status,
+      final @RequestParam(value = "start", required = false) Integer start,
+      final @RequestParam(value = "limit", required = false) Integer limit) {
 
     LOGGER.info("Received request to retrieve memberships using query [{}] and status [{}]", query, status);
 
-    List<Member> members;
+    Status newStatus = StringUtils.isNotBlank(status) ? Status.valueOf(status) : Status.ACTIVE;
 
-    if (StringUtils.isNotBlank(query)) {
-      members = memberRepo.getMembersByName(
-          query,
-          StringUtils.isNotBlank(status) ? MembershipStatus.valueOf(status) : MembershipStatus.ACTIVE);
-    } else {
-      members = new ArrayList<Member>();
-    }
+    int newStart = (start != null ? start : 0);
+    int newLimit = (limit != null ? limit : 20);
 
-    return members;
+    ListModel<Member> model = new ListModel<Member>(
+        memberRepo.getMembersByName(query, newStatus, newStart, newLimit),
+        memberRepo.getMembersByNameCount(query, newStatus)
+    );
+
+    return new ResponseEntity<ListModel<Member>>(model, HttpStatus.OK);
   }
 }

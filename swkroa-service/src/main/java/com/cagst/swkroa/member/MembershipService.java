@@ -42,7 +42,7 @@ public interface MembershipService {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance);
+  public List<Membership> getMemberships(final Status status, final MembershipBalance balance);
 
   /**
    * Retrieves a {@link List} of {@link Membership Memberships} that contain the specified <i>name</i> in one of
@@ -63,7 +63,7 @@ public interface MembershipService {
    *
    * @return A {@link List} of {@link Membership Memberships} that contain the specified name.
    */
-  public List<Membership> getMembershipsForName(final String name, final MembershipStatus status, final MembershipBalance balance);
+  public List<Membership> getMembershipsForName(final String name, final Status status, final MembershipBalance balance);
 
   /**
    * Retrieves all {@link Membership Memberships} that will be due in the following days.

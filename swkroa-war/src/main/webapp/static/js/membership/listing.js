@@ -20,7 +20,7 @@ swkroaApp.controller('membershipController',
   // Define functions
   $scope.queryKeydown = function($event) {
     if ($event.keyCode == 13 && $scope.query.length >= 2) {
-      $scope.getMembers();
+      $scope.firstPage();
     }
   };
 
@@ -67,7 +67,7 @@ swkroaApp.controller('membershipController',
     $scope.filtering  = "off";
     $scope.filterText = $scope.getFilters();
     if ($scope.query && $scope.query.length > 0) {
-      $scope.getMembers();
+      $scope.firstPage();
     }
   };
 
@@ -75,7 +75,7 @@ swkroaApp.controller('membershipController',
     $scope.filtering = "off";
   };
 
-  $scope.getMembers = function() {
+  $scope.getMembers = function(start) {
     $scope.membership = null;
 
     $('#createdMessage').hide();
@@ -84,17 +84,17 @@ swkroaApp.controller('membershipController',
     var param = "";
 
     if ($scope.query && $scope.query.length > 0) {
-      params = "?q=" + $scope.query;
+      params = '?q=' + $scope.query;
     }
 
     if ($scope.filterStatus && $scope.filterStatus.length > 0) {
       if (params.length == 0) {
-        params = "?";
+        params = '?';
       } else {
-        params = params + "&";
+        params = params + '&';
       }
 
-      params = params + "status=" + $scope.filterStatus;
+      params = params + 'status=' + $scope.filterStatus + '&start=' + start + '&limit=' + $scope.increment;
     }
 
 //    if ($scope.filterBalance && $scope.filterBalance.length > 0) {
@@ -108,8 +108,35 @@ swkroaApp.controller('membershipController',
 //    }
 
     $http.get("/api/members/" + params).success(function(data) {
-      $scope.members = data;
+      $scope.members = data.items;
+      $scope.pages   = Math.ceil(data.totalItemCount / $scope.increment);
+
+      $scope.increments.length = 0;
+      for (var idx = 0; idx < $scope.pages; idx++) {
+        $scope.increments.push(idx+1);
+      }
     });
+  };
+
+  $scope.firstPage = function() {
+    $scope.setPage(1);
+  };
+
+  $scope.prevPage = function() {
+    $scope.setPage($scope.page - 1);
+  };
+
+  $scope.setPage = function(page) {
+    $scope.page = page;
+    $scope.getMembers(($scope.page - 1) * $scope.increment, $scope.increment);
+  };
+
+  $scope.nextPage = function() {
+    $scope.setPage($scope.page + 1);
+  };
+
+  $scope.lastPage = function() {
+    $scope.setPage($scope.pages);
   };
 
   $scope.getMembership = function(member) {
@@ -243,10 +270,15 @@ swkroaApp.controller('membershipController',
   $scope.filtering        = "off";
   $scope.showCalculations = false;
 
-  $scope.searched    = false;
-  $scope.fullyLoaded = false;
-  $scope.original    = null;
-  $scope.message     = null;
+  $scope.searched      = false;
+  $scope.fullyLoaded   = false;
+  $scope.original      = null;
+  $scope.message       = null;
+  $scope.increment     = 10;
+  $scope.increments    = [];
+  $scope.start         = 0;
+  $scope.page          = 0;
+  $scope.pages         = 1;
 
   $('#createdMessage').hide();
   $('#updatedMessage').hide();

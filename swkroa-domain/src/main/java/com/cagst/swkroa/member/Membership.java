@@ -26,6 +26,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private static final long serialVersionUID = 5583617519331577882L;
 
   private long membership_id;
+  private String membership_name;
   private CodeValue entity_type;
   private DateTime next_due_dt;
   private long member_id;
@@ -62,6 +63,14 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setMembershipUID(final long membershipID) {
     this.membership_id = membershipID;
+  }
+
+  public String getMembershipName() {
+    return membership_name;
+  }
+
+  /* package */ void setMembershipName(final String name) {
+    this.membership_name = name;
   }
 
   public CodeValue getEntityType() {
@@ -150,14 +159,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
     }
 
     return nameFormatter.formatFullName(name_last, name_first, name_middle);
-  }
-
-  public String getMembershipName() {
-    if (company_name != null) {
-      return company_name;
-    }
-
-    return getFullName();
   }
 
   public BigDecimal getFixedDuesAmount() {

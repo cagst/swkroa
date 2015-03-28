@@ -10,7 +10,6 @@ import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.person.Person;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -26,6 +25,7 @@ public final class Member implements Serializable, Comparable<Member> {
   private static final long serialVersionUID = 3919236058086901376L;
 
   private long member_id;
+  private String member_name;
   private long membership_id;
   private String company_name;
   private Person person;
@@ -67,6 +67,14 @@ public final class Member implements Serializable, Comparable<Member> {
     this.member_id = uid;
   }
 
+  public String getMemberName() {
+    return member_name;
+  }
+
+  /* package */ void setMemberName(final String name) {
+    this.member_name = name;
+  }
+
   public long getMembershipUID() {
     return membership_id;
   }
@@ -89,20 +97,6 @@ public final class Member implements Serializable, Comparable<Member> {
 
   public void setPerson(final Person person) {
     this.person = person;
-  }
-
-  /**
-   * @return The name for the Member. If the member is a Company, then the company name will be returned, otherwise the
-   * name of the {@link Person} associated with this Member will be returned.
-   */
-  public String getEffectiveMemberName() {
-    if (StringUtils.isNotEmpty(company_name)) {
-      return company_name;
-    } else if (person != null) {
-      return person.getFullName();
-    } else {
-      return StringUtils.EMPTY;
-    }
   }
 
   /**
@@ -321,7 +315,7 @@ public final class Member implements Serializable, Comparable<Member> {
     }
 
     CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(getEffectiveMemberName(), rhs.getEffectiveMemberName());
+    builder.append(getMemberName(), rhs.getMemberName());
 
     return builder.build();
   }

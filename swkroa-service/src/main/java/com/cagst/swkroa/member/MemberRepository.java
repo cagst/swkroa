@@ -42,10 +42,32 @@ public interface MemberRepository extends PersonRepository {
    *      The name to search for.
    * @param status
    *      The status of the Member to search for; 'all', 'active' or 'inactive'.
+   * @param start
+   *      An {@link int} that defines the first element to retrieve.
+   * @param limit
+   *      An {@link int} that defines the number of elements to retrieve.
    *
    * @return A {@link List} of {@link Member Members} in the system that starts with the specified name.
    */
-  List<Member> getMembersByName(final String name, final MembershipStatus status);
+  List<Member> getMembersByName(final String name, final Status status, final int start, final int limit);
+
+  /**
+   * Retrieves all active {@link Member Members} in the system that has the name in one of the following fields:
+   * <ul>
+   * <li>OwnerIdent</li>
+   * <li>Company Name</li>
+   * <li>First Name</li>
+   * <li>Last Name</li>
+   * </ul>
+   *
+   * @param name
+   *      The name to search for.
+   * @param status
+   *      The status of the Member to search for; 'all', 'active' or 'inactive'.
+   *
+   * @return The number of {@link Member Members} in the system that starts with the specified name.
+   */
+  long getMembersByNameCount(final String name, final Status status);
 
   /**
    * Retrieves a {@link Member} by its unique identifier.

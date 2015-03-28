@@ -19,8 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -103,7 +101,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Membership> getMemberships(final MembershipStatus status, final MembershipBalance balance) {
+  public List<Membership> getMemberships(final Status status, final MembershipBalance balance) {
     LOGGER.info("Calling getMemberships with status [{}] and balance [{}]", status, balance);
 
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
@@ -118,7 +116,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Membership> getMembershipsByName(final String name, final MembershipStatus status, final MembershipBalance balance) {
+  public List<Membership> getMembershipsByName(final String name, final Status status, final MembershipBalance balance) {
     LOGGER.info("Calling getMembershipsByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");

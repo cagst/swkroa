@@ -112,7 +112,7 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMembersByName_NoneFound() {
-    List<Member> memberships = repo.getMembersByName("zzz", MembershipStatus.ACTIVE);
+    List<Member> memberships = repo.getMembersByName("zzz", Status.ACTIVE, 0, 5);
 
     assertNotNull("Ensure the memberships collection is not null.", memberships);
     assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
@@ -123,13 +123,13 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMembersByName_Found() {
-    List<Member> memberships1 = repo.getMembersByName("dori", MembershipStatus.ACTIVE);
+    List<Member> memberships1 = repo.getMembersByName("dori", Status.ACTIVE, 0, 5);
 
     assertNotNull("Ensure the memberships collection is not null.", memberships1);
     assertFalse("Ensure the memberships collection is not empty.", memberships1.isEmpty());
     assertEquals("Ensure we found the correct number of memberships.", 3, memberships1.size());
 
-    List<Member> memberships2 = repo.getMembersByName("reg", MembershipStatus.ACTIVE);
+    List<Member> memberships2 = repo.getMembersByName("reg", Status.ACTIVE, 0, 5);
 
     assertNotNull("Ensure the memberships collection is not null.", memberships2);
     assertFalse("Ensure the memberships collection is not empty.", memberships2.isEmpty());
