@@ -1,4 +1,5 @@
 DROP VIEW IF EXISTS membership_summary;
+DROP VIEW IF EXISTS member_summary;
 
 DROP TABLE IF EXISTS deposit_transaction;
 DROP TABLE IF EXISTS deposit;

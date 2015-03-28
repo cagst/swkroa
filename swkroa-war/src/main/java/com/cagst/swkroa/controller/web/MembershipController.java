@@ -33,7 +33,7 @@ public final class MembershipController {
   public String getMembershipListingPage() {
     LOGGER.info("Received request to show membership listing page.");
 
-    return "membership/home";
+    return "membership2/listing";
   }
 
   /**

@@ -8,7 +8,6 @@
 
   <!--Daily rolling file appender -->
   <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>swkroa.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${catalina.base}/logs/swkroa.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
 

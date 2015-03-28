@@ -5,8 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.cagst.common.db.StatementLoader;
@@ -95,7 +95,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMembershipsByName_NoneFound() {
-    Collection<Membership> memberships = repo.getMembershipsByName("zzz", MembershipStatus.ACTIVE, MembershipBalance.ALL);
+    List<Membership> memberships = repo.getMembershipsByName("zzz", MembershipStatus.ACTIVE, MembershipBalance.ALL);
 
     assertNotNull("Ensure the memberships collection is not null.", memberships);
     assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
@@ -106,13 +106,13 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMembershipsByName_Found() {
-    Collection<Membership> memberships1 = repo.getMembershipsByName("dori", MembershipStatus.ACTIVE, MembershipBalance.ALL);
+    List<Membership> memberships1 = repo.getMembershipsByName("dori", MembershipStatus.ACTIVE, MembershipBalance.ALL);
 
     assertNotNull("Ensure the memberships collection is not null.", memberships1);
     assertFalse("Ensure the memberships collection is not empty.", memberships1.isEmpty());
     assertEquals("Ensure we found the correct number of memberships.", 2, memberships1.size());
 
-    Collection<Membership> memberships2 = repo.getMembershipsByName("reg", MembershipStatus.ACTIVE, MembershipBalance.ALL);
+    List<Membership> memberships2 = repo.getMembershipsByName("reg", MembershipStatus.ACTIVE, MembershipBalance.ALL);
 
     assertNotNull("Ensure the memberships collection is not null.", memberships2);
     assertFalse("Ensure the memberships collection is not empty.", memberships2.isEmpty());
@@ -124,7 +124,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMemberships_Active_Found() {
-    Collection<Membership> memberships = repo.getMemberships(MembershipStatus.ACTIVE, MembershipBalance.ALL);
+    List<Membership> memberships = repo.getMemberships(MembershipStatus.ACTIVE, MembershipBalance.ALL);
 
     assertNotNull("Ensure the memberships collection is not null!", memberships);
     assertFalse("Ensure the memberships collection is not empty!", memberships.isEmpty());
@@ -136,7 +136,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMemberships_Delinquent_Found() {
-    Collection<Membership> memberships = repo.getMemberships(MembershipStatus.ACTIVE, MembershipBalance.DELINQUENT);
+    List<Membership> memberships = repo.getMemberships(MembershipStatus.ACTIVE, MembershipBalance.DELINQUENT);
 
     assertNotNull("Ensure the memberships collection is not null!", memberships);
     assertFalse("Ensure the memberships collection is not empty!", memberships.isEmpty());
@@ -151,7 +151,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     DateTime currentTime = new DateTime(2013, 2, 15, 0, 0);
     DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
 
-    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    List<Membership> memberships = repo.getMembershipsDueInXDays(30);
     assertNotNull("Ensure the memberships collection is not null.", memberships);
     assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
 
@@ -166,7 +166,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     DateTime currentTime = new DateTime(2014, 2, 15, 0, 0);
     DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
 
-    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    List<Membership> memberships = repo.getMembershipsDueInXDays(30);
     assertNotNull("Ensure the memberships collection is not null.", memberships);
     assertFalse("Ensure the memberships collection is not empty.", memberships.isEmpty());
     assertEquals("Ensure the correct number of memberships are found due.", 1, memberships.size());
@@ -182,7 +182,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     DateTime currentTime = new DateTime(2015, 2, 15, 0, 0);
     DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
 
-    Collection<Membership> memberships = repo.getMembershipsDueInXDays(30);
+    List<Membership> memberships = repo.getMembershipsDueInXDays(30);
     assertNotNull("Ensure the memberships collection is not null.", memberships);
     assertFalse("Ensure the memberships collection is not empty.", memberships.isEmpty());
     assertEquals("Ensure the correct number of memberships are found due.", 2, memberships.size());
@@ -196,7 +196,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
   @Test
   @Ignore
   public void testSaveMembership_Insert() {
-    Collection<Membership> memberships1 = repo.getMemberships(null, null);
+    List<Membership> memberships1 = repo.getMemberships(null, null);
 
     assertNotNull("Ensure the memberships collection is not null!", memberships1);
     assertFalse("Ensure the memberships collection is not empty!", memberships1.isEmpty());
@@ -219,7 +219,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure the membership was created.", membership);
     assertTrue("Ensure the membership has a valid uid.", membership.getMembershipUID() > 0L);
 
-    Collection<Membership> memberships2 = repo.getMemberships(null, null);
+    List<Membership> memberships2 = repo.getMemberships(null, null);
 
     assertNotNull("Ensure the memberships collection is not null!", memberships2);
     assertFalse("Ensure the memberships collection is not empty!", memberships2.isEmpty());

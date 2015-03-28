@@ -21,12 +21,12 @@ import org.joda.time.DateTime;
  * Representation of a Member within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class Member implements Serializable, Comparable<Member> {
   private static final long serialVersionUID = 3919236058086901376L;
 
   private long member_id;
+  private long membership_id;
   private String company_name;
   private Person person;
   private String owner_ident;
@@ -65,6 +65,14 @@ public final class Member implements Serializable, Comparable<Member> {
    */
   public void setMemberUID(final long uid) {
     this.member_id = uid;
+  }
+
+  public long getMembershipUID() {
+    return membership_id;
+  }
+
+  /* package */ void setMembershipUID(final long uid) {
+    this.membership_id = uid;
   }
 
   public String getCompanyName() {

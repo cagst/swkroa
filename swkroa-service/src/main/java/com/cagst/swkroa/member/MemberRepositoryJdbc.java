@@ -45,7 +45,7 @@ import org.springframework.util.Assert;
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberRepositoryJdbc.class);
 
   private static final String GET_MEMBERS_FOR_MEMBERSHIP = "GET_MEMBERS_FOR_MEMBERSHIP";
-  private static final String GET_MEMBERS_BY_NAME        = "GET_MEMBERS_FOR_MEMBERSHIP";
+  private static final String GET_MEMBERS_BY_NAME        = "GET_MEMBERS_BY_NAME";
   private static final String GET_MEMBER_BY_UID          = "GET_MEMBER_BY_UID";
 
   private static final String GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP = "GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP";
@@ -106,18 +106,16 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Member> getMembersByName(final String name, final MembershipStatus status, final MembershipBalance balance) {
+  public List<Member> getMembersByName(final String name, final MembershipStatus status) {
     LOGGER.info("Calling getMembersByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
-    Assert.notNull(balance, "Assertion Failure - argument [balance] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(3);
+    Map<String, String> params = new HashMap<String, String>(2);
     params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
     params.put("status", status.toString());
-    params.put("balance", balance.toString());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_BY_NAME), params, new MemberMapper(personRepo, memberTypeRepo));
 

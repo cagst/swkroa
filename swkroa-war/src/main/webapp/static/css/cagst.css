@@ -197,6 +197,18 @@ label {
   display:inline-block;
 }
 
+.label-contained {
+  font-size: 12px;
+}
+
+.label-contained:before {
+  content:"(";
+}
+
+.label-contained:after {
+  content:")";
+}
+
 .table-inner {
   border: 0px solid #ddd;
 }
@@ -382,7 +394,7 @@ label {
 }
 
 .lead-sm {
-  font-size: 16.1px;
+  font-size: 16px;
 }
 
 a.alt-list-group-item:hover, div.alt-list-group-item:hover {

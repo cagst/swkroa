@@ -41,13 +41,11 @@ public interface MemberRepository extends PersonRepository {
    * @param name
    *      The name to search for.
    * @param status
-   *      The status of the Memberships to search for; 'all', 'active' or 'inactive'.
-   * @param balance
-   *      The balance group of the Memberships to search for; 'all', 'delinquent', 'paid', or 'credit'.
+   *      The status of the Member to search for; 'all', 'active' or 'inactive'.
    *
-   * @return A {@link List} of {@link Membership Memberships} in the system that starts with the specified name.
+   * @return A {@link List} of {@link Member Members} in the system that starts with the specified name.
    */
-  List<Member> getMembersByName(final String name, final MembershipStatus status, final MembershipBalance balance);
+  List<Member> getMembersByName(final String name, final MembershipStatus status);
 
   /**
    * Retrieves a {@link Member} by its unique identifier.

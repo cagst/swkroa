@@ -16,29 +16,28 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * Used to marshal/un-marshal a {@link Member} to/from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */final class MemberMapper implements RowMapper<Member> {
-  private static final String MEMBER_ID = "member_id";
-  private static final String MEMBERSHIP_ID = "membership_id";
-  private static final String PERSON_ID = "person_id";
-  private static final String COMPANY_NAME = "company_name";
-  private static final String COMPANY_NAME_KEY = "company_name_key";
-  private static final String OWNER_IDENT = "owner_ident";
-  private static final String MEMBER_TYPE = "member_type_id";
-  private static final String GREETING = "greeting";
-  private static final String IN_CARE_OF = "in_care_of";
-  private static final String JOIN_DT = "join_dt";
-  private static final String MAIL_NEWSLETTER_IND = "mail_newsletter_ind";
+  private static final String MEMBER_ID            = "member_id";
+  private static final String MEMBERSHIP_ID        = "membership_id";
+  private static final String PERSON_ID            = "person_id";
+  private static final String COMPANY_NAME         = "company_name";
+  private static final String COMPANY_NAME_KEY     = "company_name_key";
+  private static final String OWNER_IDENT          = "owner_ident";
+  private static final String MEMBER_TYPE          = "member_type_id";
+  private static final String GREETING             = "greeting";
+  private static final String IN_CARE_OF           = "in_care_of";
+  private static final String JOIN_DT              = "join_dt";
+  private static final String MAIL_NEWSLETTER_IND  = "mail_newsletter_ind";
   private static final String EMAIL_NEWSLETTER_IND = "email_newsletter_ind";
-  private static final String CLOSE_REASON_ID = "close_reason_id";
-  private static final String CLOSE_REASON_TXT = "close_reason_txt";
-  private static final String CLOSE_DT_TM = "close_dt_tm";
+  private static final String CLOSE_REASON_ID      = "close_reason_id";
+  private static final String CLOSE_REASON_TXT     = "close_reason_txt";
+  private static final String CLOSE_DT_TM          = "close_dt_tm";
 
   // meta-data
-  private static final String ACTIVE_IND = "active_ind";
-  private static final String CREATE_ID = "create_id";
-  private static final String UPDT_ID = "updt_id";
+  private static final String ACTIVE_IND      = "active_ind";
+  private static final String CREATE_ID       = "create_id";
+  private static final String UPDT_ID         = "updt_id";
   private static final String MEMBER_UPDT_CNT = "member_updt_cnt";
 
   private final PersonRepository personRepo;
@@ -67,6 +66,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     }
 
     member.setMemberUID(rs.getLong(MEMBER_ID));
+    member.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
     member.setCompanyName(rs.getString(COMPANY_NAME));
     member.setOwnerIdent(rs.getString(OWNER_IDENT));
     member.setMemberType(memberTypeRepo.getMemberTypeByID(rs.getLong(MEMBER_TYPE)));

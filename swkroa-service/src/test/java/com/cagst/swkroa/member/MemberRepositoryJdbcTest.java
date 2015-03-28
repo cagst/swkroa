@@ -108,6 +108,35 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
   }
 
   /**
+   * Test the getMembersByName method and not finding any.
+   */
+  @Test
+  public void testGetMembersByName_NoneFound() {
+    List<Member> memberships = repo.getMembersByName("zzz", MembershipStatus.ACTIVE);
+
+    assertNotNull("Ensure the memberships collection is not null.", memberships);
+    assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
+  }
+
+  /**
+   * Test the getMembersByName method and finding Memberships.
+   */
+  @Test
+  public void testGetMembersByName_Found() {
+    List<Member> memberships1 = repo.getMembersByName("dori", MembershipStatus.ACTIVE);
+
+    assertNotNull("Ensure the memberships collection is not null.", memberships1);
+    assertFalse("Ensure the memberships collection is not empty.", memberships1.isEmpty());
+    assertEquals("Ensure we found the correct number of memberships.", 3, memberships1.size());
+
+    List<Member> memberships2 = repo.getMembersByName("reg", MembershipStatus.ACTIVE);
+
+    assertNotNull("Ensure the memberships collection is not null.", memberships2);
+    assertFalse("Ensure the memberships collection is not empty.", memberships2.isEmpty());
+    assertEquals("Ensure we found the correct number of memberships.", 1, memberships2.size());
+  }
+
+  /**
    * Test the getMemberByUID method and not finding the member.
    */
   @Test(expected = EmptyResultDataAccessException.class)

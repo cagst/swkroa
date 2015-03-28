@@ -1,5 +1,6 @@
 SELECT m.person_id
       ,m.member_id
+      ,m.membership_id
       ,m.company_name
       ,m.owner_ident
       ,m.member_type_id
