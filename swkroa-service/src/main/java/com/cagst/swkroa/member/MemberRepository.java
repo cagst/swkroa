@@ -27,7 +27,27 @@ public interface MemberRepository extends PersonRepository {
    *
    * @return A {@link List} of {@link Member Members} associated with the specified Membership.
    */
-  public List<Member> getMembersForMembership(final Membership membership);
+   List<Member> getMembersForMembership(final Membership membership);
+
+  /**
+   * Retrieves all active {@link Member Members} in the system that has the name in one of the following fields:
+   * <ul>
+   * <li>OwnerIdent</li>
+   * <li>Company Name</li>
+   * <li>First Name</li>
+   * <li>Last Name</li>
+   * </ul>
+   *
+   * @param name
+   *      The name to search for.
+   * @param status
+   *      The status of the Memberships to search for; 'all', 'active' or 'inactive'.
+   * @param balance
+   *      The balance group of the Memberships to search for; 'all', 'delinquent', 'paid', or 'credit'.
+   *
+   * @return A {@link List} of {@link Membership Memberships} in the system that starts with the specified name.
+   */
+  List<Member> getMembersByName(final String name, final MembershipStatus status, final MembershipBalance balance);
 
   /**
    * Retrieves a {@link Member} by its unique identifier.
@@ -42,7 +62,7 @@ public interface MemberRepository extends PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Member was found.
    */
-  public Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+   Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link List} of all {@link MembershipCounty Counties} associated with the specified
@@ -54,7 +74,7 @@ public interface MemberRepository extends PersonRepository {
    * @return A {@link List} of {@link MembershipCounty Counties} associated with the specified
    * Membership.
    */
-  public List<MembershipCounty> getMembershipCountiesForMembership(final Membership membership);
+   List<MembershipCounty> getMembershipCountiesForMembership(final Membership membership);
 
   /**
    * Retrieves a {@link MembershipCounty} by its unique identifier.
@@ -69,7 +89,7 @@ public interface MemberRepository extends PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MembershipCounty was found.
    */
-  public MembershipCounty getMembershipCountyByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+   MembershipCounty getMembershipCountyByUID(final long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Generates an Owner Id based upon the specified first-name and last-name.
@@ -82,7 +102,7 @@ public interface MemberRepository extends PersonRepository {
    * @return A {@link String} that represents a unique Owner Id based upon the specified first /
    * last names.
    */
-  public String generateOwnerId(final String firstName, final String lastName);
+   String generateOwnerId(final String firstName, final String lastName);
 
   /**
    * Commits the specified {@link Member Member} to persistent storage.
@@ -103,8 +123,7 @@ public interface MemberRepository extends PersonRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public Member saveMember(final Member member, final Membership membership, final User user)
-      throws DataAccessException;
+   Member saveMember(final Member member, final Membership membership, final User user) throws DataAccessException;
 
   /**
    * Commits the specified {@link MembershipCounty MembershipCounty} to persistent storage.
@@ -125,8 +144,9 @@ public interface MemberRepository extends PersonRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public MembershipCounty saveMembershipCounty(final MembershipCounty builder, final Membership membership,
-                                               final User user) throws DataAccessException;
+   MembershipCounty saveMembershipCounty(final MembershipCounty builder,
+                                         final Membership membership,
+                                         final User user) throws DataAccessException;
 
   /**
    * Closes the member for the specified reason.
@@ -143,6 +163,6 @@ public interface MemberRepository extends PersonRepository {
    * @return A {@link Member} once it has been closed.
    */
 
-  public Member closeMember(final Member member, final CodeValue closeReason, final String closeText, final User user)
+   Member closeMember(final Member member, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException;
 }

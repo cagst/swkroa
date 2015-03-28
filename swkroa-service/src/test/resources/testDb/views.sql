@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS membership_summary;
+
 CREATE VIEW membership_summary AS
      SELECT ms.membership_id
            ,COALESCE(m.company_name, CONCAT_WS(', ', p.name_last, p.name_first)) AS membership_name

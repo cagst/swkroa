@@ -29,6 +29,18 @@ public final class AccountingController {
   }
 
   /**
+   * Handles and retrieves the New Invoices page.
+   *
+   * @return The location and name of the page template.
+   */
+  @RequestMapping(value = "/invoices/new", method = RequestMethod.GET)
+  public String getInvoicesNewPage() {
+    LOGGER.info("Received request to show new invoices page");
+
+    return "accounting/new_invoice";
+  }
+
+  /**
    * Handles and retrieves the Payments page.
    *
    * @return The location and name of the page template.

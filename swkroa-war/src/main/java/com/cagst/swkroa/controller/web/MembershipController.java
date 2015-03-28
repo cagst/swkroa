@@ -30,12 +30,10 @@ public final class MembershipController {
    * @return The location and name of the page template.
    */
   @RequestMapping(value = "/memberships", method = RequestMethod.GET)
-  public ModelAndView getMembershipListingPage() {
+  public String getMembershipListingPage() {
     LOGGER.info("Received request to show membership listing page.");
 
-    ModelAndView mav = new ModelAndView("membership/home");
-
-    return mav;
+    return "membership/home";
   }
 
   /**

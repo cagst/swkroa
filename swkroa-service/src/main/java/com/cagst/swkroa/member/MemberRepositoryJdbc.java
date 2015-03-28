@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.cagst.common.db.StatementLoader;
+import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
@@ -44,9 +45,11 @@ import org.springframework.util.Assert;
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberRepositoryJdbc.class);
 
   private static final String GET_MEMBERS_FOR_MEMBERSHIP = "GET_MEMBERS_FOR_MEMBERSHIP";
-  private static final String GET_MEMBER_BY_UID = "GET_MEMBER_BY_UID";
+  private static final String GET_MEMBERS_BY_NAME        = "GET_MEMBERS_FOR_MEMBERSHIP";
+  private static final String GET_MEMBER_BY_UID          = "GET_MEMBER_BY_UID";
+
   private static final String GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP = "GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP";
-  private static final String GET_MEMBERSHIP_COUNTY_BY_UID = "GET_MEMBERSHIP_COUNTY_BY_UID";
+  private static final String GET_MEMBERSHIP_COUNTY_BY_UID           = "GET_MEMBERSHIP_COUNTY_BY_UID";
 
   private static final String GET_PARTIAL_OWNERID_COUNT = "GET_PARTIAL_OWNERID_COUNT";
 
@@ -100,6 +103,24 @@ import org.springframework.util.Assert;
     params.put("membership_id", membership.getMembershipUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_FOR_MEMBERSHIP), params, new MemberMapper(personRepo, memberTypeRepo));
+  }
+
+  @Override
+  public List<Member> getMembersByName(final String name, final MembershipStatus status, final MembershipBalance balance) {
+    LOGGER.info("Calling getMembersByName for [{}].", name);
+
+    Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
+    Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
+    Assert.notNull(balance, "Assertion Failure - argument [balance] cannot be null");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, String> params = new HashMap<String, String>(3);
+    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.put("status", status.toString());
+    params.put("balance", balance.toString());
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_BY_NAME), params, new MemberMapper(personRepo, memberTypeRepo));
+
   }
 
   @Override

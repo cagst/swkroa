@@ -37,6 +37,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private String name_middle;
   private String name_first;
   private BigDecimal fixed_dues;
+  private BigDecimal calculated_dues;
   private BigDecimal incremental_dues;
   private BigDecimal balance;
   private DateTime last_payment_dt_tm;
@@ -168,12 +169,20 @@ public final class Membership implements Serializable, Comparable<Membership> {
   }
 
   public BigDecimal getCalculatedDuesAmount() {
+    if (CollectionUtils.isEmpty(members)) {
+      return (calculated_dues == null ? BigDecimal.ZERO : calculated_dues);
+    }
+
     BigDecimal memberDues = BigDecimal.ZERO;
     for (Member member : members) {
       memberDues = memberDues.add(member.getMemberType().getDuesAmount());
     }
 
     return memberDues.add(incremental_dues != null ? incremental_dues : BigDecimal.ZERO);
+  }
+
+  public void setCalculatedDuesAmount(final BigDecimal dues) {
+    this.calculated_dues = dues;
   }
 
   public BigDecimal getIncrementalDues() {

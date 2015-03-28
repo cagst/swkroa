@@ -28,6 +28,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String NAME_MIDDLE             = "name_middle";
   private static final String NAME_FIRST              = "name_first";
   private static final String FIXED_DUES              = "fixed_dues";
+  private static final String CALCULATED_DUES         = "calculated_dues";
   private static final String INCREMENTAL_DUES        = "incremental_dues";
   private static final String BALANCE                 = "balance";
   private static final String LAST_PAYMENT_DT         = "last_payment_dt";
@@ -70,6 +71,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     membership.setFirstName(rs.getString(NAME_FIRST));
 
     membership.setFixedDuesAmount(rs.getBigDecimal(FIXED_DUES));
+    membership.setCalculatedDuesAmount(rs.getBigDecimal(CALCULATED_DUES));
     membership.setIncrementalDues(rs.getBigDecimal(INCREMENTAL_DUES));
 
     BigDecimal balance = rs.getBigDecimal(BALANCE);

@@ -5,34 +5,29 @@
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/js/accounting/dues_renew.js}"></script>
+  <script type="text/javascript" data-th-src="@{/static/js/accounting/new_invoice.js}"></script>
   <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
 </head>
 
 <body>
 
-<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="duesController">
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="invoiceController">
   <div class="page-header">
-    <h3 data-th-text="#{com.cagst.swkroa.dues.renew.title}">zzz Renew Memberships</h3>
+    <h3 data-th-text="#{com.cagst.swkroa.invoices.renew.title}">zzz Renew Memberships</h3>
   </div>
-
   <form name="newForm" class="form-inline spacer-bottom divider-bottom" data-th-attr="action=@{/accounting/dues/renew}" target="_blank" method="post">
     <div class="row-inner">
       <div class="form-group pull-left">
-        <label class="control-label" data-th-text="#{com.cagst.swkroa.dues.renew.due.in}">zzz Due In</label>
-        <input type="number" class="form-control" name="dueInDays" maxlength="3"
-               data-ng-model="days" />
+        <label class="control-label" data-th-text="#{com.cagst.swkroa.invoices.renew.due.in}">zzz Due In</label>
+        <input type="number" class="form-control" name="dueInDays" maxlength="3" data-ng-model="days" />
       </div>
       <button type="button" class="btn btn-primary"
-              data-th-text="#{com.cagst.swkroa.dues.renew.get.memberships}"
+              data-th-text="#{com.cagst.swkroa.invoices.renew.get.memberships}"
               data-ng-click="getMemberhipsDueIn(days)">
         zzz Memberships
       </button>
-
       <div class="pull-right" data-ng-show="membershipsDue">
-        <h4 data-th-text="#{com.cagst.swkroa.dues.renew.totals}">
-          zzz Totals
-        </h4>
+        <h4 data-th-text="#{com.cagst.swkroa.invoices.renew.totals}">zzz Totals</h4>
       </div>
     </div>
   </form>
@@ -44,33 +39,33 @@
           <input id="reportType" type="hidden" name="reportType" />
           <button type="button" class="btn btn-default"
                   data-ng-disabled="!canExport()"
-                  data-toggle="modal" data-target="#renewalLetterDlg"
-                  data-th-text="#{com.cagst.swkroa.dues.renew.generate.renewals}">
-            zzz Report
+                  data-toggle="modal" data-target="#renewalLetterDlg">
+            <i class="fa fa-print"></i>
+            <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
           </button>
           <a id="generateCsv" class="btn btn-default"
              href="javascript:submitReportForm('csv')"
-             data-ng-disabled="!canExport()"
-             data-th-text="#{com.cagst.swkroa.report.generate.export}">
-            zzz Export
+             data-ng-disabled="!canExport()">
+            <i class="fa fa-download"></i>
+            <span data-th-text="#{com.cagst.swkroa.export}">zzz Export</span>
           </a>
           <button type="button" class="btn btn-primary"
                   data-toggle="modal" data-target="#renewMembershipsDlg">
-            <span data-th-text="#{com.cagst.swkroa.dues.renew.generate.transactions}">zzz Generate</span>
+            <span data-th-text="#{com.cagst.swkroa.invoices.renew.generate.transactions}">zzz Generate</span>
           </button>
         </div>
       </div>
-      <div class="col-xs-10">
-        <table class="table table-hover table-bordered">
+      <div class="col-xs-8">
+        <table class="table table-hover table-bordered table-condensed">
           <thead>
             <tr>
               <th>
                 <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
               </th>
-              <th data-th-text="#{com.cagst.swkroa.dues.renew.membership}">zzz Membership</th>
-              <th data-th-text="#{com.cagst.swkroa.dues.renew.balance}">zzz Balance</th>
-              <th data-th-text="#{com.cagst.swkroa.dues.renew.duesamount}">zzz Dues Amount</th>
-              <th data-th-text="#{com.cagst.swkroa.dues.renew.nextduedate}">zzz Next Due Date</th>
+              <th data-th-text="#{com.cagst.swkroa.invoices.renew.membership}">zzz Membership</th>
+              <th data-th-text="#{com.cagst.swkroa.invoices.renew.balance}">zzz Balance</th>
+              <th data-th-text="#{com.cagst.swkroa.invoices.renew.duesamount}">zzz Dues Amount</th>
+              <th data-th-text="#{com.cagst.swkroa.invoices.renew.nextduedate}">zzz Next Due Date</th>
             </tr>
           </thead>
           <tbody>
@@ -95,12 +90,12 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.dues.renew.letter.title}">zzz Details</h4>
+            <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.invoices.renew.letter.title}">zzz Details</h4>
           </div>
           <div class="modal-body">
             <div class="row">
               <div class="col-xs-12">
-                <label class="form-label" data-th-text="#{com.cagst.swkroa.dues.renew.letter.years}">
+                <label class="form-label" data-th-text="#{com.cagst.swkroa.invoices.renew.letter.years}">
                   zzz Period
                 </label>
                 <input type="text" class="form-control" id="membershipPeriod" name="membershipPeriod"
@@ -112,13 +107,13 @@
           <div class="modal-footer">
             <a id="generatePdf" class="btn btn-primary"
                href="javascript:generateMembershipRenewalLetters('pdf')"
-               data-th-text="#{com.cagst.swkroa.dues.renew.generate.renewals}">
+               data-th-text="#{com.cagst.swkroa.invoices.renew.letter.generate}">
               zzz Generate
             </a>
-            <button type="button" class="btn btn-warning"
+            <button type="button" class="btn btn-default"
                     data-dismiss="modal"
-                    data-th-text="#{com.cagst.swkroa.discard}">
-              zzz Disregard
+                    data-th-text="#{com.cagst.swkroa.cancel}">
+              zzz Cancel
             </button>
           </div>
         </div>
@@ -131,7 +126,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.dues.renew.transaction.title}">zzz Details</h4>
+          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.invoices.renew.transaction.title}">zzz Details</h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -176,13 +171,13 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-primary"
                   data-ng-click="renewingMemberships()"
-                  data-th-text="#{com.cagst.swkroa.dues.renew.generate.transactions}">
+                  data-th-text="#{com.cagst.swkroa.invoices.renew.generate.transactions}">
             zzz Generate
           </button>
-          <button type="button" class="btn btn-warning"
+          <button type="button" class="btn btn-default"
                   data-dismiss="modal"
-                  data-th-text="#{com.cagst.swkroa.discard}">
-            zzz Disregard
+                  data-th-text="#{com.cagst.swkroa.cancel}">
+            zzz Cancel
           </button>
         </div>
       </div>
