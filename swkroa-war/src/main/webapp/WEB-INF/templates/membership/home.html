@@ -30,7 +30,7 @@
         <!-- Listing (Quick View) -->
         <div class="col-xs-5 stretch">
           <!-- Search -->
-          <div class="split-header" data-ng-show="filtering == 'off'">
+          <div class="split-header divider-right" data-ng-show="filtering == 'off'">
             <div class="split-header-content expand">
               <div class="input-group">
                 <a class="input-group-addon add-btn"
@@ -122,7 +122,7 @@
           <!-- Results -->
           <div class="list-group constrain-view divider-right">
             <div>
-              <div class="panel-body text-muted" data-ng-show="!memberships.length">
+              <div class="panel-body text-muted divider-top" data-ng-show="!memberships.length">
                 <em data-th-text="#{com.cagst.swkroa.membership.nosearch}"
                     data-ng-show="!searched">
                   zzz No Search
@@ -184,7 +184,7 @@
         </div>
 
         <!-- Details (Summary) -->
-        <div class="col-xs-7 stretch pull-right divider-left">
+        <div class="col-xs-7 stretch pull-right">
           <div data-ng-show="!membership">
             <em>
               <label class="panel-body text-muted text-center"
@@ -194,11 +194,11 @@
             </em>
           </div>
           <div data-ng-show="membership">
-            <div class="container-inner constrain-view">
+            <div class="container-inner constrain-view" style="min-height:540px; max-height:540px;">
               <div class="row row-inner">
                 <div class="pull-left">
                   <h2 class="lead">
-                    <span data-ng-bind="membership.primaryMember.effectiveMemberName"></span>
+                    <span data-ng-bind="membership.primaryMember.memberName"></span>
                     <small data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
                            data-ng-show="membership.primaryMember.joinDate">
                       zzz Since
@@ -249,7 +249,6 @@
                   </div>
                 </div>
               </div>
-
               <div>
                 <div class="panel panel-default">
                   <div class="panel-heading">
@@ -260,7 +259,7 @@
                   <ul class="list-group list-group-hover">
                     <li class="list-group-item" data-ng-show="membership.primaryMember">
                       <span>
-                        <strong data-ng-bind="membership.primaryMember.effectiveMemberName"></strong>
+                        <strong data-ng-bind="membership.primaryMember.memberName"></strong>
                       </span>
                       <small class="text-muted">({{membership.primaryMember.ownerIdent}})</small>
                       <small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
@@ -270,7 +269,7 @@
                     </li>
                     <li class="list-group-item" data-ng-repeat="member in membership.members"
                          data-ng-show="member.memberType.primary === false && member.active === true">
-                      <span>{{member.effectiveMemberName}}</span>
+                      <span>{{member.memberName}}</span>
                       <small class="text-muted">({{member.ownerIdent}})</small>
                       <small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.since}">
                         zzz Since
@@ -278,7 +277,6 @@
                     </li>
                   </ul>
                 </div>
-
                 <div class="spacer-top">
                   <div class="panel panel-default">
                     <div class="panel-heading">

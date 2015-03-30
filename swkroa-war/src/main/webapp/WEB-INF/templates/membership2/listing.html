@@ -27,7 +27,7 @@
       <!-- Listing (Quick View) -->
       <div class="col-xs-4 stretch" style="height:550px;">
         <!-- Search -->
-        <div class="split-header" data-ng-show="filtering == 'off'" style="height:88px;">
+        <div class="split-header divider-right" data-ng-show="filtering == 'off'" style="height:88px;">
           <div class="split-header-content expand">
             <div class="input-group">
               <a class="input-group-addon add-btn"
@@ -99,13 +99,11 @@
 
         <!-- Results -->
         <div class="list-group clear-bottom divider-right" style="height:412px; overflow:auto;">
-          <div class="panel-body text-muted" data-ng-show="!members.length">
-            <em data-th-text="#{com.cagst.swkroa.membership.nosearch}"
-                data-ng-show="!searched">
+          <div class="panel-body text-muted divider-top" data-ng-show="!members.length">
+            <em data-th-text="#{com.cagst.swkroa.membership.nosearch}" data-ng-show="!searched">
               zzz No Search
             </em>
-            <em data-th-text="#{com.cagst.swkroa.membership.nomembers}"
-                data-ng-show="searched">
+            <em data-th-text="#{com.cagst.swkroa.membership.nomembers}" data-ng-show="searched">
               zzz No members
             </em>
           </div>
@@ -119,7 +117,7 @@
             </div>
           </div>
         </div>
-        <div class="divider-top split-footer divider-right">
+        <div class="split-footer divider-right" data-ng-class="{'divider-top': !members.length || (pages == 1)}">
           <ul class="pagination" data-ng-show="pages > 1" style="margin-top:8px; margin-bottom:8px; margin-left:10px;">
             <li id="firstPage"
                 data-ng-class="{'disabled': page == 1}"
