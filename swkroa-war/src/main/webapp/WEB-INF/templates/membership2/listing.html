@@ -152,11 +152,9 @@
       <!-- Details (Summary) -->
       <div class="col-xs-8 stretch pull-right">
         <div data-ng-show="!membership">
-          <em>
-            <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.membership.notselected}">
-              zzz No membership selected.
-            </label>
-          </em>
+          <div class="panel-body text-muted text-center">
+            <em data-th-text="#{com.cagst.swkroa.membership.notselected}">zzz No membership selected.</em>
+          </div>
         </div>
         <div data-ng-show="membership">
           <div class="container-inner constrain-view" style="height:450px;">

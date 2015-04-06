@@ -10,7 +10,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
  * Definition of a repository that retrieves and persists {@link MemberType} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface MemberTypeRepository {
   /**
@@ -27,7 +26,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  public MemberType getMemberTypeByID(final long id) throws EmptyResultDataAccessException,
+   MemberType getMemberTypeByID(final long id) throws EmptyResultDataAccessException,
       IncorrectResultSizeDataAccessException;
 
   /**
@@ -47,7 +46,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  public MemberType getMemberTypeByIDAsOf(final long id, final DateTime effectiveDateTime)
+   MemberType getMemberTypeByIDAsOf(final long id, final DateTime effectiveDateTime)
       throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
@@ -64,7 +63,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  public MemberType getMemberTypeByMeaning(final String meaning) throws EmptyResultDataAccessException,
+   MemberType getMemberTypeByMeaning(final String meaning) throws EmptyResultDataAccessException,
       IncorrectResultSizeDataAccessException;
 
   /**
@@ -84,7 +83,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  public MemberType getMemberTypeByMeaningAsOf(final String meaning, final DateTime effectiveDateTime)
+   MemberType getMemberTypeByMeaningAsOf(final String meaning, final DateTime effectiveDateTime)
       throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
@@ -94,7 +93,7 @@ public interface MemberTypeRepository {
    * @return A {@link List} of active {@link MemberType MemberTypes} in the system that are
    * currently effective.
    */
-  public List<MemberType> getActiveMemberTypes();
+   List<MemberType> getActiveMemberTypes();
 
   /**
    * Retrieves all active {@link MemberType MemberTypes} in the system that were in effect as of the
@@ -106,6 +105,6 @@ public interface MemberTypeRepository {
    * @return A {@link List} of active {@link MemberType MemberTypes} in the system that were in
    * effect as of the time specified.
    */
-  public List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime);
+   List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime);
 
 }

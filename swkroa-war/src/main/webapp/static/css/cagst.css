@@ -50,10 +50,6 @@ h1, h2, h3, h4, h5, h6 {
   width: 0;
 }
 
-label, input, button, select, textarea {
-  font-weight: inherit;
-}
-
 .dropdown-menu > li > a {
   font-weight: inherit;
 }

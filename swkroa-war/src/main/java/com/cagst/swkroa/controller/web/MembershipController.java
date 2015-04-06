@@ -1,10 +1,8 @@
 package com.cagst.swkroa.controller.web;
 
 import com.cagst.swkroa.member.Membership;
-import com.cagst.swkroa.member.MembershipRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +27,8 @@ public final class MembershipController {
   public String getMembershipListingPage() {
     LOGGER.info("Received request to show membership listing page.");
 
-//    return "membership/home";
-    return "membership2/listing";
+    return "membership/home";
+//    return "membership2/listing";
   }
 
   /**
