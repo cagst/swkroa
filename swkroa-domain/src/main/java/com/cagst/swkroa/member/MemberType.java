@@ -14,7 +14,6 @@ import org.joda.time.DateTime;
  * Representation of a Member Type within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class MemberType implements Serializable, Comparable<MemberType> {
   private static final long serialVersionUID = -8799075313261854806L;
@@ -135,11 +134,6 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
     this.updt_cnt = updateCount;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
@@ -148,11 +142,6 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -173,11 +162,6 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -190,11 +174,6 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final MemberType rhs) {
     Collator collator = Collator.getInstance();

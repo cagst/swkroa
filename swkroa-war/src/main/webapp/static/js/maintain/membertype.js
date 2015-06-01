@@ -5,7 +5,7 @@
  */
 
 swkroaApp.controller('membertypeController', ['$scope', '$http', function($scope, $http) {
-  $http.get('/api/membertype').success(function(data) {
+  $http.get('/api/membertypes').success(function(data) {
     $scope.types = data;
   });
 

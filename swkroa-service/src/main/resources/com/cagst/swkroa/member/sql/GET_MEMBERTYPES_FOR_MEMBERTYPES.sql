@@ -11,6 +11,5 @@ SELECT member_type_id
       ,active_ind
       ,updt_cnt AS member_type_updt_cnt
   FROM member_type
- WHERE beg_eff_dt_tm <= :eff_dt_tm
-   AND (end_eff_dt_tm IS NULL OR end_eff_dt_tm >= :eff_dt_tm)
+ WHERE prev_member_type_id = :prev_member_type_id
    AND active_ind = 1

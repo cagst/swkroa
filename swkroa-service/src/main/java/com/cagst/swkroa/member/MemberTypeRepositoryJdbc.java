@@ -27,9 +27,10 @@ import org.springframework.util.Assert;
 /* package */class MemberTypeRepositoryJdbc extends BaseRepositoryJdbc implements MemberTypeRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberTypeRepositoryJdbc.class);
 
-  private static final String GET_MEMBERTYPE_BY_UID     = "GET_MEMBERTYPE_BY_UID";
-  private static final String GET_MEMBERTYPE_BY_MEANING = "GET_MEMBERTYPE_BY_MEANING";
-  private static final String GET_MEMBERTYPES_ACTIVE    = "GET_MEMBERTYPES_ACTIVE";
+  private static final String GET_MEMBERTYPE_BY_UID           = "GET_MEMBERTYPE_BY_UID";
+  private static final String GET_MEMBERTYPE_BY_MEANING       = "GET_MEMBERTYPE_BY_MEANING";
+  private static final String GET_MEMBERTYPES_ACTIVE          = "GET_MEMBERTYPES_ACTIVE";
+  private static final String GET_MEMBERTYPES_FOR_MEMBERTYPES = "GET_MEMBERTYPES_FOR_MEMBERTYPES";
 
   /**
    * Primary constructor used to create an instance of the MemberTypeRepositoryJdbc.
@@ -147,5 +148,19 @@ import org.springframework.util.Assert;
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERTYPES_ACTIVE), params, new MemberTypeMapper());
+  }
+
+  @Override
+  public List<MemberType> getActiveMemberTypesForMemberType(final long memberTypeId) {
+    Assert.isTrue(memberTypeId > 0, "Assertion Failed - argument [memberTypeId] must be a positive value");
+
+    LOGGER.info("Calling getActiveMemberTypesForMemberType [{}]", memberTypeId);
+
+    Map<String, Object> params = new HashMap<String, Object>(1);
+    params.put("prev_member_type_id", memberTypeId);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERTYPES_FOR_MEMBERTYPES), params, new MemberTypeMapper());
   }
 }

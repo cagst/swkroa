@@ -26,7 +26,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-   MemberType getMemberTypeByID(final long id) throws EmptyResultDataAccessException,
+  MemberType getMemberTypeByID(final long id) throws EmptyResultDataAccessException,
       IncorrectResultSizeDataAccessException;
 
   /**
@@ -46,7 +46,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-   MemberType getMemberTypeByIDAsOf(final long id, final DateTime effectiveDateTime)
+  MemberType getMemberTypeByIDAsOf(final long id, final DateTime effectiveDateTime)
       throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
@@ -63,7 +63,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-   MemberType getMemberTypeByMeaning(final String meaning) throws EmptyResultDataAccessException,
+  MemberType getMemberTypeByMeaning(final String meaning) throws EmptyResultDataAccessException,
       IncorrectResultSizeDataAccessException;
 
   /**
@@ -83,7 +83,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-   MemberType getMemberTypeByMeaningAsOf(final String meaning, final DateTime effectiveDateTime)
+  MemberType getMemberTypeByMeaningAsOf(final String meaning, final DateTime effectiveDateTime)
       throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
@@ -93,7 +93,7 @@ public interface MemberTypeRepository {
    * @return A {@link List} of active {@link MemberType MemberTypes} in the system that are
    * currently effective.
    */
-   List<MemberType> getActiveMemberTypes();
+  List<MemberType> getActiveMemberTypes();
 
   /**
    * Retrieves all active {@link MemberType MemberTypes} in the system that were in effect as of the
@@ -105,6 +105,15 @@ public interface MemberTypeRepository {
    * @return A {@link List} of active {@link MemberType MemberTypes} in the system that were in
    * effect as of the time specified.
    */
-   List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime);
+  List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime);
 
+  /**
+   * Retrieves all active {@link MemberType MemberTypes} in the system that correspond to the specified MemberType.
+   *
+   * @param memberTypeId The unique identifier of the {@link MemberType} to retrieve all the related MemberTypes for.
+   *
+   * @return A {@link List} of active {@link MemberType MemberTypes} in the system that are related to the specified
+   * MemberType.
+   */
+  List<MemberType> getActiveMemberTypesForMemberType(final long memberTypeId);
 }
