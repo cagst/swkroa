@@ -157,7 +157,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getActiveMemberTypesForMemberType [{}]", memberTypeId);
 
     Map<String, Object> params = new HashMap<String, Object>(1);
-    params.put("prev_member_type_id", memberTypeId);
+    params.put("member_type_id", memberTypeId);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 

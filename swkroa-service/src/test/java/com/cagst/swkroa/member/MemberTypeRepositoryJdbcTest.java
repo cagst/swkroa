@@ -13,6 +13,7 @@ import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.test.BaseTestRepository;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
