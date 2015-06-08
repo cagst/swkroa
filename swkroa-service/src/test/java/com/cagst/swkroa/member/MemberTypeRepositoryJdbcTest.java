@@ -7,11 +7,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.test.BaseTestRepository;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -144,8 +146,22 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
 
     Collection<MemberType> types = repo.getActiveMemberTypesAsOf(dt);
 
-    assertNotNull("Ensure we have a collection of MemberType.", types);
+    assertNotNull("Ensure we have a collection of MemberTypes.", types);
     assertFalse("Ensure our collection is populated.", types.isEmpty());
     assertEquals("Ensure we found the correct number of MemberTypes.", 7, types.size());
+  }
+
+  /**
+   * Test the getActiveMemberTypesForMemberType method.
+   */
+  @Test
+  public void testGetActiveMemberTypesForMemberType() {
+    MemberType type = repo.getMemberTypeByMeaning(MemberType.FAMILY_HEAD);
+
+    List<MemberType> types = repo.getActiveMemberTypesForMemberType(type.getMemberTypeUID());
+
+    assertNotNull("Ensure we have a collection of MemberTypes.", types);
+    assertFalse("Ensure our collection is populated.", types.isEmpty());
+    assertEquals("Ensure we found the correct number of MemberTypes.", 2, types.size());
   }
 }

@@ -73,6 +73,7 @@ a:hover, a:focus {
 .list-group-item:first-child {
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
+  margin-top: -1px;
 }
 
 .list-group-item:last-child {

@@ -7,7 +7,12 @@
  * Version: 1.0.0
  */
 
-function submitReportForm(reportType) {
+function submitReportForm(reportType, altAction) {
   $("#reportType").val(reportType);
+
+  if (altAction && altAction != 'undefined') {
+    document.reportForm.action = document.reportForm.getAttribute(altAction);
+  }
+
   document.reportForm.submit();
 }

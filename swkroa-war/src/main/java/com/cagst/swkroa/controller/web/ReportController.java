@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.text.DateFormat;
@@ -14,7 +15,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +44,7 @@ public final class ReportController {
   private static final String MEMBERSHIP_DELINQUENT_PDF = BASE_PATH + "accounting/MembershipDelinquencyPdf.jasper";
   private static final String MEMBERSHIP_RENEWAL_PDF    = BASE_PATH + "accounting/MembershipDuesRenewalPdf.jasper";
   private static final String MEMBERSHIP_RENEWAL_CSV    = BASE_PATH + "accounting/MembershipDuesRenewalCsv.jasper";
+  private static final String MEMBERSHIP_REMINDER_PDF   = BASE_PATH + "accounting/MembershipDuesReminderPdf.jasper";
   private static final String MEMBERSHIP_PAYMENTS_PDF   = BASE_PATH + "accounting/MembershipPaymentsPdf.jasper";
   private static final String MEMBERSHIP_PAYMENTS_CSV   = BASE_PATH + "accounting/MembershipPaymentsCsv.jasper";
   private static final String MEMBERSHIP_INVOICES_PDF   = BASE_PATH + "accounting/MembershipInvoicesPdf.jasper";
@@ -56,7 +57,7 @@ public final class ReportController {
 
   private static final String CUSTOM_MEMBERS_BY_COUNTY = BASE_PATH + "custom/MembersForCounties.jasper";
 
-  @Autowired
+  @Inject
   private DataSource dataSource;
 
   /**
@@ -150,6 +151,45 @@ public final class ReportController {
       mav = getReportModalAndView(request, MEMBERSHIP_RENEWAL_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
       mav = getReportModalAndView(request, MEMBERSHIP_RENEWAL_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+    }
+
+    Map<String, String[]> params = request.getParameterMap();
+
+    List<Long> membershipIds = new ArrayList<Long>();
+    for (Map.Entry<String, String[]> param : params.entrySet()) {
+      if (param.getKey().contains("selectedMembership_")) {
+        String[] sections = StringUtils.split(param.getKey(), "_");
+
+        membershipIds.add(Long.valueOf(sections[1]));
+      }
+    }
+
+    String[] periods = params.get("membershipPeriod");
+
+    if (mav != null) {
+      mav.addObject("memberships", membershipIds);
+      mav.addObject("membershipPeriod", periods[0]);
+    }
+
+    return mav;
+  }
+
+  /**
+   * Handles the request to run/generate the Membership Dues Reminder report.
+   *
+   * @return The generated report.
+   */
+  @RequestMapping(value = "/membership/remind", method = RequestMethod.POST)
+  public ModelAndView generateMembershipDuesRemindReport(final @RequestParam("reportType") String reportType,
+                                                         final HttpServletRequest request) {
+
+    LOGGER.info("Received request to generate Membership Dues Reminder report as [{}]", reportType);
+
+    String reportFilename = "Membership_Dues_Reminders_" + dateFormat.format(new Date());
+
+    ModelAndView mav = null;
+    if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
+      mav = getReportModalAndView(request, MEMBERSHIP_REMINDER_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     }
 
     Map<String, String[]> params = request.getParameterMap();

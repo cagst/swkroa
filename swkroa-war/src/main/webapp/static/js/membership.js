@@ -598,7 +598,7 @@ var loadAll = function($scope, $http) {
   });
 
   syncItems++;
-  $http.get('/api/membertype').success(function(data) {
+  $http.get('/api/membertypes').success(function(data) {
     $scope.memberTypes = data;
 
     syncCount++;

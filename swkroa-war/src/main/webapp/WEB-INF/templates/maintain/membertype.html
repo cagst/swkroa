@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+  <script type="text/javascript" data-th-src="@{/static/js/maintain/membertype.js}"></script>
+</head>
+
+<body>
+
+<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="membertypeController">
+  <div class="page-header">
+    <h3 data-th-text="#{com.cagst.swkroa.maintain.membertype.title}">zzz Maintain Member Types</h3>
+  </div>
+
+  <div class="container container-outline clear-left">
+    <div class="row container-split">
+      <div class="col-xs-5">
+        <div class="list-group constrain-view divider-right">
+          <div class="list-group-item alt-list-group-item sel-list-group-item"
+               data-ng-repeat="type in types"
+               data-ng-class="{active: type.memberTypeUID === selected.memberTypeUID}"
+               data-ng-click="getType(type)">
+            <div>
+              <span data-ng-bind="type.memberTypeDisplay"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-7">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
