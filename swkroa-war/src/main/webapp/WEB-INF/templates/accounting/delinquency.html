@@ -35,12 +35,12 @@
             <i class="fa fa-download"></i>
             <span data-th-text="#{com.cagst.swkroa.export}">zzz Export</span>
           </a>
-          <button type="button" class="btn btn-default"
-                  data-toggle="modal" data-target="#reminderLetterDlg"
-                  data-ng-disabled="!canExport()">
+          <a id="generateReminderPdf" type="button" class="btn btn-default"
+             href="javascript:generateMembershipReminderLetters('pdf', 'remind')"
+             data-ng-disabled="!canExport()">
             <i class="fa fa-print"></i>
             <span data-th-text="#{com.cagst.swkroa.report.member.reminder.report}">zzz Renew</span>
-          </button>
+          </a>
           <button type="button" class="btn btn-danger"
                   data-ng-disabled="!canExport()"
                   data-toggle="modal" data-target="#closeMembershipsDlg">
@@ -113,41 +113,6 @@
                     data-th-text="#{com.cagst.swkroa.delinquency.close.button}">
               zzz Delete
             </button>
-            <button type="button" class="btn btn-default"
-                    data-dismiss="modal"
-                    data-th-text="#{com.cagst.swkroa.cancel}">
-              zzz Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Reminder Letter Details Dialog -->
-    <div class="modal" id="reminderLetterDlg" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.invoices.renew.letter.title}">zzz Details</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-xs-12">
-                <label class="form-label" data-th-text="#{com.cagst.swkroa.invoices.renew.letter.years}">
-                  zzz Period
-                </label>
-                <input type="text" class="form-control" id="membershipPeriod" name="membershipPeriod"
-                       data-ng-model="membershipReminderPeriod"
-                       data-ng-required="true" />
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <a id="generateReminderPdf" class="btn btn-primary"
-               href="javascript:generateMembershipReminderLetters('pdf', 'remind')"
-               data-th-text="#{com.cagst.swkroa.invoices.renew.letter.generate}">
-              zzz Generate
-            </a>
             <button type="button" class="btn btn-default"
                     data-dismiss="modal"
                     data-th-text="#{com.cagst.swkroa.cancel}">

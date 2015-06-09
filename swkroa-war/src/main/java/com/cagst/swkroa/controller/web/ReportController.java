@@ -203,11 +203,8 @@ public final class ReportController {
       }
     }
 
-    String[] periods = params.get("membershipPeriod");
-
     if (mav != null) {
       mav.addObject("memberships", membershipIds);
-      mav.addObject("membershipPeriod", periods[0]);
     }
 
     return mav;

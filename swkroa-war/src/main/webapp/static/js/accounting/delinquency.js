@@ -66,15 +66,8 @@ swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'memb
   });
 
   $scope.getDelinquencies();
-  determineRenewalPeriod($scope);
 
 }]);
-
-var determineRenewalPeriod = function($scope) {
-  var currentYear = new Date().getFullYear();
-
-  $scope.membershipReminderPeriod = "(" + currentYear + " - " + (currentYear + 1) + ")";
-};
 
 var generateMembershipReminderLetters = function(reportyType, altAction) {
   $('#reminderLetterDlg').modal('hide');

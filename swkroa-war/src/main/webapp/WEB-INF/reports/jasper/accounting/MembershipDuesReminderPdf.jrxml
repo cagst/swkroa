@@ -2,9 +2,8 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesReminderPdf" pageWidth="612" pageHeight="792" columnWidth="542" leftMargin="35" rightMargin="35" topMargin="35" bottomMargin="35" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="222"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="memberships" class="java.util.Collection"/>
-	<parameter name="membershipPeriod" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.membership_name
@@ -279,7 +278,7 @@ ORDER BY ms.membership_name ASC;]]>
 					</textField>
 				</frame>
 			</band>
-			<band height="167">
+			<band height="144">
 				<staticText>
 					<reportElement x="0" y="0" width="350" height="12" uuid="d088a581-6328-4eac-b219-59969cc34224"/>
 					<textElement verticalAlignment="Bottom" markup="styled">
@@ -383,18 +382,18 @@ ORDER BY ms.membership_name ASC;]]>
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="0" y="115" width="542" height="49" uuid="cd2facf9-6d38-4752-a88a-23dfb703a66f"/>
+					<reportElement x="0" y="115" width="542" height="27" uuid="cd2facf9-6d38-4752-a88a-23dfb703a66f"/>
 					<textElement markup="styled">
-						<font fontName="TimesNewRoman" size="9" isBold="false"/>
+						<font fontName="TimesNewRoman" size="9" isBold="true"/>
 					</textElement>
-					<text><![CDATA[<b>Contributions or gifts to SWKROA are not deductible as charitable contributions for federal income tax purposes. However, they may be tax deductible as an ordinary and necessary business expense. Please consult your tax advisor.
-Renewal Reminder:</b> We are missing you! Your membership in the Southwest Kansas Royalty Owners Association is past due. We look forward to your membership renewal for our current fiscal year. Your renewal fees are shown above.]]></text>
+					<text><![CDATA[Contributions or gifts to SWKROA are not deductible as charitable contributions for federal income tax purposes. However, they may be tax deductible as an ordinary and necessary business expense. Please consult your tax advisor.
+]]></text>
 				</staticText>
 			</band>
 		</groupFooter>
 	</group>
 	<pageHeader>
-		<band height="109" splitType="Stretch">
+		<band height="123" splitType="Stretch">
 			<rectangle>
 				<reportElement mode="Opaque" x="0" y="0" width="250" height="50" forecolor="#333333" uuid="8f0b641a-8d33-4ee8-b237-8a49454b9398"/>
 				<graphicElement>
@@ -443,14 +442,15 @@ Renewal Reminder:</b> We are missing you! Your membership in the Southwest Kansa
 				<text><![CDATA[Membership Renewal Reminder]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="50" width="542" height="42" uuid="3f3bbeea-2cdc-468c-b37a-8103e059caf3"/>
+				<reportElement x="0" y="50" width="542" height="57" uuid="3f3bbeea-2cdc-468c-b37a-8103e059caf3"/>
 				<textElement verticalAlignment="Middle" markup="styled">
 					<font fontName="TimesNewRoman" size="9" isPdfEmbedded="false"/>
 				</textElement>
-				<text><![CDATA[Please make your check payable to <b>SWKROA</b> and return this form along with your payment to SWKROA at 209 E 6<sup>th</sup> Street, Hugoton, KS 67951. We have enclosed a self-addressed envelope for your convenience. Please review and confirm the following membership information and make any necessary changes below.]]></text>
+				<text><![CDATA[<b>Renewal Reminder:</b> We are missing you! Your membership in the Southwest Kansas Royalty Owners Association is past due. We look forward to your membership renewal for our current fiscal year. Your renewal fees are shown below.
+Please make your check payable to <b>SWKROA</b> and return this form along with your payment to SWKROA at 209 E 6<sup>th</sup> Street, Hugoton, KS 67951. We have enclosed a self-addressed envelope for your convenience. Please review and confirm the following membership information and make any necessary changes below.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="92" width="542" height="15" uuid="a5f55bae-47fd-41ec-8393-011c582aa83a"/>
+				<reportElement x="0" y="107" width="542" height="15" uuid="a5f55bae-47fd-41ec-8393-011c582aa83a"/>
 				<textElement textAlignment="Center">
 					<font fontName="TimesNewRoman" size="9"/>
 				</textElement>
@@ -461,7 +461,7 @@ Renewal Reminder:</b> We are missing you! Your membership in the Southwest Kansa
 				<textElement textAlignment="Center">
 					<font fontName="TimesNewRoman" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{membershipPeriod}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["This noticed prepared on " + (new SimpleDateFormat("MMM dd, yyyy").format(new Date()))]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
