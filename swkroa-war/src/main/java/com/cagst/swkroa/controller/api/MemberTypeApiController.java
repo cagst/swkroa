@@ -1,6 +1,7 @@
 package com.cagst.swkroa.controller.api;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.cagst.swkroa.member.MemberType;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -43,12 +43,17 @@ public class MemberTypeApiController {
   }
 
   @RequestMapping(value = "/{memberTypeId}", method = RequestMethod.GET)
-  @ResponseBody
   public List<MemberType> getMemberTypes(final @PathVariable("memberTypeId") long memberTypeId) {
     LOGGER.info("Received request to retrieve all active member types for member type [{}]", memberTypeId);
 
     List<MemberType> types = memberTypeRepository.getActiveMemberTypesForMemberType(memberTypeId);
+    Collections.sort(types, new Comparator<MemberType>() {
+      @Override
+      public int compare(MemberType lhs, MemberType rhs) {
+        return lhs.getBeginEffectiveDateTime().compareTo(rhs.getBeginEffectiveDateTime());
+      }
+    });
 
-    return null;
+    return types;
   }
 }

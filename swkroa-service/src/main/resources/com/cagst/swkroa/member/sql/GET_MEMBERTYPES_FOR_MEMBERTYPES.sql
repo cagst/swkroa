@@ -1,15 +1,15 @@
-SELECT member_type_id
-      ,prev_member_type_id
-      ,member_type_display
-      ,member_type_meaning
-      ,dues_amount
-      ,primary_ind
-      ,allow_spouse_ind
-      ,allow_member_ind
-      ,beg_eff_dt_tm
-      ,end_eff_dt_tm
-      ,active_ind
-      ,updt_cnt AS member_type_updt_cnt
+SELECT mt2.member_type_id
+      ,mt2.prev_member_type_id
+      ,mt2.member_type_display
+      ,mt2.member_type_meaning
+      ,mt2.dues_amount
+      ,mt2.primary_ind
+      ,mt2.allow_spouse_ind
+      ,mt2.allow_member_ind
+      ,mt2.beg_eff_dt_tm
+      ,mt2.end_eff_dt_tm
+      ,mt2.active_ind
+      ,mt2.updt_cnt AS member_type_updt_cnt
   FROM member_type mt1
       ,member_type mt2
  WHERE mt1.member_type_id = :member_type_id

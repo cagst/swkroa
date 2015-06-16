@@ -715,6 +715,54 @@ swkroaApp.service('transactionService', ['$http', function($http) {
   };
 }]);
 
+// define a service for MemberTypes
+swkroaApp.service('memberTypeService', ['$http', function($http) {
+  this.getMemberTypes = function() {
+    var promise = $http.get('/api/membertypes');
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  };
+
+  this.getAllMemberTypesByMemberTypeId = function(memberTypeId) {
+    var promise = $http.get('/api/membertypes/' + memberTypeId);
+
+    promise.success = function(fn) {
+      promise.then(function(response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function(fn) {
+      promise.then(function(response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    return promise;
+  }
+
+}]);
+
 swkroaApp.controller('dashboardController', function($scope, $http) {
   $http.get('/api/dashboard').success(function(data) {
     $scope.dashboard = data;

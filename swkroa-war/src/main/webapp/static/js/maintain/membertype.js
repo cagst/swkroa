@@ -4,12 +4,16 @@
  * Author: Craig Gaskill
  */
 
-swkroaApp.controller('membertypeController', ['$scope', '$http', function($scope, $http) {
-  $http.get('/api/membertypes').success(function(data) {
+swkroaApp.controller('membertypeController', ['$scope', 'memberTypeService', function($scope, memberTypeService) {
+  memberTypeService.getMemberTypes().success(function(data) {
     $scope.types = data;
   });
 
   $scope.getType = function(type) {
     $scope.selected = type;
+
+    memberTypeService.getAllMemberTypesByMemberTypeId(type.memberTypeUID).success(function(data) {
+      $scope.allMemberTypes = data;
+    });
   };
 }]);
