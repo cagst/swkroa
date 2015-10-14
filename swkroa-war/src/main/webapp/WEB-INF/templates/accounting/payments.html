@@ -54,34 +54,33 @@
           <tfoot>
             <tr>
               <td colspan="4">
-                <ul class="pagination clear-top clear-bottom">
-                  <li id="firstPage"
-                      data-ng-class="{'disabled': page == 1}"
-                      data-ng-click="firstPage()">
-                    <a href="#"><i class="fa fa-angle-double-left"></i></a>
-                  </li>
-                  <li id="prevPage"
-                      data-ng-class="{'disabled': page == 1}"
-                      data-ng-click="prevPage()">
-                    <a><i class="fa fa-angle-left"></i></a>
-                  </li>
-                  <li data-ng-repeat="increment in increments"
-                      data-ng-attr-id="{{'page' + increment}}"
-                      data-ng-class="{'active': page == increment}"
-                      data-ng-click="setPage(increment)">
-                    <a href="#">{{increment}}</a>
-                  </li>
-                  <li id="nextPage"
-                      data-ng-class="{'disabled': page == pages}"
-                      data-ng-click="nextPage()">
-                    <a href="#"><i class="fa fa-angle-right"></i></a>
-                  </li>
-                  <li id="lastPage"
-                      data-ng-class="{'disabled': page == pages}"
-                      data-ng-click="lastPage()">
-                    <a href="#"><i class="fa fa-angle-double-right"></i></a>
-                  </li>
-                </ul>
+                <div class="text-center">
+                  <ul class="pagination clear-top clear-bottom">
+                    <li id="firstPage"
+                        data-ng-class="{'disabled': page == 1}"
+                        data-ng-click="firstPage()">
+                      <a href="#"><i class="fa fa-angle-double-left"></i></a>
+                    </li>
+                    <li id="prevPage"
+                        data-ng-class="{'disabled': page == 1}"
+                        data-ng-click="prevPage()">
+                      <a><i class="fa fa-angle-left"></i></a>
+                    </li>
+                    <li class="disabled">
+                      <span data-th-text="#{com.cagst.swkroa.page.of.pages}"></span>
+                    </li>
+                    <li id="nextPage"
+                        data-ng-class="{'disabled': page == pages}"
+                        data-ng-click="nextPage()">
+                      <a href="#"><i class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li id="lastPage"
+                        data-ng-class="{'disabled': page == pages}"
+                        data-ng-click="lastPage()">
+                      <a href="#"><i class="fa fa-angle-double-right"></i></a>
+                    </li>
+                  </ul>
+                </div>
               </td>
             </tr>
           </tfoot>

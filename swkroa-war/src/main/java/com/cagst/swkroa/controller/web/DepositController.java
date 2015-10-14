@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @version 1.0.0
  */
 @Controller
+@RequestMapping(value = "/accounting/deposits")
 public class DepositController {
   private static final Logger LOGGER = LoggerFactory.getLogger(DepositController.class);
 
   @Autowired
   private DepositRepository depositRepo;
 
-  @RequestMapping(value = "/accounting/deposits", method = RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public String getDepositPage() {
     LOGGER.info("Received request to show the deposit page.");
 

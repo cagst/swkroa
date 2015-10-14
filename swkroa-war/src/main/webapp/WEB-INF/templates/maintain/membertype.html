@@ -31,7 +31,39 @@
       </div>
 
       <div class="col-xs-7">
-
+        <div data-ng-show="!selected">
+          <em>
+            <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.maintain.membertype.notselected}">
+              zzz No record selected!
+            </label>
+          </em>
+        </div>
+        <div data-ng-show="selected">
+          <div class="row">
+            <div class="col-xs-6">
+              <label for="description" class="control-label label-required"
+                     data-th-text="#{com.cagst.swkroa.desc}">zzz Description</label>
+              <span id="description" class="form-control"
+                    data-editable-text="selected.memberTypeDisplay"
+                    data-e-name="display"
+                    data-e-form="editForm">
+                {{selected.memberTypeDisplay}}
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <label for="meaning" class="control-label label-required"
+                     data-th-text="#{com.cagst.swkroa.mean}">zzz Meaning</label>
+              <span id="meaning" class="form-control"
+                    data-editable-text="selected.memberTypeMeaning"
+                    data-e-name="meaning"
+                    data-e-form="editForm">
+                {{selected.memberTypeMeaning}}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

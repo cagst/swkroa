@@ -26,19 +26,19 @@
         </div>
         <div>
           <div class="col-xs-2">
-            <label data-th-text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
-            <select class="form-control"
+            <label for="title" data-th-text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
+            <select id="title" class="form-control"
                     data-ng-model="member.person.titleCD"
                     data-ng-options="title.codeValueUID as title.display for title in titles">
               <option value="" data-th-text="#{com.cagst.swkroa.none}"></option>
             </select>
           </div>
           <div class="col-xs-2" data-ng-class="{'has-error': memberForm.firstName.$invalid}">
-            <label class="control-label label-required"
+            <label for="firstName" class="control-label label-required"
                    data-th-text="#{com.cagst.swkroa.membership.member.firstname.label}">
               zzz First Name
             </label>
-            <input type="text" class="form-control" name="firstName" maxlength="50"
+            <input id="firstName" name="firstName" type="text" class="form-control" maxlength="50"
                    data-th-placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
                    data-ng-model="member.person.firstName"
                    data-ng-required="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true"
