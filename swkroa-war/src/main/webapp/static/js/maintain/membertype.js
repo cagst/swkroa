@@ -4,6 +4,10 @@
  * Author: Craig Gaskill
  */
 
+swkroaApp.run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});
+
 swkroaApp.controller('membertypeController', ['$scope', 'memberTypeService', function($scope, memberTypeService) {
   memberTypeService.getMemberTypes().success(function(data) {
     $scope.types = data;

@@ -39,29 +39,82 @@
           </em>
         </div>
         <div data-ng-show="selected">
-          <div class="row">
-            <div class="col-xs-6">
-              <label for="description" class="control-label label-required"
-                     data-th-text="#{com.cagst.swkroa.desc}">zzz Description</label>
-              <span id="description" class="form-control"
-                    data-editable-text="selected.memberTypeDisplay"
-                    data-e-name="display"
-                    data-e-form="editForm">
-                {{selected.memberTypeDisplay}}
-              </span>
+          <form name="editform" data-editable-form>
+            <div class="row">
+              <div class="col-xs-6 form-group">
+                <div>
+                  <label for="description" class="control-label"
+                         data-ng-class="{'label-required': editform.$visible}"
+                         data-th-text="#{com.cagst.swkroa.desc}">zzz Description</label>
+                </div>
+                <div>
+                  <span id="description"
+                         data-editable-text="selected.memberTypeDisplay"
+                         data-e-name="display"
+                         data-e-form="editform">
+                    {{selected.memberTypeDisplay}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-xs-6 form-group">
+                <div>&nbsp</div>
+                <div>
+                  <span id="primary"
+                        data-editable-checkbox="selected.primary"
+                        data-e-name="primary"
+                        data-e-form="editform"
+                        data-e-title="Primary Member">
+                    Primary Member: {{selected.primary && "Yes" || "No"}}
+                  </span>
+                </div>
+              </div>
             </div>
+            <div class="row">
+              <div class="col-xs-6 form-group">
+                <div>
+                  <label for="meaning" class="control-label"
+                         data-ng-class="{'label-required': editform.$visible}"
+                         data-th-text="#{com.cagst.swkroa.mean}">zzz Meaning</label>
+                </div>
+                <div>
+                  <span id="meaning"
+                         data-editable-text="selected.memberTypeMeaning"
+                         data-e-name="meaning"
+                         data-e-form="editform">
+                    {{selected.memberTypeMeaning}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-xs-6 form-group">
+                <div>&nbsp</div>
+                <div>
+                  <span id="allowSpouse"
+                        data-editable-checkbox="selected.allowSpouse"
+                        data-e-name="allowSpouse"
+                        data-e-form="editform"
+                        data-e-title="Allow Spouse">
+                    Allow Spouse: {{selected.allowSpouse && "Yes" || "No"}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div data-ng-show="editform.$visible">
+            <button type="submit" class="btn btn-success" data-ng-disabled="editform.$waiting">
+              <i class="fa fa-save"></i>
+              <span data-th-text="#{com.cagst.swkroa.save}">zzz Save</span>
+            </button>
+            <a href="#" class="btn btn-cancel" data-ng-disabled="editform.$waiting"
+               data-ng-click="editform.$cancel()">
+              <i class="fa fa-ban"></i>
+              <span data-th-text="#{com.cagst.swkroa.cancel}">zzz Cancel</span>
+            </a>
           </div>
-          <div class="row">
-            <div class="col-xs-6">
-              <label for="meaning" class="control-label label-required"
-                     data-th-text="#{com.cagst.swkroa.mean}">zzz Meaning</label>
-              <span id="meaning" class="form-control"
-                    data-editable-text="selected.memberTypeMeaning"
-                    data-e-name="meaning"
-                    data-e-form="editForm">
-                {{selected.memberTypeMeaning}}
-              </span>
-            </div>
+          <div data-ng-show="!editform.$visible">
+            <button type="button" class="btn btn-primary" data-ng-click="editform.$show()">
+              <i class="fa fa-edit"></i>
+              <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+            </button>
           </div>
         </div>
       </div>
