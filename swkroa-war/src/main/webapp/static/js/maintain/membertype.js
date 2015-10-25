@@ -38,4 +38,8 @@ swkroaApp.controller('membertypeController', ['$scope', 'memberTypeService', '$h
     });
   };
 
+  $scope.newRate = function() {
+    $scope.memberRate = {active: true, beginEffectiveDateTime: new Date(), duesAmount: $scope.selected.duesAmount};
+  };
+
 }]);

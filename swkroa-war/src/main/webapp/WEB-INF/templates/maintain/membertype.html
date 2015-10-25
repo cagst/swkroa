@@ -54,15 +54,17 @@
                     <div>
                       <label for="description" class="control-label"
                              data-ng-class="{'label-required': editform.$visible}"
-                             th:text="#{com.cagst.swkroa.desc}">zzz Description</label>
+                             th:text="#{com.cagst.swkroa.desc}">
+                        zzz Description
+                      </label>
                     </div>
                     <div>
-                  <span id="description"
-                        data-editable-text="selected.memberTypeDisplay"
-                        data-e-name="display"
-                        data-e-form="editform">
-                    {{selected.memberTypeDisplay}}
-                  </span>
+                      <span id="description"
+                            data-editable-text="selected.memberTypeDisplay"
+                            data-e-name="display"
+                            data-e-form="editform">
+                        {{selected.memberTypeDisplay}}
+                      </span>
                     </div>
                     <div data-ng-class="{'form-row-spacer': !editform.$visible}">
                       <label for="meaning" class="control-label"
@@ -70,44 +72,44 @@
                              th:text="#{com.cagst.swkroa.mean}">zzz Meaning</label>
                     </div>
                     <div>
-                  <span id="meaning"
-                        data-editable-text="selected.memberTypeMeaning"
-                        data-e-name="meaning"
-                        data-e-form="editform">
-                    {{selected.memberTypeMeaning}}
-                  </span>
+                      <span id="meaning"
+                            data-editable-text="selected.memberTypeMeaning"
+                            data-e-name="meaning"
+                            data-e-form="editform">
+                        {{selected.memberTypeMeaning}}
+                      </span>
                     </div>
                   </div>
                   <div class="col-xs-6 form-group">
                     <div class="row-spacer">
-                  <span id="primary"
-                        data-editable-checkbox="selected.primary"
-                        data-e-name="primary"
-                        data-e-form="editform"
-                        th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.primary}">
-                    <b th:text="#{com.cagst.swkroa.maintain.membertype.primary}">zzz Primary</b>
-                    {{selected.primary && "Yes" || "No"}}
-                  </span>
+                      <span id="primary"
+                            data-editable-checkbox="selected.primary"
+                            data-e-name="primary"
+                            data-e-form="editform"
+                            th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.primary}">
+                        <b th:text="#{com.cagst.swkroa.maintain.membertype.primary}">zzz Primary</b>
+                        {{selected.primary && "Yes" || "No"}}
+                      </span>
                     </div>
                     <div class="row-spacer">
-                  <span id="allowSpouse"
-                        data-editable-checkbox="selected.allowSpouse"
-                        data-e-name="allowSpouse"
-                        data-e-form="editform"
-                        th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.spouse}">
-                    <b th:text="#{com.cagst.swkroa.maintain.membertype.spouse}">zzz Spouse</b>
-                    {{selected.allowSpouse && "Yes" || "No"}}
-                  </span>
+                      <span id="allowSpouse"
+                            data-editable-checkbox="selected.allowSpouse"
+                            data-e-name="allowSpouse"
+                            data-e-form="editform"
+                            th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.spouse}">
+                        <b th:text="#{com.cagst.swkroa.maintain.membertype.spouse}">zzz Spouse</b>
+                        {{selected.allowSpouse && "Yes" || "No"}}
+                      </span>
                     </div>
                     <div class="row-spacer">
-                  <span id="allowMember"
-                        data-editable-checkbox="selected.allowMember"
-                        data-e-name="allowMember"
-                        data-e-form="editform"
-                        th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.family}">
-                    <b th:text="#{com.cagst.swkroa.maintain.membertype.family}">zzz Members</b>
-                    {{selected.allowMember && "Yes" || "No"}}
-                  </span>
+                      <span id="allowMember"
+                            data-editable-checkbox="selected.allowMember"
+                            data-e-name="allowMember"
+                            data-e-form="editform"
+                            th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.family}">
+                        <b th:text="#{com.cagst.swkroa.maintain.membertype.family}">zzz Members</b>
+                        {{selected.allowMember && "Yes" || "No"}}
+                      </span>
                     </div>
 
                     <div class="row-spacer" data-ng-show="editform.$visible">
@@ -138,6 +140,11 @@
               <span class="panel-title" th:text="#{com.cagst.swkroa.maintain.membertype.rates}">
                 zzz Rates
               </span>
+              <button type="button" class="btn btn-primary btn-xs pull-right"
+                      data-toggle="modal" data-target="#changeRateDlg"
+                      data-ng-click="newRate()">
+                <span th:text="#{com.cagst.swkroa.maintain.membertype.newrate}">zzz Change</span>
+              </button>
             </div>
             <div class="panel-body clear-padding">
               <form name="amounts">
@@ -160,6 +167,55 @@
               </form>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="changeRateDlg" class="modal fade" tabindex="-1">
+    <div class="modal-dialog" style="width:300px">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" th:text="#{com.cagst.swkroa.maintain.membertype.newrate}">
+            zzz Change Dues
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="beginDate" class="form-label" th:text="#{com.cagst.swkroa.maintain.membertype.dues.start}">
+              zzz Begin Date
+            </label>
+            <div class="input-group">
+              <input id="beginDate" name="beginDate" type="text" class="form-control"
+                     data-datepicker-popup="MM/dd/yyyy"
+                     data-is-open="opened"
+                     data-show-button-bar="false"
+                     data-show-weeks="false"
+                     data-ng-model="memberRate.beginEffectiveDateTime" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" data-ng-click="open($event)">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </span>
+            </div>
+          </div>
+          <label for="rateAmount" class="form-label" th:text="#{com.cagst.swkroa.maintain.membertype.dues.amount}">
+            zzz Amount
+          </label>
+          <input id="rateAmount" name="rateAmount" type="number" class="form-control"
+                 data-ng-model="memberRate.duesAmount"/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success"
+                  data-ng-click="saveNewRate()"
+                  th:text="#{com.cagst.swkroa.update}">
+            zzz Update
+          </button>
+          <button type="button" class="btn btn-default"
+                  data-dismiss="modal"
+                  th:text="#{com.cagst.swkroa.cancel}">
+            zzz Cancel
+          </button>
         </div>
       </div>
     </div>
