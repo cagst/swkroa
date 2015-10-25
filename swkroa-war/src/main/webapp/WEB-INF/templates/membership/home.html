@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
-  <script type="text/javascript" data-th-src="@{/static/js/membership.js}"></script>
+  <script type="text/javascript" th:src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/membership.js}"></script>
 </head>
 
 <body>
@@ -15,14 +16,14 @@
   <!-- Membership Listing Page -->
   <div data-ng-show="view == 'listing'">
     <div class="page-header">
-      <h3 data-th-text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
+      <h3 th:text="#{com.cagst.swkroa.membership.overview}">zzz Membership Overview</h3>
       <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
-        <div data-th-text="#{com.cagst.swkroa.membership.save.created}">zzz Created</div>
+        <div th:text="#{com.cagst.swkroa.membership.save.created}">zzz Created</div>
       </div>
       <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
-        <div data-th-text="#{com.cagst.swkroa.membership.save.updated}">zzz Updated</div>
+        <div th:text="#{com.cagst.swkroa.membership.save.updated}">zzz Updated</div>
       </div>
     </div>
     <div class="container-outline">
@@ -35,18 +36,18 @@
               <div class="input-group">
                 <a class="input-group-addon add-btn"
                    data-ng-click="addMembership()"
-                   data-th-attr="tooltip=#{com.cagst.swkroa.membership.add}"
+                   th:attr="tooltip=#{com.cagst.swkroa.membership.add}"
                    data-tooltip-placement="right">
                   <i class="fa fa-plus"></i>
                 </a>
                 <input type="text" class="form-control" autofocus="autofocus"
-                       data-th-placeholder="#{com.cagst.swkroa.membership.search.prompt}"
+                       th:placeholder="#{com.cagst.swkroa.membership.search.prompt}"
                        data-ng-model="query"
                        data-ng-keydown="queryKeydown($event)" />
                 <a class="input-group-addon btn btn-primary"
                    data-ng-click="getMemberships()"
                    data-ng-disabled="query.length < 2"
-                   data-th-attr="tooltip=#{com.cagst.swkroa.membership.search.tip}"
+                   th:attr="tooltip=#{com.cagst.swkroa.membership.search.tip}"
                    data-tooltip-placement="right">
                   <i class="fa fa-search"></i>
                 </a>
@@ -60,7 +61,7 @@
                        data-ng-model="filterText" />
                 <a class="input-group-addon btn"
                    data-ng-click="showFilterOptions()"
-                   data-th-attr="tooltip=#{com.cagst.swkroa.membership.filter.tip}"
+                   th:attr="tooltip=#{com.cagst.swkroa.membership.filter.tip}"
                    data-tooltip-placement="right">
                   <i class="fa fa-filter"></i>
                 </a>
@@ -72,32 +73,32 @@
           <div class="split-header" data-ng-show="filtering == 'on'">
             <div class="split-header-content expand">
               <div class="row">
-                <label class="col-xs-2">Status</label>
-                <select class="col-xs-8" data-ng-model="filterStatus">
-                  <option value="ALL" data-th-text="#{com.cagst.swkroa.membership.filter.all}">
+                <label for="filterStatus" class="col-xs-2">Status</label>
+                <select id="filterStatus" class="col-xs-8" data-ng-model="filterStatus">
+                  <option value="ALL" th:text="#{com.cagst.swkroa.membership.filter.all}">
                     zzz All
                   </option>
-                  <option value="ACTIVE" data-th-text="#{com.cagst.swkroa.membership.filter.active}">
+                  <option value="ACTIVE" th:text="#{com.cagst.swkroa.membership.filter.active}">
                     zzz Active
                   </option>
-                  <option value="INACTIVE" data-th-text="#{com.cagst.swkroa.membership.filter.inactive}">
+                  <option value="INACTIVE" th:text="#{com.cagst.swkroa.membership.filter.inactive}">
                     zzz Inactive
                   </option>
                 </select>
               </div>
               <div class="row">
-                <label class="col-xs-2">Balance</label>
-                <select class="col-xs-8" data-ng-model="filterBalance">
-                  <option value="ALL" data-th-text="#{com.cagst.swkroa.membership.filter.all}">
+                <label for="filterBalance" class="col-xs-2">Balance</label>
+                <select id="filterBalance" class="col-xs-8" data-ng-model="filterBalance">
+                  <option value="ALL" th:text="#{com.cagst.swkroa.membership.filter.all}">
                     zzz All
                   </option>
-                  <option value="DELINQUENT" data-th-text="#{com.cagst.swkroa.membership.filter.delinquent}">
+                  <option value="DELINQUENT" th:text="#{com.cagst.swkroa.membership.filter.delinquent}">
                     zzz Credit
                   </option>
-                  <option value="PAID" data-th-text="#{com.cagst.swkroa.membership.filter.paid}">
+                  <option value="PAID" th:text="#{com.cagst.swkroa.membership.filter.paid}">
                     zzz Delinquent
                   </option>
-                  <option value="CREDIT" data-th-text="#{com.cagst.swkroa.membership.filter.credit}">
+                  <option value="CREDIT" th:text="#{com.cagst.swkroa.membership.filter.credit}">
                     zzz Paid
                   </option>
                 </select>
@@ -106,12 +107,12 @@
                 <span class="col-xs-offset-2 col-xs-8">
                   <button type="button" class="btn btn-primary btn-sm"
                           data-ng-click="applyFilter()"
-                          data-th-text="#{com.cagst.swkroa.membership.filter.apply}">
+                          th:text="#{com.cagst.swkroa.membership.filter.apply}">
                     zzz Apply Filter
                   </button>
                   <button type="button" class="btn btn-default btn-sm"
                           data-ng-click="cancelFilter()"
-                          data-th-text="#{com.cagst.swkroa.cancel}">
+                          th:text="#{com.cagst.swkroa.cancel}">
                     zzz Cancel
                   </button>
                 </span>
@@ -123,11 +124,11 @@
           <div class="list-group constrain-view divider-right">
             <div>
               <div class="panel-body text-muted divider-top" data-ng-show="!memberships.length">
-                <em data-th-text="#{com.cagst.swkroa.membership.nosearch}"
+                <em th:text="#{com.cagst.swkroa.membership.nosearch}"
                     data-ng-show="!searched">
                   zzz No Search
                 </em>
-                <em data-th-text="#{com.cagst.swkroa.membership.nomemberships}"
+                <em th:text="#{com.cagst.swkroa.membership.nomemberships}"
                     data-ng-show="searched">
                   zzz No memberships
                 </em>
@@ -140,40 +141,40 @@
                   <div class="lead lead-in">
                     <span data-ng-bind="mem.membershipName">zzz Membership Name</span>
                     <span data-ng-show="mem.memberTypeMeaning == 'REGULAR'"
-                          data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.regular}"
+                          th:attr="tooltip=#{com.cagst.swkroa.membership.type.regular}"
                           data-tooltip-placement="left"
                           class="pull-right">
                       <i class="fa fa-user"></i>
                     </span>
                     <span data-ng-show="mem.memberTypeMeaning == 'FAMILY_HEAD'"
-                          data-th-attr="tooltip=#{com.cagst.swkroa.membership.type.family}"
+                          th:attr="tooltip=#{com.cagst.swkroa.membership.type.family}"
                           data-tooltip-placement="left"
                           class="pull-right">
                       <i class="fa fa-users"></i>
                     </span>
                   </div>
                   <div data-ng-if="mem.joinDate != null">
-                    <span data-th-text="#{com.cagst.swkroa.membership.member.since}">zzz Member Since</span>
+                    <span th:text="#{com.cagst.swkroa.membership.member.since}">zzz Member Since</span>
                   </div>
                   <div>
-                    <span data-th-text="#{com.cagst.swkroa.membership.fixed.dues}">zzz Dues Of</span>
-                    <span data-th-text="#{com.cagst.swkroa.membership.calculated.dues}" class="text-warning"
+                    <span th:text="#{com.cagst.swkroa.membership.fixed.dues}">zzz Dues Of</span>
+                    <span th:text="#{com.cagst.swkroa.membership.calculated.dues}" class="text-warning"
                           data-ng-show="mem.effectiveDuesAmount != mem.calculatedDuesAmount">
                       zzz Calculated Dues
                     </span>
                     <span class="pull-right text-danger"
-                          data-ng-bind="mem.balance | currency"
+                          th:text="#{com.cagst.swkroa.membership.pastdue}"
                           data-ng-show="mem.balance < 0">
                       zzz Past Due
                     </span>
                     <span class="pull-right text-success"
-                          data-ng-bind="mem.balance | currency"
+                          th:text="#{com.cagst.swkroa.membership.credit}"
                           data-ng-show="mem.balance > 0">
                       zzz Credit
                     </span>
                     <span class="pull-right"
-                          data-ng-bind="mem.balance | currency"
-                          data-ng-show="mem.balance == 0">
+                          th:text="#{com.cagst.swkroa.membership.paid}"
+                          data-ng-show="mem.balance === 0">
                       zzz Paid
                     </span>
                   </div>
@@ -188,7 +189,7 @@
           <div data-ng-show="!membership">
             <em>
               <label class="panel-body text-muted text-center"
-                     data-th-text="#{com.cagst.swkroa.membership.notselected}">
+                     th:text="#{com.cagst.swkroa.membership.notselected}">
                 zzz No membership selected.
               </label>
             </em>
@@ -199,7 +200,7 @@
                 <div class="pull-left">
                   <h2 class="lead">
                     <span data-ng-bind="membership.primaryMember.memberName"></span>
-                    <small data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
+                    <small th:text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
                            data-ng-show="membership.primaryMember.joinDate">
                       zzz Since
                     </small>
@@ -211,7 +212,7 @@
                       <i class="fa fa-caret-right" data-ng-show="!showCalculations"></i>
                       <i class="fa fa-caret-down" data-ng-show="showCalculations"></i>
                     </a>
-                    <span class="panel-text" data-th-text="#{com.cagst.swkroa.membership.calc.title}">
+                    <span class="panel-text" th:text="#{com.cagst.swkroa.membership.calc.title}">
                       zzz Dues Calculation
                     </span>
                   </div>
@@ -227,7 +228,7 @@
                       </span>
                     </div>
                     <div class="row row-inner" data-ng-show="membership.incrementalDues > 0">
-                      <span class="col-xs-8" data-th-text="#{com.cagst.swkroa.membership.calc.incremental}">zzz Incremental Dues</span>
+                      <span class="col-xs-8" th:text="#{com.cagst.swkroa.membership.calc.incremental}">zzz Incremental Dues</span>
                       <span class="col-xs-4">
                         <span class="pull-right">
                           {{membership.incrementalDues | currency}}
@@ -237,7 +238,7 @@
                   </div>
                   <div class="panel-footer" data-ng-show="showCalculations">
                     <div class="row row-inner">
-                      <span class="col-xs-8" data-th-text="#{com.cagst.swkroa.membership.calc.total}">
+                      <span class="col-xs-8" th:text="#{com.cagst.swkroa.membership.calc.total}">
                         zzz Total
                       </span>
                       <span class="col-xs-4">
@@ -252,7 +253,7 @@
               <div>
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="panel-title" data-th-text="#{com.cagst.swkroa.membership.members}">
+                    <span class="panel-title" th:text="#{com.cagst.swkroa.membership.members}">
                       zzz Members
                     </span>
                   </div>
@@ -262,7 +263,7 @@
                         <strong data-ng-bind="membership.primaryMember.memberName"></strong>
                       </span>
                       <small class="text-muted">({{membership.primaryMember.ownerIdent}})</small>
-                      <small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
+                      <small class="text-muted" th:text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
                              data-ng-show="membership.primaryMember.joinDate">
                         zzz Since
                       </small>
@@ -271,7 +272,7 @@
                          data-ng-show="member.memberType.primary === false && member.active === true">
                       <span>{{member.memberName}}</span>
                       <small class="text-muted">({{member.ownerIdent}})</small>
-                      <small class="text-muted" data-th-text="#{com.cagst.swkroa.membership.member.detail.since}">
+                      <small class="text-muted" th:text="#{com.cagst.swkroa.membership.member.detail.since}">
                         zzz Since
                       </small>
                     </li>
@@ -280,7 +281,7 @@
                 <div class="spacer-top">
                   <div class="panel panel-default">
                     <div class="panel-heading">
-                      <span class="panel-title" data-th-text="#{com.cagst.swkroa.membership.counties}">
+                      <span class="panel-title" th:text="#{com.cagst.swkroa.membership.counties}">
                         zzz Counties
                       </span>
                     </div>
@@ -288,7 +289,7 @@
                       <li class="list-group-item" data-ng-class="{text_bold: membershipCounty.votingCounty === true}">
                         {{membershipCounty.county.countyName}}
                         <small class="text-muted text_normal"
-                               data-th-text="#{com.cagst.swkroa.membership.member.detail.county}">
+                               th:text="#{com.cagst.swkroa.membership.member.detail.county}">
                           zzz County Details
                         </small>
                       </li>
@@ -296,8 +297,8 @@
                   </div>
                 </div>
 
-                <div data-th-include="membership/list/detail_comments"></div>
-                <div data-th-include="membership/list/detail_transactions"></div>
+                <div th:include="membership/list/detail_comments"></div>
+                <div th:include="membership/list/detail_transactions"></div>
               </div>
             </div>
 
@@ -306,19 +307,19 @@
                 <button type="button" class="btn btn-primary btn-xs"
                         data-ng-click="editMembership()">
                   <i class="fa fa-edit"></i>
-                  <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                  <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
                 </button>
                 <button type="button" class="btn btn-danger btn-xs"
                         data-toggle="modal" data-target="#closeMembershipsDlg"
                         data-ng-show="membership.active == true">
                   <i class="fa fa-power-off"></i>
-                  <span data-th-text="#{com.cagst.swkroa.membership.close}">zzz Close</span>
+                  <span th:text="#{com.cagst.swkroa.membership.close}">zzz Close</span>
                 </button>
                 <button type="button" class="btn btn-danger btn-xs"
                         data-toggle="modal" data-target="#openMembershipsDlg"
                         data-ng-show="membership.active == false">
                   <i class="fa fa-circle-o-notch"></i>
-                  <span data-th-text="#{com.cagst.swkroa.membership.open}">zzz Open</span>
+                  <span th:text="#{com.cagst.swkroa.membership.open}">zzz Open</span>
                 </button>
               </div>
             </div>
@@ -329,27 +330,27 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.close.title}">zzz Please confirm</h4>
+                  <h4 class="modal-title" th:text="#{com.cagst.swkroa.membership.close.title}">zzz Please confirm</h4>
                 </div>
                 <div class="modal-body">
-                  <p data-th-text="#{com.cagst.swkroa.membership.close.msg}">zzz Member</p>
+                  <p th:text="#{com.cagst.swkroa.membership.close.msg}">zzz Member</p>
 
-                  <label class="control-label"
+                  <label for="closeReason" class="control-label"
                          data-ng-class="{'label-required': true}"
-                         data-th-text="#{com.cagst.swkroa.membership.close.reason}">
+                         th:text="#{com.cagst.swkroa.membership.close.reason}">
                     zzz Close Reason
                   </label>
-                  <select class="form-control"
+                  <select id="closeReason" class="form-control"
                           data-ng-model="closeReason"
                           data-ng-required="true"
                           data-ng-options="reason.display for reason in closeReasons">
                   </select>
-                  <label class="control-label"
+                  <label for="companyName" class="control-label"
                          data-ng-class="{'label-required': closeReason.meaning == 'CLOSE_OTHER'}"
-                         data-th-text="#{com.cagst.swkroa.membership.close.text}">
+                         th:text="#{com.cagst.swkroa.membership.close.text}">
                     zzz CloseText
                   </label>
-                  <input type="text" class="form-control" name="companyName" maxlength="100"
+                  <input id="companyName" name="companyName" type="text" class="form-control" maxlength="100"
                          data-ng-model="closeText"
                          data-ng-disabled="closeReason.meaning != 'CLOSE_OTHER'"
                          data-ng-required="closeReason.meaning == 'CLOSE_OTHER'" />
@@ -358,12 +359,12 @@
                   <button type="button" class="btn btn-danger"
                           data-ng-click="closeMembership()"
                           data-ng-disabled="!canClose()"
-                          data-th-text="#{com.cagst.swkroa.membership.close.button}">
+                          th:text="#{com.cagst.swkroa.membership.close.button}">
                     zzz Delete
                   </button>
                   <button type="button" class="btn btn-default"
                           data-dismiss="modal"
-                          data-th-text="#{com.cagst.swkroa.cancel}">
+                          th:text="#{com.cagst.swkroa.cancel}">
                     zzz Cancel
                   </button>
                 </div>
@@ -376,20 +377,20 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.open.title}">zzz Please confirm</h4>
+                  <h4 class="modal-title" th:text="#{com.cagst.swkroa.membership.open.title}">zzz Please confirm</h4>
                 </div>
                 <div class="modal-body">
-                  <span data-th-text="#{com.cagst.swkroa.membership.open.message}">zzz Open this?</span>
+                  <span th:text="#{com.cagst.swkroa.membership.open.message}">zzz Open this?</span>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-danger"
                           data-ng-click="openMembership()"
-                          data-th-text="#{com.cagst.swkroa.membership.open.btn}">
+                          th:text="#{com.cagst.swkroa.membership.open.btn}">
                     zzz Delete
                   </button>
                   <button type="button" class="btn btn-default"
                           data-dismiss="modal"
-                          data-th-text="#{com.cagst.swkroa.cancel}">
+                          th:text="#{com.cagst.swkroa.cancel}">
                     zzz Default
                   </button>
                 </div>
@@ -397,8 +398,8 @@
             </div>
           </div>
 
-          <div data-th-include="membership/list/dlg_comment"></div>
-          <div data-th-include="membership/list/dlg_transaction"></div>
+          <div th:include="membership/list/dlg_comment"></div>
+          <div th:include="membership/list/dlg_transaction"></div>
 
         </div>
       </div>
@@ -408,20 +409,20 @@
   <!-- Modify (Add/Edit) Membership Page -->
   <div data-ng-show="view == 'add' || view == 'edit'">
     <div class="page-header">
-      <h3 data-th-text="#{com.cagst.swkroa.membership.add}" data-ng-show="membership.membershipUID == 0">
+      <h3 th:text="#{com.cagst.swkroa.membership.add}" data-ng-show="membership.membershipUID == 0">
         zzz Add Membership
       </h3>
-      <input id="membershipId" type="hidden" data-th-value="${membershipId}" />
+      <input id="membershipId" type="hidden" th:value="${membershipId}" />
 
-      <h3 data-th-text="#{com.cagst.swkroa.membership.edit}" data-ng-show="membership.membershipUID > 0">
+      <h3 th:text="#{com.cagst.swkroa.membership.edit}" data-ng-show="membership.membershipUID > 0">
         zzz Edit Membership
       </h3>
     </div>
 
     <form method="POST" name="membershipForm" novalidate data-ng-submit="save()" class="css-form">
-      <div data-th-include="membership/modify/section_membership"></div>
-      <div data-th-include="membership/modify/section_counties"></div>
-      <div data-th-include="membership/modify/section_members"
+      <div th:include="membership/modify/section_membership"></div>
+      <div th:include="membership/modify/section_counties"></div>
+      <div th:include="membership/modify/section_members"
            data-ng-show="membership.primaryMember.memberType.allowMember ||
                          membership.members.length > 0"></div>
 
@@ -430,19 +431,19 @@
           <div class="spacer-top">
             <button type="submit"
                     class="btn btn-primary"
-                    data-th-text="#{com.cagst.swkroa.membership.create}"
+                    th:text="#{com.cagst.swkroa.membership.create}"
                     data-ng-show="membership.membershipUID == 0"
                     data-ng-disabled="membershipForm.$invalid">
             </button>
             <button type="submit"
                     class="btn btn-primary"
-                    data-th-text="#{com.cagst.swkroa.membership.update}"
+                    th:text="#{com.cagst.swkroa.membership.update}"
                     data-ng-show="membership.membershipUID > 0"
                     data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
             </button>
             <button type="button" class="btn btn-default"
                     data-ng-click="cancelChanges()"
-                    data-th-text="#{com.cagst.swkroa.cancel}">
+                    th:text="#{com.cagst.swkroa.cancel}">
             </button>
           </div>
         </div>

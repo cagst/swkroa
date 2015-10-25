@@ -2,9 +2,12 @@ package com.cagst.swkroa.member;
 
 import java.util.List;
 
+import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 /**
  * Definition of a repository that retrieves and persists {@link MemberType} objects.
@@ -116,4 +119,7 @@ public interface MemberTypeRepository {
    * MemberType.
    */
   List<MemberType> getActiveMemberTypesForMemberType(final long memberTypeId);
+
+  MemberType saveMemberType(final MemberType memberType, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
 }

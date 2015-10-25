@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/js/accounting/invoices.js}"></script>
-  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/accounting/invoices.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/report.js}"></script>
 </head>
 
 <body>
 
 <div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="invoiceController">
   <div class="page-header">
-    <h3 data-th-text="#{com.cagst.swkroa.invoices.title}">zzz Invoices</h3>
+    <h3 th:text="#{com.cagst.swkroa.invoices.title}">zzz Invoices</h3>
   </div>
-  <form name="reportForm" data-th-attr="action=@{/report/membership/invoices}" target="_blank" method="post">
+  <form name="reportForm" th:attr="action=@{/report/membership/invoices}" target="_blank" method="post">
     <div class="row" data-ng-show="invoiceGroups">
       <div class="col-xs-2">
         <div class="btn-group-vertical">
-          <a class="btn btn-primary" data-th-href="@{/accounting/invoices/new}">
-            <span data-th-text="#{com.cagst.swkroa.invoices.renew.button}">zzz Renew Membership</span>
+          <a class="btn btn-primary" th:href="@{/accounting/invoices/new}">
+            <span th:text="#{com.cagst.swkroa.invoices.renew.button}">zzz Renew Membership</span>
           </a>
         </div>
       </div>
@@ -28,9 +29,9 @@
         <table class="table table-hover table-bordered table-condensed">
           <thead>
             <tr>
-              <th data-th-text="#{com.cagst.swkroa.invoices.date}">zzz Date</th>
-              <th data-th-text="#{com.cagst.swkroa.invoices.count}">zzz Count</th>
-              <th data-th-text="#{com.cagst.swkroa.invoices.amount}">zzz Amount</th>
+              <th th:text="#{com.cagst.swkroa.invoices.date}">zzz Date</th>
+              <th th:text="#{com.cagst.swkroa.invoices.count}">zzz Count</th>
+              <th th:text="#{com.cagst.swkroa.invoices.amount}">zzz Amount</th>
               <th></th>
             </tr>
           </thead>
@@ -43,11 +44,11 @@
                 <div class="btn-group">
                   <a type="button" class="btn btn-info btn-xs" data-ng-click="generateInvoicesReport('pdf', group.transactionDate, group.transactionDate)">
                     <i class="fa fa-print"></i>
-                    <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
+                    <span th:text="#{com.cagst.swkroa.print}">zzz Print</span>
                   </a>
                   <a type="button" class="btn btn-default btn-xs" data-ng-click="generateInvoicesReport('csv', group.transactionDate, group.transactionDate)">
                     <i class="fa fa-download"></i>
-                    <span data-th-text="#{com.cagst.swkroa.export}">zzz Export</span>
+                    <span th:text="#{com.cagst.swkroa.export}">zzz Export</span>
                   </a>
                 </div>
               </td>
@@ -69,7 +70,7 @@
                       <a><i class="fa fa-angle-left"></i></a>
                     </li>
                     <li class="disabled">
-                      <span data-th-text="#{com.cagst.swkroa.page.of.pages}"></span>
+                      <span th:text="#{com.cagst.swkroa.page.of.pages}"></span>
                     </li>
                     <li id="nextPage"
                         data-ng-class="{'disabled': page == pages}"

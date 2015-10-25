@@ -9,12 +9,18 @@ import java.util.Map;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 
 /**
@@ -31,6 +37,9 @@ import org.springframework.util.Assert;
   private static final String GET_MEMBERTYPE_BY_MEANING       = "GET_MEMBERTYPE_BY_MEANING";
   private static final String GET_MEMBERTYPES_ACTIVE          = "GET_MEMBERTYPES_ACTIVE";
   private static final String GET_MEMBERTYPES_FOR_MEMBERTYPES = "GET_MEMBERTYPES_FOR_MEMBERTYPES";
+
+  private static final String INSERT_MEMBERTYPE = "INSERT_MEMBERTYPE";
+  private static final String UPDATE_MEMBERTYPE = "UPDATE_MEMBERTYPE";
 
   /**
    * Primary constructor used to create an instance of the MemberTypeRepositoryJdbc.
@@ -137,6 +146,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
+  @Cacheable(value = "memberTypeList")
   public List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime) {
     Assert.notNull(effectiveDateTime, "Assertion Failed - argument [effectiveDateTime] cannot be null");
 
@@ -151,6 +161,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
+  @Cacheable(value = "memberTypeList")
   public List<MemberType> getActiveMemberTypesForMemberType(final long memberTypeId) {
     Assert.isTrue(memberTypeId > 0, "Assertion Failed - argument [memberTypeId] must be a positive value");
 
@@ -162,5 +173,60 @@ import org.springframework.util.Assert;
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERTYPES_FOR_MEMBERTYPES), params, new MemberTypeMapper());
+  }
+
+  @Override
+  @CacheEvict(value = {"memberTypes", "memberTypeList"}, allEntries = true)
+  public MemberType saveMemberType(final MemberType memberType, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+
+    Assert.notNull(memberType, "Assertion failed - argument memberType cannot be null.");
+
+    LOGGER.info("Calling saveMemberType for [{}]", memberType.getMemberTypeMeaning());
+
+    if (memberType.getMemberTypeUID() == 0L) {
+      return insertMemberType(memberType, user);
+    } else {
+      return updateMemberType(memberType, user);
+    }
+  }
+
+  private MemberType insertMemberType(final MemberType memberType, final User user)
+      throws IncorrectResultSizeDataAccessException, DataAccessException {
+
+    LOGGER.info("Inserting new MemberType [{}]", memberType.getMemberTypeMeaning());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_MEMBERTYPE),
+        MemberTypeMapper.mapInsertStatement(memberType, user), keyHolder);
+    if (cnt == 1) {
+      memberType.setMemberTypeUID(keyHolder.getKey().longValue());
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+
+    return memberType;
+  }
+
+  private MemberType updateMemberType(final MemberType memberType, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+
+    LOGGER.info("Updating MemberType [{}]", memberType.getMemberTypeMeaning());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(UPDATE_MEMBERTYPE),
+        MemberTypeMapper.mapUpdateStatement(memberType, user));
+    if (cnt == 1) {
+      memberType.setMemberTypeUpdateCount(memberType.getMemberTypeUpdateCount() + 1);
+    } else if (cnt == 0) {
+      throw new OptimisticLockingFailureException("invalid update count of [" + cnt + "] possible update count mismatch");
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+
+    return memberType;
   }
 }

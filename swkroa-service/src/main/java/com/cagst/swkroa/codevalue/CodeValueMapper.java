@@ -58,7 +58,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
    * statement.
    */
   public static MapSqlParameterSource mapInsertStatement(final CodeValue codeValue, final User user) {
-
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(CODESET_ID, codeValue.getCodeSetUID());
     params.addValue(CODEVALUE_DISPLAY, codeValue.getDisplay());

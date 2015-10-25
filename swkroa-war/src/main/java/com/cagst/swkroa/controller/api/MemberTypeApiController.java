@@ -6,13 +6,22 @@ import java.util.List;
 
 import com.cagst.swkroa.member.MemberType;
 import com.cagst.swkroa.member.MemberTypeRepository;
+import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Handles and retrieves {@link MemberType} objects depending on the URI template.
@@ -55,5 +64,39 @@ public class MemberTypeApiController {
     });
 
     return types;
+  }
+
+  /**
+   * Handles the request and persists the {@link MemberType} to persistent storage.
+   *
+   * @param memberType
+   *    The {@link MemberType} to persist.
+   * @param request
+   *    The {@link HttpServletRequest} sent from the caller.
+   *
+   * @return The {@link MemberType} after it has been persisted.
+   */
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<MemberType> saveMemberType(final @RequestBody MemberType memberType,
+                                                   final HttpServletRequest request) {
+
+    LOGGER.info("Received request to save membertype [{}]", memberType.getMemberTypeUID());
+
+    // determine if this is a new MemberType before we save it
+    boolean newMemberType = (memberType.getMemberTypeUID() == 0);
+
+    // save the MemberType
+    MemberType savedMemberType = memberTypeRepository.saveMemberType(memberType, WebAppUtils.getUser());
+
+    // specify the location of the resource
+    UriComponents locationUri = ServletUriComponentsBuilder
+        .fromContextPath(request)
+        .path("/api/membertypes/{memberTypeId}")
+        .buildAndExpand(savedMemberType.getMemberTypeUID());
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setLocation(locationUri.toUri());
+
+    return new ResponseEntity<>(savedMemberType, headers, newMemberType ? HttpStatus.CREATED : HttpStatus.OK);
   }
 }

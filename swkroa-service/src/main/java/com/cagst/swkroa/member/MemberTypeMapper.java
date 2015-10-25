@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.cagst.common.util.CGTDateTimeUtils;
+import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 /**
  * Used to marshal/unmarshal a {@link MemberType} to/from the database.
@@ -23,7 +25,11 @@ import org.springframework.jdbc.core.RowMapper;
   private static final String ALLOW_MEMBER_IND = "allow_member_ind";
   private static final String BEG_EFF_DT_TM = "beg_eff_dt_tm";
   private static final String END_EFF_DT_TM = "end_eff_dt_tm";
+
+  // meta-data
   private static final String ACTIVE_IND = "active_ind";
+  private static final String CREATE_ID = "create_id";
+  private static final String UPDT_ID = "updt_id";
   private static final String MEMBER_TYPE_UPDT_CNT = "member_type_updt_cnt";
 
   /*
@@ -48,5 +54,45 @@ import org.springframework.jdbc.core.RowMapper;
     type.setMemberTypeUpdateCount(rs.getLong(MEMBER_TYPE_UPDT_CNT));
 
     return type;
+  }
+
+  public static MapSqlParameterSource mapInsertStatement(final MemberType memberType, final User user) {
+    MapSqlParameterSource params = new MapSqlParameterSource();
+
+    params.addValue(MEMBER_TYPE_PREV_UID, memberType.getPreviousMemberTypeUID());
+    params.addValue(MEMBER_TYPE_DISPLAY, memberType.getMemberTypeDisplay());
+    params.addValue(MEMBER_TYPE_MEANING, memberType.getMemberTypeMeaning());
+    params.addValue(DUES_AMOUNT, memberType.getDuesAmount());
+    params.addValue(PRIMARY_IND, memberType.isPrimary());
+    params.addValue(ALLOW_SPOUSE_IND, memberType.isAllowSpouse());
+    params.addValue(ALLOW_MEMBER_IND, memberType.isAllowMember());
+    params.addValue(BEG_EFF_DT_TM, CGTDateTimeUtils.convertDateTimeToTimestamp(memberType.getBeginEffectiveDateTime()));
+    params.addValue(END_EFF_DT_TM, CGTDateTimeUtils.convertDateTimeToTimestamp(memberType.getEndEffectiveDateTime()));
+
+    params.addValue(ACTIVE_IND, memberType.isActive());
+    params.addValue(CREATE_ID, user.getUserUID());
+    params.addValue(UPDT_ID, user.getUserUID());
+
+    return params;
+  }
+
+  public static MapSqlParameterSource mapUpdateStatement(final MemberType memberType, final User user) {
+    MapSqlParameterSource params = new MapSqlParameterSource();
+
+    params.addValue(MEMBER_TYPE_DISPLAY, memberType.getMemberTypeDisplay());
+    params.addValue(MEMBER_TYPE_MEANING, memberType.getMemberTypeMeaning());
+    params.addValue(DUES_AMOUNT, memberType.getDuesAmount());
+    params.addValue(PRIMARY_IND, memberType.isPrimary());
+    params.addValue(ALLOW_SPOUSE_IND, memberType.isAllowSpouse());
+    params.addValue(ALLOW_MEMBER_IND, memberType.isAllowMember());
+    params.addValue(BEG_EFF_DT_TM, CGTDateTimeUtils.convertDateTimeToTimestamp(memberType.getBeginEffectiveDateTime()));
+    params.addValue(END_EFF_DT_TM, CGTDateTimeUtils.convertDateTimeToTimestamp(memberType.getEndEffectiveDateTime()));
+    params.addValue(ACTIVE_IND, memberType.isActive());
+    params.addValue(UPDT_ID, user.getUserUID());
+
+    params.addValue(MEMBER_TYPE_UID, memberType.getMemberTypeUID());
+    params.addValue(MEMBER_TYPE_UPDT_CNT, memberType.getMemberTypeUpdateCount());
+
+    return params;
   }
 }

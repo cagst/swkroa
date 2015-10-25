@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/js/accounting/delinquency.js}"></script>
-  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/accounting/delinquency.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/report.js}"></script>
 </head>
 
 <body>
 
 <div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="delinquencyController">
   <div class="page-header">
-    <h3 data-th-text="#{com.cagst.swkroa.delinquency.title}">zzz Delinquencies</h3>
+    <h3 th:text="#{com.cagst.swkroa.delinquency.title}">zzz Delinquencies</h3>
   </div>
 
   <form name="reportForm" target="_blank" method="post"
-        data-th-action="@{/report/membership/delinquent}"
-        data-th-attr="remind=@{/report/membership/remind}">
+        th:action="@{/report/membership/delinquent}"
+        th:attr="remind=@{/report/membership/remind}">
     <div class="row" data-ng-show="delinquencies">
       <div class="col-xs-3">
         <div class="btn-group-vertical">
@@ -27,25 +28,25 @@
              href="javascript:submitReportForm('pdf')"
              data-ng-disabled="!canExport()">
             <i class="fa fa-print"></i>
-            <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
+            <span th:text="#{com.cagst.swkroa.print}">zzz Print</span>
           </a>
           <a id="generateCsv" class="btn btn-default"
              href="javascript:submitReportForm('csv')"
              data-ng-disabled="!canExport()">
             <i class="fa fa-download"></i>
-            <span data-th-text="#{com.cagst.swkroa.export}">zzz Export</span>
+            <span th:text="#{com.cagst.swkroa.export}">zzz Export</span>
           </a>
           <a id="generateReminderPdf" type="button" class="btn btn-default"
              href="javascript:generateMembershipReminderLetters('pdf', 'remind')"
              data-ng-disabled="!canExport()">
             <i class="fa fa-print"></i>
-            <span data-th-text="#{com.cagst.swkroa.report.member.reminder.report}">zzz Renew</span>
+            <span th:text="#{com.cagst.swkroa.report.member.reminder.report}">zzz Renew</span>
           </a>
           <button type="button" class="btn btn-danger"
                   data-ng-disabled="!canExport()"
                   data-toggle="modal" data-target="#closeMembershipsDlg">
             <i class="fa fa-power-off"></i>
-            <span data-th-text="#{com.cagst.swkroa.delinquency.close.button}">zzz Close</span>
+            <span th:text="#{com.cagst.swkroa.delinquency.close.button}">zzz Close</span>
           </button>
         </div>
       </div>
@@ -56,9 +57,9 @@
               <th>
                 <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
               </th>
-              <th data-th-text="#{com.cagst.swkroa.delinquency.membership}">zzz Membership</th>
-              <th data-th-text="#{com.cagst.swkroa.delinquency.duesamount}">zzz Dues Amount</th>
-              <th data-th-text="#{com.cagst.swkroa.delinquency.balance}">zzz Balance</th>
+              <th th:text="#{com.cagst.swkroa.delinquency.membership}">zzz Membership</th>
+              <th th:text="#{com.cagst.swkroa.delinquency.duesamount}">zzz Dues Amount</th>
+              <th th:text="#{com.cagst.swkroa.delinquency.balance}">zzz Balance</th>
             </tr>
           </thead>
           <tbody>
@@ -81,14 +82,14 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.delinquency.close.title}">zzz Please confirm</h4>
+            <h4 class="modal-title" th:text="#{com.cagst.swkroa.delinquency.close.title}">zzz Please confirm</h4>
           </div>
           <div class="modal-body">
-            <p data-th-text="#{com.cagst.swkroa.delinquency.close.msg}">zzz Members</p>
+            <p th:text="#{com.cagst.swkroa.delinquency.close.msg}">zzz Members</p>
 
             <label class="control-label"
                    data-ng-class="{'label-required': true}"
-                   data-th-text="#{com.cagst.swkroa.delinquency.close.reason}">
+                   th:text="#{com.cagst.swkroa.delinquency.close.reason}">
               zzz Close Reason
             </label>
             <select class="form-control"
@@ -98,7 +99,7 @@
             </select>
             <label class="control-label"
                    data-ng-class="{'label-required': closeReason.meaning == 'CLOSE_OTHER'}"
-                   data-th-text="#{com.cagst.swkroa.delinquency.close.text}">
+                   th:text="#{com.cagst.swkroa.delinquency.close.text}">
               zzz CloseText
             </label>
             <input type="text" class="form-control" name="companyName" maxlength="100"
@@ -110,12 +111,12 @@
             <button type="button" class="btn btn-danger"
                     data-ng-click="closeMemberships()"
                     data-ng-disabled="!canClose()"
-                    data-th-text="#{com.cagst.swkroa.delinquency.close.button}">
+                    th:text="#{com.cagst.swkroa.delinquency.close.button}">
               zzz Delete
             </button>
             <button type="button" class="btn btn-default"
                     data-dismiss="modal"
-                    data-th-text="#{com.cagst.swkroa.cancel}">
+                    th:text="#{com.cagst.swkroa.cancel}">
               zzz Cancel
             </button>
           </div>

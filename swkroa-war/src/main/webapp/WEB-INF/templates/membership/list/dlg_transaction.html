@@ -1,16 +1,21 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
 <!-- Modify Transaction Dialog -->
-<div data-th-fragment="dlgModifyTransaction">
+<div th:fragment="dlgModifyTransaction">
   <div class="modal fade" id="modifyTransaction">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title"
-              data-th-text="#{com.cagst.swkroa.membership.transaction.update}"
+              th:text="#{com.cagst.swkroa.membership.transaction.update}"
               data-ng-show="transactionIdx > -1">
             zzz Modify transaction
           </h4>
           <h4 class="modal-title"
-              data-th-text="#{com.cagst.swkroa.membership.transaction.create}"
+              th:text="#{com.cagst.swkroa.membership.transaction.create}"
               data-ng-show="transactionIdx == -1">
             zzz Create transaction
           </h4>
@@ -19,7 +24,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-xs-4">
-              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.date}">
+              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.date}">
                 zzz Date
               </label>
               <div class="input-group">
@@ -38,7 +43,7 @@
               </div>
             </div>
             <div class="col-xs-4 col-xs-offset-4">
-              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.refno}">
+              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.refno}">
                 zzz Ref No
               </label>
               <input type="text" class="form-control" maxlength="25"
@@ -50,7 +55,7 @@
           <div class="row spacer-top">
             <div class="col-xs-4"
                  data-ng-class="{'has-error': type.$invalid}">
-              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.type}">
+              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.type}">
                 zzz Type
               </label>
               <select class="form-control select2" name="type"
@@ -58,24 +63,24 @@
                       data-ng-required="true"
                       data-ng-show="transactionIdx == -1">
                 <option value="INVOICE"
-                        data-th-text="#{com.cagst.swkroa.membership.transaction.invoice}">
+                        th:text="#{com.cagst.swkroa.membership.transaction.invoice}">
                   zzz Invoice
                 </option>
                 <option value="PAYMENT"
-                        data-th-text="#{com.cagst.swkroa.membership.transaction.payment}">
+                        th:text="#{com.cagst.swkroa.membership.transaction.payment}">
                   zzz Payment
                 </option>
               </select>
               <input class="form-control select2" name="type" readonly
-                     data-th-value="#{com.cagst.swkroa.membership.transaction.invoice}"
+                     th:value="#{com.cagst.swkroa.membership.transaction.invoice}"
                      data-ng-show="transactionIdx > -1 && transaction.transactionType == 'INVOICE'" />
               <input class="form-control" name="type" readonly
-                     data-th-value="#{com.cagst.swkroa.membership.transaction.payment}"
+                     th:value="#{com.cagst.swkroa.membership.transaction.payment}"
                      data-ng-show="transactionIdx > -1 && transaction.transactionType == 'PAYMENT'" />
             </div>
 
             <div class="col-xs-4">
-              <label class="form-label" data-th-text="#{com.cagst.swkroa.desc}">
+              <label class="form-label" th:text="#{com.cagst.swkroa.desc}">
                 zzz Desc
               </label>
               <input type="text" class="form-control" name="desc"
@@ -84,7 +89,7 @@
                      data-ng-options="type.display for type in entryTypes" />
             </div>
             <div class="col-xs-4" data-ng-class="{'has-error': amount.$invalid}">
-              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.amount}">
+              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.amount}">
                 zzz Amount
               </label>
               <input id="amount" name="amount" type="text" class="form-control" readonly
@@ -95,19 +100,13 @@
           <table class="table table-condensed spacer-top">
             <thead>
             <tr>
-              <th data-th-text="#{com.cagst.swkroa.membership.transaction.type}">
-                zzz Type
-              </th>
-              <th data-th-text="#{com.cagst.swkroa.membership.transaction.member}">
-                zzz Member
-              </th>
-              <th data-th-text="#{com.cagst.swkroa.membership.transaction.amount}">
-                zzz Amount
-              </th>
+              <th th:text="#{com.cagst.swkroa.membership.transaction.type}">zzz Type</th>
+              <th th:text="#{com.cagst.swkroa.membership.transaction.member}">zzz Member</th>
+              <th th:text="#{com.cagst.swkroa.membership.transaction.amount}">zzz Amount</th>
               <th>
                 <button type="button" class="btn btn-success btn-xs"
                         data-ng-click="addTransactionEntry()"
-                        data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.create}">
+                        th:attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.create}">
                   <i class="fa fa-plus"></i>
                 </button>
               </th>
@@ -138,7 +137,7 @@
               <td>
                 <button type="button" class="btn btn-danger btn-xs" data-tooltip="zzz Delete Entry"
                         data-ng-click="deleteTransactionEntry(entry)"
-                        data-th-attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
+                        th:attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
                   <i class="fa fa-trash-o"></i>
                 </button>
               </td>
@@ -159,7 +158,7 @@
 
           <div class="row spacer-top">
             <div class="col-xs-12">
-              <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.transaction.memo}">
+              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.memo}">
                 zzz Memo
               </label>
               <textarea class="form-control" rows="3" data-ng-model="transaction.memo"></textarea>
@@ -172,18 +171,18 @@
           <button type="button" class="btn btn-success"
                   data-ng-click="saveTransaction()"
                   data-ng-show="transactionIdx > -1"
-                  data-th-text="#{com.cagst.swkroa.update}">
+                  th:text="#{com.cagst.swkroa.update}">
             zzz Update
           </button>
           <button type="button" class="btn btn-success"
                   data-ng-click="saveTransaction()"
                   data-ng-show="transactionIdx == -1"
-                  data-th-text="#{com.cagst.swkroa.create}">
+                  th:text="#{com.cagst.swkroa.create}">
             zzz Create
           </button>
           <button type="button" class="btn btn-default"
                   data-dismiss="modal"
-                  data-th-text="#{com.cagst.swkroa.cancel}">
+                  th:text="#{com.cagst.swkroa.cancel}">
             zzz Cancel
           </button>
         </div>
@@ -193,16 +192,17 @@
 </div>
 
 <!-- Delete Transaction Dialog -->
-<div data-th-fragment="dlgDeleteTransaction">
+<div th:fragment="dlgDeleteTransaction">
   <div class="modal fade" id="deleteTransaction" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.transaction.delete.title}">zzz Please
-                                                                                                         confirm</h4>
+          <h4 class="modal-title" th:text="#{com.cagst.swkroa.membership.transaction.delete.title}">
+            zzz Please confirm
+          </h4>
         </div>
         <div class="modal-body">
-          <p data-th-text="#{com.cagst.swkroa.membership.transaction.delete.message}">zzz Delete this?</p>
+          <p th:text="#{com.cagst.swkroa.membership.transaction.delete.message}">zzz Delete this?</p>
 
           <div>
             <span>{{transaction.transactionDate | date:'mediumDate'}}</span>
@@ -213,12 +213,12 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-danger"
                   data-ng-click="removeTransaction()"
-                  data-th-text="#{com.cagst.swkroa.delete}">
+                  th:text="#{com.cagst.swkroa.delete}">
             zzz Delete
           </button>
           <button type="button" class="btn btn-primary"
                   data-dismiss="modal"
-                  data-th-text="#{com.cagst.swkroa.keep}">
+                  th:text="#{com.cagst.swkroa.keep}">
             zzz Keep
           </button>
         </div>
@@ -226,3 +226,5 @@
     </div>
   </div>
 </div>
+
+</html>

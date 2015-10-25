@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/js/maintain/codeset.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/maintain/codeset.js}"></script>
 </head>
 
 <body>
 
 <div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="codesetController">
   <div class="page-header">
-    <h3 data-th-text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
+    <h3 th:text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
   </div>
   <div class="container container-outline">
     <div class="row container-split">
       <div class="col-xs-5 pull-left clear-left clear-right">
         <div class="split-header divider-right">
           <div class="split-header-content">
-            <label class="control-label" data-th-text="#{com.cagst.swkroa.maintain.codeset.codesets}">
+            <label class="control-label" th:text="#{com.cagst.swkroa.maintain.codeset.codesets}">
               zzz Code Sets
             </label>
           </div>
@@ -35,7 +36,7 @@
       <div class="col-xs-7 pull-right clear-left clear-right">
         <div class="split-header divider-bottom">
           <div class="split-header-content">
-            <label class="control-label" data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalues}">
+            <label class="control-label" th:text="#{com.cagst.swkroa.maintain.codeset.codevalues}">
               zzz Coded Values
             </label>
           </div>
@@ -43,7 +44,7 @@
         <div class="list-group">
           <div data-ng-show="!codevalues.length">
             <em>
-              <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.maintain.notselected}">
+              <label class="panel-body text-muted text-center" th:text="#{com.cagst.swkroa.maintain.notselected}">
                 zzz No records found!
               </label>
             </em>
@@ -52,12 +53,12 @@
             <table class="table table-bordered table-hover table-inner">
               <thead>
               <tr>
-                <th data-th-text="#{com.cagst.swkroa.disp}" style="width:36%">zzz Display</th>
-                <th data-th-text="#{com.cagst.swkroa.mean}" style="width:36%">zzz Meaning</th>
+                <th th:text="#{com.cagst.swkroa.disp}" style="width:36%">zzz Display</th>
+                <th th:text="#{com.cagst.swkroa.mean}" style="width:36%">zzz Meaning</th>
                 <th style="width: 24%">
                   <a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="addCodeValue()">
                     <i class="fa fa-plus"></i>
-                    <span data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.add}">zzz Add</span>
+                    <span th:text="#{com.cagst.swkroa.maintain.codeset.codevalue.add}">zzz Add</span>
                   </a>
                 </th>
               </tr>
@@ -91,25 +92,25 @@
                     <div class="form-group btn-group pull-right">
                       <button type="submit" class="btn btn-success btn-xs" data-ng-disabled="rowform.$waiting">
                         <i class="fa fa-save"></i>
-                        <span data-th-text="#{com.cagst.swkroa.save}">zzz Save</span>
+                        <span th:text="#{com.cagst.swkroa.save}">zzz Save</span>
                       </button>
                       <a href="#" class="btn btn-xs btn-cancel" data-ng-disabled="rowform.$waiting"
                          data-ng-click="rowform.$cancel()">
                         <i class="fa fa-ban"></i>
-                        <span data-th-text="#{com.cagst.swkroa.cancel}">zzz Cancel</span>
+                        <span th:text="#{com.cagst.swkroa.cancel}">zzz Cancel</span>
                       </a>
                     </div>
                   </form>
                   <div class="btn-group pull-right" data-ng-show="!rowform.$visible">
                     <button type="button" class="btn btn-primary btn-xs" data-ng-click="rowform.$show()">
                       <i class="fa fa-edit"></i>
-                      <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                      <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
                     </button>
                     <button type="button" class="btn btn-danger btn-xs"
                             data-ng-click="selectedCodeValue(codevalue)"
                             data-toggle="modal" data-target="#confirmDeletion">
                       <i class="fa fa-trash-o"></i>
-                      <span data-th-text="#{com.cagst.swkroa.delete}">zzz Delete</span>
+                      <span th:text="#{com.cagst.swkroa.delete}">zzz Delete</span>
                     </button>
                   </div>
                 </td>
@@ -126,12 +127,12 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.title}">
+          <h4 class="modal-title" th:text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.title}">
             zzz Please confirm
           </h4>
         </div>
         <div class="modal-body">
-          <span data-th-text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.message}">
+          <span th:text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.message}">
             zzz Delete this?
           </span>
         </div>

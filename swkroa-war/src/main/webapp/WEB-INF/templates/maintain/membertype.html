@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/js/maintain/membertype.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/maintain/membertype.js}"></script>
 </head>
 
 <body>
 
 <div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="membertypeController">
   <div class="page-header">
-    <h3 data-th-text="#{com.cagst.swkroa.maintain.membertype.title}">zzz Maintain Member Types</h3>
+    <h3 th:text="#{com.cagst.swkroa.maintain.membertype.title}">zzz Maintain Member Types</h3>
   </div>
 
   <div class="container container-outline clear-left">
@@ -33,88 +34,131 @@
       <div class="col-xs-7">
         <div data-ng-show="!selected">
           <em>
-            <label class="panel-body text-muted text-center" data-th-text="#{com.cagst.swkroa.maintain.membertype.notselected}">
+            <label class="panel-body text-muted text-center"
+                   th:text="#{com.cagst.swkroa.maintain.membertype.notselected}">
               zzz No record selected!
             </label>
           </em>
         </div>
-        <div data-ng-show="selected">
-          <form name="editform" data-editable-form>
-            <div class="row">
-              <div class="col-xs-6 form-group">
-                <div>
-                  <label for="description" class="control-label"
-                         data-ng-class="{'label-required': editform.$visible}"
-                         data-th-text="#{com.cagst.swkroa.desc}">zzz Description</label>
-                </div>
-                <div>
+        <div data-ng-show="selected" class="spacer-top">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <span class="panel-title" th:text="#{com.cagst.swkroa.details}">zzz Details</span>
+            </div>
+            <div class="panel-body">
+              <form name="editform"
+                    data-editable-form
+                    onaftersave="saveMemberType(selected)">
+                <div class="row">
+                  <div class="col-xs-6 form-group">
+                    <div>
+                      <label for="description" class="control-label"
+                             data-ng-class="{'label-required': editform.$visible}"
+                             th:text="#{com.cagst.swkroa.desc}">zzz Description</label>
+                    </div>
+                    <div>
                   <span id="description"
-                         data-editable-text="selected.memberTypeDisplay"
-                         data-e-name="display"
-                         data-e-form="editform">
+                        data-editable-text="selected.memberTypeDisplay"
+                        data-e-name="display"
+                        data-e-form="editform">
                     {{selected.memberTypeDisplay}}
                   </span>
-                </div>
-              </div>
-              <div class="col-xs-6 form-group">
-                <div>&nbsp</div>
-                <div>
+                    </div>
+                    <div data-ng-class="{'form-row-spacer': !editform.$visible}">
+                      <label for="meaning" class="control-label"
+                             data-ng-class="{'label-required': editform.$visible}"
+                             th:text="#{com.cagst.swkroa.mean}">zzz Meaning</label>
+                    </div>
+                    <div>
+                  <span id="meaning"
+                        data-editable-text="selected.memberTypeMeaning"
+                        data-e-name="meaning"
+                        data-e-form="editform">
+                    {{selected.memberTypeMeaning}}
+                  </span>
+                    </div>
+                  </div>
+                  <div class="col-xs-6 form-group">
+                    <div class="row-spacer">
                   <span id="primary"
                         data-editable-checkbox="selected.primary"
                         data-e-name="primary"
                         data-e-form="editform"
-                        data-e-title="Primary Member">
-                    Primary Member: {{selected.primary && "Yes" || "No"}}
+                        th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.primary}">
+                    <b th:text="#{com.cagst.swkroa.maintain.membertype.primary}">zzz Primary</b>
+                    {{selected.primary && "Yes" || "No"}}
                   </span>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-6 form-group">
-                <div>
-                  <label for="meaning" class="control-label"
-                         data-ng-class="{'label-required': editform.$visible}"
-                         data-th-text="#{com.cagst.swkroa.mean}">zzz Meaning</label>
-                </div>
-                <div>
-                  <span id="meaning"
-                         data-editable-text="selected.memberTypeMeaning"
-                         data-e-name="meaning"
-                         data-e-form="editform">
-                    {{selected.memberTypeMeaning}}
-                  </span>
-                </div>
-              </div>
-              <div class="col-xs-6 form-group">
-                <div>&nbsp</div>
-                <div>
+                    </div>
+                    <div class="row-spacer">
                   <span id="allowSpouse"
                         data-editable-checkbox="selected.allowSpouse"
                         data-e-name="allowSpouse"
                         data-e-form="editform"
-                        data-e-title="Allow Spouse">
-                    Allow Spouse: {{selected.allowSpouse && "Yes" || "No"}}
+                        th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.spouse}">
+                    <b th:text="#{com.cagst.swkroa.maintain.membertype.spouse}">zzz Spouse</b>
+                    {{selected.allowSpouse && "Yes" || "No"}}
                   </span>
+                    </div>
+                    <div class="row-spacer">
+                  <span id="allowMember"
+                        data-editable-checkbox="selected.allowMember"
+                        data-e-name="allowMember"
+                        data-e-form="editform"
+                        th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.family}">
+                    <b th:text="#{com.cagst.swkroa.maintain.membertype.family}">zzz Members</b>
+                    {{selected.allowMember && "Yes" || "No"}}
+                  </span>
+                    </div>
+
+                    <div class="row-spacer" data-ng-show="editform.$visible">
+                      <button type="submit" class="btn btn-success btn-xs" data-ng-disabled="editform.$waiting">
+                        <i class="fa fa-save"></i>
+                        <span th:text="#{com.cagst.swkroa.save}">zzz Save</span>
+                      </button>
+                      <a href="#" class="btn btn-cancel btn-xs" data-ng-disabled="editform.$waiting"
+                         data-ng-click="editform.$cancel()">
+                        <i class="fa fa-ban"></i>
+                        <span th:text="#{com.cagst.swkroa.cancel}">zzz Cancel</span>
+                      </a>
+                    </div>
+                    <div class="row-spacer" data-ng-show="!editform.$visible">
+                      <button type="button" class="btn btn-primary btn-xs" data-ng-click="editform.$show()">
+                        <i class="fa fa-edit"></i>
+                        <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
-          </form>
-          <div data-ng-show="editform.$visible">
-            <button type="submit" class="btn btn-success" data-ng-disabled="editform.$waiting">
-              <i class="fa fa-save"></i>
-              <span data-th-text="#{com.cagst.swkroa.save}">zzz Save</span>
-            </button>
-            <a href="#" class="btn btn-cancel" data-ng-disabled="editform.$waiting"
-               data-ng-click="editform.$cancel()">
-              <i class="fa fa-ban"></i>
-              <span data-th-text="#{com.cagst.swkroa.cancel}">zzz Cancel</span>
-            </a>
           </div>
-          <div data-ng-show="!editform.$visible">
-            <button type="button" class="btn btn-primary" data-ng-click="editform.$show()">
-              <i class="fa fa-edit"></i>
-              <span data-th-text="#{com.cagst.swkroa.edit}">zzz Edit</span>
-            </button>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <span class="panel-title" th:text="#{com.cagst.swkroa.maintain.membertype.rates}">
+                zzz Rates
+              </span>
+            </div>
+            <div class="panel-body clear-padding">
+              <form name="amounts">
+                  <table class="table table-hover table-inner">
+                    <thead>
+                    <tr>
+                      <th th:text="#{com.cagst.swkroa.maintain.membertype.dues.amount}">zzz Amount</th>
+                      <th th:text="#{com.cagst.swkroa.maintain.membertype.dues.start}">zzz Beginning On</th>
+                      <th th:text="#{com.cagst.swkroa.maintain.membertype.dues.stop}">zzz Ending On</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-repeat="type in allMemberTypes | orderBy: 'beginEffectiveDateTime': true">
+                      <td>{{type.duesAmount | currency}}</td>
+                      <td>{{type.beginEffectiveDateTime | date:'medium'}}</td>
+                      <td>{{type.endEffectiveDateTime | date:'medium'}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+              </form>
+            </div>
           </div>
         </div>
       </div>

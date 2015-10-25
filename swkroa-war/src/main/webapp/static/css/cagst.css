@@ -185,6 +185,14 @@ a:hover, a:focus {
   margin: 5px;
 }
 
+.form-row-spacer {
+  padding-top: 15px;
+}
+
+.row-spacer {
+  padding-top: 5px;
+}
+
 label {
   cursor:default;
 }

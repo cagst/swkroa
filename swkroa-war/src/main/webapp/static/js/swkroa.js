@@ -520,7 +520,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
-  this.saveMembership = function(membership) {
+  this._saveMembership = function(membership) {
     var promise = $http.post(rootUrl, membership);
 
     promise.success = function(fn) {
@@ -589,11 +589,11 @@ swkroaApp.service('membershipService', ['$http', function($http) {
 
     if (transDescArg) {
       transDesc = transDescArg;
-    };
+    }
 
     if (transMemoArg) {
       transMemo = transMemoArg;
-    };
+    }
 
     var data = {
       membershipIds: membershipIdsArg,
@@ -759,7 +759,7 @@ swkroaApp.service('memberTypeService', ['$http', function($http) {
     };
 
     return promise;
-  }
+  };
 
 }]);
 
