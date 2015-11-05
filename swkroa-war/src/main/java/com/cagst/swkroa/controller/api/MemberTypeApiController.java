@@ -1,7 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import com.cagst.swkroa.member.MemberType;
@@ -56,12 +55,7 @@ public class MemberTypeApiController {
     LOGGER.info("Received request to retrieve all active member types for member type [{}]", memberTypeId);
 
     List<MemberType> types = memberTypeRepository.getActiveMemberTypesForMemberType(memberTypeId);
-    Collections.sort(types, new Comparator<MemberType>() {
-      @Override
-      public int compare(MemberType lhs, MemberType rhs) {
-        return lhs.getBeginEffectiveDateTime().compareTo(rhs.getBeginEffectiveDateTime());
-      }
-    });
+    types.sort((MemberType rhs, MemberType lhs) -> rhs.getBeginEffectiveDate().compareTo(rhs.getBeginEffectiveDate()));
 
     return types;
   }
@@ -98,5 +92,31 @@ public class MemberTypeApiController {
     headers.setLocation(locationUri.toUri());
 
     return new ResponseEntity<>(savedMemberType, headers, newMemberType ? HttpStatus.CREATED : HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/{memberTypeId}", method = RequestMethod.PUT)
+  public ResponseEntity<MemberType> saveMemberTypeRate(final @PathVariable("memberTypeId") long memberTypeId,
+                                                       final @RequestBody MemberType memberType) {
+
+    LOGGER.info("Received request to save membertype rate [{}]", memberTypeId);
+
+    // find the currently active and effective member type and set its end effective date
+    MemberType currentMemberType = memberTypeRepository.getMemberTypeByUID(memberTypeId);
+    currentMemberType.setEndEffectiveDate(memberType.getBeginEffectiveDate());
+
+    memberTypeRepository.saveMemberType(currentMemberType, WebAppUtils.getUser());
+
+    // ensure the new member type has the correct values
+    memberType.setPreviousMemberTypeUID(currentMemberType.getPreviousMemberTypeUID());
+    memberType.setMemberTypeDisplay(currentMemberType.getMemberTypeDisplay());
+    memberType.setMemberTypeMeaning(currentMemberType.getMemberTypeMeaning());
+    memberType.setPrimary(currentMemberType.isPrimary());
+    memberType.setAllowSpouse(currentMemberType.isAllowSpouse());
+    memberType.setAllowMember(currentMemberType.isAllowMember());
+
+    // save the new MemberType
+    MemberType savedMemberType = memberTypeRepository.saveMemberType(memberType, WebAppUtils.getUser());
+
+    return new ResponseEntity<>(savedMemberType, HttpStatus.OK);
   }
 }

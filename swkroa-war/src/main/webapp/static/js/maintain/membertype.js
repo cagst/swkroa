@@ -39,7 +39,15 @@ swkroaApp.controller('membertypeController', ['$scope', 'memberTypeService', '$h
   };
 
   $scope.newRate = function() {
-    $scope.memberRate = {active: true, beginEffectiveDateTime: new Date(), duesAmount: $scope.selected.duesAmount};
+    $scope.memberRate = {active: true, beginEffectiveDate: new Date(), duesAmount: $scope.selected.duesAmount};
   };
+
+  $scope.saveNewRate = function() {
+    $http.put('/api/membertypes/' + $scope.selected.previousMemberTypeUID, $scope.memberRate).success(function(data) {
+      $scope.getType($scope.selected);
+    });
+
+    $('#changeRateDlg').modal('hide');
+  }
 
 }]);

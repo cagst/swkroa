@@ -27,7 +27,6 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link MemberTypeRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("memberTypeRepository")
 /* package */class MemberTypeRepositoryJdbc extends BaseRepositoryJdbc implements MemberTypeRepository {
@@ -54,26 +53,13 @@ import org.springframework.util.Assert;
 
   @Override
   @Cacheable(value = "memberTypes")
-  public MemberType getMemberTypeByID(final long id)
+  public MemberType getMemberTypeByUID(final long id)
       throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMemberTypeByID for [{}].", id);
 
-    return getMemberTypeByIDAsOf(id, DateTime.now());
-  }
-
-  @Override
-  @Cacheable(value = "memberTypes")
-  public MemberType getMemberTypeByIDAsOf(final long id, final DateTime effectiveDateTime)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
-
-    Assert.notNull(effectiveDateTime, "Assertion Failed - argument [effectiveDateTime] cannot be null");
-
-    LOGGER.info("Calling getMemberTypeByIDAsOf for [{}] as of [{}]", id, effectiveDateTime);
-
-    Map<String, Object> params = new HashMap<String, Object>(2);
+    Map<String, Object> params = new HashMap<>();
     params.put("member_type_id", id);
-    params.put("eff_dt_tm", effectiveDateTime.toDate());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
@@ -86,10 +72,10 @@ import org.springframework.util.Assert;
     if (types.size() == 1) {
       return types.get(0);
     } else if (types.size() == 0) {
-      LOGGER.warn("MemberType with ID of [{}] was not found for [{}].", id, effectiveDateTime);
+      LOGGER.warn("MemberType with ID of [{}] was not found.", id);
       throw new EmptyResultDataAccessException(1);
     } else {
-      LOGGER.error("More than one MemberType with ID of [{}] was found for [{}].", id, effectiveDateTime);
+      LOGGER.error("More than one MemberType with ID of [{}] was found.", id);
       throw new IncorrectResultSizeDataAccessException(1, types.size());
     }
   }
@@ -116,7 +102,7 @@ import org.springframework.util.Assert;
 
     Map<String, Object> params = new HashMap<String, Object>(2);
     params.put("member_type_meaning", meaning);
-    params.put("eff_dt_tm", effectiveDateTime.toDate());
+    params.put("eff_dt", effectiveDateTime.toDate());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
@@ -153,7 +139,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getActiveMemberTypesAsOf [{}]", effectiveDateTime);
 
     Map<String, Object> params = new HashMap<String, Object>(1);
-    params.put("eff_dt_tm", effectiveDateTime.toDate());
+    params.put("eff_dt", effectiveDateTime.toDate());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 

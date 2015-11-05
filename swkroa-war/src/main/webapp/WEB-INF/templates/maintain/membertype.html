@@ -157,10 +157,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr data-ng-repeat="type in allMemberTypes | orderBy: 'beginEffectiveDateTime': true">
+                    <tr data-ng-repeat="type in allMemberTypes | orderBy: 'beginEffectiveDate': true">
                       <td>{{type.duesAmount | currency}}</td>
-                      <td>{{type.beginEffectiveDateTime | date:'medium'}}</td>
-                      <td>{{type.endEffectiveDateTime | date:'medium'}}</td>
+                      <td>{{type.beginEffectiveDate | date:'mediumDate'}}</td>
+                      <td>{{type.endEffectiveDate | date:'mediumDate'}}</td>
                     </tr>
                     </tbody>
                   </table>
@@ -191,7 +191,7 @@
                      data-is-open="opened"
                      data-show-button-bar="false"
                      data-show-weeks="false"
-                     data-ng-model="memberRate.beginEffectiveDateTime" />
+                     data-ng-model="memberRate.beginEffectiveDate" />
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" data-ng-click="open($event)">
                   <i class="fa fa-calendar"></i>

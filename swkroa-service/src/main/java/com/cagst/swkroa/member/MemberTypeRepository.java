@@ -29,28 +29,8 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByID(final long id) throws EmptyResultDataAccessException,
+  MemberType getMemberTypeByUID(final long id) throws EmptyResultDataAccessException,
       IncorrectResultSizeDataAccessException;
-
-  /**
-   * Retrieves a {@link MemberType} by its identifier that is in effect as of the specified
-   * effective date time.
-   *
-   * @param id
-   *     A {@link long} that identifies the member type to retrieve.
-   * @param effectiveDateTime
-   *     A {@link DateTime} that specifies the effective time to retrieve the member type for.
-   *
-   * @return A {@link MemberType}, if one exists, that matches the specified id and is in effect as
-   * of the time specified; otherwise, a {@code null} is returned.
-   *
-   * @throws EmptyResultDataAccessException
-   *     if no MemberType was found.
-   * @throws IncorrectResultSizeDataAccessException
-   *     if more than 1 MemberType was found.
-   */
-  MemberType getMemberTypeByIDAsOf(final long id, final DateTime effectiveDateTime)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link MemberType} by its meaning that is in effect as of NOW.

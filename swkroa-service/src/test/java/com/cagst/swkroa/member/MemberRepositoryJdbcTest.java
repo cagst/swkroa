@@ -61,8 +61,8 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     familyHead.setMemberTypeMeaning(MemberType.FAMILY_HEAD);
     familyHead.setMemberTypeDisplay("Family Head");
 
-    Mockito.when(memberTypeRepo.getMemberTypeByID(1L)).thenReturn(regularMember);
-    Mockito.when(memberTypeRepo.getMemberTypeByID(2L)).thenReturn(familyHead);
+    Mockito.when(memberTypeRepo.getMemberTypeByUID(1L)).thenReturn(regularMember);
+    Mockito.when(memberTypeRepo.getMemberTypeByUID(2L)).thenReturn(familyHead);
 
     Mockito.when(memberTypeRepo.getMemberTypeByMeaning(MemberType.REGULAR)).thenReturn(regularMember);
     Mockito.when(memberTypeRepo.getMemberTypeByMeaning(MemberType.FAMILY_HEAD)).thenReturn(familyHead);

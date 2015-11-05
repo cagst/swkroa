@@ -6,8 +6,8 @@ SELECT mt2.member_type_id
       ,mt2.primary_ind
       ,mt2.allow_spouse_ind
       ,mt2.allow_member_ind
-      ,mt2.beg_eff_dt_tm
-      ,mt2.end_eff_dt_tm
+      ,mt2.beg_eff_dt
+      ,mt2.end_eff_dt
       ,mt2.active_ind
       ,mt2.updt_cnt AS member_type_updt_cnt
   FROM member_type mt1

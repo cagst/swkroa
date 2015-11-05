@@ -5,8 +5,8 @@ UPDATE member_type
       ,primary_ind         = :primary_ind
       ,allow_spouse_ind    = :allow_spouse_ind
       ,allow_member_ind    = :allow_member_ind
-      ,beg_eff_dt_tm       = :beg_eff_dt_tm
-      ,end_eff_dt_tm       = :end_eff_dt_tm
+      ,beg_eff_dt          = :beg_eff_dt
+      ,end_eff_dt          = :end_eff_dt
       ,active_ind          = :active_ind
       ,updt_cnt            = updt_cnt + 1
       ,updt_id             = :updt_id
