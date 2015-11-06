@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
@@ -8,24 +9,24 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
-  <title layout:title-pattern="$DECORATOR_TITLE" data-th-text="#{com.cagst.swkroa.title}">zzz SWKROA</title>
+  <title layout:title-pattern="$DECORATOR_TITLE" th:text="#{com.cagst.swkroa.title}">zzz SWKROA</title>
 
-  <link type="text/css" data-th-href="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css}"
+  <link type="text/css" th:href="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css}"
         rel="stylesheet" />
-  <link type="text/css" data-th-href="@{/static/css/cagst.css}" rel="stylesheet" />
-  <link type="text/css" data-th-href="@{/static/css/swkroa.css}" rel="stylesheet" />
+  <link type="text/css" th:href="@{/static/css/cagst.css}" rel="stylesheet" />
+  <link type="text/css" th:href="@{/static/css/swkroa.css}" rel="stylesheet" />
 </head>
 <body>
 
 <div id="page-header">
   <span id="page-title">
-    <a data-th-href="@{/}" href="#">
-      <img data-th-src="@{/static/images/swkroa_logo_small.jpg}" />
+    <a th:href="@{/}" href="#">
+      <img th:src="@{/static/images/swkroa_logo_small.jpg}" />
     </a>
   </span>
   <ul id="account-navigation">
     <li>
-      <a href="#" data-th-text="#{com.cagst.swkroa.header.help}">
+      <a href="#" th:text="#{com.cagst.swkroa.header.help}">
         zzz Help
       </a>
     </li>
@@ -35,7 +36,7 @@
 <div id="page-navigation" class="navbar navbar-inverse">
   <div class="navbar-collapse">
     <span class="navbar-brand pull-right">
-      <a href="#" data-th-text="#{com.cagst.brand}">zzz CAGST</a>
+      <a href="#" th:text="#{com.cagst.brand.title}">zzz CAGST</a>
     </span>
   </div>
 </div>

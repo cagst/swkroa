@@ -6,11 +6,9 @@ SELECT member_type_id
       ,primary_ind
       ,allow_spouse_ind
       ,allow_member_ind
-      ,beg_eff_dt_tm
-      ,end_eff_dt_tm
+      ,beg_eff_dt
+      ,end_eff_dt
       ,active_ind
       ,updt_cnt AS member_type_updt_cnt
   FROM member_type
- WHERE prev_member_type_id = :member_type_id
-   AND beg_eff_dt_tm <= :eff_dt_tm
-   AND (end_eff_dt_tm IS NULL OR end_eff_dt_tm >= :eff_dt_tm)
+ WHERE member_type_id = :member_type_id

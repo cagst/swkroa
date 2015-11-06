@@ -4,7 +4,6 @@
  * Provides functionality for the Maintain User pages.
  *
  * Author:  Craig Gaskill
- * Version: 1.0.0
  */
 
 swkroaApp.config(function($stateProvider, $urlRouterProvider) {
@@ -140,14 +139,16 @@ swkroaApp.controller('userController',
   };
 }]);
 
-swkroaApp.controller('modifyUserController', ['$scope', '$http', '$state', function($scope, $http, $state) {
+swkroaApp.controller('modifyUserController',
+    ['$scope', '$http', '$state', 'codesetService',
+    function($scope, $http, $state, codesetService) {
   var original = angular.copy($scope.share.user);
 
   $("#errorMessage").hide();
 
   $scope.states = $scope.contactService.getStates();
 
-  $http.get('/api/codeset/TITLE/').success(function(data) {
+  codesetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
     $scope.titles = data;
   });
 

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-11-05T20:59:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembersForCounties" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="0d6b487e-96ec-4032-bd90-fb5a29b10db4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="ReportTitle" fontName="TimesNewRoman" fontSize="18"/>
 	<style name="Text Body" isDefault="true" fontName="TimesNewRoman" fontSize="11"/>
 	<style name="ColumnHeader" fontName="TimesNewRoman" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
@@ -35,7 +39,7 @@
                                 ON (m.membership_id = mc.membership_id AND m.active_ind = 1)
                         INNER JOIN member_type mt
                                 ON (mt.prev_member_type_id = m.member_type_id AND mt.active_ind = 1
-                               AND  mt.beg_eff_dt_tm <= NOW() AND (mt.end_eff_dt_tm > NOW() OR mt.end_eff_dt_tm IS NULL)
+                               AND  mt.beg_eff_dt <= NOW() AND (mt.end_eff_dt > NOW() OR mt.end_eff_dt IS NULL)
                                AND  mt.member_type_meaning != 'SPOUSE')
                    LEFT OUTER JOIN address a
                                 ON (a.parent_entity_name = 'MEMBER' AND a.parent_entity_id = m.member_id AND a.active_ind = 1)
@@ -53,7 +57,7 @@
            AND m.active_ind = 1
            AND mt.prev_member_type_id = m.member_type_id
            AND mt.active_ind = 1
-           AND mt.beg_eff_dt_tm <= NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm >= NOW())
+           AND mt.beg_eff_dt <= NOW() AND (mt.end_eff_dt IS NULL OR mt.end_eff_dt >= NOW())
            AND mt.member_type_meaning != 'SPOUSE'
          UNION
         -- Find Members who live in a City in Kiowa county
@@ -68,7 +72,7 @@
            AND m.active_ind = 1
            AND mt.prev_member_type_id = m.member_type_id
            AND mt.active_ind = 1
-           AND mt.beg_eff_dt_tm <= NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm >= NOW())
+           AND mt.beg_eff_dt <= NOW() AND (mt.end_eff_dt IS NULL OR mt.end_eff_dt >= NOW())
            AND mt.member_type_meaning != 'SPOUSE'
          UNION
         -- Find Members who live in a City in Barber county
@@ -83,7 +87,7 @@
            AND m.active_ind = 1
            AND mt.prev_member_type_id = m.member_type_id
            AND mt.active_ind = 1
-           AND mt.beg_eff_dt_tm <= NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm >= NOW())
+           AND mt.beg_eff_dt <= NOW() AND (mt.end_eff_dt IS NULL OR mt.end_eff_dt >= NOW())
            AND mt.member_type_meaning != 'SPOUSE'
          UNION
         -- Find Members who live in a City in Harper county
@@ -98,7 +102,7 @@
            AND m.active_ind = 1
            AND mt.prev_member_type_id = m.member_type_id
            AND mt.active_ind = 1
-           AND mt.beg_eff_dt_tm <= NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm >= NOW())
+           AND mt.beg_eff_dt <= NOW() AND (mt.end_eff_dt IS NULL OR mt.end_eff_dt >= NOW())
            AND mt.member_type_meaning != 'SPOUSE'
          UNION
         -- Find Members who live in a City in Kingman county
@@ -113,7 +117,7 @@
            AND m.active_ind = 1
            AND mt.prev_member_type_id = m.member_type_id
            AND mt.active_ind = 1
-           AND mt.beg_eff_dt_tm <= NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm >= NOW())
+           AND mt.beg_eff_dt <= NOW() AND (mt.end_eff_dt IS NULL OR mt.end_eff_dt >= NOW())
            AND mt.member_type_meaning != 'SPOUSE'
          UNION
         -- Find Members who live in a City in Stafford county
@@ -128,7 +132,7 @@
            AND m.active_ind = 1
            AND mt.prev_member_type_id = m.member_type_id
            AND mt.active_ind = 1
-           AND mt.beg_eff_dt_tm <= NOW() AND (mt.end_eff_dt_tm IS NULL OR mt.end_eff_dt_tm >= NOW())
+           AND mt.beg_eff_dt <= NOW() AND (mt.end_eff_dt IS NULL OR mt.end_eff_dt >= NOW())
            AND mt.member_type_meaning != 'SPOUSE'
       )iq
      INNER JOIN member m ON (m.member_Id = iq.member_id)
@@ -136,9 +140,7 @@ LEFT OUTER JOIN person p ON (p.person_id = m.person_id AND p.active_ind = 1)
 LEFT OUTER JOIN address a ON (a.address_id = iq.address_id)
 ORDER BY county_name, member_name;]]>
 	</queryString>
-	<field name="county_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="county_name" class="java.lang.String"/>
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -150,9 +152,7 @@ ORDER BY county_name, member_name;]]>
 	<field name="state_code" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="postal_code" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="postal_code" class="java.lang.String"/>
 	<field name="royalty_counties" class="java.lang.Long"/>
 	<group name="CountyGroup" isStartNewPage="true" isResetPageNumber="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{county_name}]]></groupExpression>

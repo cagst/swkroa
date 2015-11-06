@@ -199,7 +199,7 @@ public final class MembershipServiceImpl implements MembershipService {
 
       // Create Transaction Entries
       for (Member member : members) {
-        MemberType type = memberTypeRepo.getMemberTypeByID(member.getMemberType().getMemberTypeUID());
+        MemberType type = memberTypeRepo.getMemberTypeByUID(member.getMemberType().getMemberTypeUID());
         if (type.getDuesAmount().compareTo(BigDecimal.ZERO) > 0) {
           TransactionEntry entry = new TransactionEntry();
           entry.setTransaction(invoice);

@@ -17,8 +17,8 @@
   <form method="POST" name="userForm" novalidate data-ng-submit="save()" class="css-form">
     <div class="row row-inner spacer-top">
       <div class="col-xs-2">
-        <label>Title</label>
-        <select class="form-control"
+        <label for="title">Title</label>
+        <select id="title" class="form-control"
                 data-ng-model="share.user.titleCD"
                 data-ng-options="title.codeValueUID as title.display for title in titles">
         </select>
@@ -59,10 +59,10 @@
                data-ng-required="true" />
       </div>
       <div class="col-xs-2">
-        <label>Expires On</label>
+        <label for="expire-dt">Expires On</label>
 
         <div class="input-group">
-          <input type="text" class="form-control"
+          <input id="expire-dt" type="text" class="form-control"
                  data-datepicker-popup="MM/dd/yyyy"
                  data-is-open="opened"
                  data-show-button-bar="false"
@@ -85,15 +85,15 @@
 
     <div class="row row-inner spacer-top" data-ng-show="share.user.userUID == 0">
       <div class="col-xs-2" data-ng-class="{'has-error': userForm.password.$invalid}">
-        <label class="label-required">Password</label>
-        <input type="password" class="form-control" name="password" maxlength="50"
+        <label class="label-required" for="new-password">Password</label>
+        <input id="new-password" type="password" class="form-control" name="password" maxlength="50"
                data-ng-model="share.user.password"
                data-ng-blur="validatePasswordFields()"
                data-ng-required="share.user.userUID == 0" />
       </div>
       <div class="col-xs-2" data-ng-class="{'has-error': userForm.confirmPassword.$invalid}">
-        <label class="label-required">Confirm Password</label>
-        <input type="password" class="form-control" name="confirmPassword" maxlength="50"
+        <label class="label-required" for="confirm-password">Confirm Password</label>
+        <input id="confirm-password" type="password" class="form-control" name="confirmPassword" maxlength="50"
                data-ng-model="confirmPassword"
                data-ng-blur="validatePasswordFields()"
                data-ng-required="share.user.userUID == 0" />

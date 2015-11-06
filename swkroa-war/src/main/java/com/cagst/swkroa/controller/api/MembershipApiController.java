@@ -185,7 +185,7 @@ public final class MembershipApiController {
     HttpHeaders headers = new HttpHeaders();
     headers.setLocation(locationUri.toUri());
 
-    return new ResponseEntity<Membership>(savedMembership, headers, newMembership ? HttpStatus.CREATED : HttpStatus.OK);
+    return new ResponseEntity<>(savedMembership, headers, newMembership ? HttpStatus.CREATED : HttpStatus.OK);
   }
 
   /**

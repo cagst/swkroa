@@ -168,8 +168,8 @@ import org.springframework.util.Assert;
   public CodeValue saveCodeValueForCodeSet(final CodeValue codeValue, final User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
 
-    Assert.notNull(codeValue, "[Assertion failed] - argument codeValue cannot be null.");
-    Assert.notNull(user, "[Assertion failed] - argument user cannot be null.");
+    Assert.notNull(codeValue, "Assertion failed - argument codeValue cannot be null.");
+    Assert.notNull(user, "Assertion failed - argument user cannot be null.");
 
     LOGGER.info("Saving CodeValue [{}].", codeValue.getDisplay());
 

@@ -35,7 +35,7 @@ public class CountyRepositoryJdbcTest extends BaseTestRepository {
   @Test
   public void testGetActiveCounties() {
     Collection<County> counties = repo.getActiveCounties();
-    assertNotNull("Ensure the counties collection is not null.");
+    assertNotNull("Ensure the counties collection is not null.", counties);
     assertFalse("Ensure the counties collection is not empty.", counties.isEmpty());
     assertEquals("Ensure we found the correct number of counties.", 6, counties.size());
   }
@@ -46,7 +46,7 @@ public class CountyRepositoryJdbcTest extends BaseTestRepository {
   @Test
   public void testGetCountiesForState() {
     Collection<County> counties = repo.getCountiesForState("KS");
-    assertNotNull("Ensure the counties collection is not null.");
+    assertNotNull("Ensure the counties collection is not null.", counties);
     assertFalse("Ensure the counties collection is not empty.", counties.isEmpty());
     assertEquals("Ensure we found the correct number of counties.", 3, counties.size());
   }

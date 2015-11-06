@@ -64,7 +64,7 @@ swkroaApp.controller('membershipController',
     $('#createdMessage').hide();
     $('#updatedMessage').hide();
 
-    var param = "";
+    var params = "";
 
     if ($scope.query && $scope.query.length > 0) {
       params = '?q=' + $scope.query;

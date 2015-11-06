@@ -81,6 +81,8 @@ public final class CodeSetApiController {
    *    A {@link String} that represents the {@link CodeSet} to associate the {@link CodeValue CodeValues} to.
    * @param codeValue
    *    The {@link CodeValue} to persist.
+   * @param request
+   *    The {@link HttpServletRequest} sent from the caller.
    *
    * @return The {@link CodeValue} after it has been persisted.
    */

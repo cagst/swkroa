@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
@@ -14,9 +15,9 @@
   <div class="row">
     <div class="col-xs-2">
       <a class="btn btn-primary form-control"
-         data-th-href="@{/report/custom/membersbycounty.pdf}" target="_blank">
+         th:href="@{/report/custom/membersbycounty.pdf}" target="_blank">
         <i class="fa fa-print"></i>
-        <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
+        <span th:text="#{com.cagst.swkroa.print}">zzz Print</span>
       </a>
     </div>
   </div>

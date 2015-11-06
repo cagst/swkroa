@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0.0
  */
 @RestController
+@RequestMapping(value = "/api/counties")
 public final class CountyApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(CountyApiController.class);
 
@@ -30,7 +31,7 @@ public final class CountyApiController {
    *
    * @return A JSON representation of the active Counties within the system.
    */
-  @RequestMapping(value = "/api/counties", method = RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public List<County> getActiveCounties() {
     LOGGER.info("Received request to retrieve active counties.");
 

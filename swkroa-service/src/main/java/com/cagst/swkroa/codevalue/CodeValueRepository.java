@@ -16,16 +16,16 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CodeValueRepository {
-  public static final String CLOSE_REASONS = "CLOSE_REASONS";
-  public static final String GENDER = "GENDER";
-  public static final String TITLE = "TITLE";
-  public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
-  public static final String PHONE_TYPE = "PHONE_TYPE";
-  public static final String EMAIL_TYPE = "EMAIL_TYPE";
-  public static final String ENTITY_TYPE = "ENTITY_TYPE";
-  public static final String MEMBERSHIP_TYPE = "MEMBERSHIP_TYPE";
-  public static final String VERIFICATION_TYPE = "VERIFICATION_TYPE";
-  public static final String TRANSACTION_TYPE = "TRANSACTION_TYPE";
+  String CLOSE_REASONS = "CLOSE_REASONS";
+  String GENDER = "GENDER";
+  String TITLE = "TITLE";
+  String ADDRESS_TYPE = "ADDRESS_TYPE";
+  String PHONE_TYPE = "PHONE_TYPE";
+  String EMAIL_TYPE = "EMAIL_TYPE";
+  String ENTITY_TYPE = "ENTITY_TYPE";
+  String MEMBERSHIP_TYPE = "MEMBERSHIP_TYPE";
+  String VERIFICATION_TYPE = "VERIFICATION_TYPE";
+  String TRANSACTION_TYPE = "TRANSACTION_TYPE";
 
   /**
    * Retrieves a {@link CodeSet} by its unique identifier.
@@ -36,14 +36,14 @@ public interface CodeValueRepository {
    * @return The {@link CodeSet} that corresponds to the specified {@link long} unique identifier, <code>null</code> if
    * the CodeSet does not exist.
    */
-  public CodeSet getCodeSetByUID(final long uid);
+  CodeSet getCodeSetByUID(final long uid);
 
   /**
    * Retrieves a {@link List} of {@link CodeSet CodeSets} that are active within the system.
    *
    * @return A {@link List} of {@link CodeSet CodeSets} that are active within the system.
    */
-  public List<CodeSet> getActiveCodeSets();
+  List<CodeSet> getActiveCodeSets();
 
   /**
    * Retrieves a {@link List} of {@link CodeValue} that are associated to the specified {@link CodeSet}.
@@ -54,7 +54,7 @@ public interface CodeValueRepository {
    * @return A {@link List} of {@link CodeValue} that are associated to the specified {@link CodeSet}, an empty list if
    * no CodeValues are associated to the CodeSet.
    */
-  public List<CodeValue> getCodeValuesForCodeSet(final CodeSet codeSet);
+  List<CodeValue> getCodeValuesForCodeSet(final CodeSet codeSet);
 
   /**
    * Retrieves a {@link List} of {@link CodeValue} that are associated to the {@link CodeSet} associated with the
@@ -66,7 +66,7 @@ public interface CodeValueRepository {
    * @return A {@link List} of {@link CodeValue} that are associated to the specified {@link CodeSet} meaning, an empty
    * list if no CodeValues are associated to the CodeSet meaning.
    */
-  public List<CodeValue> getCodeValuesForCodeSetByMeaning(final String codeSetMeaning);
+  List<CodeValue> getCodeValuesForCodeSetByMeaning(final String codeSetMeaning);
 
   /**
    * Retrieves a {@link CodeValue} by its unique identifier.
@@ -81,7 +81,7 @@ public interface CodeValueRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 CodeValue was found.
    */
-  public CodeValue getCodeValueByUID(final long uid);
+  CodeValue getCodeValueByUID(final long uid);
 
   /**
    * Retrieves a {@link CodeValue} by its meaning.
@@ -96,7 +96,7 @@ public interface CodeValueRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 CodeValue was found.
    */
-  public CodeValue getCodeValueByMeaning(final String meaning);
+  CodeValue getCodeValueByMeaning(final String meaning);
 
   /**
    * Persists the specified {@link CodeValue}.
@@ -115,6 +115,6 @@ public interface CodeValueRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public CodeValue saveCodeValueForCodeSet(final CodeValue codeValue, final User user)
+  CodeValue saveCodeValueForCodeSet(final CodeValue codeValue, final User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
 }

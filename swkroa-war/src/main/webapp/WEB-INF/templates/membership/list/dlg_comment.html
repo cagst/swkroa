@@ -1,28 +1,33 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
 <!-- Modify Comment Dialog -->
-<div data-th-fragment="dlgModifyComment">
+<div th:fragment="dlgModifyComment">
   <div class="modal fade" id="modifyComment">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title"
-              data-th-text="#{com.cagst.swkroa.membership.comment.update}"
+              th:text="#{com.cagst.swkroa.membership.comment.update}"
               data-ng-show="commentIdx > -1">
             zzz Modify comment
           </h4>
           <h4 class="modal-title"
-              data-th-text="#{com.cagst.swkroa.membership.comment.create}"
+              th:text="#{com.cagst.swkroa.membership.comment.create}"
               data-ng-show="commentIdx == -1">
             zzz Create comment
           </h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label" data-th-text="#{com.cagst.swkroa.membership.comment.modify.date}">
+            <label for="commentDate" class="form-label" th:text="#{com.cagst.swkroa.membership.comment.modify.date}">
               zzz Date
             </label>
 
             <div class="input-group">
-              <input type="text" class="form-control" name="commentDate"
+              <input id="commentDate" name="commentDate" type="text" class="form-control"
                      data-datepicker-popup="MM/dd/yyyy"
                      data-is-open="opened"
                      data-show-button-bar="false"
@@ -35,25 +40,25 @@
               </span>
             </div>
           </div>
-          <p data-th-text="#{com.cagst.swkroa.membership.comment.modify.message}">zzz Comment</p>
-          <textarea class="form-control" rows="3" data-ng-model="comment.commentText" autofocus></textarea>
+          <label for="commentText" th:text="#{com.cagst.swkroa.membership.comment.modify.message}">zzz Comment</label>
+          <textarea id="commentText" name="commentText" class="form-control" rows="3" data-ng-model="comment.commentText" autofocus></textarea>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success"
                   data-ng-click="saveComment()"
                   data-ng-show="commentIdx > -1"
-                  data-th-text="#{com.cagst.swkroa.update}">
+                  th:text="#{com.cagst.swkroa.update}">
             zzz Update
           </button>
           <button type="button" class="btn btn-success"
                   data-ng-click="saveComment()"
                   data-ng-show="commentIdx == -1"
-                  data-th-text="#{com.cagst.swkroa.create}">
+                  th:text="#{com.cagst.swkroa.create}">
             zzz Create
           </button>
           <button type="button" class="btn btn-default"
                   data-dismiss="modal"
-                  data-th-text="#{com.cagst.swkroa.cancel}">
+                  th:text="#{com.cagst.swkroa.cancel}">
             zzz Cancel
           </button>
         </div>
@@ -63,17 +68,17 @@
 </div>
 
 <!-- Delete Comment Dialog -->
-<div data-th-fragment="dlgDeleteComment">
+<div th:fragment="dlgDeleteComment">
   <div class="modal fade" id="deleteComment" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.membership.comment.delete.title}">
+          <h4 class="modal-title" th:text="#{com.cagst.swkroa.membership.comment.delete.title}">
             zzz Please confirm
           </h4>
         </div>
         <div class="modal-body">
-          <p data-th-text="#{com.cagst.swkroa.membership.comment.delete.message}">zzz Delete this?</p>
+          <p th:text="#{com.cagst.swkroa.membership.comment.delete.message}">zzz Delete this?</p>
           <blockquote>
             <p class="comment-text">{{comment.commentText}}</p>
           </blockquote>
@@ -81,12 +86,12 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-danger"
                   data-ng-click="removeComment()"
-                  data-th-text="#{com.cagst.swkroa.delete}">
+                  th:text="#{com.cagst.swkroa.delete}">
             zzz Delete
           </button>
           <button type="button" class="btn btn-primary"
                   data-dismiss="modal"
-                  data-th-text="#{com.cagst.swkroa.keep}">
+                  th:text="#{com.cagst.swkroa.keep}">
             zzz Keep
           </button>
         </div>
@@ -94,3 +99,5 @@
     </div>
   </div>
 </div>
+
+</html>

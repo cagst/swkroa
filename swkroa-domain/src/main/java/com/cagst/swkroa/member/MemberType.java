@@ -33,8 +33,8 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
   private boolean primary;
   private boolean allowSpouse;
   private boolean allowMember;
-  private DateTime beg_eff_dt_tm;
-  private DateTime end_eff_dt_tm;
+  private DateTime beg_eff_dt;
+  private DateTime end_eff_dt;
   private boolean active_ind = true;
   private long updt_cnt;
 
@@ -50,7 +50,7 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
     return prev_member_type_id;
   }
 
-  /* package */void setPreviousMemberTypeUID(final long prevUID) {
+  public void setPreviousMemberTypeUID(final long prevUID) {
     this.prev_member_type_id = prevUID;
   }
 
@@ -102,20 +102,20 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
     this.allowMember = allowMember;
   }
 
-  public DateTime getBeginEffectiveDateTime() {
-    return beg_eff_dt_tm;
+  public DateTime getBeginEffectiveDate() {
+    return beg_eff_dt;
   }
 
-  public void setBeginEffectiveDateTime(final DateTime effectiveDateTime) {
-    this.beg_eff_dt_tm = effectiveDateTime;
+  public void setBeginEffectiveDate(final DateTime effectiveDate) {
+    this.beg_eff_dt = effectiveDate;
   }
 
-  public DateTime getEndEffectiveDateTime() {
-    return end_eff_dt_tm;
+  public DateTime getEndEffectiveDate() {
+    return end_eff_dt;
   }
 
-  public void setEndEffectiveDateTime(final DateTime effectiveDateTime) {
-    this.end_eff_dt_tm = effectiveDateTime;
+  public void setEndEffectiveDate(final DateTime effectiveDate) {
+    this.end_eff_dt = effectiveDate;
   }
 
   public boolean isActive() {
@@ -168,8 +168,8 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
     builder.append("display", member_type_display);
     builder.append("meaning", member_type_meaning);
     builder.append("duesAmount", dues_amount);
-    builder.append("begEffDtTm", beg_eff_dt_tm);
-    builder.append("endEffDtTm", end_eff_dt_tm);
+    builder.append("begEffDt", beg_eff_dt);
+    builder.append("endEffDt", end_eff_dt);
 
     return builder.build();
   }

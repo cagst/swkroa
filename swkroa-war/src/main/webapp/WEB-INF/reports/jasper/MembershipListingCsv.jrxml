@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-11-05T20:47:40 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipListingCsv" pageWidth="1750" pageHeight="612" orientation="Landscape" columnWidth="1710" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="9434fd36-1b42-4031-bb64-1ae80c16f6b7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="start_date" class="java.util.Date"/>
-	<parameter name="end_date" class="java.util.Date"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.membership_name
@@ -28,11 +30,11 @@
   FROM membership_summary ms
  INNER JOIN member_type mt ON (mt.member_type_id = ms.member_type_id)
  INNER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind)
- INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m.member_type_id AND mt2.active_ind = 1 AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
+ INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m.member_type_id AND mt2.active_ind = 1 AND mt2.beg_eff_dt < NOW() AND (mt2.end_eff_dt IS NULL OR mt2.end_eff_dt > NOW()))
   LEFT OUTER JOIN primary_address pa ON (pa.parent_entity_id = m.member_id AND pa.parent_entity_name = 'MEMBER')
  WHERE ms.active_ind = 1
 ORDER BY ms.membership_name ASC
-        ,mt2.primary_ind DESC;]]>
+        ,mt2.primary_ind DESC]]>
 	</queryString>
 	<field name="membership_id" class="java.math.BigInteger">
 		<fieldDescription><![CDATA[]]></fieldDescription>

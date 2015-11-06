@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS address_hist;
+DROP TABLE IF EXISTS codeset_hist;
+DROP TABLE IF EXISTS codevalue_hist;
+DROP TABLE IF EXISTS comment_hist;
+DROP TABLE IF EXISTS county_hist;
+DROP TABLE IF EXISTS deposit_hist;
+DROP TABLE IF EXISTS deposit_transaction_hist;
+DROP TABLE IF EXISTS email_hist;
+DROP TABLE IF EXISTS member_hist;
+DROP TABLE IF EXISTS membership_county_hist;
+DROP TABLE IF EXISTS membership_hist;
+DROP TABLE IF EXISTS member_type_hist;
+DROP TABLE IF EXISTS person_hist;
+DROP TABLE IF EXISTS phone_hist;
+DROP TABLE IF EXISTS transaction_entry_hist;
+DROP TABLE IF EXISTS transaction_hist;
+DROP TABLE IF EXISTS user_hist;

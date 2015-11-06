@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
@@ -12,44 +13,44 @@
       <meta http-equiv="refresh" content="<%=session.getMaxInactiveInterval() - 5%>; url=<cagst:static key='url.auth.timedout' />" />
   -->
 
-  <title layout:title-pattern="$DECORATOR_TITLE" data-th-text="#{com.cagst.swkroa.title}">zzz SWKROA</title>
+  <title data-layout-title-pattern="$DECORATOR_TITLE" th:text="#{com.cagst.swkroa.title}">zzz SWKROA</title>
 
-  <link type="text/css" data-th-href="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css}" rel="stylesheet" />
-  <link type="text/css" data-th-href="@{//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
-  <link type="text/css" data-th-href="@{/static/angular-xeditable-0.1.8/css/xeditable.css}" rel="stylesheet" />
-  <link type="text/css" data-th-href="@{/static/css/cagst.css}" rel="stylesheet" />
-  <link type="text/css" data-th-href="@{/static/css/swkroa.css}" rel="stylesheet" />
+  <link type="text/css" th:href="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css}" rel="stylesheet" />
+  <link type="text/css" th:href="@{//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+  <link type="text/css" th:href="@{/static/angular-xeditable-0.1.8/css/xeditable.css}" rel="stylesheet" />
+  <link type="text/css" th:href="@{/static/css/cagst.css}" rel="stylesheet" />
+  <link type="text/css" th:href="@{/static/css/swkroa.css}" rel="stylesheet" />
 
-  <script type="text/javascript" data-th-src="@{//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js}"></script>
-  <script type="text/javascript" data-th-src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js}"></script>
-  <script type="text/javascript" data-th-src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js}"></script>
+  <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js}"></script>
+  <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js}"></script>
+  <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js}"></script>
 
-  <script type="text/javascript" data-th-src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
-  <script type="text/javascript" data-th-src="@{/static/angular-xeditable-0.1.8/js/xeditable.min.js}"></script>
-  <script type="text/javascript" data-th-src="@{/static/js/swkroa.js}"></script>
+  <script type="text/javascript" th:src="@{/static/ui-utils-0.1.1/ui-utils.min.js}"></script>
+  <script type="text/javascript" th:src="@{/static/angular-xeditable-0.1.8/js/xeditable.min.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/swkroa.js}"></script>
 </head>
 
 <body>
 <div id="page-header">
   <span id="page-title">
-    <a data-th-href="@{/}" href="#">
-      <img src="static/images/swkroa_logo_small.jpg" data-th-src="@{/static/images/swkroa_logo_small.jpg}" />
+    <a th:href="@{/}" href="#">
+      <img src="/static/images/swkroa_logo_small.jpg" th:src="@{/static/images/swkroa_logo_small.jpg}" />
     </a>
   </span>
   <ul id="account-navigation">
     <li>
-      <span data-th-text="#{com.cagst.swkroa.header.welcome}">zzz Welcome</span>
-      <a data-th-href="@{/profile}" data-th-text="${#authentication.principal.firstName}">
+      <span th:text="#{com.cagst.swkroa.header.welcome}">zzz Welcome</span>
+      <a th:href="@{/profile}" th:text="${#authentication.principal.firstName}">
         zzz Profile
       </a>
     </li>
     <li>
-      <a data-th-href="@{/j_spring_security_logout}" data-th-text="#{com.cagst.swkroa.header.signout}">
+      <a th:href="@{/j_spring_security_logout}" th:text="#{com.cagst.swkroa.header.signout}">
         zzz Sign Out
       </a>
     </li>
     <li>
-      <a href="#" data-th-text="#{com.cagst.swkroa.header.help}">
+      <a href="#" th:text="#{com.cagst.swkroa.header.help}">
         zzz Help
       </a>
     </li>
@@ -60,37 +61,37 @@
   <div class="navbar-collapse">
     <ul class="nav navbar-nav">
       <li>
-        <a href="#" data-th-href="@{/}" data-th-text="#{com.cagst.swkroa.nav.home}">
+        <a href="#" th:href="@{/}" th:text="#{com.cagst.swkroa.nav.home}">
           zzz Home
         </a>
       </li>
       <li>
-        <a data-th-href="@{/memberships}"
-           data-th-text="#{com.cagst.swkroa.nav.membership}">
+        <a th:href="@{/memberships}"
+           th:text="#{com.cagst.swkroa.nav.membership}">
           zzz Memberships
         </a>
       </li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <span data-th-text="#{com.cagst.swkroa.nav.accounting}">zzz Accounting</span>
+          <span th:text="#{com.cagst.swkroa.nav.accounting}">zzz Accounting</span>
           <span class="caret-inverse"></span>
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a data-th-href="@{/accounting/invoices}"
-               data-th-text="#{com.cagst.swkroa.accounting.menu.invoices}">
+            <a th:href="@{/accounting/invoices}"
+               th:text="#{com.cagst.swkroa.accounting.menu.invoices}">
               zzz Invoices
             </a>
           </li>
           <li>
-            <a data-th-href="@{/accounting/payments}"
-               data-th-text="#{com.cagst.swkroa.accounting.menu.payments}">
+            <a th:href="@{/accounting/payments}"
+               th:text="#{com.cagst.swkroa.accounting.menu.payments}">
               zzz Invoices
             </a>
           </li>
           <li>
-            <a data-th-href="@{/accounting/delinquencies}"
-               data-th-text="#{com.cagst.swkroa.accounting.menu.delinquencies}">
+            <a th:href="@{/accounting/delinquencies}"
+               th:text="#{com.cagst.swkroa.accounting.menu.delinquencies}">
               zzz Delinquencies
             </a>
           </li>
@@ -98,38 +99,38 @@
       </li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <span data-th-text="#{com.cagst.swkroa.nav.reports}">zzz Reports</span>
+          <span th:text="#{com.cagst.swkroa.nav.reports}">zzz Reports</span>
           <span class="caret-inverse"></span>
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a data-th-href="@{/report/membership/listing}"
-               data-th-text="#{com.cagst.swkroa.report.membership.listing.title}">
+            <a th:href="@{/report/membership/listing}"
+               th:text="#{com.cagst.swkroa.report.membership.listing.title}">
               zzz Membership Listing
             </a>
           </li>
           <li>
-            <a data-th-href="@{/report/membership/status}"
-               data-th-text="#{com.cagst.swkroa.report.membership.status.title}">
+            <a th:href="@{/report/membership/status}"
+               th:text="#{com.cagst.swkroa.report.membership.status.title}">
               zzz Membership Past Due
             </a>
           </li>
           <li class="divider"></li>
           <li>
-            <a data-th-href="@{/report/member/mailinglist}"
-               data-th-text="#{com.cagst.swkroa.report.member.mailinglist.title}">
+            <a th:href="@{/report/member/mailinglist}"
+               th:text="#{com.cagst.swkroa.report.member.mailinglist.title}">
               zzz Member Mailing List
             </a>
           </li>
           <li>
-            <a data-th-href="@{/report/member/emaillist}"
-               data-th-text="#{com.cagst.swkroa.report.member.emaillist.title}">
+            <a th:href="@{/report/member/emaillist}"
+               th:text="#{com.cagst.swkroa.report.member.emaillist.title}">
               zzz Member Email List
             </a>
           </li>
           <li class="divider"></li>
           <li>
-            <a data-th-href="@{/report/custom/membersbycounty}">
+            <a th:href="@{/report/custom/membersbycounty}">
               Members by County
             </a>
           </li>
@@ -137,22 +138,22 @@
       </li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <span data-th-text="#{com.cagst.swkroa.nav.maintain}">zzz Maintain</span>
+          <span th:text="#{com.cagst.swkroa.nav.maintain}">zzz Maintain</span>
           <span class="caret-inverse"></span>
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a data-th-href="@{/maintain/codeset}" data-th-text="#{com.cagst.swkroa.maintain.menu.codeset}">
+            <a th:href="@{/maintain/codeset}" th:text="#{com.cagst.swkroa.maintain.menu.codeset}">
               zzz Code Sets
             </a>
           </li>
           <li>
-            <a data-th-href="@{/maintain/membertype}" data-th-text="#{com.cagst.swkroa.maintain.menu.membertype}">
+            <a th:href="@{/maintain/membertype}" th:text="#{com.cagst.swkroa.maintain.menu.membertype}">
               zzz Member Type
             </a>
           </li>
           <li>
-            <a data-th-href="@{/maintain/users}" data-th-text="#{com.cagst.swkroa.maintain.menu.user}">
+            <a th:href="@{/maintain/users}" th:text="#{com.cagst.swkroa.maintain.menu.user}">
               zzz Users
             </a>
           </li>
@@ -160,13 +161,13 @@
       </li>
     </ul>
     <span class="navbar-brand pull-right">
-      <a href="#" data-th-text="#{com.cagst.brand}">zzz CAGST</a>
+      <a href="#" th:text="#{com.cagst.brand.title}">zzz CAGST</a>
     </span>
   </div>
 </div>
 
 <div id="page-content">
-  <div layout:fragment="content">
+  <div data-layout-fragment="content">
     <h1>zzzPage content goes here!</h1>
   </div>
 </div>
@@ -176,15 +177,15 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.save.failed.caption}">zzz Optimistic</h4>
+        <h4 class="modal-title" th:text="#{com.cagst.swkroa.save.failed.caption}">zzz Optimistic</h4>
       </div>
       <div class="modal-body">
-        <div data-th-text="#{com.cagst.swkroa.save.failed.message.optimistic}">zzz Update Failed?</div>
+        <div th:text="#{com.cagst.swkroa.save.failed.message.optimistic}">zzz Update Failed?</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary"
                 data-dismiss="modal"
-                data-th-text="#{com.cagst.swkroa.ok}">
+                th:text="#{com.cagst.swkroa.ok}">
           zzz Keep
         </button>
       </div>
@@ -197,17 +198,17 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.unknown.failure.caption}">zzz Unknown</h4>
+        <h4 class="modal-title" th:text="#{com.cagst.swkroa.unknown.failure.caption}">zzz Unknown</h4>
       </div>
       <div class="modal-body">
-        <div data-th-text="#{com.cagst.swkroa.unknown.failure.message.unknown}">zzz Update Failed?</div>
+        <div th:text="#{com.cagst.swkroa.unknown.failure.message.unknown}">zzz Update Failed?</div>
         <br/>
         <div id="unknownErrorMessage"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary"
                 data-dismiss="modal"
-                data-th-text="#{com.cagst.swkroa.ok}">
+                th:text="#{com.cagst.swkroa.ok}">
           zzz Keep
         </button>
       </div>
@@ -220,7 +221,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" data-th-text="#{com.cagst.swkroa.processing}">zzz Processing</h4>
+        <h4 class="modal-title" th:text="#{com.cagst.swkroa.processing}">zzz Processing</h4>
       </div>
       <div class="modal-body">
         <div class="progress">
@@ -233,8 +234,8 @@
   </div>
 </div>
 
-<script type="text/javascript" data-th-src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js}"></script>
-<script type="text/javascript" data-th-src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js}"></script>
+<script type="text/javascript" th:src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js}"></script>
 
 </body>
 </html>

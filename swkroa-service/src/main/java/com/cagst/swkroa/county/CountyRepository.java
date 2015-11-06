@@ -15,7 +15,7 @@ public interface CountyRepository {
    *
    * @return A {@link Collection} of active {@link County Counties} defined within the system.
    */
-  public Collection<County> getActiveCounties();
+   Collection<County> getActiveCounties();
 
   /**
    * Retrieves a {@link Collection} of {@link County Counties} associated with the specified
@@ -28,7 +28,7 @@ public interface CountyRepository {
    * @return The {@link Collection} of {@link County Counties} associated with the specified
    * {@link State}.
    */
-  public Collection<County> getCountiesForState(final String stateCode);
+   Collection<County> getCountiesForState(final String stateCode);
 
   /**
    * Retrieves the {@link County} associated with the specified unique identifier.
@@ -39,7 +39,7 @@ public interface CountyRepository {
    * @return The {@link County} associated with the specified uid, {@code null} if no County was
    * found.
    */
-  public County getCountyByUID(final long uid);
+   County getCountyByUID(final long uid);
 
   /**
    * Retrieves the {@link County} associated with the specified state and county.
@@ -51,5 +51,5 @@ public interface CountyRepository {
    *
    * @return The {@link County} associated to the specified state and county.
    */
-  public County getCountyByStateAndCode(final String state, final String county);
+   County getCountyByStateAndCode(final String state, final String county);
 }

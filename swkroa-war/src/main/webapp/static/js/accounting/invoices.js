@@ -12,7 +12,7 @@ swkroaApp.controller('invoiceController',
                       'transactionService',
     function($scope, $http, transactionService) {
 
-  $scope.increment     = 15;
+  $scope.increment     = 10;
   $scope.increments    = [];
   $scope.invoiceGroups = [];
   $scope.start         = 0;

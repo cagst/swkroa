@@ -71,7 +71,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     member.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
     member.setCompanyName(rs.getString(COMPANY_NAME));
     member.setOwnerIdent(rs.getString(OWNER_IDENT));
-    member.setMemberType(memberTypeRepo.getMemberTypeByID(rs.getLong(MEMBER_TYPE)));
+    member.setMemberType(memberTypeRepo.getMemberTypeByUID(rs.getLong(MEMBER_TYPE)));
     member.setGreeting(rs.getString(GREETING));
     member.setInCareOf(rs.getString(IN_CARE_OF));
     member.setJoinDate(CGTDateTimeUtils.getDateTime(rs, JOIN_DT));

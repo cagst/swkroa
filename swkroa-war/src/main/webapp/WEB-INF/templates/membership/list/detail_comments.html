@@ -1,13 +1,18 @@
-<div data-th-fragment="listComments">
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="listComments">
   <div class="spacer-top">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span class="panel-title" data-th-text="#{com.cagst.swkroa.membership.comments}">zzz Comments</span>
+        <span class="panel-title" th:text="#{com.cagst.swkroa.membership.comments}">zzz Comments</span>
         <span class="pull-right">
           <button type="button" class="btn btn-success btn-xs"
                   data-toggle="modal" data-target="#modifyComment"
                   data-ng-click="addComment()"
-                  data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.create}"
+                  th:attr="tooltip=#{com.cagst.swkroa.membership.comment.create}"
                   data-tooltip-placement="left">
             <i class="fa fa-plus"></i>
           </button>
@@ -23,14 +28,14 @@
               <button type="button" class="btn btn-primary btn-xs"
                       data-toggle="modal" data-target="#modifyComment"
                       data-ng-click="selectComment(comment)"
-                      data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.update}"
+                      th:attr="tooltip=#{com.cagst.swkroa.membership.comment.update}"
                       data-tooltip-placement="left">
                 <i class="fa fa-edit"></i>
               </button>
               <button type="button" class="btn btn-danger btn-xs"
                       data-toggle="modal" data-target="#deleteComment"
                       data-ng-click="selectComment(comment)"
-                      data-th-attr="tooltip=#{com.cagst.swkroa.membership.comment.delete.title}"
+                      th:attr="tooltip=#{com.cagst.swkroa.membership.comment.delete.title}"
                       data-tooltip-placement="left">
                 <i class="fa fa-trash-o"></i>
               </button>
@@ -41,3 +46,5 @@
     </div>
   </div>
 </div>
+
+</html>

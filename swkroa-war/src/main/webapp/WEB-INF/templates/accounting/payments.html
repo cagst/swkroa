@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/js/accounting/payments.js}"></script>
-  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/accounting/payments.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/report.js}"></script>
 </head>
 
 <body>
 
 <div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="paymentController">
   <div class="page-header">
-    <h3 data-th-text="#{com.cagst.swkroa.payments.title}">zzz Payments</h3>
+    <h3 th:text="#{com.cagst.swkroa.payments.title}">zzz Payments</h3>
   </div>
-  <form name="reportForm" data-th-attr="action=@{/report/membership/payments}" target="_blank" method="post">
+  <form name="reportForm" th:attr="action=@{/report/membership/payments}" target="_blank" method="post">
     <div class="row" data-ng-show="paymentGroups">
       <div class="col-xs-3">
         <input id="reportType" type="hidden" name="reportType" />
@@ -26,9 +27,9 @@
         <table class="table table-hover table-bordered table-condensed">
           <thead>
             <tr>
-              <th data-th-text="#{com.cagst.swkroa.payments.date}">zzz Date</th>
-              <th data-th-text="#{com.cagst.swkroa.payments.count}">zzz Count</th>
-              <th data-th-text="#{com.cagst.swkroa.payments.amount}">zzz Amount</th>
+              <th th:text="#{com.cagst.swkroa.payments.date}">zzz Date</th>
+              <th th:text="#{com.cagst.swkroa.payments.count}">zzz Count</th>
+              <th th:text="#{com.cagst.swkroa.payments.amount}">zzz Amount</th>
               <th></th>
             </tr>
           </thead>
@@ -41,11 +42,11 @@
                 <div class="btn-group">
                   <a type="button" class="btn btn-info btn-xs" data-ng-click="generatePaymentsReport('pdf', group.transactionDate, group.transactionDate)">
                     <i class="fa fa-print"></i>
-                    <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
+                    <span th:text="#{com.cagst.swkroa.print}">zzz Print</span>
                   </a>
                   <a type="button" class="btn btn-default btn-xs" data-ng-click="generatePaymentsReport('csv', group.transactionDate, group.transactionDate)">
                     <i class="fa fa-download"></i>
-                    <span data-th-text="#{com.cagst.swkroa.export}">zzz Export</span>
+                    <span th:text="#{com.cagst.swkroa.export}">zzz Export</span>
                   </a>
                 </div>
               </td>
@@ -54,34 +55,33 @@
           <tfoot>
             <tr>
               <td colspan="4">
-                <ul class="pagination clear-top clear-bottom">
-                  <li id="firstPage"
-                      data-ng-class="{'disabled': page == 1}"
-                      data-ng-click="firstPage()">
-                    <a href="#"><i class="fa fa-angle-double-left"></i></a>
-                  </li>
-                  <li id="prevPage"
-                      data-ng-class="{'disabled': page == 1}"
-                      data-ng-click="prevPage()">
-                    <a><i class="fa fa-angle-left"></i></a>
-                  </li>
-                  <li data-ng-repeat="increment in increments"
-                      data-ng-attr-id="{{'page' + increment}}"
-                      data-ng-class="{'active': page == increment}"
-                      data-ng-click="setPage(increment)">
-                    <a href="#">{{increment}}</a>
-                  </li>
-                  <li id="nextPage"
-                      data-ng-class="{'disabled': page == pages}"
-                      data-ng-click="nextPage()">
-                    <a href="#"><i class="fa fa-angle-right"></i></a>
-                  </li>
-                  <li id="lastPage"
-                      data-ng-class="{'disabled': page == pages}"
-                      data-ng-click="lastPage()">
-                    <a href="#"><i class="fa fa-angle-double-right"></i></a>
-                  </li>
-                </ul>
+                <div class="text-center">
+                  <ul class="pagination clear-top clear-bottom">
+                    <li id="firstPage"
+                        data-ng-class="{'disabled': page == 1}"
+                        data-ng-click="firstPage()">
+                      <a href="#"><i class="fa fa-angle-double-left"></i></a>
+                    </li>
+                    <li id="prevPage"
+                        data-ng-class="{'disabled': page == 1}"
+                        data-ng-click="prevPage()">
+                      <a><i class="fa fa-angle-left"></i></a>
+                    </li>
+                    <li class="disabled">
+                      <span th:text="#{com.cagst.swkroa.page.of.pages}"></span>
+                    </li>
+                    <li id="nextPage"
+                        data-ng-class="{'disabled': page == pages}"
+                        data-ng-click="nextPage()">
+                      <a href="#"><i class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li id="lastPage"
+                        data-ng-class="{'disabled': page == pages}"
+                        data-ng-click="lastPage()">
+                      <a href="#"><i class="fa fa-angle-double-right"></i></a>
+                    </li>
+                  </ul>
+                </div>
               </td>
             </tr>
           </tfoot>

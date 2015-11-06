@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Craig Gaskill
  */
 @RestController
+@RequestMapping(value = "/api/comments")
 public final class CommentApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommentApiController.class);
 
@@ -36,7 +37,7 @@ public final class CommentApiController {
    *
    * @return The {@link Comment} after it has been persisted.
    */
-  @RequestMapping(value = "/api/comments", method = RequestMethod.PUT)
+  @RequestMapping(method = RequestMethod.PUT)
   public Comment saveComment(final @RequestBody Comment comment) {
     LOGGER.info("Received request to save comment.");
 

@@ -2,9 +2,12 @@ package com.cagst.swkroa.member;
 
 import java.util.List;
 
+import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 /**
  * Definition of a repository that retrieves and persists {@link MemberType} objects.
@@ -26,28 +29,8 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByID(final long id) throws EmptyResultDataAccessException,
+  MemberType getMemberTypeByUID(final long id) throws EmptyResultDataAccessException,
       IncorrectResultSizeDataAccessException;
-
-  /**
-   * Retrieves a {@link MemberType} by its identifier that is in effect as of the specified
-   * effective date time.
-   *
-   * @param id
-   *     A {@link long} that identifies the member type to retrieve.
-   * @param effectiveDateTime
-   *     A {@link DateTime} that specifies the effective time to retrieve the member type for.
-   *
-   * @return A {@link MemberType}, if one exists, that matches the specified id and is in effect as
-   * of the time specified; otherwise, a {@code null} is returned.
-   *
-   * @throws EmptyResultDataAccessException
-   *     if no MemberType was found.
-   * @throws IncorrectResultSizeDataAccessException
-   *     if more than 1 MemberType was found.
-   */
-  MemberType getMemberTypeByIDAsOf(final long id, final DateTime effectiveDateTime)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link MemberType} by its meaning that is in effect as of NOW.
@@ -116,4 +99,7 @@ public interface MemberTypeRepository {
    * MemberType.
    */
   List<MemberType> getActiveMemberTypesForMemberType(final long memberTypeId);
+
+  MemberType saveMemberType(final MemberType memberType, final User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
 }

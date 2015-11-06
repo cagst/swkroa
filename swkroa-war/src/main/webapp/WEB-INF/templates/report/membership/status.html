@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/main">
 
 <head>
-  <script type="text/javascript" data-th-src="@{/static/js/report.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/report.js}"></script>
 </head>
 
 <body>
 
 <div data-layout-fragment="content">
   <div class="page-header">
-    <h3 data-th-text="#{com.cagst.swkroa.report.membership.status.report}">zzz Membership Status Report</h3>
+    <h3 th:text="#{com.cagst.swkroa.report.membership.status.report}">zzz Membership Status Report</h3>
   </div>
 
-  <form name="reportForm" data-th-attr="action=@{/report/membership/status}" target="_blank" method="post">
+  <form name="reportForm" th:attr="action=@{/report/membership/status}" target="_blank" method="post">
     <div class="row">
       <div class="col-xs-2">
         <a class="btn btn-primary form-control" href="javascript:submitReportForm('pdf')">
           <i class="fa fa-print"></i>
-          <span data-th-text="#{com.cagst.swkroa.print}">zzz Print</span>
+          <span th:text="#{com.cagst.swkroa.print}">zzz Print</span>
         </a>
       </div>
     </div>

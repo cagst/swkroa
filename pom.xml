@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.cagst.swkroa</groupId>
-  <artifactId>swkroa</artifactId>
+  <artifactId>swkroa-parent</artifactId>
   <version>2.1-SNAPSHOT</version>
   <name>SWKROA</name>
   <packaging>pom</packaging>
@@ -47,7 +47,7 @@
 
   <properties>
     <!-- Build Properties -->
-    <jdk.version>1.6</jdk.version>
+    <jdk.version>1.8</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <site.url>scp://repo.rele</site.url>
@@ -63,7 +63,7 @@
     <google-autovalue-version>1.0</google-autovalue-version>
 
     <!-- CAGST Framework -->
-    <cagst-version>1.1.0</cagst-version>
+    <cagst-version>1.2</cagst-version>
 
     <!-- Spring Frameworks -->
     <spring-version>4.1.0.RELEASE</spring-version>
@@ -106,7 +106,7 @@
     <hsqldb-version>2.3.2</hsqldb-version>
 
     <!-- Jasper Reporting Engine -->
-    <jasper-version>5.6.1</jasper-version>
+    <jasper-version>6.1.1</jasper-version>
 
     <!-- Miscellaneous -->
     <servlet-api-version>3.0.1</servlet-api-version>
@@ -443,6 +443,7 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit-version}</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- HSQL DB Dependencies -->
@@ -450,6 +451,7 @@
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>${hsqldb-version}</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- Mockito Dependencies -->
@@ -457,6 +459,7 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
         <version>${mockito-version}</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- PowerMock Dependencies for mocking final classes-->
@@ -464,14 +467,15 @@
         <groupId>org.powermock</groupId>
         <artifactId>powermock-module-junit4</artifactId>
         <version>${powermock-version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-mockito-release-full</artifactId>
         <version>${powermock-version}</version>
         <type>pom</type>
+        <scope>test</scope>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 
@@ -485,9 +489,9 @@
       </snapshots>
     </repository>
     <repository>
-      <id>cagst-public</id>
-      <name>CAGST Public Repository</name>
-      <url>http://repo.cagst.com/content/groups/public/</url>
+      <id>cagst-external</id>
+      <name>CAGST External (3rd Party) Repository</name>
+      <url>http://repo.cagst.com/content/repositories/thirdparty/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
@@ -530,7 +534,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[${jdk.version}, 1.8)</version>
+                  <version>[${jdk.version},)</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <version>[3.0.4, 4.0)</version>
