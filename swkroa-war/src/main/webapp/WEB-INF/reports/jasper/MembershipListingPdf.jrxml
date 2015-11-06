@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-11-05T06:49:46 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipListingPdf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ff1417b-b07f-4412-9ad0-03b68e9852f0">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="ReportTitle" fontName="TimesNewRoman" fontSize="18"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
@@ -27,11 +30,11 @@
   FROM membership_summary ms
  INNER JOIN member_type mt ON (mt.member_type_id = ms.member_type_id)
  INNER JOIN member_summary m ON (m.membership_id = ms.membership_id AND m.active_ind = ms.active_ind)
- INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m.member_type_id AND mt2.active_ind = 1 AND mt2.beg_eff_dt_tm < NOW() AND (mt2.end_eff_dt_tm IS NULL OR mt2.end_eff_dt_tm > NOW()))
+ INNER JOIN member_type mt2 ON (mt2.prev_member_type_id = m.member_type_id AND mt2.active_ind = 1 AND mt2.beg_eff_dt < NOW() AND (mt2.end_eff_dt IS NULL OR mt2.end_eff_dt > NOW()))
   LEFT OUTER JOIN primary_address pa ON (pa.parent_entity_id = m.member_id AND pa.parent_entity_name = 'MEMBER')
  WHERE ms.active_ind = 1
 ORDER BY ms.membership_name ASC
-        ,mt2.primary_ind DESC;]]>
+        ,mt2.primary_ind DESC]]>
 	</queryString>
 	<field name="membership_id" class="java.math.BigInteger">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -117,13 +120,12 @@ $F{fixed_dues}.equals( $F{calculated_dues} ) ?
 		</groupHeader>
 		<groupFooter>
 			<band height="12">
-				<textField pattern="¤ #,##0.00;(¤ #,##0.00)">
-					<reportElement x="70" y="0" width="502" height="12" uuid="7ec13e06-7a06-4f62-8ee3-ed555d9ecd04"/>
-					<textElement textAlignment="Right">
-						<font fontName="TimesNewRoman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{total_dues}]]></textFieldExpression>
-				</textField>
+				<line>
+					<reportElement x="0" y="2" width="572" height="1" uuid="d83f0b8c-8de0-462f-be5c-0793e3746118"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
 			</band>
 		</groupFooter>
 	</group>
@@ -146,13 +148,6 @@ $F{fixed_dues}.equals( $F{calculated_dues} ) ?
 					<font fontName="TimesNewRoman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
-			</textField>
-			<textField pattern="¤ #,##0.00;(¤ #,##0.00)">
-				<reportElement x="472" y="0" width="100" height="12" uuid="9747d626-d157-493a-84d0-533f248ef730"/>
-				<textElement textAlignment="Right">
-					<font fontName="TimesNewRoman" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{dues_amount}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="11" y="2" width="59" height="12" forecolor="#999999" uuid="a46c03f8-40a7-41ca-96f7-1416787e860c"/>
@@ -200,12 +195,6 @@ $F{fixed_dues}.equals( $F{calculated_dues} ) ?
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="0" y="2" width="572" height="1" uuid="fe3f9fa0-d731-47b9-b593-066d4e61bd19"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
 		</band>
 	</pageFooter>
 </jasperReport>
