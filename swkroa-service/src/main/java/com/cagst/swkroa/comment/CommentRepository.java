@@ -12,19 +12,17 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Definition of a repository that retrieves and persists {@link Comment} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface CommentRepository {
   /**
-   * Retrieves a {@link List} of {@link Comment Comments} defined within the system for the specified {@link Membership}
-   * .
+   * Retrieves a {@link List} of {@link Comment Comments} defined within the system for the specified {@link Membership}.
    *
    * @param membership
    *     The {@link Membership} to retrieve comments for.
    *
    * @return A {@link List} of {@link Comment Comments} associated with the specified Membership.
    */
-  public List<Comment> getCommentsForMembership(final Membership membership);
+  List<Comment> getCommentsForMembership(final Membership membership);
 
   /**
    * Retrieves the {@link Comment} associated with the specified unique identifier.
@@ -34,7 +32,7 @@ public interface CommentRepository {
    *
    * @return The {@link Comment} associated with the specified uid, {@code null} if no Comment was found.
    */
-  public Comment getCommentByUID(final long uid);
+  Comment getCommentByUID(final long uid);
 
   /**
    * Persists the specified {@link Comment}.
@@ -53,6 +51,6 @@ public interface CommentRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public Comment saveComment(final Comment comment, final User user) throws OptimisticLockingFailureException,
+  Comment saveComment(final Comment comment, final User user) throws OptimisticLockingFailureException,
       IncorrectResultSizeDataAccessException, DataAccessException;
 }

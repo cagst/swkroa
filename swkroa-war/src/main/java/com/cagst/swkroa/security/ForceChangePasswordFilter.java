@@ -18,7 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * before they can proceed.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class ForceChangePasswordFilter extends OncePerRequestFilter {
   private static final Logger logger = LoggerFactory.getLogger(ForceChangePasswordFilter.class);
@@ -29,12 +28,6 @@ public final class ForceChangePasswordFilter extends OncePerRequestFilter {
     changePasswordUrl = url;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.web.filter.OncePerRequestFilter#doFilterInternal(javax.servlet.http.
-   * HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.servlet.FilterChain)
-   */
   @Override
   protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
                                   final FilterChain filterChain) throws ServletException, IOException {

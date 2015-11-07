@@ -24,12 +24,13 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-xs-4">
-              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.date}">
+              <label for="transactionDate" class="form-label"
+                     th:text="#{com.cagst.swkroa.membership.transaction.date}">
                 zzz Date
               </label>
               <div class="input-group">
-                <input type="text" class="form-control" name="transactionDate"
-                       data-datepicker-popup="MM/dd/yyyy"
+                <input id="transactionDate" name="transactionDate" type="text" class="form-control"
+                       data-uib-datepicker-popup="MM/dd/yyyy"
                        data-is-open="opened"
                        data-show-button-bar="false"
                        data-show-weeks="false"
@@ -43,10 +44,11 @@
               </div>
             </div>
             <div class="col-xs-4 col-xs-offset-4">
-              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.refno}">
+              <label for="referenceNumber" class="form-label"
+                     th:text="#{com.cagst.swkroa.membership.transaction.refno}">
                 zzz Ref No
               </label>
-              <input type="text" class="form-control" maxlength="25"
+              <input id="referenceNumber" type="text" class="form-control" maxlength="25"
                      data-ng-model="transaction.referenceNumber"
                   />
             </div>
@@ -55,10 +57,10 @@
           <div class="row spacer-top">
             <div class="col-xs-4"
                  data-ng-class="{'has-error': type.$invalid}">
-              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.type}">
+              <label for="type" class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.type}">
                 zzz Type
               </label>
-              <select class="form-control select2" name="type"
+              <select id="type" name="type" class="form-control"
                       data-ng-model="transaction.transactionType"
                       data-ng-required="true"
                       data-ng-show="transactionIdx == -1">
@@ -71,25 +73,24 @@
                   zzz Payment
                 </option>
               </select>
-              <input class="form-control select2" name="type" readonly
+              <input name="type" class="form-control" readonly
                      th:value="#{com.cagst.swkroa.membership.transaction.invoice}"
                      data-ng-show="transactionIdx > -1 && transaction.transactionType == 'INVOICE'" />
-              <input class="form-control" name="type" readonly
+              <input name="type" class="form-control" readonly
                      th:value="#{com.cagst.swkroa.membership.transaction.payment}"
                      data-ng-show="transactionIdx > -1 && transaction.transactionType == 'PAYMENT'" />
             </div>
 
             <div class="col-xs-4">
-              <label class="form-label" th:text="#{com.cagst.swkroa.desc}">
+              <label for="desc" class="form-label" th:text="#{com.cagst.swkroa.desc}">
                 zzz Desc
               </label>
-              <input type="text" class="form-control" name="desc"
+              <input id="desc" name="desc" type="text" class="form-control"
                      data-ng-model="transaction.transactionDescription"
-                     data-ng-required="true"
-                     data-ng-options="type.display for type in entryTypes" />
+                     data-ng-required="true"/>
             </div>
             <div class="col-xs-4" data-ng-class="{'has-error': amount.$invalid}">
-              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.amount}">
+              <label for="amount" class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.amount}">
                 zzz Amount
               </label>
               <input id="amount" name="amount" type="text" class="form-control" readonly
@@ -106,7 +107,7 @@
               <th>
                 <button type="button" class="btn btn-success btn-xs"
                         data-ng-click="addTransactionEntry()"
-                        th:attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.create}">
+                        th:attr="uibTooltip=#{com.cagst.swkroa.membership.transaction.entry.create}">
                   <i class="fa fa-plus"></i>
                 </button>
               </th>
@@ -116,7 +117,7 @@
                    data-ng-show="entry.active">
             <tr>
               <td class="col-xs-4">
-                <select class="form-control select2" name="entryType"
+                <select class="form-control" name="entryType"
                         data-ng-model="entry.transactionEntryType"
                         data-ng-required="true"
                         data-ng-options="type.display for type in entryTypes">
@@ -135,9 +136,9 @@
                        data-ng-change="calculateTransactionAmount()" />
               </td>
               <td>
-                <button type="button" class="btn btn-danger btn-xs" data-tooltip="zzz Delete Entry"
+                <button type="button" class="btn btn-danger btn-xs"
                         data-ng-click="deleteTransactionEntry(entry)"
-                        th:attr="tooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
+                        th:attr="uibTooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
                   <i class="fa fa-trash-o"></i>
                 </button>
               </td>
@@ -158,10 +159,10 @@
 
           <div class="row spacer-top">
             <div class="col-xs-12">
-              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.memo}">
+              <label for="memo" class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.memo}">
                 zzz Memo
               </label>
-              <textarea class="form-control" rows="3" data-ng-model="transaction.memo"></textarea>
+              <textarea id="memo" class="form-control" rows="3" data-ng-model="transaction.memo"></textarea>
             </div>
           </div>
 

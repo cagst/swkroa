@@ -12,8 +12,8 @@
           <button type="button" class="btn btn-success btn-xs"
                   data-toggle="modal" data-target="#modifyComment"
                   data-ng-click="addComment()"
-                  th:attr="tooltip=#{com.cagst.swkroa.membership.comment.create}"
-                  data-tooltip-placement="left">
+                  th:attr="uibTooltip=#{com.cagst.swkroa.membership.comment.create}"
+                  data-uib-tooltip-placement="left">
             <i class="fa fa-plus"></i>
           </button>
         </span>
@@ -28,15 +28,15 @@
               <button type="button" class="btn btn-primary btn-xs"
                       data-toggle="modal" data-target="#modifyComment"
                       data-ng-click="selectComment(comment)"
-                      th:attr="tooltip=#{com.cagst.swkroa.membership.comment.update}"
-                      data-tooltip-placement="left">
+                      th:attr="uibTooltip=#{com.cagst.swkroa.membership.comment.update}"
+                      data-uib-tooltip-placement="left">
                 <i class="fa fa-edit"></i>
               </button>
               <button type="button" class="btn btn-danger btn-xs"
                       data-toggle="modal" data-target="#deleteComment"
                       data-ng-click="selectComment(comment)"
-                      th:attr="tooltip=#{com.cagst.swkroa.membership.comment.delete.title}"
-                      data-tooltip-placement="left">
+                      th:attr="uibTooltip=#{com.cagst.swkroa.membership.comment.delete.title}"
+                      data-uib-tooltip-placement="left">
                 <i class="fa fa-trash-o"></i>
               </button>
             </div>

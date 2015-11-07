@@ -29,7 +29,15 @@
   <sec:http pattern="/static/**" security="none"/>
 
   <!-- Secured Resources -->
-  <sec:http auto-config="true" use-expressions="true" access-denied-page="/auth/notauthorized">
+  <sec:http auto-config="true">
+    <!-- Enable CSRF Security -->
+    <sec:csrf />
+    <!--
+    <sec:csrf disabled="true"/>
+    -->
+
+    <sec:access-denied-handler error-page="/auth/notauthorized"/>
+
     <!-- Restrict access to ALL other pages -->
     <sec:intercept-url pattern="/public/**" access="permitAll"/>
     <sec:intercept-url pattern="/auth/**" access="permitAll"/>
@@ -37,10 +45,14 @@
 
     <!-- Set the login page and what to do if login fails -->
     <sec:form-login login-page="/auth/signin"
+                    username-parameter="username"
+                    password-parameter="password"
+                    login-processing-url="/login"
                     authentication-failure-url="/auth/signin"
                     authentication-success-handler-ref="successHandler"/>
 
-    <sec:logout invalidate-session="true"
+    <sec:logout logout-url="/logout"
+                invalidate-session="true"
                 delete-cookies="JSESSIONID"
                 logout-success-url="/auth/signedout"/>
 
