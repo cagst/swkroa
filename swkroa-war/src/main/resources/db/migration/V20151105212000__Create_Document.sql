@@ -7,8 +7,8 @@ CREATE TABLE document (
   document_location      VARCHAR(256) NULL,
   document_content       MEDIUMBLOB NULL,
   document_desc          VARCHAR(150) NULL,
-  beg_eff_dt             DATETIME NOT NULL,
-  end_eff_dt             DATETIME NULL,
+  beg_eff_dt             DATE NOT NULL,
+  end_eff_dt             DATE NULL,
   active_ind             BOOLEAN DEFAULT 1 NOT NULL,
   create_dt_tm           DATETIME NOT NULL,
   create_id              BIGINT UNSIGNED NOT NULL,
@@ -17,5 +17,6 @@ CREATE TABLE document (
   updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
   CONSTRAINT document_pk PRIMARY KEY (document_id),
   INDEX document_idx1 (beg_eff_dt, document_type),
-  INDEX document_idx2 (parent_entity_name, parent_entity_id)
+  INDEX document_idx2 (parent_entity_name, parent_entity_id),
+  INDEX document_idx3 (document_location)
 ) ENGINE = InnoDB;

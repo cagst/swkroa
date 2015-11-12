@@ -11,80 +11,86 @@ if (typeof String.prototype.startsWith != 'function') {
   };
 }
 
-//angular.module('ng').filter('tel', function () {
-//  return function (tel) {
-//    if (!tel) { return ''; }
-//
-//    var value = tel.toString().trim().replace(/^\+/, '');
-//
-//    if (value.match(/[^0-9]/)) {
-//      return tel;
-//    }
-//
-//    var country, city, number;
-//
-//    switch (value.length) {
-//    case 10: // +1PPP####### -> C (PPP) ###-####
-//      country = 1;
-//      city = value.slice(0, 3);
-//      number = value.slice(3);
-//      break;
-//
-//    case 11: // +CPPP####### -> CCC (PP) ###-####
-//      country = value[0];
-//      city = value.slice(1, 4);
-//      number = value.slice(4);
-//      break;
-//
-//    case 12: // +CCCPP####### -> CCC (PP) ###-####
-//      country = value.slice(0, 3);
-//      city = value.slice(3, 5);
-//      number = value.slice(5);
-//      break;
-//
-//    default:
-//      return tel;
-//    }
-//
-//    if (country == 1) {
-//      country = "";
-//    }
-//
-//    number = number.slice(0, 3) + '-' + number.slice(3);
-//
-//    return (country + " (" + city + ") " + number).trim();
-//  };
-//});
-
-//angular.module('ng').filter('zip', function () {
-//  return function (zip) {
-//    if (!zip) { return ''; }
-//
-//    var value = zip.toString().trim().replace(/^\+/, '');
-//
-//    if (value.match(/[^0-9]/)) {
-//      return zip;
-//    }
-//
-//    switch (value.length) {
-//    case 9: // ######### -> #####-####
-//      zip = value.slice(0, 5);
-//      plus4 = value.slice(5);
-//      return zip + "-" + plus4;
-//      break;
-//
-//    default:
-//      return zip;
-//    }
-//  };
-//});
-
 var swkroaApp = angular.module('swkroaApp',
-  ['ui.bootstrap',
-   'ui.utils',
-   'ui.router',
-   'xeditable']
-);
+    ['ui.bootstrap',
+      'ui.utils',
+      'ui.router',
+      'xeditable']
+).config(['$httpProvider, uibDatepickerPopupConfig', function($httpProvider, uibDatepickerPopupConfig) {
+  $httpProvider.interceptors.push('contextRootInterceptor');
+
+  uibDatepickerPopupConfig.uibDatepickerPopup = "MM/dd/yyyy";
+  uibDatepickerPopupConfig.showButtonBar = false;
+  uibDatepickerPopupConfig.showWeeks = false;
+}]);
+
+angular.module('swkroaApp').filter('tel', function () {
+  return function (tel) {
+    if (!tel) { return ''; }
+
+    var value = tel.toString().trim().replace(/^\+/, '');
+
+    if (value.match(/[^0-9]/)) {
+      return tel;
+    }
+
+    var country, city, number;
+
+    switch (value.length) {
+    case 10: // +1PPP####### -> C (PPP) ###-####
+      country = 1;
+      city = value.slice(0, 3);
+      number = value.slice(3);
+      break;
+
+    case 11: // +CPPP####### -> CCC (PP) ###-####
+      country = value[0];
+      city = value.slice(1, 4);
+      number = value.slice(4);
+      break;
+
+    case 12: // +CCCPP####### -> CCC (PP) ###-####
+      country = value.slice(0, 3);
+      city = value.slice(3, 5);
+      number = value.slice(5);
+      break;
+
+    default:
+      return tel;
+    }
+
+    if (country == 1) {
+      country = "";
+    }
+
+    number = number.slice(0, 3) + '-' + number.slice(3);
+
+    return (country + " (" + city + ") " + number).trim();
+  };
+});
+
+angular.module('swkroaApp').filter('zip', function () {
+  return function (zip) {
+    if (!zip) { return ''; }
+
+    var value = zip.toString().trim().replace(/^\+/, '');
+
+    if (value.match(/[^0-9]/)) {
+      return zip;
+    }
+
+    switch (value.length) {
+    case 9: // ######### -> #####-####
+      zip = value.slice(0, 5);
+      plus4 = value.slice(5);
+      return zip + "-" + plus4;
+      break;
+
+    default:
+      return zip;
+    }
+  };
+});
 
 responseSuccessful = function(response) {
  return (200 <= response.status && response.status <= 299);
@@ -117,10 +123,6 @@ swkroaApp.factory('contextRootInterceptor', function() {
 swkroaApp.factory('swkroaCache', function($cacheFactory) {
   return $cacheFactory('swkroaCache');
 });
-
-swkroaApp.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.interceptors.push('contextRootInterceptor');
-}]);
 
 // define a service for CodeSet / CodeValues
 swkroaApp.service('codesetService', ['$http', 'swkroaCache', function($http, swkroaCache) {
@@ -540,21 +542,19 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     };
 
     return promise;
-  }
+  };
 
   this.generateOwnerId = function(firstName, lastName) {
-    var promise = $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName).then(function(response) {
+    return $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName).then(function(response) {
       return JSON.parse(response.data);
     });
-
-    return promise;
   };
 
   this.closeMemberships = function(membershipIdsArg, closeReasonArg, closeTextArg) {
     var closeReasonText = "";
     if (closeTextArg) {
       closeReasonText = closeTextArg;
-    };
+    }
 
     var data = {
       membershipIds: membershipIdsArg,

@@ -53,6 +53,13 @@ swkroaApp.controller('userController',
   function($scope, $http, codesetService, contactService, $state) {
 
   $scope.contactService = contactService;
+  $scope.status = {
+    opened: false
+  };
+
+  $scope.openExpireDate = function() {
+    $scope.status.opened = true;
+  };
 
   $http.get('/api/users').success(function(data) {
     $scope.users = data;
@@ -198,7 +205,7 @@ swkroaApp.controller('modifyUserController',
       error(function(data, status) {
         switch (status) {
         case 400: // bad request
-          $scope.errorMessage = data.message
+          $scope.errorMessage = data.message;
           break;
         case 409: // conflict
           $scope.errorMessage = "User " + data.fullName + " has been updated by another user!";

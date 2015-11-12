@@ -21,6 +21,7 @@
     <constructor-arg ref="userService"/>
   </bean>
 
+  <bean id="csrfHeaderFilter" class="com.cagst.swkroa.security.CsrfHeaderFilter"/>
   <bean id="changePasswordFilter" class="com.cagst.swkroa.security.ForceChangePasswordFilter">
     <property name="changePasswordUrl" value="/auth/changepwd"/>
   </bean>
@@ -31,10 +32,10 @@
   <!-- Secured Resources -->
   <sec:http auto-config="true">
     <!-- Enable CSRF Security -->
-    <sec:csrf />
     <!--
-    <sec:csrf disabled="true"/>
+    <sec:csrf />
     -->
+    <sec:csrf disabled="true"/>
 
     <sec:access-denied-handler error-page="/auth/notauthorized"/>
 

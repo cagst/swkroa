@@ -107,7 +107,7 @@
               <th>
                 <button type="button" class="btn btn-success btn-xs"
                         data-ng-click="addTransactionEntry()"
-                        th:attr="uibTooltip=#{com.cagst.swkroa.membership.transaction.entry.create}">
+                        th:attr="uib-tooltip=#{com.cagst.swkroa.membership.transaction.entry.create}">
                   <i class="fa fa-plus"></i>
                 </button>
               </th>
@@ -117,10 +117,11 @@
                    data-ng-show="entry.active">
             <tr>
               <td class="col-xs-4">
-                <select class="form-control" name="entryType"
-                        data-ng-model="entry.transactionEntryType"
-                        data-ng-required="true"
-                        data-ng-options="type.display for type in entryTypes">
+                <select class="form-control" name="entryType">
+                  <option data-ng-repeat="type in entryTypes"
+                          data-ng-model="entry.transactionEntryType">
+                    {{type.display}}
+                  </option>
                 </select>
               </td>
               <td class="col-xs-4">
@@ -138,7 +139,7 @@
               <td>
                 <button type="button" class="btn btn-danger btn-xs"
                         data-ng-click="deleteTransactionEntry(entry)"
-                        th:attr="uibTooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
+                        th:attr="uib-tooltip=#{com.cagst.swkroa.membership.transaction.entry.delete.title}">
                   <i class="fa fa-trash-o"></i>
                 </button>
               </td>

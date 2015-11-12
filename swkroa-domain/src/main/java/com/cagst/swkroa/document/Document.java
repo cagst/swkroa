@@ -10,6 +10,8 @@ import java.io.Serializable;
  * @author Craig Gaskill
  */
 public final class Document implements Serializable {
+  public static final String MEMBERSHIP = "MEMBERSHIP";
+
   private long document_id;
   private long parent_entity_id;
   private String parent_entity_name;
