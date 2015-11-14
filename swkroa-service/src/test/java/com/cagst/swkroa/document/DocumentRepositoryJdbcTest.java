@@ -6,19 +6,29 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import com.cagst.swkroa.filesystem.FileDTO;
 import com.cagst.swkroa.filesystem.FileSystem;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Test class for the {@link DocumentRepositoryJdbc} class.
@@ -28,12 +38,24 @@ import java.util.List;
 @RunWith(JUnit4.class)
 public class DocumentRepositoryJdbcTest extends BaseTestRepository {
   private DocumentRepositoryJdbc repo;
-  private FileSystem fileSystem = Mockito.mock(FileSystem.class);
+  private FileSystem fileSystem = mock(FileSystem.class);
+
+  private static final String FILE_LOCATION = "file://swkroa/document/store/renewal/testfile.txt";
 
   private User user;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
+    FileDTO testFile = FileDTO.builder()
+        .setFileId(FILE_LOCATION)
+        .setFileName("testfile.txt")
+        .setFileFormat("txt")
+        .setFileType("RENEWAL")
+        .build();
+
+    when(fileSystem.saveFileForEntity(anyString(), anyLong(), anyString(), anyString(), anyString(), anyObject()))
+        .thenReturn(Optional.of(testFile));
+
     repo = new DocumentRepositoryJdbc(createTestDataSource(), fileSystem);
 
     user = new User();
@@ -81,6 +103,7 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
   public void testSaveDocument_Insert() {
     Document document = new Document();
     document.setDocumentDescription("Document used for testing.");
+    document.setDocumentName("testfile.txt");
     document.setDocumentFormat("txt");
     document.setDocumentType("RENEWAL");
     document.setDocumentContents("Some test data to be places in the document.\nAnd more on another line".getBytes());
@@ -91,6 +114,41 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
     assertTrue("Ensure it has an ID", savedDocument.getDocumentUID() > 0L);
     assertEquals("Ensure it has the same description", document.getDocumentDescription(), savedDocument.getDocumentDescription());
     assertEquals("Ensure it has the proper update count", 0, document.getDocumentUpdateCount());
+    assertNull("Ensure the location was not set", document.getDocumentLocation());
+
+    Membership membership = new Membership();
+    membership.setMembershipUID(1L);
+
+    List<Document> documents = repo.getDocumentsForMembership(membership);
+    assertNotNull("Ensure we have a valid collection", documents);
+    assertFalse("Ensure the collection is not empty", documents.isEmpty());
+    assertEquals("Ensure we found the correct number of documents", 4, documents.size());
+  }
+
+  /**
+   * Test the saveDocument method by inserting a new document that exceeds the size we want to store in the DB.
+   */
+  @Test
+  public void testSaveDocument_Insert_Large() throws IOException {
+    InputStream in = this.getClass().getResourceAsStream("CarrotCakeCheesecake.pdf");
+
+    Document document = new Document();
+    document.setDocumentDescription("Another document used for testing.");
+    document.setDocumentName("testfile.txt");
+    document.setDocumentFormat("txt");
+    document.setDocumentType("RENEWAL");
+    document.setDocumentContents(IOUtils.toByteArray(in));
+    document.setBeginEffectiveDate(new DateTime());
+
+    IOUtils.closeQuietly(in);
+
+    Document savedDocument = repo.saveDocument(document, user);
+    assertNotNull("Ensure the document object is valid", savedDocument);
+    assertTrue("Ensure it has an ID", savedDocument.getDocumentUID() > 0L);
+    assertEquals("Ensure it has the same description", document.getDocumentDescription(), savedDocument.getDocumentDescription());
+    assertEquals("Ensure it has the proper update count", 0, document.getDocumentUpdateCount());
+    assertNotNull("Ensure the location was set", document.getDocumentLocation());
+    assertNull("Ensure the contents where cleared", document.getDocumentContents());
 
     Membership membership = new Membership();
     membership.setMembershipUID(1L);

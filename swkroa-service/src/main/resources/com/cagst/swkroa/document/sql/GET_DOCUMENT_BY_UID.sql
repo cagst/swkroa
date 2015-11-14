@@ -2,6 +2,7 @@ SELECT d.document_id
       ,d.parent_entity_id
       ,d.parent_entity_name
       ,d.document_type
+      ,d.document_name
       ,d.document_format
       ,d.document_location
       ,d.document_content

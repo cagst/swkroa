@@ -16,6 +16,7 @@ public final class Document implements Serializable {
   private long parent_entity_id;
   private String parent_entity_name;
   private String document_type;
+  private String document_name;
   private String document_format;
   private String document_location;
   private byte[] document_content;
@@ -57,6 +58,14 @@ public final class Document implements Serializable {
 
   public void setDocumentType(final String type) {
     this.document_type = type;
+  }
+
+  public String getDocumentName() {
+    return document_name;
+  }
+
+  public void setDocumentName(final String name) {
+    this.document_name = name;
   }
 
   public String getDocumentFormat() {

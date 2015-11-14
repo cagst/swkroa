@@ -2,10 +2,12 @@ package com.cagst.swkroa.document;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.filesystem.FileDTO;
 import com.cagst.swkroa.filesystem.FileSystem;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import net.sf.ehcache.transaction.xa.OptimisticLockFailureException;
+import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -19,9 +21,11 @@ import org.springframework.util.Assert;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * A JDBC Implementation of the {@link DocumentRepository} interface.
@@ -31,6 +35,8 @@ import java.util.Map;
 @Named("documentRepo")
 /* package */ class DocumentRepositoryJdbc extends BaseRepositoryJdbc implements DocumentRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(DocumentRepositoryJdbc.class);
+
+  private static final long MAX_DB_SIZE = 1000000;
 
   private static final String GET_DOCUMENT_BY_UID      = "GET_DOCUMENT_BY_UID";
   private static final String GET_DOCUMENTS_FOR_ENTITY = "GET_DOCUMENTS_FOR_ENTITY";
@@ -92,6 +98,28 @@ import java.util.Map;
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
     LOGGER.info("Saving Document for [{}, {}]", document.getParentEntityName(), document.getParentEntityUID());
+
+    if (document.getDocumentContents() != null && document.getDocumentContents().length > MAX_DB_SIZE) {
+      try {
+        // Document exceeds the size we want to store in the DB
+        // save to our external persistent store
+        Optional<FileDTO> file = fileSystem.saveFileForEntity(
+            document.getParentEntityName(),
+            document.getParentEntityUID(),
+            document.getDocumentName(),
+            document.getDocumentType(),
+            document.getDocumentFormat(),
+            document.getDocumentContents());
+
+        // If we were successful, we need to set the location of the file and clear the contents (so we don't save it twice)
+        if (file.isPresent()) {
+          document.setDocumentLocation(file.get().getFileId());
+          document.setDocumentContents(null);
+        }
+      } catch (FileSystemException | FileAlreadyExistsException ex) {
+        LOGGER.error("Unable to save file to external persistence store", ex);
+      }
+    }
 
     if (document.getDocumentUID() == 0L) {
       return insertDocument(document, user);

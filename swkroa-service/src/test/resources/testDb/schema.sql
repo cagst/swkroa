@@ -322,6 +322,7 @@ CREATE TABLE document (
   parent_entity_id       BIGINT NULL,
   parent_entity_name     VARCHAR(25) NULL,
   document_type          VARCHAR(25) NOT NULL,
+  document_name          VARCHAR(100) NOT NULL,
   document_format        VARCHAR(5) NOT NULL,
   document_location      VARCHAR(256) NULL,
   document_content       BLOB NULL,

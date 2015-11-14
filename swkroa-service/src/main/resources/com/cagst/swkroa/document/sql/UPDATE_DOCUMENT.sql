@@ -1,5 +1,6 @@
 UPDATE document
    SET document_type     = :document_type
+      ,document_name     = :document_name
       ,document_format   = :document_format
       ,document_location = :document_location
       ,document_content  = :document_content

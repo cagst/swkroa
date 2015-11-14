@@ -1,6 +1,7 @@
 INSERT INTO document (parent_entity_id
                      ,parent_entity_name
                      ,document_type
+                     ,document_name
                      ,document_format
                      ,document_location
                      ,document_content
@@ -15,6 +16,7 @@ INSERT INTO document (parent_entity_id
              VALUES (:parent_entity_id
                     ,:parent_entity_name
                     ,:document_type
+                    ,:document_name
                     ,:document_format
                     ,:document_location
                     ,:document_content

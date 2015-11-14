@@ -3,6 +3,7 @@ CREATE TABLE document (
   parent_entity_id       BIGINT UNSIGNED NULL,
   parent_entity_name     VARCHAR(25) NULL,
   document_type          VARCHAR(25) NOT NULL COMMENT 'The type of document: Invoice, Newsletter, etc.',
+  document_name          VARCHAR(100) NOT NULL COMMENT 'The name (filename) for the document',
   document_format        VARCHAR(5) NOT NULL COMMENT 'The format of the content: XML, PDF, etc.',
   document_location      VARCHAR(256) NULL,
   document_content       MEDIUMBLOB NULL,
