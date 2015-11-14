@@ -43,7 +43,7 @@ CREATE TABLE audit_log (
   audit_instigator          VARCHAR(50) NOT NULL,
   audit_message             VARCHAR(250) NULL,
   create_dt_tm              TIMESTAMP NOT NULL,
-  create_id                 BIGINT NULL,
+  create_id                 BIGINT NULL
 );
 
 CREATE TABLE person (

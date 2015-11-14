@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 
 import javax.inject.Inject;
@@ -31,6 +34,9 @@ import java.util.Map;
 
   private static final String GET_DOCUMENT_BY_UID      = "GET_DOCUMENT_BY_UID";
   private static final String GET_DOCUMENTS_FOR_ENTITY = "GET_DOCUMENTS_FOR_ENTITY";
+
+  private static final String INSERT_DOCUMENT = "INSERT_DOCUMENT";
+  private static final String UPDATE_DOCUMENT = "UPDATE_DOCUMENT";
 
   private final FileSystem fileSystem;
 
@@ -115,10 +121,36 @@ import java.util.Map;
   }
 
   private Document insertDocument(final Document document, final User user) {
-    return null;
+    LOGGER.info("Inserting new Document for [{}]", document.getParentEntityName());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_DOCUMENT), DocumentMapper.mapInsertStatement(document, user), keyHolder);
+    if (cnt == 1) {
+      document.setDocumentUID(keyHolder.getKey().longValue());
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+
+    return document;
   }
 
   private Document updateDocument(final Document document, final User user) {
-    return null;
+    LOGGER.info("Updating Document for [{}]", document.getDocumentUID());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(UPDATE_DOCUMENT), DocumentMapper.mapUpdateStatement(document, user));
+    if (cnt == 1) {
+      document.setDocumentUpdateCount(document.getDocumentUpdateCount() + 1);
+    } else if (cnt == 0) {
+      throw new OptimisticLockingFailureException("invalid update count of [" + cnt
+          + "] possible update count mismatch");
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+
+    return document;
   }
 }

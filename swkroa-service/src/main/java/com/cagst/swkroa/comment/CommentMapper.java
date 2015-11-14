@@ -55,7 +55,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
   public static MapSqlParameterSource mapInsertStatement(final Comment comment, final User user) {
-
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(PARENT_ENTITY_NAME, comment.getParentEntityName());
     params.addValue(PARENT_ENTITY_ID, comment.getParentEntityUID());
