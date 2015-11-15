@@ -2,6 +2,7 @@ package com.cagst.swkroa.document;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.filesystem.FileDTO;
 import com.cagst.swkroa.filesystem.FileSystem;
 import com.cagst.swkroa.member.Membership;
@@ -40,11 +41,13 @@ import java.util.Optional;
 
   private static final String GET_DOCUMENT_BY_UID      = "GET_DOCUMENT_BY_UID";
   private static final String GET_DOCUMENTS_FOR_ENTITY = "GET_DOCUMENTS_FOR_ENTITY";
+  private static final String GET_GLOBAL_DOCUMENTS     = "GET_GLOBAL_DOCUMENTS";
 
   private static final String INSERT_DOCUMENT = "INSERT_DOCUMENT";
   private static final String UPDATE_DOCUMENT = "UPDATE_DOCUMENT";
 
   private final FileSystem fileSystem;
+  private final CodeValueRepository codeValueRepo;
 
   /**
    * Primary Constructor used to create an instance of the DocumentRepositoryJdbc.
@@ -53,12 +56,17 @@ import java.util.Optional;
    *    The {@link DataSource} used to retrieve / persist data objects.
    * @param fileSystem
    *    The {@link FileSystem} used to persist the document externally.
+   * @param codeValueRepo
+   *     The {@link CodeValueRepository} to use to retrieve additional attributes.
    */
   @Inject
-  public DocumentRepositoryJdbc(final DataSource dataSource, final FileSystem fileSystem) {
+  public DocumentRepositoryJdbc(final DataSource dataSource,
+                                final FileSystem fileSystem,
+                                final CodeValueRepository codeValueRepo) {
     super(dataSource);
 
     this.fileSystem = fileSystem;
+    this.codeValueRepo = codeValueRepo;
   }
 
   @Override
@@ -69,7 +77,7 @@ import java.util.Optional;
     Map<String, Long> params = new HashMap<>(1);
     params.put("document_id", uid);
 
-    List<Document> documents = getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENT_BY_UID), params, new DocumentMapper());
+    List<Document> documents = getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENT_BY_UID), params, new DocumentMapper(codeValueRepo));
     if (documents.size() == 1) {
       return documents.get(0);
     } else if (documents.size() == 0) {
@@ -91,6 +99,15 @@ import java.util.Optional;
   }
 
   @Override
+  public List<Document> getGlobalDocuments() {
+    LOGGER.info("Calling getGlobalDocuments [{}]");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_GLOBAL_DOCUMENTS), new DocumentMapper(codeValueRepo));
+  }
+
+  @Override
   public Document saveDocument(final Document document, final User user)
       throws OptimisticLockFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
 
@@ -107,7 +124,7 @@ import java.util.Optional;
             document.getParentEntityName(),
             document.getParentEntityUID(),
             document.getDocumentName(),
-            document.getDocumentType(),
+            document.getDocumentType().getMeaning(),
             document.getDocumentFormat(),
             document.getDocumentContents());
 
@@ -145,7 +162,7 @@ import java.util.Optional;
     params.put("parent_entity_name", entityName);
     params.put("parent_entity_id", entityID);
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENTS_FOR_ENTITY), params, new DocumentMapper());
+    return getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENTS_FOR_ENTITY), params, new DocumentMapper(codeValueRepo));
   }
 
   private Document insertDocument(final Document document, final User user) {

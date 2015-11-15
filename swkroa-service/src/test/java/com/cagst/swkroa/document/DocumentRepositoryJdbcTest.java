@@ -12,6 +12,8 @@ import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.cagst.swkroa.codevalue.CodeValue;
+import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.filesystem.FileDTO;
 import com.cagst.swkroa.filesystem.FileSystem;
 import com.cagst.swkroa.member.Membership;
@@ -39,9 +41,11 @@ import java.util.Optional;
 public class DocumentRepositoryJdbcTest extends BaseTestRepository {
   private DocumentRepositoryJdbc repo;
   private FileSystem fileSystem = mock(FileSystem.class);
+  private CodeValueRepository codeValueRepo = mock(CodeValueRepository.class);
 
   private static final String FILE_LOCATION = "file://swkroa/document/store/renewal/testfile.txt";
 
+  private CodeValue renewalCodeValue;
   private User user;
 
   @Before
@@ -56,7 +60,14 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
     when(fileSystem.saveFileForEntity(anyString(), anyLong(), anyString(), anyString(), anyString(), anyObject()))
         .thenReturn(Optional.of(testFile));
 
-    repo = new DocumentRepositoryJdbc(createTestDataSource(), fileSystem);
+    renewalCodeValue = new CodeValue();
+    renewalCodeValue.setCodeValueUID(1L);
+    renewalCodeValue.setDisplay("Renewal Letter");
+    renewalCodeValue.setMeaning("RENEWAL");
+
+    when(codeValueRepo.getCodeValueByUID(anyLong())).thenReturn(renewalCodeValue);
+
+    repo = new DocumentRepositoryJdbc(createTestDataSource(), fileSystem, codeValueRepo);
 
     user = new User();
     user.setUserUID(1L);
@@ -97,6 +108,17 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
   }
 
   /**
+   * Test the getGlobalDocuments method.
+   */
+  @Test
+  public void testGetGlobalDocuments() {
+    List<Document> documents = repo.getGlobalDocuments();
+    assertNotNull("Ensure we have a valid collection", documents);
+    assertFalse("Ensure the collection is not empty", documents.isEmpty());
+    assertEquals("Ensure we found the correct number of documents", 2, documents.size());
+  }
+
+  /**
    * Test the saveDocument method by inserting a new document.
    */
   @Test
@@ -105,7 +127,7 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
     document.setDocumentDescription("Document used for testing.");
     document.setDocumentName("testfile.txt");
     document.setDocumentFormat("txt");
-    document.setDocumentType("RENEWAL");
+    document.setDocumentType(renewalCodeValue);
     document.setDocumentContents("Some test data to be places in the document.\nAnd more on another line".getBytes());
     document.setBeginEffectiveDate(new DateTime());
 
@@ -136,7 +158,7 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
     document.setDocumentDescription("Another document used for testing.");
     document.setDocumentName("testfile.txt");
     document.setDocumentFormat("txt");
-    document.setDocumentType("RENEWAL");
+    document.setDocumentType(renewalCodeValue);
     document.setDocumentContents(IOUtils.toByteArray(in));
     document.setBeginEffectiveDate(new DateTime());
 

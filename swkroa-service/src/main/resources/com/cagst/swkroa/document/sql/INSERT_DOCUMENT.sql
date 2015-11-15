@@ -1,6 +1,6 @@
 INSERT INTO document (parent_entity_id
                      ,parent_entity_name
-                     ,document_type
+                     ,document_type_cd
                      ,document_name
                      ,document_format
                      ,document_location
@@ -15,7 +15,7 @@ INSERT INTO document (parent_entity_id
                      ,updt_dt_tm)
              VALUES (:parent_entity_id
                     ,:parent_entity_name
-                    ,:document_type
+                    ,:document_type_cd
                     ,:document_name
                     ,:document_format
                     ,:document_location

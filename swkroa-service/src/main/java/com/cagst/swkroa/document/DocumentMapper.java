@@ -1,6 +1,7 @@
 package com.cagst.swkroa.document;
 
 import com.cagst.common.util.CGTDateTimeUtils;
+import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ import java.sql.Types;
   private static final String DOCUMENT_ID          = "document_id";
   private static final String PARENT_ENTITY_ID     = "parent_entity_id";
   private static final String PARENT_ENTITY_NAME   = "parent_entity_name";
-  private static final String DOCUMENT_TYPE        = "document_type";
+  private static final String DOCUMENT_TYPE_CD     = "document_type_cd";
   private static final String DOCUMENT_NAME        = "document_name";
   private static final String DOCUMENT_FORMAT      = "document_format";
   private static final String DOCUMENT_LOCATION    = "document_location";
@@ -43,13 +44,25 @@ import java.sql.Types;
   private static final String UPDT_ID    = "updt_id";
   private static final String DOCUMENT_UPDT_CNT = "document_updt_cnt";
 
+  private final CodeValueRepository codeValueRepo;
+
+  /**
+   * Primary Constructor used to create an instance of <i>DocumentMapper</i>
+   *
+   * @param codeValueRepo
+   *     The {@link CodeValueRepository} to use to retrieve codified values associated with the document.
+   */
+  public DocumentMapper(final CodeValueRepository codeValueRepo) {
+    this.codeValueRepo = codeValueRepo;
+  }
+
   @Override
   public Document mapRow(ResultSet rs, int rowNum) throws SQLException {
     Document document = new Document();
     document.setDocumentUID(rs.getLong(DOCUMENT_ID));
     document.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
     document.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    document.setDocumentType(rs.getString(DOCUMENT_TYPE));
+    document.setDocumentType(codeValueRepo.getCodeValueByUID(rs.getLong(DOCUMENT_TYPE_CD)));
     document.setDocumentName(rs.getString(DOCUMENT_NAME));
     document.setDocumentFormat(rs.getString(DOCUMENT_FORMAT));
     document.setDocumentLocation(rs.getString(DOCUMENT_LOCATION));
@@ -90,7 +103,7 @@ import java.sql.Types;
     params.addValue(PARENT_ENTITY_ID, document.getParentEntityUID() != 0L ? document.getParentEntityUID() : null);
     params.addValue(PARENT_ENTITY_NAME, document.getParentEntityName());
     params.addValue(DOCUMENT_DESCRIPTION, document.getDocumentDescription());
-    params.addValue(DOCUMENT_TYPE, document.getDocumentType());
+    params.addValue(DOCUMENT_TYPE_CD, document.getDocumentType().getCodeValueUID());
     params.addValue(DOCUMENT_NAME, document.getDocumentName());
     params.addValue(DOCUMENT_FORMAT,document.getDocumentFormat());
     params.addValue(DOCUMENT_LOCATION, document.getDocumentLocation());
@@ -118,7 +131,7 @@ import java.sql.Types;
   public static MapSqlParameterSource mapUpdateStatement(final Document document, final User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(DOCUMENT_DESCRIPTION, document.getDocumentDescription());
-    params.addValue(DOCUMENT_TYPE, document.getDocumentType());
+    params.addValue(DOCUMENT_TYPE_CD, document.getDocumentType().getCodeValueUID());
     params.addValue(DOCUMENT_NAME, document.getDocumentName());
     params.addValue(DOCUMENT_FORMAT,document.getDocumentFormat());
     params.addValue(DOCUMENT_LOCATION, document.getDocumentLocation());

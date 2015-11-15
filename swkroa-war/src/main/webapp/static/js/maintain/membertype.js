@@ -9,9 +9,15 @@ swkroaApp.run(function(editableOptions) {
 });
 
 swkroaApp.controller('membertypeController', ['$scope', 'memberTypeService', '$http', function($scope, memberTypeService, $http) {
+  $scope.beginDateIsOpen = false;
+
   memberTypeService.getMemberTypes().success(function(data) {
     $scope.types = data;
   });
+
+  $scope.openBeginDate = function($event) {
+    $scope.beginDateIsOpen = true;
+  };
 
   $scope.getType = function(type) {
     $scope.selected = type;

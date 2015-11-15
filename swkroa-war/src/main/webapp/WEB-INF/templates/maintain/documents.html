@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/main">
+
+<head>
+</head>
+
+<body>
+
+<div data-layout-fragment="content">
+  <div class="page-header">
+    <h3 th:text="#{maintain.documents.title}">zzz Maintain Documents</h3>
+  </div>
+
+  <div class="row">
+    <div style="margin-left: 15px; margin-right: 15px;">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th th:text="#{maintain.documents.description}">zzz Description</th>
+          <th th:text="#{maintain.documents.type}">zzz Type</th>
+          <th th:text="#{maintain.documents.name}">zzz Name</th>
+          <th th:text="#{maintain.documents.begin}">zzz Begin</th>
+          <th th:text="#{maintain.documents.end}">zzz End</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="document : ${documents}">
+          <td th:text="${document.getDocumentDescription()}">zzz Desc</td>
+          <td th:text="${document.getDocumentType().getDisplay()}">zzz Type</td>
+          <td th:text="${document.getDocumentName()}">zzz Name</td>
+          <td th:text="${#dates.format(document.getBeginEffectiveDate(), 'MMM d, yyyy')}">zzz Begin</td>
+          <td th:text="${document.getEndEffectiveDate()}">zzz End</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

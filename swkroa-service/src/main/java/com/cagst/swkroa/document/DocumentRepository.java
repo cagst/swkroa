@@ -36,6 +36,13 @@ public interface DocumentRepository {
   List<Document> getDocumentsForMembership(final Membership membership);
 
   /**
+   * Retrieves a {@link List} of {@link Document Documents} that are globally defined in the system.
+   *
+   * @return A {@link List} of {@link Document Documents} that are globally defined in the system.
+   */
+  List<Document> getGlobalDocuments();
+
+  /**
    * Persists the specified {@link Document}.
    *
    * @param document

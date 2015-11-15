@@ -13,16 +13,10 @@ if (typeof String.prototype.startsWith != 'function') {
 
 var swkroaApp = angular.module('swkroaApp',
     ['ui.bootstrap',
-      'ui.utils',
-      'ui.router',
-      'xeditable']
-).config(['$httpProvider, uibDatepickerPopupConfig', function($httpProvider, uibDatepickerPopupConfig) {
-  $httpProvider.interceptors.push('contextRootInterceptor');
-
-  uibDatepickerPopupConfig.uibDatepickerPopup = "MM/dd/yyyy";
-  uibDatepickerPopupConfig.showButtonBar = false;
-  uibDatepickerPopupConfig.showWeeks = false;
-}]);
+     'ui.utils',
+     'ui.router',
+     'xeditable']
+);
 
 angular.module('swkroaApp').filter('tel', function () {
   return function (tel) {
@@ -92,9 +86,17 @@ angular.module('swkroaApp').filter('zip', function () {
   };
 });
 
-responseSuccessful = function(response) {
- return (200 <= response.status && response.status <= 299);
-};
+swkroaApp.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('contextRootInterceptor');
+}]);
+
+swkroaApp.config(['uibDatepickerConfig', function(uibDatepickerConfig) {
+  uibDatepickerConfig.showWeeks = false;
+}]);
+
+swkroaApp.config(['uibDatepickerPopupConfig', function(uibDatepickerPopupConfig) {
+  uibDatepickerPopupConfig.showButtonBar = false;
+}]);
 
 // add an interceptor to our http service to inject the context root for our requests
 swkroaApp.factory('contextRootInterceptor', function() {
@@ -768,6 +770,10 @@ swkroaApp.controller('dashboardController', function($scope, $http) {
     $scope.dashboard = data;
   });
 });
+
+responseSuccessful = function(response) {
+  return (200 <= response.status && response.status <= 299);
+};
 
 showProcessingDialog = function() {
   $('#pleaseWaitDlg').modal('show');

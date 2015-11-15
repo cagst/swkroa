@@ -1,5 +1,6 @@
 package com.cagst.swkroa.document;
 
+import com.cagst.swkroa.codevalue.CodeValue;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ public final class Document implements Serializable {
   private long document_id;
   private long parent_entity_id;
   private String parent_entity_name;
-  private String document_type;
+  private CodeValue document_type;
   private String document_name;
   private String document_format;
   private String document_location;
@@ -52,11 +53,11 @@ public final class Document implements Serializable {
     this.parent_entity_name = name;
   }
 
-  public String getDocumentType() {
+  public CodeValue getDocumentType() {
     return document_type;
   }
 
-  public void setDocumentType(final String type) {
+  public void setDocumentType(final CodeValue type) {
     this.document_type = type;
   }
 
