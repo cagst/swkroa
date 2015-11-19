@@ -188,7 +188,7 @@ public class FileSystemImpl implements FileSystem {
 
     LOGGER.debug("Calling saveFileForEntity for entity [{}], filename [{}], and filetype [{}]", parentEntityName, fileName, fileType);
 
-    String uri = buildUri(parentEntityName, parentEntityId, fileName, fileType, fileFormat);
+    String uri = buildUri(parentEntityName, parentEntityId, fileName, fileType);
 
     FileObject fileObject;
     try {
@@ -284,8 +284,6 @@ public class FileSystemImpl implements FileSystem {
    *      A {@link String} that represents the name of the document / file.
    * @param fileType
    *      A {@link String} that defines the type of document / file being stored.
-   * @param fileFormat
-   *      A {@link String} that defines the format of the document / file being stored.
    *
    * @return A {@link String} that represents the location of the file.
    */
@@ -294,14 +292,11 @@ public class FileSystemImpl implements FileSystem {
       final String parentEntityName,
       final long parentEntityId,
       final String fileName,
-      final String fileType,
-      final String fileFormat
+      final String fileType
   ) {
     String path = DATE_TIME_FORMATTER.print(new DateTime());
     path += DEFAULT_SEPARATOR;
     path += normalizeFilename(fileName);
-    path += ".";
-    path += fileFormat;
 
     UriComponentsBuilder builder = UriComponentsBuilder.fromPath(getBasePath())
         .scheme(scheme)

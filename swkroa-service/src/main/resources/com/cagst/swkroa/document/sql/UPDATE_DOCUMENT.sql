@@ -1,10 +1,6 @@
 UPDATE document
-   SET document_type_cd  = :document_type_cd
-      ,document_name     = :document_name
-      ,document_format   = :document_format
-      ,document_location = :document_location
-      ,document_content  = :document_content
-      ,document_desc     = :document_desc
+   SET document_desc     = :document_desc
+      ,document_type_cd  = :document_type_cd
       ,beg_eff_dt        = :beg_eff_dt
       ,end_eff_dt        = :end_eff_dt
       ,active_ind        = :active_ind

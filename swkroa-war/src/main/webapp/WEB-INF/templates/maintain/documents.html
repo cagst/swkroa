@@ -12,7 +12,9 @@
 
 <div data-layout-fragment="content">
   <div class="page-header">
-    <h3 th:text="#{maintain.documents.title}">zzz Maintain Documents</h3>
+    <div class="container clear-left clear-right" style="width:100%">
+    <h3 class="pull-left" th:text="#{maintain.documents.title}">zzz Maintain Documents</h3>
+    </div>
   </div>
 
   <div class="row">
@@ -25,18 +27,114 @@
           <th th:text="#{maintain.documents.name}">zzz Name</th>
           <th th:text="#{maintain.documents.begin}">zzz Begin</th>
           <th th:text="#{maintain.documents.end}">zzz End</th>
+          <th>
+            <button type="button" class="btn btn-success btn-xs pull-right"
+                    data-toggle="modal" data-target="#uploadFileDlg">
+              <i class="fa fa-upload"></i>
+              <span th:text="#{maintain.documents.upload}">zzz Upload</span>
+            </button>
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr th:each="document : ${documents}">
+        <tr th:each="document : ${documents}" class="hover-buttons">
           <td th:text="${document.getDocumentDescription()}">zzz Desc</td>
           <td th:text="${document.getDocumentType().getDisplay()}">zzz Type</td>
           <td th:text="${document.getDocumentName()}">zzz Name</td>
           <td th:text="${#dates.format(document.getBeginEffectiveDate(), 'MMM d, yyyy')}">zzz Begin</td>
           <td th:text="${document.getEndEffectiveDate()}">zzz End</td>
+          <td>
+            <div class="btn-group pull-right">
+              <button type="button" class="btn btn-primary btn-xs">
+                <i class="fa fa-edit"></i>
+                <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+              </button>
+              <a type="button" class="btn btn-default btn-xs"
+                 target="_blank"
+                 th:href="@{/maintain/documents/__${document.getDocumentUID()}__}">
+                <i class="fa fa-binoculars"></i>
+                <span th:text="#{maintain.documents.action.view}">zzz View</span>
+              </a>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
+    </div>
+  </div>
+
+  <div id="uploadFileDlg" class="modal fade" tabindex="-1">
+    <div class="modal-dialog" style="width:600px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" th:text="#{maintain.documents.upload}">
+            zzz Upload Document
+          </h4>
+        </div>
+        <form action="#" th:action="@{/maintain/documents/upload}" method="post" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="documentDesc" class="form-label"
+                       th:text="#{maintain.documents.description}">
+                  zzz Description
+                </label>
+                <input id="documentDesc" name="documentDesc" type="text" class="form-control" maxlength="150"/>
+              </div>
+              <div class="col-xs-6">
+                <label for="documentTypeUID" class="form-label"
+                       th:text="#{maintain.documents.type}">
+                  zzz Type
+                </label>
+                <select id="documentTypeUID" name="documentTypeUID" class="form-control">
+                  <option th:each="type : ${documentTypes}"
+                          th:value="${type.getCodeValueUID()}"
+                          th:text="${type.getDisplay()}">
+                    zzz Types
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="beginDate" class="form-label"
+                       th:text="#{maintain.documents.begin}">
+                  zzz Begin
+                </label>
+                <input id="beginDate" name="beginDate" type="text" class="form-control"
+                       data-uib-datepicker-popup="MM/dd/yyyy"
+                       data-is-open="beginOpen" />
+              </div>
+              <div class="col-xs-6">
+                <label for="endDate" class="form-label"
+                       th:text="#{maintain.documents.end}">
+                  zzz End
+                </label>
+                <input id="endDate" name="endDate" type="text" class="form-control"
+                       data-uib-datepicker-popup="MM/dd/yyyy"
+                       data-is-open="beginOpen" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <input id="uploadFile" name="uploadFile" class="form-row-spacer" type="file">
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success"
+                    th:text="#{maintain.documents.upload}">
+              zzz Upload
+            </button>
+            <button type="button" class="btn btn-default"
+                    data-dismiss="modal"
+                    th:text="#{com.cagst.swkroa.cancel}">
+              zzz Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

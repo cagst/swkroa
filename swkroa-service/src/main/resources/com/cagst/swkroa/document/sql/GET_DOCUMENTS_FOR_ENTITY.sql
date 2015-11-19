@@ -5,7 +5,6 @@ SELECT d.document_id
       ,d.document_name
       ,d.document_format
       ,d.document_location
-      ,d.document_content
       ,d.document_desc
       ,d.beg_eff_dt
       ,d.end_eff_dt

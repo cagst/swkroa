@@ -52,6 +52,10 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+    </dependency>
 
     <!-- Log 4J Dependencies -->
     <dependency>

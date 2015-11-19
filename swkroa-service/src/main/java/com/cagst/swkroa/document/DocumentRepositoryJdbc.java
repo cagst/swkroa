@@ -77,7 +77,7 @@ import java.util.Optional;
     Map<String, Long> params = new HashMap<>(1);
     params.put("document_id", uid);
 
-    List<Document> documents = getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENT_BY_UID), params, new DocumentMapper(codeValueRepo));
+    List<Document> documents = getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENT_BY_UID), params, new DocumentMapper(codeValueRepo, true));
     if (documents.size() == 1) {
       return documents.get(0);
     } else if (documents.size() == 0) {
@@ -104,7 +104,7 @@ import java.util.Optional;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_GLOBAL_DOCUMENTS), new DocumentMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_GLOBAL_DOCUMENTS), new DocumentMapper(codeValueRepo, false));
   }
 
   @Override
@@ -162,7 +162,7 @@ import java.util.Optional;
     params.put("parent_entity_name", entityName);
     params.put("parent_entity_id", entityID);
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENTS_FOR_ENTITY), params, new DocumentMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENTS_FOR_ENTITY), params, new DocumentMapper(codeValueRepo, false));
   }
 
   private Document insertDocument(final Document document, final User user) {

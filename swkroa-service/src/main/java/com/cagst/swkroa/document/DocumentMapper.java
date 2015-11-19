@@ -45,15 +45,19 @@ import java.sql.Types;
   private static final String DOCUMENT_UPDT_CNT = "document_updt_cnt";
 
   private final CodeValueRepository codeValueRepo;
+  private final boolean retrieveContent;
 
   /**
    * Primary Constructor used to create an instance of <i>DocumentMapper</i>
    *
    * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve codified values associated with the document.
+   *    The {@link CodeValueRepository} to use to retrieve codified values associated with the document.
+   * @param retrieveContent
+   *    A {@link boolean} that specifies if we should retrieve the content (if it is available in the resultset).
    */
-  public DocumentMapper(final CodeValueRepository codeValueRepo) {
+  public DocumentMapper(final CodeValueRepository codeValueRepo, final boolean retrieveContent) {
     this.codeValueRepo = codeValueRepo;
+    this.retrieveContent = retrieveContent;
   }
 
   @Override
@@ -70,15 +74,17 @@ import java.sql.Types;
     document.setBeginEffectiveDate(CGTDateTimeUtils.getDateTime(rs, BEG_EFF_DT));
     document.setEndEffectiveDate(CGTDateTimeUtils.getDateTime(rs, END_EFF_DT));
 
-    Blob content = rs.getBlob(DOCUMENT_CONTENT);
-    if (content != null) {
-      InputStream in = content.getBinaryStream();
-      try {
-        document.setDocumentContents(IOUtils.toByteArray(in));
-      } catch (IOException ex) {
-        LOGGER.error("Error retrieving document contents [" + ex.getLocalizedMessage() + "]", ex);
-      } finally {
-        IOUtils.closeQuietly(in);
+    if (retrieveContent) {
+      Blob content = rs.getBlob(DOCUMENT_CONTENT);
+      if (content != null) {
+        InputStream in = content.getBinaryStream();
+        try {
+          document.setDocumentContents(IOUtils.toByteArray(in));
+        } catch (IOException ex) {
+          LOGGER.error("Error retrieving document contents [" + ex.getLocalizedMessage() + "]", ex);
+        } finally {
+          IOUtils.closeQuietly(in);
+        }
       }
     }
 
@@ -132,10 +138,6 @@ import java.sql.Types;
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(DOCUMENT_DESCRIPTION, document.getDocumentDescription());
     params.addValue(DOCUMENT_TYPE_CD, document.getDocumentType().getCodeValueUID());
-    params.addValue(DOCUMENT_NAME, document.getDocumentName());
-    params.addValue(DOCUMENT_FORMAT,document.getDocumentFormat());
-    params.addValue(DOCUMENT_LOCATION, document.getDocumentLocation());
-    params.addValue(DOCUMENT_CONTENT, document.getDocumentContents() != null ? new SqlLobValue(document.getDocumentContents()) : null, Types.BLOB);
     params.addValue(BEG_EFF_DT, document.getBeginEffectiveDate().toDate());
     params.addValue(END_EFF_DT, document.getEndEffectiveDate() != null ? document.getEndEffectiveDate().toDate() : null);
     params.addValue(ACTIVE_IND, document.isActive());

@@ -19,6 +19,8 @@
   <mvc:resources location="/wro/*" mapping="/wro/*"/>
   -->
 
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
   <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
     <property name="prefix" value="/WEB-INF/templates/"/>
     <property name="suffix" value=".html"/>

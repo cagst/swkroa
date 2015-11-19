@@ -62,11 +62,11 @@ public final class MemberApiController {
     int newStart = (start != null ? start : 0);
     int newLimit = (limit != null ? limit : 20);
 
-    ListModel<Member> model = new ListModel<Member>(
+    ListModel<Member> model = new ListModel<>(
         memberRepo.getMembersByName(query, newStatus, newStart, newLimit),
         memberRepo.getMembersByNameCount(query, newStatus)
     );
 
-    return new ResponseEntity<ListModel<Member>>(model, HttpStatus.OK);
+    return new ResponseEntity<>(model, HttpStatus.OK);
   }
 }
