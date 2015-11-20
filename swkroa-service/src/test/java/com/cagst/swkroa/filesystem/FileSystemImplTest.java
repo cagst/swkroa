@@ -83,7 +83,7 @@ public class FileSystemImplTest {
    */
   @Test
   public void testBuildUri() {
-    String baseUri1 = fileSystem.buildUri("MEMBERSHIP", 123, "2015 - 2016 Membership Renewal", "RENEWAL_LETTER");
+    String baseUri1 = fileSystem.buildUri("MEMBERSHIP", 123, "2015 - 2016 Membership Renewal.pdf", "RENEWAL_LETTER");
     assertNotNull("Ensure the path is not null", baseUri1);
 
     String expectedStart1 = fileSystem.getScheme() + ":" + fileSystem.getBasePath() + "membership/123/renewal_letter/";
@@ -92,7 +92,7 @@ public class FileSystemImplTest {
     assertTrue("Ensure the client base path is built correctly for the default schema.", baseUri1.startsWith(expectedStart1));
     assertTrue("Ensure the client base path is built correctly for the default schema.", baseUri1.endsWith(expectedEnd1));
 
-    String baseUri2 = fileSystem.buildUri(null, 0, "2016 Newsletter", "NEWS_LETTER");
+    String baseUri2 = fileSystem.buildUri(null, 0, "2016 Newsletter.pdf", "NEWS_LETTER");
     assertNotNull("Ensure the path is not null", baseUri2);
 
     String expectedStart2 = fileSystem.getScheme() + ":" + fileSystem.getBasePath() + "news_letter/";
