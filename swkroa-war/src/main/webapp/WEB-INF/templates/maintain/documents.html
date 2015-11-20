@@ -6,6 +6,7 @@
       layout:decorator="layouts/main">
 
 <head>
+  <script type="text/javascript" th:src="@{/static/js/maintain/documents.js}"></script>
 </head>
 
 <body>
@@ -79,14 +80,16 @@
                        th:text="#{maintain.documents.description}">
                   zzz Description
                 </label>
-                <input id="documentDesc" name="documentDesc" type="text" class="form-control" maxlength="150"/>
+                <input id="documentDesc" name="documentDesc" type="text" class="form-control"
+                       maxlength="150" onchange="enableUploadDocument()"/>
               </div>
               <div class="col-xs-6">
                 <label for="documentTypeUID" class="form-label"
                        th:text="#{maintain.documents.type}">
                   zzz Type
                 </label>
-                <select id="documentTypeUID" name="documentTypeUID" class="form-control">
+                <select id="documentTypeUID" name="documentTypeUID" class="form-control"
+                        onchange="enableUploadDocument()">
                   <option th:each="type : ${documentTypes}"
                           th:value="${type.getCodeValueUID()}"
                           th:text="${type.getDisplay()}">
@@ -101,29 +104,45 @@
                        th:text="#{maintain.documents.begin}">
                   zzz Begin
                 </label>
-                <input id="beginDate" name="beginDate" type="text" class="form-control"
-                       data-uib-datepicker-popup="MM/dd/yyyy"
-                       data-is-open="beginOpen" />
+                <div id="beginDateTimePicker" class="input-group">
+                  <input id="beginDate" name="beginDate" type="text" class="form-control date-picker"
+                         onchange="enableUploadDocument()"
+                         readonly
+                         data-uib-datepicker-popup="MM/dd/yyyy"
+                         data-is-open="beginOpen" />
+                  <label for="beginDate" class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </label>
+                </div>
               </div>
               <div class="col-xs-6">
                 <label for="endDate" class="form-label"
                        th:text="#{maintain.documents.end}">
                   zzz End
                 </label>
-                <input id="endDate" name="endDate" type="text" class="form-control"
-                       data-uib-datepicker-popup="MM/dd/yyyy"
-                       data-is-open="beginOpen" />
+                <div id="endDateTimePicker" class="input-group datetimepicker">
+                  <input id="endDate" name="endDate" type="text" class="form-control"
+                         data-uib-datepicker-popup="MM/dd/yyyy"
+                         data-is-open="beginOpen" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+                </div>
               </div>
             </div>
             <div class="row">
               <div class="col-xs-12">
-                <input id="uploadFile" name="uploadFile" class="form-row-spacer" type="file">
+                <input id="uploadFile" name="uploadFile" class="form-row-spacer" type="file"
+                       onchange="enableUploadDocument()">
               </div>
             </div>
           </div>
 
           <div class="modal-footer">
-            <button type="submit" class="btn btn-success"
+            <button id="uploadDocumentButton" type="submit" class="btn btn-success"
+                    th:disabled="'enableUploadDocument()'"
                     th:text="#{maintain.documents.upload}">
               zzz Upload
             </button>
