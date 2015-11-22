@@ -218,7 +218,7 @@ swkroaApp.service('codesetService', ['$http', 'swkroaCache', function($http, swk
 }]);
 
 // define a service for Contacts
-swkroaApp.service('contactService', ['$http', function($http) {
+swkroaApp.service('contactService', [function() {
   this.getStates = function() {
     return [
       {code:"AL", name:"Alabama"},
@@ -226,12 +226,6 @@ swkroaApp.service('contactService', ['$http', function($http) {
       {code:"AS", name:"American Samoa"},
       {code:"AZ", name:"Arizona"},
       {code:"AR", name:"Arkansas"},
-      {code:"AF", name:"Armed Forces Africa"},
-      {code:"AA", name:"Armed Forces Americas"},
-      {code:"AC", name:"Armed Forces Canada"},
-      {code:"AE", name:"Armed Forces Europe"},
-      {code:"AM", name:"Armed Forces Middle East"},
-      {code:"AP", name:"Armed Forces Pacific"},
       {code:"CA", name:"California"},
       {code:"CO", name:"Colorado"},
       {code:"CT", name:"Connecticut"},

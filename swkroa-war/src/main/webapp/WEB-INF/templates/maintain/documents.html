@@ -39,14 +39,25 @@
       </thead>
       <tbody>
         <tr th:each="document : ${documents}" class="hover-buttons">
-          <td th:text="${document.getDocumentDescription()}">zzz Desc</td>
-          <td th:text="${document.getDocumentType().getDisplay()}">zzz Type</td>
+          <td th:text="${document.getDocumentDescription()}"
+              th:id="${document.getDocumentUID()}">
+            zzz Desc
+          </td>
+          <td th:text="${document.getDocumentType().getDisplay()}"
+              th:id="${document.getDocumentType().getCodeValueUID()}">
+            zzz Type
+          </td>
           <td th:text="${document.getDocumentName()}">zzz Name</td>
-          <td th:text="${#dates.format(document.getBeginEffectiveDate(), 'MMM d, yyyy')}">zzz Begin</td>
+          <td th:text="${#dates.format(document.getBeginEffectiveDate(), 'MMM d, yyyy')}"
+              th:name="${#dates.format(document.getBeginEffectiveDate(), 'MM/dd/yyyy')}">
+            zzz Begin
+          </td>
           <td th:text="${document.getEndEffectiveDate()}">zzz End</td>
           <td>
             <div class="btn-group pull-right">
-              <button type="button" class="btn btn-primary btn-xs">
+              <button type="button" class="btn btn-primary btn-xs"
+                      data-toggle="modal" data-target="#editDocumentDlg"
+                      onclick="displayEditDialog(this)">
                 <i class="fa fa-edit"></i>
                 <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
               </button>
@@ -64,6 +75,7 @@
     </div>
   </div>
 
+  <!-- Upload File Dialog -->
   <div id="uploadFileDlg" class="modal fade" tabindex="-1">
     <div class="modal-dialog" style="width:600px;">
       <div class="modal-content">
@@ -76,7 +88,7 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-xs-6">
-                <label for="documentDesc" class="form-label"
+                <label for="documentDesc" class="form-label label-required"
                        th:text="#{maintain.documents.description}">
                   zzz Description
                 </label>
@@ -84,7 +96,7 @@
                        maxlength="150" onchange="enableUploadDocument()"/>
               </div>
               <div class="col-xs-6">
-                <label for="documentTypeUID" class="form-label"
+                <label for="documentTypeUID" class="form-label label-required"
                        th:text="#{maintain.documents.type}">
                   zzz Type
                 </label>
@@ -100,7 +112,7 @@
             </div>
             <div class="row">
               <div class="col-xs-6">
-                <label for="beginDate" class="form-label"
+                <label for="beginDate" class="form-label label-required"
                        th:text="#{maintain.documents.begin}">
                   zzz Begin
                 </label>
@@ -123,7 +135,7 @@
                 <div id="endDateTimePicker" class="input-group datetimepicker">
                   <input id="endDate" name="endDate" type="text" class="form-control"
                          data-uib-datepicker-popup="MM/dd/yyyy"
-                         data-is-open="beginOpen" />
+                         data-is-open="endOpen" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default">
                       <i class="fa fa-calendar"></i>
@@ -156,6 +168,96 @@
       </div>
     </div>
   </div>
+
+  <!-- Edit Document Dialog -->
+  <div id="editDocumentDlg" class="modal fade" tabindex="-1">
+    <div class="modal-dialog" style="width:600px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" th:text="#{maintain.documents.edit.document}">
+            zzz Edit Document
+          </h4>
+        </div>
+        <form action="#" th:action="@{/maintain/documents}" method="post">
+          <div class="modal-body">
+            <div class="row">
+              <input id="documentUID" name="documentUID" type="hidden" />
+              <div class="col-xs-6">
+                <label for="editDocumentDesc" class="form-label label-required"
+                       th:text="#{maintain.documents.description}">
+                  zzz Description
+                </label>
+                <input id="editDocumentDesc" name="editDocumentDesc" type="text" class="form-control"
+                       maxlength="150" onchange="enableSaveDocument()"/>
+              </div>
+              <div class="col-xs-6">
+                <label for="editDocumentTypeUID" class="form-label label-required"
+                       th:text="#{maintain.documents.type}">
+                  zzz Type
+                </label>
+                <select id="editDocumentTypeUID" name="editDocumentTypeUID" class="form-control"
+                        onchange="enableSaveDocument()">
+                  <option th:each="type : ${documentTypes}"
+                          th:value="${type.getCodeValueUID()}"
+                          th:text="${type.getDisplay()}">
+                    zzz Types
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <label for="editBeginDate" class="form-label label-required"
+                       th:text="#{maintain.documents.begin}">
+                  zzz Begin
+                </label>
+                <div id="editBeginDateTimePicker" class="input-group">
+                  <input id="editBeginDate" name="editBeginDate" type="text" class="form-control date-picker"
+                         onchange="enableSaveDocument()"
+                         readonly
+                         data-uib-datepicker-popup="MM/dd/yyyy"
+                         data-is-open="editBeginOpen" />
+                  <label class="input-group-addon" onclick="openDatePicker('editBeginOpen')">
+                    <i class="fa fa-calendar"></i>
+                  </label>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <label for="editEndDate" class="form-label"
+                       th:text="#{maintain.documents.end}">
+                  zzz End
+                </label>
+                <div id="editEndDateTimePicker" class="input-group datetimepicker">
+                  <input id="editEndDate" name="editEndDate" type="text" class="form-control"
+                         data-uib-datepicker-popup="MM/dd/yyyy"
+                         data-is-open="editEndOpen" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="saveDocumentButton" type="submit" class="btn btn-success"
+                    th:disabled="'enableSaveDocument()'"
+                    th:text="#{com.cagst.swkroa.save}">
+              zzz Upload
+            </button>
+            <button type="button" class="btn btn-default"
+                    data-dismiss="modal"
+                    th:text="#{com.cagst.swkroa.cancel}">
+              zzz Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 </body>

@@ -4,3 +4,4 @@
 **/.classpath
 *.iml
 .idea
+src/main/webapp/components
