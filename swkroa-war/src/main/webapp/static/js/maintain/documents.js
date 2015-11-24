@@ -24,16 +24,15 @@ displayEditDialog = function(el) {
     var value = $(this).text();
 
     if (idx === 0) {
-      var id = $(this).attr('id');
-      $('#documentUID').val(id);
+      $('#documentUID').val($(this).attr('id'));
       $('#editDocumentDesc').val(value);
     } else if (idx === 1) {
-      var id = $(this).attr('id');
-      $('#editDocumentTypeUID').val(id);
+      $('#editDocumentTypeUID').val($(this).attr('id'));
     } else if (idx === 3) {
       value = $(this).attr('name');
       $('#editBeginDate').val(value);
     } else if (idx === 4) {
+      value = $(this).attr('name');
       $('#editEndDate').val(value);
     }
 

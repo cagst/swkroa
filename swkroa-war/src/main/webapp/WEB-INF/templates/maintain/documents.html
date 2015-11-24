@@ -52,7 +52,10 @@
               th:name="${#dates.format(document.getBeginEffectiveDate(), 'MM/dd/yyyy')}">
             zzz Begin
           </td>
-          <td th:text="${document.getEndEffectiveDate()}">zzz End</td>
+          <td th:text="${#dates.format(document.getEndEffectiveDate(), 'MMM d, yyyy')}"
+              th:name="${#dates.format(document.getEndEffectiveDate(), 'MM/dd/yyyy')}">
+            zzz End
+          </td>
           <td>
             <div class="btn-group pull-right">
               <button type="button" class="btn btn-primary btn-xs"
@@ -119,7 +122,6 @@
                 <div id="beginDateTimePicker" class="input-group">
                   <input id="beginDate" name="beginDate" type="text" class="form-control date-picker"
                          onchange="enableUploadDocument()"
-                         readonly
                          data-uib-datepicker-popup="MM/dd/yyyy"
                          data-is-open="beginOpen" />
                   <label for="beginDate" class="input-group-addon">
@@ -214,7 +216,6 @@
                 <div id="editBeginDateTimePicker" class="input-group">
                   <input id="editBeginDate" name="editBeginDate" type="text" class="form-control date-picker"
                          onchange="enableSaveDocument()"
-                         readonly
                          data-uib-datepicker-popup="MM/dd/yyyy"
                          data-is-open="editBeginOpen" />
                   <label class="input-group-addon" onclick="openDatePicker('editBeginOpen')">

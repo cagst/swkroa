@@ -4,6 +4,7 @@ import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.document.DocumentRepository;
+import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -139,6 +140,7 @@ public final class MaintenanceController {
       final @RequestParam("documentTypeUID") long documentTypeUID,
       final @RequestParam("beginDate") Date beginDate,
       final @RequestParam("endDate") Date endDate) {
+
     LOGGER.info("Received request to upload the file.");
 
     CodeValue documentType = codeValueRepository.getCodeValueByUID(documentTypeUID);
@@ -163,6 +165,35 @@ public final class MaintenanceController {
     ModelAndView mav = new ModelAndView("maintain/documents");
     mav.addObject("documents", documentRepository.getGlobalDocuments());
     mav.addObject("uploadSucceeded", uploadSucceeded);
+
+    return mav;
+  }
+
+  @RequestMapping(value = "documents", method = RequestMethod.POST)
+  public ModelAndView saveDocument(
+      final @RequestParam("documentUID") long documentId,
+      final @RequestParam("editDocumentDesc") String documentDescription,
+      final @RequestParam("editDocumentTypeUID") long documentTypeUID,
+      final @RequestParam("editBeginDate") Date beginDate,
+      final @RequestParam("editEndDate") Date endDate) {
+
+    LOGGER.info("Received request to save document [{}]", documentId);
+    Document document = documentRepository.getDocumentByUID(documentId);
+    if (document == null) {
+      throw new ResourceNotFoundException("Unable to find document [" + documentId + "]");
+    }
+
+    CodeValue documentType = codeValueRepository.getCodeValueByUID(documentTypeUID);
+
+    document.setDocumentDescription(documentDescription);
+    document.setDocumentType(documentType);
+    document.setBeginEffectiveDate(new DateTime(beginDate));
+    document.setEndEffectiveDate(endDate != null ? new DateTime(endDate) : null);
+
+    documentRepository.saveDocument(document, WebAppUtils.getUser());
+
+    ModelAndView mav = new ModelAndView("maintain/documents");
+    mav.addObject("documents", documentRepository.getGlobalDocuments());
 
     return mav;
   }
