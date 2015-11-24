@@ -6,6 +6,11 @@
       layout:decorator="layouts/main">
 
 <head>
+  <link type="text/css" th:href="@{//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css}"/>
+
+  <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js}"></script>
+  <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js}"></script>
+
   <script type="text/javascript" th:src="@{/static/js/maintain/documents.js}"></script>
 </head>
 
@@ -119,14 +124,12 @@
                        th:text="#{maintain.documents.begin}">
                   zzz Begin
                 </label>
-                <div id="beginDateTimePicker" class="input-group">
-                  <input id="beginDate" name="beginDate" type="text" class="form-control date-picker"
-                         onchange="enableUploadDocument()"
-                         data-uib-datepicker-popup="MM/dd/yyyy"
-                         data-is-open="beginOpen" />
-                  <label for="beginDate" class="input-group-addon">
+                <div id="beginDateTimePicker" class="input-group date date-time-picker">
+                  <input id="beginDate" name="beginDate" type="text" class="form-control"
+                         onchange="enableUploadDocument()" />
+                  <span class="input-group-addon">
                     <i class="fa fa-calendar"></i>
-                  </label>
+                  </span>
                 </div>
               </div>
               <div class="col-xs-6">
@@ -134,14 +137,10 @@
                        th:text="#{maintain.documents.end}">
                   zzz End
                 </label>
-                <div id="endDateTimePicker" class="input-group datetimepicker">
-                  <input id="endDate" name="endDate" type="text" class="form-control"
-                         data-uib-datepicker-popup="MM/dd/yyyy"
-                         data-is-open="endOpen" />
-                  <span class="input-group-btn">
-                    <button type="button" class="btn btn-default">
-                      <i class="fa fa-calendar"></i>
-                    </button>
+                <div id="endDateTimePicker" class="input-group date-time-picker">
+                  <input id="endDate" name="endDate" type="text" class="form-control" />
+                  <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
                   </span>
                 </div>
               </div>
@@ -213,12 +212,10 @@
                        th:text="#{maintain.documents.begin}">
                   zzz Begin
                 </label>
-                <div id="editBeginDateTimePicker" class="input-group">
-                  <input id="editBeginDate" name="editBeginDate" type="text" class="form-control date-picker"
-                         onchange="enableSaveDocument()"
-                         data-uib-datepicker-popup="MM/dd/yyyy"
-                         data-is-open="editBeginOpen" />
-                  <label class="input-group-addon" onclick="openDatePicker('editBeginOpen')">
+                <div id="editBeginDateTimePicker" class="input-group date-time-picker">
+                  <input id="editBeginDate" name="editBeginDate" type="text" class="form-control"
+                         onchange="enableSaveDocument()"/>
+                  <label class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </label>
                 </div>
@@ -228,15 +225,11 @@
                        th:text="#{maintain.documents.end}">
                   zzz End
                 </label>
-                <div id="editEndDateTimePicker" class="input-group datetimepicker">
-                  <input id="editEndDate" name="editEndDate" type="text" class="form-control"
-                         data-uib-datepicker-popup="MM/dd/yyyy"
-                         data-is-open="editEndOpen" />
-                  <span class="input-group-btn">
-                    <button type="button" class="btn btn-default">
-                      <i class="fa fa-calendar"></i>
-                    </button>
-                  </span>
+                <div id="editEndDateTimePicker" class="input-group date-time-picker">
+                  <input id="editEndDate" name="editEndDate" type="text" class="form-control"/>
+                  <label class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </label>
                 </div>
               </div>
             </div>

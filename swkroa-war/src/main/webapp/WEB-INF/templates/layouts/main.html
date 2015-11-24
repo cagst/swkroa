@@ -29,6 +29,7 @@
 
   <!-- JQuery Support -->
   <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js}"></script>
+  <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js}"></script>
 
   <!-- Angular Support -->
   <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.js}"></script>
@@ -262,6 +263,15 @@
 <script type="text/javascript">
 //  $('select').select2();
 //  $('.date-picker').datetimePicker();
+$(function () {
+  var pickers = $('.date-time-picker');
+  $.each(pickers, function(idx, val) {
+    $(val).datetimepicker({
+      format: 'L'
+    });
+  });
+});
+
 </script>
 
 </body>

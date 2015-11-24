@@ -50,7 +50,3 @@ enableSaveDocument = function() {
 
   $('#saveDocumentButton').prop('disabled', disabled);
 };
-
-openDatePicker = function(isOpen) {
-  isOpen = true;
-};
