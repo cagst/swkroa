@@ -14,7 +14,12 @@
   <!-- Define our static resources so they don't get processed by the DispatcherServlet -->
   <mvc:resources location="/static/css/**" mapping="/static/css/"/>
   <mvc:resources location="/static/images/**" mapping="/static/img/"/>
+
+  <!--
   <mvc:resources location="/wro/*" mapping="/wro/*"/>
+  -->
+
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
   <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
     <property name="prefix" value="/WEB-INF/templates/"/>

@@ -36,7 +36,7 @@
               <div class="input-group">
                 <a class="input-group-addon add-btn"
                    data-ng-click="addMembership()"
-                   th:attr="tooltip=#{com.cagst.swkroa.membership.add}"
+                   th:attr="uib-tooltip=#{com.cagst.swkroa.membership.add}"
                    data-tooltip-placement="right">
                   <i class="fa fa-plus"></i>
                 </a>
@@ -47,7 +47,7 @@
                 <a class="input-group-addon btn btn-primary"
                    data-ng-click="getMemberships()"
                    data-ng-disabled="query.length < 2"
-                   th:attr="tooltip=#{com.cagst.swkroa.membership.search.tip}"
+                   th:attr="uibt-ooltip=#{com.cagst.swkroa.membership.search.tip}"
                    data-tooltip-placement="right">
                   <i class="fa fa-search"></i>
                 </a>
@@ -61,7 +61,7 @@
                        data-ng-model="filterText" />
                 <a class="input-group-addon btn"
                    data-ng-click="showFilterOptions()"
-                   th:attr="tooltip=#{com.cagst.swkroa.membership.filter.tip}"
+                   th:attr="uib-tooltip=#{com.cagst.swkroa.membership.filter.tip}"
                    data-tooltip-placement="right">
                   <i class="fa fa-filter"></i>
                 </a>
@@ -141,13 +141,13 @@
                   <div class="lead lead-in">
                     <span data-ng-bind="mem.membershipName">zzz Membership Name</span>
                     <span data-ng-show="mem.memberTypeMeaning == 'REGULAR'"
-                          th:attr="tooltip=#{com.cagst.swkroa.membership.type.regular}"
+                          th:attr="uib-tooltip=#{com.cagst.swkroa.membership.type.regular}"
                           data-tooltip-placement="left"
                           class="pull-right">
                       <i class="fa fa-user"></i>
                     </span>
                     <span data-ng-show="mem.memberTypeMeaning == 'FAMILY_HEAD'"
-                          th:attr="tooltip=#{com.cagst.swkroa.membership.type.family}"
+                          th:attr="uib-tooltip=#{com.cagst.swkroa.membership.type.family}"
                           data-tooltip-placement="left"
                           class="pull-right">
                       <i class="fa fa-users"></i>

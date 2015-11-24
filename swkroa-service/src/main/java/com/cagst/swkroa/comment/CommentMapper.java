@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */final class CommentMapper implements RowMapper<Comment> {
   private static final String COMMENT_ID = "comment_id";
@@ -28,11 +27,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String UPDT_ID = "updt_id";
   private static final String COMMENT_UPDT_CNT = "comment_updt_cnt";
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public Comment mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     Comment comment = new Comment();
@@ -61,7 +55,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
   public static MapSqlParameterSource mapInsertStatement(final Comment comment, final User user) {
-
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(PARENT_ENTITY_NAME, comment.getParentEntityName());
     params.addValue(PARENT_ENTITY_ID, comment.getParentEntityUID());

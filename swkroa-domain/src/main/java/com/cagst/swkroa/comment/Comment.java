@@ -13,7 +13,6 @@ import org.joda.time.DateTime;
  * Represents a Comment within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class Comment implements Serializable, Comparable<Comment> {
   private static final long serialVersionUID = -4070620060954592537L;

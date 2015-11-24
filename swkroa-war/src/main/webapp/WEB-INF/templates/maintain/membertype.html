@@ -188,12 +188,10 @@
             <div class="input-group">
               <input id="beginDate" name="beginDate" type="text" class="form-control"
                      data-datepicker-popup="MM/dd/yyyy"
-                     data-is-open="opened"
-                     data-show-button-bar="false"
-                     data-show-weeks="false"
+                     data-is-open="beginDateIsOpen"
                      data-ng-model="memberRate.beginEffectiveDate" />
               <span class="input-group-btn">
-                <button type="button" class="btn btn-default" data-ng-click="open($event)">
+                <button type="button" class="btn btn-default" data-ng-click="openBeginDate($event)">
                   <i class="fa fa-calendar"></i>
                 </button>
               </span>

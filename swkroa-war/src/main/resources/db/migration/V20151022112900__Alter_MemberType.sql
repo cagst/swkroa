@@ -1,4 +1,4 @@
-DROP TRIGGER member_type_history;
+DROP TRIGGER IF EXISTS member_type_history;
 
 ALTER TABLE member_type
         ADD beg_eff_dt DATE NOT NULL

@@ -11,7 +11,14 @@ if (typeof String.prototype.startsWith != 'function') {
   };
 }
 
-angular.module('ng').filter('tel', function () {
+var swkroaApp = angular.module('swkroaApp',
+    ['ui.bootstrap',
+     'ui.utils',
+     'ui.router',
+     'xeditable']
+);
+
+angular.module('swkroaApp').filter('tel', function () {
   return function (tel) {
     if (!tel) { return ''; }
 
@@ -56,7 +63,7 @@ angular.module('ng').filter('tel', function () {
   };
 });
 
-angular.module('ng').filter('zip', function () {
+angular.module('swkroaApp').filter('zip', function () {
   return function (zip) {
     if (!zip) { return ''; }
 
@@ -79,16 +86,17 @@ angular.module('ng').filter('zip', function () {
   };
 });
 
-var swkroaApp = angular.module('swkroaApp',
-  ['ui.bootstrap',
-   'ui.utils',
-   'ui.router',
-   'xeditable']
-);
+swkroaApp.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('contextRootInterceptor');
+}]);
 
-responseSuccessful = function(response) {
- return (200 <= response.status && response.status <= 299);
-};
+swkroaApp.config(['uibDatepickerConfig', function(uibDatepickerConfig) {
+  uibDatepickerConfig.showWeeks = false;
+}]);
+
+swkroaApp.config(['uibDatepickerPopupConfig', function(uibDatepickerPopupConfig) {
+  uibDatepickerPopupConfig.showButtonBar = false;
+}]);
 
 // add an interceptor to our http service to inject the context root for our requests
 swkroaApp.factory('contextRootInterceptor', function() {
@@ -117,10 +125,6 @@ swkroaApp.factory('contextRootInterceptor', function() {
 swkroaApp.factory('swkroaCache', function($cacheFactory) {
   return $cacheFactory('swkroaCache');
 });
-
-swkroaApp.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.interceptors.push('contextRootInterceptor');
-}]);
 
 // define a service for CodeSet / CodeValues
 swkroaApp.service('codesetService', ['$http', 'swkroaCache', function($http, swkroaCache) {
@@ -214,7 +218,7 @@ swkroaApp.service('codesetService', ['$http', 'swkroaCache', function($http, swk
 }]);
 
 // define a service for Contacts
-swkroaApp.service('contactService', ['$http', function($http) {
+swkroaApp.service('contactService', [function() {
   this.getStates = function() {
     return [
       {code:"AL", name:"Alabama"},
@@ -222,12 +226,6 @@ swkroaApp.service('contactService', ['$http', function($http) {
       {code:"AS", name:"American Samoa"},
       {code:"AZ", name:"Arizona"},
       {code:"AR", name:"Arkansas"},
-      {code:"AF", name:"Armed Forces Africa"},
-      {code:"AA", name:"Armed Forces Americas"},
-      {code:"AC", name:"Armed Forces Canada"},
-      {code:"AE", name:"Armed Forces Europe"},
-      {code:"AM", name:"Armed Forces Middle East"},
-      {code:"AP", name:"Armed Forces Pacific"},
       {code:"CA", name:"California"},
       {code:"CO", name:"Colorado"},
       {code:"CT", name:"Connecticut"},
@@ -540,21 +538,19 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     };
 
     return promise;
-  }
+  };
 
   this.generateOwnerId = function(firstName, lastName) {
-    var promise = $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName).then(function(response) {
+    return $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName).then(function(response) {
       return JSON.parse(response.data);
     });
-
-    return promise;
   };
 
   this.closeMemberships = function(membershipIdsArg, closeReasonArg, closeTextArg) {
     var closeReasonText = "";
     if (closeTextArg) {
       closeReasonText = closeTextArg;
-    };
+    }
 
     var data = {
       membershipIds: membershipIdsArg,
@@ -768,6 +764,10 @@ swkroaApp.controller('dashboardController', function($scope, $http) {
     $scope.dashboard = data;
   });
 });
+
+responseSuccessful = function(response) {
+  return (200 <= response.status && response.status <= 299);
+};
 
 showProcessingDialog = function() {
   $('#pleaseWaitDlg').modal('show');

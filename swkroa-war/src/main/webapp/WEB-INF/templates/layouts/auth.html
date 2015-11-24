@@ -11,9 +11,7 @@
 
   <title layout:title-pattern="$DECORATOR_TITLE" th:text="#{com.cagst.swkroa.title}">zzz SWKROA</title>
 
-  <link type="text/css" th:href="@{//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css}"
-        rel="stylesheet" />
-  <link type="text/css" th:href="@{/static/css/cagst.css}" rel="stylesheet" />
+  <link type="text/css" th:href="@{//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css}" rel="stylesheet" />
   <link type="text/css" th:href="@{/static/css/swkroa.css}" rel="stylesheet" />
 </head>
 <body>
@@ -21,7 +19,7 @@
 <div id="page-header">
   <span id="page-title">
     <a th:href="@{/}" href="#">
-      <img th:src="@{/static/images/swkroa_logo_small.jpg}" />
+      <img src="/static/images/swkroa_logo_small.jpg" th:src="@{/static/images/swkroa_logo_small.jpg}" />
     </a>
   </span>
   <ul id="account-navigation">
