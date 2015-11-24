@@ -21,75 +21,54 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-vfs2</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-io</artifactId>
     </dependency>
 
     <!-- Google Guava Library Dependencies -->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
 
     <!-- Log 4J Dependencies -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>integration</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
 
     <!-- Logback Dependencies -->
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- CAGST Compile Dependencies -->
     <dependency>
       <groupId>com.cagst</groupId>
       <artifactId>cagst-common-db</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.cagst</groupId>
       <artifactId>cagst-common-service</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
 
     <!-- SWKROA Dependencies -->
     <dependency>
       <groupId>com.cagst.swkroa</groupId>
       <artifactId>swkroa-domain</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- Spring JDBC Dependencies -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-jdbc-core</artifactId>
-      <version>1.0.0.RELEASE</version>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
 
     <!-- Spring AOP Dependencies -->
@@ -99,17 +78,31 @@
       <version>${spring-version}</version>
     </dependency>
 
+    <!-- Spring JDBC Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jdbc-core</artifactId>
+      <version>1.1.0.RELEASE</version>
+    </dependency>
+
+    <!-- Spring Web Dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+
     <!-- AspectJ Dependencies -->
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
-      <type>jar</type>
       <scope>runtime</scope>
     </dependency>
 
@@ -117,8 +110,19 @@
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
+    </dependency>
+
+    <!-- Google Common Spring Aspect Dependencies -->
+    <dependency>
+      <groupId>com.googlecode.commonspringaspects</groupId>
+      <artifactId>common-spring-aspects</artifactId>
+      <version>1.0.11</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!--                   -->
@@ -129,7 +133,6 @@
     <dependency>
       <groupId>com.cagst</groupId>
       <artifactId>cagst-test</artifactId>
-      <type>jar</type>
       <scope>test</scope>
     </dependency>
 
@@ -137,7 +140,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <type>jar</type>
       <scope>test</scope>
     </dependency>
 
@@ -145,7 +147,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-      <type>jar</type>
       <scope>test</scope>
     </dependency>
 
@@ -153,22 +154,9 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <type>jar</type>
       <scope>test</scope>
     </dependency>
 
-    <!-- Google Common Spring Aspect Dependencies -->
-    <dependency>
-      <groupId>com.googlecode.commonspringaspects</groupId>
-      <artifactId>common-spring-aspects</artifactId>
-      <version>1.0.9</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
   </dependencies>
 
   <repositories>

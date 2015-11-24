@@ -36,9 +36,9 @@ public class Person implements Serializable, Comparable<Person> {
   private Locale locale;
   private DateTimeZone time_zone;
 
-  private List<Address> addresses = new ArrayList<Address>();
-  private List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
-  private List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+  private List<Address> addresses = new ArrayList<>();
+  private List<EmailAddress> emailAddresses = new ArrayList<>();
+  private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
   // meta-data
   private boolean active_ind = true;

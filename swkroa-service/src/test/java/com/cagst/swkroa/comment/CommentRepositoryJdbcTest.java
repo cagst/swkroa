@@ -22,7 +22,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
 /**
- * Test class for CommentRepositoryJdbc class.
+ * Test class for the {@link CommentRepositoryJdbc} class.
  *
  * @author Craig Gaskill
  */
@@ -73,7 +73,7 @@ public class CommentRepositoryJdbcTest extends BaseTestRepository {
 
     List<Comment> comments = repo.getCommentsForMembership(membership);
     assertNotNull("Ensure we have a valid collection.", comments);
-    assertTrue("Ensure the collection is emtpy.", comments.isEmpty());
+    assertTrue("Ensure the collection is empty.", comments.isEmpty());
   }
 
   /**
@@ -86,7 +86,7 @@ public class CommentRepositoryJdbcTest extends BaseTestRepository {
 
     List<Comment> comments = repo.getCommentsForMembership(membership);
     assertNotNull("Ensure we have a valid collection.", comments);
-    assertFalse("Ensure the collection is emtpy.", comments.isEmpty());
+    assertFalse("Ensure the collection is empty.", comments.isEmpty());
     assertEquals("Ensure the collection has the correct number of comments.", 2, comments.size());
   }
 

@@ -63,14 +63,14 @@
 
         <div class="input-group">
           <input id="expire-dt" type="text" class="form-control"
-                 data-datepicker-popup="MM/dd/yyyy"
-                 data-is-open="opened"
-                 data-show-button-bar="false"
+                 data-datepicker-options="datePickerConfig"
+                 data-uib-datepicker-popup="MM/dd/yyyy"
+                 data-is-open="status.opened"
                  data-show-weeks="false"
                  data-ng-model="share.user.accountExpiredDate"
-                 data-ng-blur="doesUsernameExist()" />
+                 data-ng-blur="doesUsernameExist()"/>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-default" data-ng-click="open($event)">
+            <button type="button" class="btn btn-default" data-ng-click="openExpireDate()">
               <i class="fa fa-calendar"></i>
             </button>
           </span>

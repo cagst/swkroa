@@ -50,11 +50,6 @@ import org.springframework.util.Assert;
     super(dataSource);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.comment.CommentRepository#getCommentsForMembership(com.cagst.swkroa.member .Membership)
-   */
   @Override
   @Cacheable(value = "commentsList", key = "#membership.getMembershipUID()")
   public List<Comment> getCommentsForMembership(final Membership membership) {
@@ -65,17 +60,12 @@ import org.springframework.util.Assert;
     return getCommentsForEntity(Comment.MEMBERSHIP, membership.getMembershipUID());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.comment.CommentRepository#getCommentByUID(long)
-   */
   @Override
   public Comment getCommentByUID(final long uid) {
     LOGGER.info("Calling getCommentByUID for [{}]", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("comment_id", uid);
 
     List<Comment> comments = getJdbcTemplate().query(stmtLoader.load(GET_COMMENT_BY_UID), params, new CommentMapper());
@@ -91,12 +81,6 @@ import org.springframework.util.Assert;
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.comment.CommentRepository#saveComment(com.cagst.swkroa.comment.Comment,
-   * com.cagst.swkroa.user.User)
-   */
   @Override
   @CacheEvict(value = "commentsList", key = "#comment.getParentEntityUID()")
   public Comment saveComment(final Comment comment, final User user) throws OptimisticLockingFailureException,
@@ -127,7 +111,7 @@ import org.springframework.util.Assert;
   private List<Comment> getCommentsForEntity(final String entityName, final long entityID) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, Object> params = new HashMap<String, Object>();
+    Map<String, Object> params = new HashMap<>();
     params.put("parent_entity_name", entityName);
     params.put("parent_entity_id", entityID);
 

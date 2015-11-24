@@ -20,7 +20,6 @@ import org.springframework.web.servlet.view.jasperreports.JasperReportsXlsView;
  * Factory that will return a ...
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public class JasperReportsViewFactory {
   private static final Logger LOGGER = LoggerFactory.getLogger(JasperReportsViewFactory.class);
