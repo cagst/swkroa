@@ -80,14 +80,18 @@ swkroaApp.controller('profileController',
   };
 }]);
 
-swkroaApp.controller('modifyProfileController', ['$scope', '$http', '$state', function($scope, $http, $state) {
+swkroaApp.controller('modifyProfileController', ['$scope', '$http', 'codesetService', '$state', function($scope, $http, codesetService, $state) {
   var original = angular.copy($scope.share.user);
 
   $("#errorMessage").hide();
 
   $scope.states = $scope.contactService.getStates();
 
-  $http.get('/api/codeset/TITLE/').success(function(data) {
+//  $http.get('/api/codeset/TITLE/').success(function(data) {
+//    $scope.titles = data;
+//  });
+
+  codesetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
     $scope.titles = data;
   });
 
