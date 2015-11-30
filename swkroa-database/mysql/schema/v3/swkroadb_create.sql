@@ -55,22 +55,3 @@ CREATE TABLE user_role (
   CONSTRAINT user_role_fk2 FOREIGN KEY (role_id) REFERENCES role (role_id)
 ) ENGINE = InnoDB;
 
-CREATE TABLE document (
-  document_id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  document_type          VARCHAR(25) NOT NULL,
-  document_format        VARCHAR(5) NOT NULL,
-  parent_entity_id       BIGINT UNSIGNED NULL,
-  parent_entity_name     VARCHAR(25) NULL,
-  document_content       MEDIUMBLOB NULL,
-  beg_eff_dt_tm          DATETIME NOT NULL,
-  end_eff_dt_tm          DATETIME NULL,
-  active_ind             BOOLEAN DEFAULT 1 NOT NULL,
-  create_dt_tm           DATETIME NOT NULL,
-  create_id              BIGINT UNSIGNED NOT NULL,
-  updt_dt_tm             DATETIME NOT NULL,
-  updt_id                BIGINT UNSIGNED NOT NULL,
-  updt_cnt               INT UNSIGNED DEFAULT 0 NOT NULL,
-  CONSTRAINT document_pk PRIMARY KEY (document_id),
-  INDEX document_idx1 (document_type),
-  INDEX document_idx2 (parent_entity_name, parent_entity_id)
-) ENGINE = InnoDB;

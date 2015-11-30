@@ -9,7 +9,7 @@ CREATE TABLE document (
   parent_entity_name     VARCHAR(25) NULL,
   document_type_cd       BIGINT NOT NULL COMMENT 'The type of document: Invoice, Newsletter, etc.',
   document_name          VARCHAR(100) NOT NULL COMMENT 'The name (filename) for the document',
-  document_format        VARCHAR(255) NOT NULL COMMENT 'The format of the content: XML, application/pdf, etc.',
+  document_format        VARCHAR(50) NOT NULL COMMENT 'The format of the content: XML, application/pdf, etc.',
   document_location      VARCHAR(255) NULL,
   document_content       MEDIUMBLOB NULL,
   document_desc          VARCHAR(150) NULL,
