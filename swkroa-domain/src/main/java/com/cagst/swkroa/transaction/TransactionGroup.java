@@ -1,6 +1,5 @@
 package com.cagst.swkroa.transaction;
 
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 

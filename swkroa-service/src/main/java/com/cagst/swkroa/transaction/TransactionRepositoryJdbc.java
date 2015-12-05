@@ -75,12 +75,12 @@ import org.springframework.util.CollectionUtils;
 
   @Override
   public Transaction getTransactionByUID(final long uid)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
+      throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getTransactionByUID for [{}]", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("transaction_id", uid);
 
     List<Transaction> trans = getJdbcTemplate().query(
@@ -107,7 +107,7 @@ import org.springframework.util.CollectionUtils;
     LOGGER.info("Calling getTransactionsForMembership [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("membership_id", membership.getMembershipUID());
 
     return getJdbcTemplate().query
@@ -122,7 +122,7 @@ import org.springframework.util.CollectionUtils;
     LOGGER.info("Calling getCountOfTransactionGroupsForInvoices");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Integer> params = new HashMap<String, Integer>(1);
+    Map<String, Integer> params = new HashMap<>(1);
     params.put("transaction_type", type.ordinal());
 
     return getJdbcTemplate().queryForObject(
@@ -137,7 +137,7 @@ import org.springframework.util.CollectionUtils;
     LOGGER.info("Calling getTransactionListForInvoices");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Integer> params =  new HashMap<String, Integer>(3);
+    Map<String, Integer> params =  new HashMap<>(3);
     params.put("transaction_type", type.ordinal());
     params.put("start", start);
     params.put("limit", limit);
@@ -156,7 +156,7 @@ import org.springframework.util.CollectionUtils;
     LOGGER.info("Calling getTransactionsForDeposit [{}].", deposit.getDepositNumber());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("deposit_id", deposit.getDepositUID());
 
     return getJdbcTemplate().query(
@@ -167,21 +167,17 @@ import org.springframework.util.CollectionUtils;
   }
 
   @Override
-  public List<UnpaidInvoice> getUnpaidInvoicesForMembership(final long id) {
-    Assert.isTrue(id > 0L, "Assertion Failed - argument [id] must be greater than 0");
-
-    LOGGER.info("Calling getUnpaidInvoicesForMembership [{}].", id);
+  public List<UnpaidInvoice> getUnpaidInvoices() {
+    LOGGER.info("Calling getUnpaidInvoices");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>();
-    params.put("membership_id", id);
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_UNPAID_INVOICES_FOR_MEMBERSHIP), params, new UnpaidInvoiceMapper());
+    return getJdbcTemplate().query(stmtLoader.load(GET_UNPAID_INVOICES), new UnpaidInvoiceMapper());
   }
 
   @Override
   public Transaction saveTransaction(final Transaction transaction, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     Assert.notNull(transaction, "Assertion Failed - argument [transaction] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");

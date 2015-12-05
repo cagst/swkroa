@@ -9,6 +9,7 @@ import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionGroup;
 import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.transaction.TransactionType;
+import com.cagst.swkroa.transaction.UnpaidInvoice;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,12 +54,12 @@ public final class TransactionApiController {
 
     LOGGER.info("Received request to retrieve transaction groups for invoices starting at [{}] with limit of[{}]", newStart, newLimit);
 
-    ListModel<TransactionGroup> model = new ListModel<TransactionGroup>(
+    ListModel<TransactionGroup> model = new ListModel<>(
         transactionRepo.getTransactionGroupsForType(TransactionType.INVOICE, newStart, newLimit),
         transactionRepo.getCountOfTransactionGroupsForType(TransactionType.INVOICE)
     );
 
-    return new ResponseEntity<ListModel<TransactionGroup>>(model, HttpStatus.OK);
+    return new ResponseEntity<>(model, HttpStatus.OK);
   }
 
   /**
@@ -76,12 +77,24 @@ public final class TransactionApiController {
 
     LOGGER.info("Received request to retrieve transaction groups for payments starting at [{}] with limit of[{}]", newStart, newLimit);
 
-    ListModel<TransactionGroup> model = new ListModel<TransactionGroup>(
+    ListModel<TransactionGroup> model = new ListModel<>(
         transactionRepo.getTransactionGroupsForType(TransactionType.PAYMENT, newStart, newLimit),
         transactionRepo.getCountOfTransactionGroupsForType(TransactionType.PAYMENT)
     );
 
-    return new ResponseEntity<ListModel<TransactionGroup>>(model, HttpStatus.OK);
+    return new ResponseEntity<>(model, HttpStatus.OK);
+  }
+
+  /**
+   * Handles the request to retrieve the {@link List} of {@link UnpaidInvoice UnpaidInvoices} that are active in the system.
+   *
+   * @return A JSON representation of the {@link List} of {@link UnpaidInvoice UnpaidInvoices}.
+   */
+  @RequestMapping(value = "/unpaid", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<UnpaidInvoice> getUnpaidInvoices() {
+    LOGGER.info("Received request to retrieve unpaid invoices");
+
+    return transactionRepo.getUnpaidInvoices();
   }
 
   /**
@@ -102,6 +115,6 @@ public final class TransactionApiController {
     // save the transaction
     Transaction savedTransaction = transactionRepo.saveTransaction(transaction, WebAppUtils.getUser());
 
-    return new ResponseEntity<Transaction>(savedTransaction, newTransaction ? HttpStatus.CREATED : HttpStatus.OK);
+    return new ResponseEntity<>(savedTransaction, newTransaction ? HttpStatus.CREATED : HttpStatus.OK);
   }
 }

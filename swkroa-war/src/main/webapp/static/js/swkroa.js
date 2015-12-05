@@ -667,7 +667,7 @@ swkroaApp.service('transactionService', ['$http', function($http) {
   };
 
   this.getUnpaidTransactions = function() {
-    var promise = $http.get('/api/transactions?type=unpaid');
+    var promise = $http.get('/api/transactions/unpaid');
 
     promise.success = function(fn) {
       promise.then(function(response) {

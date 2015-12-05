@@ -7,12 +7,20 @@ import java.math.BigDecimal;
  * Representation of an invoice Transaction that has not been fully paid.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class UnpaidInvoice extends Transaction implements Serializable {
+  private String membership_name;
   private BigDecimal transaction_amount;
   private BigDecimal amount_paid;
   private BigDecimal amount_remaining;
+
+  public String getMembershipName() {
+    return membership_name;
+  }
+
+  public void setMembershipName(final String name) {
+    this.membership_name = name;
+  }
 
   public BigDecimal getTransactionAmount() {
     return transaction_amount;

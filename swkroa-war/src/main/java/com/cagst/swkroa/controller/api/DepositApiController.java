@@ -10,7 +10,6 @@ import com.cagst.swkroa.exception.ResourceNotFoundException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,8 +59,6 @@ public class DepositApiController {
 
     try {
       return depositService.getDeposit(depositId);
-    } catch (EmptyResultDataAccessException ex) {
-      throw new ResourceNotFoundException(ex);
     } catch (IncorrectResultSizeDataAccessException ex) {
       throw new ResourceNotFoundException(ex);
     }

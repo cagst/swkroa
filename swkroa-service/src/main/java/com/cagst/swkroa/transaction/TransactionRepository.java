@@ -30,8 +30,7 @@ public interface TransactionRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 {@link Transaction} was found.
    */
-  Transaction getTransactionByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  Transaction getTransactionByUID(final long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link List} of {@link Transaction Transactions} defined withing the system for the specified
@@ -76,15 +75,11 @@ public interface TransactionRepository {
   List<Transaction> getTransactionsForDeposit(final Deposit deposit);
 
   /**
-   * Retrieves a {@link List} of {@link Transaction Transactions} that have not been paid in full for the specified
-   * Membership that is identified by the specified id.
+   * Retrieves a {@link List} of {@link Transaction Transactions} that have not been paid in full.
    *
-   * @param id
-   *     A {@link long} that uniquely identifies the Membership to retrieve the unpaid invoices for.
-   *
-   * @return A {@link List} of {@link Transaction Transactions} that have not been paid in null for the specified membership.
+   * @return A {@link List} of {@link Transaction Transactions} that have not been paid in full.
    */
-  List<UnpaidInvoice> getUnpaidInvoicesForMembership(final long id);
+  List<UnpaidInvoice> getUnpaidInvoices();
 
   /**
    * Persists the specified {@link Transaction}.
@@ -103,6 +98,5 @@ public interface TransactionRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  Transaction saveTransaction(final Transaction transaction, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+  Transaction saveTransaction(final Transaction transaction, final User user) throws DataAccessException;
 }

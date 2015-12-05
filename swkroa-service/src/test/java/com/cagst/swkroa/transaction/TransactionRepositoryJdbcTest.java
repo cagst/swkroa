@@ -165,8 +165,8 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   @Ignore
-  public void testGetUnpaidInvoicesForMembership_Found() {
-    List<UnpaidInvoice> transactions = repo.getUnpaidInvoicesForMembership(2L);
+  public void testGetUnpaidInvoices_Found() {
+    List<UnpaidInvoice> transactions = repo.getUnpaidInvoices();
     assertNotNull("Ensure the transaction list exists.", transactions);
     assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
     assertEquals("Ensure we found the correct number of transactions.", 1, transactions.size());

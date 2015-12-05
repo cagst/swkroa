@@ -14,21 +14,21 @@
 
 <div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="invoiceController">
   <div class="page-header">
-    <h3 th:text="#{com.cagst.swkroa.invoices.renew.title}">zzz Renew Memberships</h3>
+    <h3 th:text="#{invoices.renew.title}">zzz Renew Memberships</h3>
   </div>
   <form name="newForm" class="form-inline spacer-bottom divider-bottom" th:attr="action=@{/accounting/dues/renew}" target="_blank" method="post">
     <div class="row-inner">
       <div class="form-group pull-left">
-        <label class="control-label" th:text="#{com.cagst.swkroa.invoices.renew.due.in}">zzz Due In</label>
+        <label class="control-label" th:text="#{invoices.renew.due.in}">zzz Due In</label>
         <input type="number" class="form-control" name="dueInDays" maxlength="3" data-ng-model="days" />
       </div>
       <button type="button" class="btn btn-primary"
-              th:text="#{com.cagst.swkroa.invoices.renew.get.memberships}"
+              th:text="#{invoices.renew.get.memberships}"
               data-ng-click="getMemberhipsDueIn(days)">
         zzz Memberships
       </button>
       <div class="pull-right" data-ng-show="membershipsDue">
-        <h4 th:text="#{com.cagst.swkroa.invoices.renew.totals}">zzz Totals</h4>
+        <h4 th:text="#{invoices.renew.totals}">zzz Totals</h4>
       </div>
     </div>
   </form>
@@ -52,7 +52,7 @@
           </a>
           <button type="button" class="btn btn-primary"
                   data-toggle="modal" data-target="#renewMembershipsDlg">
-            <span th:text="#{com.cagst.swkroa.invoices.renew.generate.transactions}">zzz Generate</span>
+            <span th:text="#{invoices.renew.generate.transactions}">zzz Generate</span>
           </button>
         </div>
       </div>
@@ -63,10 +63,10 @@
               <th>
                 <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
               </th>
-              <th th:text="#{com.cagst.swkroa.invoices.renew.membership}">zzz Membership</th>
-              <th th:text="#{com.cagst.swkroa.invoices.renew.balance}">zzz Balance</th>
-              <th th:text="#{com.cagst.swkroa.invoices.renew.duesamount}">zzz Dues Amount</th>
-              <th th:text="#{com.cagst.swkroa.invoices.renew.nextduedate}">zzz Next Due Date</th>
+              <th th:text="#{invoices.renew.membership}">zzz Membership</th>
+              <th th:text="#{invoices.renew.balance}">zzz Balance</th>
+              <th th:text="#{invoices.renew.duesamount}">zzz Dues Amount</th>
+              <th th:text="#{invoices.renew.nextduedate}">zzz Next Due Date</th>
             </tr>
           </thead>
           <tbody>
@@ -91,13 +91,13 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" th:text="#{com.cagst.swkroa.invoices.renew.letter.title}">zzz Details</h4>
+            <h4 class="modal-title" th:text="#{invoices.renew.letter.title}">zzz Details</h4>
           </div>
           <div class="modal-body">
             <div class="row">
               <div class="col-xs-12">
                 <label class="form-label" for="membershipPeriod"
-                       th:text="#{com.cagst.swkroa.invoices.renew.letter.years}">
+                       th:text="#{invoices.renew.letter.years}">
                   zzz Period
                 </label>
                 <input type="text" class="form-control" id="membershipPeriod" name="membershipPeriod"
@@ -109,7 +109,7 @@
           <div class="modal-footer">
             <a id="generatePdf" class="btn btn-primary"
                href="javascript:generateMembershipRenewalLetters('pdf')"
-               th:text="#{com.cagst.swkroa.invoices.renew.letter.generate}">
+               th:text="#{invoices.renew.letter.generate}">
               zzz Generate
             </a>
             <button type="button" class="btn btn-default"
@@ -128,7 +128,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" th:text="#{com.cagst.swkroa.invoices.renew.transaction.title}">zzz Details</h4>
+          <h4 class="modal-title" th:text="#{invoices.renew.transaction.title}">zzz Details</h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -173,7 +173,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-primary"
                   data-ng-click="renewingMemberships()"
-                  th:text="#{com.cagst.swkroa.invoices.renew.generate.transactions}">
+                  th:text="#{invoices.renew.generate.transactions}">
             zzz Generate
           </button>
           <button type="button" class="btn btn-default"

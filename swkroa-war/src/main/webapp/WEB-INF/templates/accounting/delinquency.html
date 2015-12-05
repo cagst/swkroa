@@ -14,7 +14,7 @@
 
 <div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="delinquencyController">
   <div class="page-header">
-    <h3 th:text="#{com.cagst.swkroa.delinquency.title}">zzz Delinquencies</h3>
+    <h3 th:text="#{delinquency.title}">zzz Delinquencies</h3>
   </div>
 
   <form name="reportForm" target="_blank" method="post"
@@ -46,7 +46,7 @@
                   data-ng-disabled="!canExport()"
                   data-toggle="modal" data-target="#closeMembershipsDlg">
             <i class="fa fa-power-off"></i>
-            <span th:text="#{com.cagst.swkroa.delinquency.close.button}">zzz Close</span>
+            <span th:text="#{delinquency.close.button}">zzz Close</span>
           </button>
         </div>
       </div>
@@ -57,9 +57,9 @@
               <th>
                 <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
               </th>
-              <th th:text="#{com.cagst.swkroa.delinquency.membership}">zzz Membership</th>
-              <th th:text="#{com.cagst.swkroa.delinquency.duesamount}">zzz Dues Amount</th>
-              <th th:text="#{com.cagst.swkroa.delinquency.balance}">zzz Balance</th>
+              <th th:text="#{delinquency.membership}">zzz Membership</th>
+              <th th:text="#{delinquency.duesamount}">zzz Dues Amount</th>
+              <th th:text="#{delinquency.balance}">zzz Balance</th>
             </tr>
           </thead>
           <tbody>
@@ -82,27 +82,28 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" th:text="#{com.cagst.swkroa.delinquency.close.title}">zzz Please confirm</h4>
+            <h4 class="modal-title" th:text="#{delinquency.close.title}">zzz Please confirm</h4>
           </div>
           <div class="modal-body">
-            <p th:text="#{com.cagst.swkroa.delinquency.close.msg}">zzz Members</p>
+            <p th:text="#{delinquency.close.msg}">zzz Members</p>
 
-            <label class="control-label"
+            <label for="closeReason" class="control-label"
                    data-ng-class="{'label-required': true}"
-                   th:text="#{com.cagst.swkroa.delinquency.close.reason}">
+                   th:text="#{delinquency.close.reason}">
               zzz Close Reason
             </label>
-            <select class="form-control"
+            <select id="closeReason" name="closeReason" class="form-control"
                     data-ng-model="closeReason"
                     data-ng-required="true"
                     data-ng-options="reason.display for reason in closeReasons">
             </select>
-            <label class="control-label"
+            <label for="companyName" class="control-label"
                    data-ng-class="{'label-required': closeReason.meaning == 'CLOSE_OTHER'}"
-                   th:text="#{com.cagst.swkroa.delinquency.close.text}">
+                   th:text="#{delinquency.close.text}">
               zzz CloseText
             </label>
-            <input type="text" class="form-control" name="companyName" maxlength="100"
+            <input id="companyName" name="companyName"
+                   type="text" class="form-control" maxlength="100"
                    data-ng-model="closeText"
                    data-ng-disabled="closeReason.meaning != 'CLOSE_OTHER'"
                    data-ng-required="closeReason.meaning == 'CLOSE_OTHER'" />
@@ -111,7 +112,7 @@
             <button type="button" class="btn btn-danger"
                     data-ng-click="closeMemberships()"
                     data-ng-disabled="!canClose()"
-                    th:text="#{com.cagst.swkroa.delinquency.close.button}">
+                    th:text="#{delinquency.close.button}">
               zzz Delete
             </button>
             <button type="button" class="btn btn-default"

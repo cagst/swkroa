@@ -53,6 +53,18 @@ public final class AccountingController {
   }
 
   /**
+   * Handles and retrieves the Deposits page.
+   *
+   * @return The location and name of the page template.
+   */
+  @RequestMapping(value = "/deposits", method = RequestMethod.GET)
+  public String getDepositPage() {
+    LOGGER.info("Received request to show the deposit page.");
+
+    return "accounting/deposit";
+  }
+
+  /**
    * Handles and retrieves the Delinquencies page.
    *
    * @return The location and name fo the page template.
