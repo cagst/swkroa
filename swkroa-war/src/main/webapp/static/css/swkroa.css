@@ -263,6 +263,21 @@ label {
   width: 100%;
 }
 
+.table-scroll {
+  height: 40%;
+}
+
+.table-scroll > tr {
+  width: 100%;
+  display: inline-table;
+}
+
+.table-scroll > tbody {
+  height: 35%;
+  overflow-y: scroll;
+  width: 100%;
+}
+
 .row-inner {
   margin-left: 0;
   margin-right: 0;

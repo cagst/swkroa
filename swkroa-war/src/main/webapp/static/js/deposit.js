@@ -128,6 +128,24 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
   $scope.cancelChanges = function() {
     $scope.view = "listing";
   };
+
+  $scope.addInvoiceToDeposit = function(transaction) {
+    $scope.deposit.transactions.push(transaction);
+
+    var idx = $scope.unpaid.indexOf(transaction);
+    $scope.unpaid.splice(idx, 1);
+
+    $scope.deposit.depositAmount += transaction.amountRemaining;
+  };
+
+  $scope.removeInvoiceFromDeposit = function(transaction) {
+    $scope.unpaid.push(transaction);
+
+    var idx = $scope.deposit.transactions.indexOf(transaction);
+    $scope.deposit.transactions.splice(idx, 1);
+
+    $scope.deposit.depositAmount -= transaction.amountRemaining;
+  };
 }]);
 
 var syncTransactions = function(scope) {
@@ -138,7 +156,7 @@ var syncTransactions = function(scope) {
 
     for (var idx2 = 0; idx2 < scope.unpaid.length; idx2++) {
       if (scope.unpaid[idx2].transactionUID == scope.deposit.transactions[idx1].transactionUID) {
-        scope.unpaid[idx2].transactionInDeposit = true
+        scope.unpaid[idx2].transactionInDeposit = true;
         found = true;
         break;
       }

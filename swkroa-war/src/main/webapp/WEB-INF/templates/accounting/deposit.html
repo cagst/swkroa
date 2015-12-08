@@ -86,94 +86,129 @@
 
     <form method="POST" name="depositForm" novalidate data-ng-submit="save()" class="css-form">
       <div class="row">
-        <div class="col-xs-2"></div>
-        <div class="col-xs-2">
-          <label for="depositDate" class="control-label label-required"
-                 th:text="#{deposits.date}">
-            zzz Date
-          </label>
-          <p class="input-group">
-            <input id="depositDate" name="depositDate" type="text" class="form-control"
-                   data-datepicker-popup="MM/dd/yyyy"
-                   data-is-open="openDepositDate"
-                   data-ng-model="deposit.depositDate"
-                   data-ng-required="true" />
+        <div class="col-xs-3">
+          <div class="row" style="margin-left:10px; margin-right:10px;">
+            <label for="depositDate" class="control-label label-required"
+                   th:text="#{deposits.date}">
+              zzz Date
+            </label>
+            <p class="input-group">
+              <input id="depositDate" name="depositDate" type="text" class="form-control"
+                     data-datepicker-popup="MM/dd/yyyy"
+                     data-is-open="openDepositDate"
+                     data-ng-model="deposit.depositDate"
+                     data-ng-required="true" />
             <span class="input-group-btn">
               <button type="button" class="btn btn-default" data-ng-click="openDepositDate($event)">
                 <i class="fa fa-calendar"></i>
               </button>
             </span>
-          </p>
+            </p>
+          </div>
+          <div class="row" style="margin-left:10px; margin-right:10px;">
+            <label for="depositNumber" class="control-label label-required"
+                   th:text="#{deposits.number.label}">
+              zzz Deposit Number
+            </label>
+            <input id="depositNumber" name="depositNumber"
+                   type="text" class="form-control" maxlength="25"
+                   th:placeholder="#{deposits.number.prompt}"
+                   data-ng-model="deposit.depositNumber"
+                   data-ng-required="true" />
+          </div>
+          <div class="row" style="margin-left:10px; margin-right:10px;">
+            <label class="control-label" th:text="#{deposits.amount}">zzz Amount</label>
+            <h3 class="clear-top"
+                data-ng-bind="deposit.depositAmount | currency">
+              zzz Deposit Amount
+            </h3>
+          </div>
+          <div class="row" style="margin-left:10px; margin-right:10px;">
+            <div class="spacer-top">
+              <div class="divider-top">
+                <div class="spacer-top">
+                  <button type="submit"
+                          class="btn btn-primary"
+                          th:text="#{deposits.create}"
+                          data-ng-show="deposit.depositUID == 0"
+                          data-ng-disabled="depositForm.$invalid">
+                  </button>
+                  <button type="submit"
+                          class="btn btn-primary"
+                          th:text="#{deposits.update}"
+                          data-ng-show="deposit.depositUID > 0"
+                          data-ng-disabled="hasChanges(deposit) || depositForm.$invalid">
+                  </button>
+                  <button type="button" class="btn btn-default"
+                          data-ng-click="cancelChanges()"
+                          th:text="#{com.cagst.swkroa.cancel}">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-xs-2">
-          <label for="depositNumber" class="control-label label-required"
-                 th:text="#{deposits.number.label}">
-            zzz Deposit Number
-          </label>
-          <input id="depositNumber" name="depositNumber"
-                 type="text" class="form-control" maxlength="25"
-                 th:placeholder="#{deposits.number.prompt}"
-                 data-ng-model="deposit.depositNumber"
-                 data-ng-required="true" />
-        </div>
-        <div class="col-xs-2">
-          <label th:text="#{deposits.amount}">zzz Amount</label>
-          <h3 class="clear-top"
-              data-ng-bind="deposit.depositAmount | currency">
-            zzz Deposit Amount
-          </h3>
-        </div>
-        <div class="col-xs-4"></div>
-      </div>
-      <div class="row">
-        <div class="col-xs-2"></div>
-        <div class="col-xs-10">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th></th>
-                <th th:text="#{deposits.transaction.date}">zzz Date</th>
-                <th th:text="#{deposits.transaction.membership}">zzz Membership</th>
-                <th th:text="#{deposits.transaction.amount}">zzz Amount</th>
-                <th th:text="#{deposits.transaction.paid}">zzz Paid</th>
-                <th th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr data-ng-repeat="inv in unpaid | orderBy: ['transactionDate', 'membershipName']">
-                <td>
-                  <input type="checkbox" data-ng-model="inv.transactionInDeposit"/>
-                </td>
-                <td>{{inv.transactionDate | date: 'mediumDate'}}</td>
-                <td>{{inv.membershipName}}</td>
-                <td>{{inv.transactionAmount | currency}}</td>
-                <td>{{inv.amountPaid | currency}}</td>
-                <td>{{inv.amountRemaining | currency}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="col-xs-2"></div>
-      </div>
-      <div class="spacer-top">
-        <div class="divider-top">
-          <div class="spacer-top">
-            <button type="submit"
-                    class="btn btn-primary"
-                    th:text="#{deposits.create}"
-                    data-ng-show="deposit.depositUID == 0"
-                    data-ng-disabled="depositForm.$invalid">
-            </button>
-            <button type="submit"
-                    class="btn btn-primary"
-                    th:text="#{deposits.update}"
-                    data-ng-show="deposit.depositUID > 0"
-                    data-ng-disabled="hasChanges(deposit) || depositForm.$invalid">
-            </button>
-            <button type="button" class="btn btn-default"
-                    data-ng-click="cancelChanges()"
-                    th:text="#{com.cagst.swkroa.cancel}">
-            </button>
+        <div class="col-xs-9">
+          <div style="height:275px; overflow-y:scroll;">
+            <table class="table table-hover table-bordered">
+             <thead>
+               <tr>
+                 <th></th>
+                 <th th:text="#{deposits.transaction.date}">zzz Date</th>
+                 <th th:text="#{deposits.transaction.membership}">zzz Membership</th>
+                 <th th:text="#{deposits.transaction.amount}">zzz Amount</th>
+                 <th th:text="#{deposits.transaction.paid}">zzz Paid</th>
+                 <th th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr data-ng-repeat="inv in unpaid | orderBy: ['transactionDate', 'membershipName']">
+                 <td>
+                   <button type="button" class="btn btn-success btn-xs"
+                           data-uib-tooltip="Add to Deposit"
+                           data-ng-click="addInvoiceToDeposit(inv)">
+                     <i class="fa fa-plus"></i>
+                   </button>
+                 </td>
+                 <td>{{inv.transactionDate | date: 'mediumDate'}}</td>
+                 <td>{{inv.membershipName}}</td>
+                 <td>{{inv.transactionAmount | currency}}</td>
+                 <td>{{inv.amountPaid | currency}}</td>
+                 <td>{{inv.amountRemaining | currency}}</td>
+               </tr>
+             </tbody>
+           </table>
+          </div>
+
+          <div class="spacer-top" style="height:275px; overflow-y:scroll;">
+            <table class="table table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th th:text="#{deposits.transaction.date}">zzz Date</th>
+                  <th th:text="#{deposits.transaction.membership}">zzz Membership</th>
+                  <th th:text="#{deposits.transaction.amount}">zzz Amount</th>
+                  <th th:text="#{deposits.transaction.paid}">zzz Paid</th>
+                  <th th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
+                </tr>
+              </thead>
+              <tbody>
+               <tr data-ng-repeat="tx in deposit.transactions | orderBy: ['transactionDate', 'membershipName']">
+                  <td>
+                    <button type="button" class="btn btn-danger btn-xs"
+                            data-uib-tooltip="Remove Deposit"
+                            data-ng-click="removeInvoiceFromDeposit(tx)">
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </td>
+                  <td>{{tx.transactionDate | date: 'mediumDate'}}</td>
+                  <td>{{tx.membershipName}}</td>
+                  <td>{{tx.transactionAmount | currency}}</td>
+                  <td>{{tx.amountPaid | currency}}</td>
+                  <td>{{tx.amountRemaining | currency}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
