@@ -130,16 +130,14 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
   };
 
   $scope.addInvoiceToDeposit = function(transaction) {
+    transaction.transactionInDeposit = true;
+
     $scope.deposit.transactions.push(transaction);
-
-    var idx = $scope.unpaid.indexOf(transaction);
-    $scope.unpaid.splice(idx, 1);
-
     $scope.deposit.depositAmount += transaction.amountRemaining;
   };
 
   $scope.removeInvoiceFromDeposit = function(transaction) {
-    $scope.unpaid.push(transaction);
+    transaction.transactionInDeposit = false;
 
     var idx = $scope.deposit.transactions.indexOf(transaction);
     $scope.deposit.transactions.splice(idx, 1);
