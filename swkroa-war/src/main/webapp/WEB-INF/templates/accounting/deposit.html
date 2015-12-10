@@ -149,48 +149,55 @@
           </div>
         </div>
         <div class="col-xs-9">
-          <div style="height:275px; overflow-y:scroll;">
-            <h3>Unpaid Invoices</h3>
-            <table class="table table-hover table-bordered table-condensed">
-             <thead>
-               <tr>
-                 <th></th>
-                 <th class="col-xs-2" th:text="#{deposits.transaction.date}">zzz Date</th>
-                 <th class="col-xs-7">
-                   <span th:text="#{deposits.transaction.membership}">zzz Membership</span>
-                   <span class="pull-right text-muted" th:text="#{deposits.transaction.description}">zzz Invoice</span>
-                 </th>
-                 <th class="col-xs-1" th:text="#{deposits.transaction.amount}">zzz Amount</th>
-                 <th class="col-xs-1" th:text="#{deposits.transaction.paid}">zzz Paid</th>
-                 <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
-               </tr>
-             </thead>
-             <tbody>
-               <tr data-ng-repeat="inv in unpaid | orderBy: ['membershipName', 'transactionDate']"
-                   data-ng-show="!inv.transactionInDeposit">
-                 <td>
-                   <button type="button" class="btn btn-success btn-xs"
-                           th:attr="data-uib-tooltip=#{deposits.add.tooltip}"
-                           data-ng-click="addInvoiceToDeposit(inv)">
-                     <i class="fa fa-plus"></i>
-                   </button>
-                 </td>
-                 <td>{{inv.transactionDate | date: 'mediumDate'}}</td>
-                 <td>
-                   <span data-ng-bind="inv.membershipName"></span>
-                   <span class="text-muted pull-right" data-ng-bind="inv.transactionDescription"></span>
-                 </td>
-                 <td><span class="pull-right" data-ng-bind="inv.transactionAmount | currency"></span></td>
-                 <td><span class="pull-right" data-ng-bind="inv.amountPaid | currency"></span></td>
-                 <td><span class="pull-right" data-ng-bind="inv.amountRemaining | currency"></span></td>
-               </tr>
-             </tbody>
-           </table>
+          <div class="panel panel-default" style="height:275px; overflow-y:scroll;">
+            <div class="panel-heading">
+              <span class="panel-title">Unpaid Invoices</span>
+            </div>
+            <div class="panel-body clear-padding">
+              <table class="table table-hover table-bordered table-condensed">
+                  <thead>
+                  <tr>
+                    <th></th>
+                    <th class="col-xs-2" th:text="#{deposits.transaction.date}">zzz Date</th>
+                    <th class="col-xs-7">
+                      <span th:text="#{deposits.transaction.membership}">zzz Membership</span>
+                      <span class="pull-right text-muted" th:text="#{deposits.transaction.description}">zzz Invoice</span>
+                    </th>
+                    <th class="col-xs-1" th:text="#{deposits.transaction.amount}">zzz Amount</th>
+                    <th class="col-xs-1" th:text="#{deposits.transaction.paid}">zzz Paid</th>
+                    <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr data-ng-repeat="inv in unpaid | orderBy: ['membershipName', 'transactionDate']"
+                      data-ng-show="!inv.transactionInDeposit">
+                    <td>
+                      <button type="button" class="btn btn-success btn-xs"
+                              th:attr="data-uib-tooltip=#{deposits.add.tooltip}"
+                              data-ng-click="addInvoiceToDeposit(inv)">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </td>
+                    <td>{{inv.transactionDate | date: 'mediumDate'}}</td>
+                    <td>
+                      <span data-ng-bind="inv.membershipName"></span>
+                      <span class="text-muted pull-right" data-ng-bind="inv.transactionDescription"></span>
+                    </td>
+                    <td><span class="pull-right" data-ng-bind="inv.transactionAmount | currency"></span></td>
+                    <td><span class="pull-right" data-ng-bind="inv.amountPaid | currency"></span></td>
+                    <td><span class="pull-right" data-ng-bind="inv.amountRemaining | currency"></span></td>
+                  </tr>
+                  </tbody>
+                </table>
+            </div>
           </div>
 
-          <div class="spacer-top" style="height:275px; overflow-y:scroll;">
-            <h3>Transactions in Deposit</h3>
-            <table class="table table-hover table-bordered table-condensed">
+          <div class="spacer-top panel panel-default" style="height:275px; overflow-y:scroll;">
+            <div class="panel-heading">
+              <span class="panel-title">Transactions in Deposit</span>
+            </div>
+            <div class="panel-body clear-padding">
+              <table class="table table-hover table-bordered table-condensed">
               <thead>
                 <tr>
                   <th></th>
@@ -225,6 +232,7 @@
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>
