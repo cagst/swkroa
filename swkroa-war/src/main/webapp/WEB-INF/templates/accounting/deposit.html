@@ -175,7 +175,7 @@
                      <i class="fa fa-plus"></i>
                    </button>
                  </td>
-                 <td><span data-ng-bind="inv.transactionDate | date: 'mediumDate'"></span></td>
+                 <td>{{inv.transactionDate | date: 'mediumDate'}}</td>
                  <td>
                    <span data-ng-bind="inv.membershipName"></span>
                    <span class="text-muted pull-right" data-ng-bind="inv.transactionDescription"></span>
@@ -214,14 +214,14 @@
                       <i class="fa fa-minus"></i>
                     </button>
                   </td>
-                  <td><span data-ng-bind="tx.transactionDate | date: 'mediumDate'"></span></td>
+                  <td>{{tx.transactionDate | date: 'mediumDate'}}</td>
                  <td>
                    <span data-ng-bind="tx.membershipName"></span>
                    <span class="text-muted pull-right" data-ng-bind="tx.transactionDescription"></span>
                  </td>
-                  <td><span class="pull-right" data-ng-bind="tx.transactionAmount | currency"></span></td>
-                  <td><span class="pull-right" data-ng-bind="tx.amountPaid | currency"></span></td>
-                  <td><span class="pull-right" data-ng-bind="tx.amountRemaining | currency"></span></td>
+                  <td>{{tx.transactionAmount | currency}}</td>
+                  <td>{{tx.amountPaid | currency}}</td>
+                  <td>{{tx.amountRemaining | currency}}</td>
                 </tr>
               </tbody>
             </table>

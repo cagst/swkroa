@@ -113,8 +113,6 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
 
     transactionService.getUnpaidTransactions().success(function(data) {
       $scope.unpaid = data;
-
-      syncTransactions($scope)
     });
   };
 
@@ -132,37 +130,26 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
   $scope.addInvoiceToDeposit = function(transaction) {
     transaction.transactionInDeposit = true;
 
-    $scope.deposit.transactions.push(transaction);
-    $scope.deposit.depositAmount += transaction.amountRemaining;
+    var tx = angular.copy(transaction);
+    tx.amountPaid = tx.amountRemaining;
+    tx.amountRemaining = 0;
+
+    $scope.deposit.transactions.push(tx);
+    $scope.deposit.depositAmount += tx.amountPaid;
   };
 
   $scope.removeInvoiceFromDeposit = function(transaction) {
-    transaction.transactionInDeposit = false;
-
-    var idx = $scope.deposit.transactions.indexOf(transaction);
-    $scope.deposit.transactions.splice(idx, 1);
-
-    $scope.deposit.depositAmount -= transaction.amountRemaining;
-  };
-}]);
-
-var syncTransactions = function(scope) {
-  var found = false;
-
-  for (var idx1 = 0; idx1 < scope.deposit.transactions.length; idx1++) {
-    found = false;
-
-    for (var idx2 = 0; idx2 < scope.unpaid.length; idx2++) {
-      if (scope.unpaid[idx2].transactionUID == scope.deposit.transactions[idx1].transactionUID) {
-        scope.unpaid[idx2].transactionInDeposit = true;
-        found = true;
+    for (var idx1 = 0; idx1 < $scope.unpaid.length; idx1++) {
+      if ($scope.unpaid[idx1].transactionUID == transaction.transactionUID) {
+        $scope.unpaid[idx1].transactionInDeposit = false;
         break;
       }
     }
 
-    if (!found) {
-      scope.unpaid.push(scope.deposit.transactions[idx1]);
-      scope.unpaid[scope.unpaid.length - 1].transactionInDeposit = true;
-    }
-  }
-};
+    var idx2 = $scope.deposit.transactions.indexOf(transaction);
+    $scope.deposit.transactions.splice(idx2, 1);
+
+    $scope.deposit.depositAmount -= transaction.amountPaid;
+  };
+}]);
+
