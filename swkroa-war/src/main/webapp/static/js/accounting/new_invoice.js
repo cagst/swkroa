@@ -21,7 +21,7 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
 
       for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
           $scope.membershipsDue[idx].selected = true;
-          $scope.totalAmount += $scope.membershipsDue[idx].effectiveDuesAmount;
+          $scope.totalAmount += $scope.membershipsDue[idx].calculatedDuesAmount;
       }
 
       $scope.totalMemberships = $scope.membershipsDue.length;
@@ -93,7 +93,7 @@ var calculateTotals = function($scope) {
 
     for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
         if ($scope.membershipsDue[idx].selected) {
-          $scope.totalAmount += $scope.membershipsDue[idx].effectiveDuesAmount;
+          $scope.totalAmount += $scope.membershipsDue[idx].calculatedDuesAmount;
           $scope.totalMemberships += 1;
         }
     }

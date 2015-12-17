@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-17T05:32:00 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDelinquencyCsv" pageWidth="1000" pageHeight="612" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="0b79281c-c950-4cf4-a772-c170aab664f9">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="memberships" class="java.util.Collection"/>
 	<queryString>
 		<![CDATA[SELECT ms.company_name
@@ -23,7 +27,7 @@
       ,pa.state_code
       ,pa.postal_code_formatted AS postal_code
       ,pa.country_code
-      ,effective_dues
+      ,calculated_dues
       ,balance
   FROM membership_summary ms
 INNER JOIN primary_address pa ON (pa.parent_entity_id = ms.member_id AND pa.parent_entity_name = 'MEMBER')
@@ -33,9 +37,7 @@ ORDER BY membership_name]]>
 	<field name="company_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="membership_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="membership_name" class="java.lang.String"/>
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -55,9 +57,7 @@ ORDER BY membership_name]]>
 	<field name="name_last" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="name_full" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="name_full" class="java.lang.String"/>
 	<field name="address1" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -73,18 +73,12 @@ ORDER BY membership_name]]>
 	<field name="state_code" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="postal_code" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="postal_code" class="java.lang.String"/>
 	<field name="country_code" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="effective_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="balance" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="calculated_dues" class="java.math.BigDecimal"/>
+	<field name="balance" class="java.math.BigDecimal"/>
 	<variable name="CSZ" class="java.lang.String">
 		<variableExpression><![CDATA[$F{city} + ", " + $F{state_code} + " " + $F{postal_code}]]></variableExpression>
 	</variable>
@@ -199,7 +193,7 @@ ORDER BY membership_name]]>
 			</textField>
 			<textField>
 				<reportElement x="650" y="0" width="50" height="20" uuid="4540a75f-0328-40bb-9fe5-9a2222e4e518"/>
-				<textFieldExpression><![CDATA[$F{effective_dues}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{calculated_dues}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="700" y="0" width="50" height="20" uuid="61cbe9da-b40f-4172-8742-84e37d8bc62a"/>

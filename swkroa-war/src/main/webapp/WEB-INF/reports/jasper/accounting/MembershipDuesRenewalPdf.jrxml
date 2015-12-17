@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-17T05:55:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDuesRenewalPdf" pageWidth="612" pageHeight="792" columnWidth="542" leftMargin="35" rightMargin="35" topMargin="35" bottomMargin="35" uuid="18747cb9-3756-4b8d-b28a-a2d3926be0e4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="memberships" class="java.util.Collection"/>
 	<parameter name="membershipPeriod" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.membership_name
-      ,ms.fixed_dues
       ,ms.calculated_dues
-      ,ms.effective_dues
       ,(SELECT SUM(m1.dues_amount)
           FROM member_summary m1
          WHERE m1.membership_id = ms.membership_id
@@ -53,26 +55,16 @@
   LEFT OUTER JOIN primary_email m1e ON (m1e.parent_entity_id = m1.member_id AND m1e.parent_entity_name = 'MEMBER')
  WHERE $X{IN, ms.membership_id, memberships}
    AND ms.active_ind = 1
-   AND ms.effective_dues > 0
+   AND ms.calculated_dues > 0
 ORDER BY ms.membership_name ASC;]]>
 	</queryString>
 	<field name="membership_id" class="java.math.BigInteger">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="membership_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fixed_dues" class="java.math.BigDecimal"/>
-	<field name="calculated_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="effective_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="membership_name" class="java.lang.String"/>
+	<field name="calculated_dues" class="java.math.BigDecimal"/>
 	<field name="family_dues" class="java.math.BigDecimal"/>
-	<field name="balance" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="balance" class="java.math.BigDecimal"/>
 	<field name="primary_dues_amount" class="java.math.BigDecimal"/>
 	<field name="primary_member_type_meaning" class="java.lang.String"/>
 	<field name="member_id" class="java.math.BigInteger">
@@ -96,16 +88,13 @@ ORDER BY ms.membership_name ASC;]]>
 	<field name="primary_state" class="java.lang.String"/>
 	<field name="primary_postal_code" class="java.lang.String"/>
 	<field name="spouse_name" class="java.lang.String"/>
-	<field name="member_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="name_full" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="member_name" class="java.lang.String"/>
+	<field name="name_full" class="java.lang.String"/>
 	<field name="member_address" class="java.lang.String"/>
 	<field name="email_address" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="COLUMN_25" class="java.lang.Boolean"/>
 	<field name="member_dues_amount" class="java.math.BigDecimal"/>
 	<variable name="family_member_count" class="java.lang.Integer" resetType="Group" resetGroup="membership" calculation="Count">
 		<variableExpression><![CDATA[$F{member_name}]]></variableExpression>
@@ -141,7 +130,7 @@ ORDER BY ms.membership_name ASC;]]>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font fontName="TimesNewRoman" size="9"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{family_dues} == null ? $F{effective_dues}.subtract($F{primary_dues_amount}) : $F{effective_dues}.subtract($F{primary_dues_amount}).subtract($F{family_dues})]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{family_dues} == null ? $F{calculated_dues}.subtract($F{primary_dues_amount}) : $F{calculated_dues}.subtract($F{primary_dues_amount}).subtract($F{family_dues})]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="0" y="24" width="350" height="12" uuid="cca1d80f-1a10-418b-a138-dbfb1379ee69"/>
@@ -327,7 +316,7 @@ ORDER BY ms.membership_name ASC;]]>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font fontName="TimesNewRoman" size="9"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{effective_dues}.add($F{balance}.negate())]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{calculated_dues}.add($F{balance}.negate())]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="0" y="55" width="350" height="12" uuid="70f2e467-8242-479b-a036-fc45dba88791"/>

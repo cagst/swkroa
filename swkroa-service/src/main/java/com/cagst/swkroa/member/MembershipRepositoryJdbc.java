@@ -80,7 +80,7 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("membership_id", uid);
 
     List<Membership> memberships = getJdbcTemplate().query(
@@ -108,7 +108,7 @@ import org.springframework.util.Assert;
     Assert.notNull(balance, "Assertion Failure - argument [balance] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(2);
+    Map<String, String> params = new HashMap<>(2);
     params.put("status", status.toString());
     params.put("balance", balance.toString());
 
@@ -124,7 +124,7 @@ import org.springframework.util.Assert;
     Assert.notNull(balance, "Assertion Failure - argument [balance] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(3);
+    Map<String, String> params = new HashMap<>(3);
     params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
     params.put("status", status.toString());
     params.put("balance", balance.toString());
@@ -139,7 +139,7 @@ import org.springframework.util.Assert;
     Assert.isTrue(days >= 0, "[Assertion Failure] - argument [days] must be greater than or equal to zero");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Date> params = new HashMap<String, Date>(1);
+    Map<String, Date> params = new HashMap<>(1);
     params.put("nextDueDate", DateTime.now().plusDays(days).toDate());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS), params, new MembershipMapper(codeValueRepo));

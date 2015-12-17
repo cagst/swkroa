@@ -27,6 +27,13 @@
              data-ng-disabled="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
              data-ng-required="membership.entityType.meaning != 'ENTITY_INDIVIDUAL'" />
     </div>
+    <div class="col-xs-2">
+      <label th:text="#{com.cagst.swkroa.membership.dues.incremental}">zzz Incremental</label>
+      <div class="input-group">
+        <input type="number" class="form-control"
+               data-ng-model="membership.incrementalDues" />
+      </div>
+    </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.dueDate.$invalid}">
       <label class="control-label label-required" th:text="#{com.cagst.swkroa.membership.dueon}">
         zzz Due On
@@ -46,53 +53,12 @@
         </span>
       </p>
     </div>
-  </div>
-
-  <div class="row spacer-top">
+    <!--
     <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.dues.incremental}">zzz Incremental</label>
-      <div class="input-group">
-        <input type="number" class="form-control"
-               data-ng-model="membership.incrementalDues" />
-      </div>
+      <label th:text="#{com.cagst.swkroa.membership.dues.calculated}">zzz calculated</label>
+      <h3 class="clear-top clear-bottom">{{membership.calculatedDuesAmount | currency}}</h3>
     </div>
-    <div class="col-xs-2">
-      <div data-ng-show="!fixedDuesAmount">
-        <label th:text="#{com.cagst.swkroa.membership.dues.calculated}">zzz Calculated</label>
-        <div class="input-group">
-          <input type="number" class="form-control"
-                 data-ng-model="membership.calculatedDuesAmount"
-                 disabled />
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-default"
-                    data-ng-click="toggleDuesAmount(true);"
-                    th:tooltip="#{com.cagst.swkroa.membership.amountdue.calculated.tooltip}">
-              <i class="fa fa-cogs muted"></i>
-            </button>
-          </span>
-        </div>
-      </div>
-      <div data-ng-show="fixedDuesAmount">
-        <label th:text="#{com.cagst.swkroa.membership.dues.fixed}">zzz Fixed</label>
-        <div class="input-group">
-          <input type="number" class="form-control"
-                 data-ng-model="membership.fixedDuesAmount" />
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-default"
-                    data-ng-click="toggleDuesAmount(false);"
-                    th:tooltip="#{com.cagst.swkroa.membership.amountdue.calculated.tooltip}">
-              <i class="fa fa-cogs muted"></i>
-            </button>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="col-xs-2">
-      <div data-ng-show="fixedDuesAmount">
-        <label th:text="#{com.cagst.swkroa.membership.dues.calculated}">zzz calculated</label>
-        <div>{{membership.calculatedDuesAmount | currency}}</div>
-      </div>
-    </div>
+    -->
   </div>
 
   <div class="row spacer-top">

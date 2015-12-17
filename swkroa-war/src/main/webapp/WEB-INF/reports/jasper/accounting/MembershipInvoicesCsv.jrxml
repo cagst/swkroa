@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-17T05:09:54 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipInvoicesCsv" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="9434fd36-1b42-4031-bb64-1ae80c16f6b7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="start_date" class="java.util.Date"/>
 	<parameter name="end_date" class="java.util.Date"/>
 	<queryString>
@@ -12,7 +15,7 @@
       ,t.ref_num
       ,ms.membership_name
       ,ms.owner_ident
-      ,ms.effective_dues
+      ,ms.calculated_dues
       ,SUM(te1.transaction_entry_amount) AS transaction_amount
       ,(SELECT SUM(bd.transaction_entry_amount)
           FROM transaction_entry bd
@@ -59,21 +62,15 @@
 	<field name="ref_num" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="membership_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="membership_name" class="java.lang.String"/>
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="effective_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="calculated_dues" class="java.math.BigDecimal"/>
 	<field name="transaction_amount" class="java.math.BigDecimal"/>
 	<field name="base_dues" class="java.math.BigDecimal"/>
 	<field name="family_dues" class="java.math.BigDecimal"/>
-	<field name="incremental_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="incremental_dues" class="java.math.BigDecimal"/>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
@@ -134,7 +131,7 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="300" y="0" width="75" height="20" uuid="1c9afdb2-daaf-42f8-98a2-da19bc416e50"/>
-				<textFieldExpression><![CDATA[$F{effective_dues}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{calculated_dues}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="375" y="0" width="75" height="20" uuid="b9a9c8f7-feef-4a82-b14e-0b3091fb5ce2"/>

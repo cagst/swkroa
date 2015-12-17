@@ -213,14 +213,14 @@ public final class MembershipServiceImpl implements MembershipService {
       }
 
       // Create the incremental dues transaction entry
-      if (membership.getFixedDuesAmount() != null && membership.getFixedDuesAmount().compareTo(membership.getCalculatedDuesAmount()) > 0) {
+      if (membership.getIncrementalDues() != null) {
         Member primary = memberRepo.getMemberByUID(membership.getMemberUID());
 
         TransactionEntry entry = new TransactionEntry();
         entry.setTransaction(invoice);
         entry.setMember(primary);
         entry.setTransactionEntryType(incrementalDues);
-        entry.setTransactionEntryAmount(membership.getFixedDuesAmount().subtract(membership.getCalculatedDuesAmount()).negate());
+        entry.setTransactionEntryAmount(membership.getIncrementalDues().negate());
         entry.setActive(true);
 
         invoice.addEntry(entry);

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-17T05:30:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDelinquencyPdf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="154edfef-2cab-4b00-9282-814fdab4faf4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="ReportTitle" fontName="TimesNewRoman" fontSize="18"/>
 	<style name="Text Body" fontName="TimesNewRoman" fontSize="12"/>
 	<style name="ColumnHeader" fontName="TimesNewRoman" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
@@ -11,7 +15,7 @@
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.next_due_dt
-      ,ms.effective_dues
+      ,ms.calculated_dues
       ,ms.balance
       ,ms.owner_ident
       ,ms.membership_name
@@ -25,18 +29,12 @@ ORDER BY ms.membership_name]]>
 	<field name="next_due_dt" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="effective_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="balance" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="calculated_dues" class="java.math.BigDecimal"/>
+	<field name="balance" class="java.math.BigDecimal"/>
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="membership_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="membership_name" class="java.lang.String"/>
 	<variable name="TotalAmountDue" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
 	</variable>
@@ -116,7 +114,7 @@ ORDER BY ms.membership_name]]>
 				<textElement textAlignment="Right">
 					<font fontName="TimesNewRoman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{effective_dues}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{calculated_dues}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤#,##0.00;(¤#,##0.00)">
 				<reportElement style="Text Body" x="472" y="0" width="100" height="15" uuid="83090c8c-7c8e-4348-93f3-7de541f21274"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-11-05T06:49:46 -->
+<!-- 2015-12-16T22:09:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipListingPdf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ff1417b-b07f-4412-9ad0-03b68e9852f0">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -11,9 +11,7 @@
 	<queryString>
 		<![CDATA[SELECT ms.membership_id
       ,ms.membership_name
-      ,ms.fixed_dues
       ,ms.calculated_dues
-      ,ms.effective_dues
       ,ms.balance
       ,mt.member_type_display
       ,m.member_id
@@ -39,21 +37,9 @@ ORDER BY ms.membership_name ASC
 	<field name="membership_id" class="java.math.BigInteger">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="membership_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fixed_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="calculated_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="effective_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="balance" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="membership_name" class="java.lang.String"/>
+	<field name="calculated_dues" class="java.math.BigDecimal"/>
+	<field name="balance" class="java.math.BigDecimal"/>
 	<field name="member_type_display" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -63,9 +49,7 @@ ORDER BY ms.membership_name ASC
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="member_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="member_name" class="java.lang.String"/>
 	<field name="dues_amount" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -84,9 +68,7 @@ ORDER BY ms.membership_name ASC
 	<field name="state_code" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="postal_code" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="postal_code" class="java.lang.String"/>
 	<field name="country_code" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -99,11 +81,7 @@ ORDER BY ms.membership_name ASC
 ($F{postal_code} == null ? "" : ", " + $F{postal_code})]]></variableExpression>
 	</variable>
 	<variable name="total_dues" class="java.lang.String">
-		<variableExpression><![CDATA[$F{fixed_dues} != null ? (
-$F{fixed_dues}.equals( $F{calculated_dues} ) ?
-"Total Dues Amount: " + $F{calculated_dues}.toString() :
-"Total Dues Amount: " + $F{fixed_dues}.toString() + " (fixed) / " + $F{calculated_dues}.toString() + " (calculated)") :
-"Total Dues Amount: " + $F{calculated_dues}]]></variableExpression>
+		<variableExpression><![CDATA["Total Dues Amount: " + $F{calculated_dues}]]></variableExpression>
 	</variable>
 	<group name="membership_group" keepTogether="true">
 		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
@@ -157,7 +135,7 @@ $F{fixed_dues}.equals( $F{calculated_dues} ) ?
 				<textFieldExpression><![CDATA["(" + $F{owner_ident} + ")"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="70" y="12" width="502" height="12" isRemoveLineWhenBlank="true" uuid="3bba7e15-94ee-4339-9f7d-3bf35595bf9a"/>
+				<reportElement x="70" y="13" width="502" height="12" isRemoveLineWhenBlank="true" uuid="3bba7e15-94ee-4339-9f7d-3bf35595bf9a"/>
 				<textElement>
 					<font fontName="TimesNewRoman" size="8"/>
 				</textElement>

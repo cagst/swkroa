@@ -111,7 +111,6 @@ swkroaApp.controller('membershipController',
       if (response.status == 200) {
         $scope.membership      = response.data;
         $scope.original        = angular.copy(response.data);
-        $scope.fixedDuesAmount = ($scope.membership.fixedDuesAmount > 0);
       }
     });
 
@@ -130,8 +129,6 @@ swkroaApp.controller('membershipController',
     } else {
       syncAllItems($scope);
     }
-
-    $scope.fixedDuesAmount = ($scope.membership.fixedDuesAmount > 0);
 
     $scope.original = angular.copy($scope.membership);
     $scope.view     = "edit";
@@ -295,10 +292,6 @@ swkroaApp.controller('membershipController',
     $scope.openedSpouseJoinDate = true;
   };
 
-  $scope.toggleDuesAmount = function(fixed) {
-    $scope.fixedDuesAmount = fixed;
-  };
-
   $scope.addSpouse = function() {
     var spouseMember = null;
     for (idx = 0; idx < $scope.memberTypes.length; idx++) {
@@ -403,10 +396,6 @@ swkroaApp.controller('membershipController',
   };
 
   $scope.save = function() {
-    if ($scope.fixedDuesAmount == false) {
-      $scope.membership.fixedDuesAmount = null;
-    }
-
     membershipService.saveMembership($scope.membership).then(function(response) {
       if (response.status == 201) {
         if ($scope.memberships) {

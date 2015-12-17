@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-17T05:15:51 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipPaymentsPdf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="592f4b46-07f9-47b9-bb46-d5831d019664">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROA"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="start_date" class="java.util.Date"/>
 	<parameter name="end_date" class="java.util.Date"/>
 	<queryString>
@@ -13,7 +16,7 @@
       ,t.ref_num
       ,ms.membership_name
       ,ms.owner_ident
-      ,ms.effective_dues
+      ,ms.calculated_dues
       ,SUM(te1.transaction_entry_amount) AS transaction_amount
       ,(SELECT SUM(sf.transaction_entry_amount)
           FROM transaction_entry sf
@@ -44,22 +47,18 @@
 	<field name="ref_num" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="membership_name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="membership_name" class="java.lang.String"/>
 	<field name="owner_ident" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="effective_dues" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="calculated_dues" class="java.math.BigDecimal"/>
 	<field name="transaction_amount" class="java.math.BigDecimal"/>
 	<field name="special_funds_amount" class="java.math.BigDecimal"/>
 	<variable name="total_paid" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{transaction_amount}]]></variableExpression>
 	</variable>
 	<variable name="total_dues" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{effective_dues}]]></variableExpression>
+		<variableExpression><![CDATA[$F{calculated_dues}]]></variableExpression>
 	</variable>
 	<variable name="special_funds" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{special_funds_amount}]]></variableExpression>
@@ -239,7 +238,7 @@
 				<textElement textAlignment="Right">
 					<font fontName="TimesNewRoman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{effective_dues}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{calculated_dues}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤#,##0.00#;¤(-#,##0.00#)">
 				<reportElement x="452" y="0" width="50" height="12" uuid="2e4fbd7b-e6e5-4b62-9be1-a12ec0c21d49">

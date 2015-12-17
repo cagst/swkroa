@@ -37,7 +37,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private String name_last;
   private String name_middle;
   private String name_first;
-  private BigDecimal fixed_dues;
   private BigDecimal calculated_dues;
   private BigDecimal incremental_dues;
   private BigDecimal balance;
@@ -50,10 +49,10 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private boolean active_ind = true;
   private long updt_cnt;
 
-  private List<Member> members = new ArrayList<Member>();
-  private List<MembershipCounty> counties = new ArrayList<MembershipCounty>();
-  private List<Comment> comments = new ArrayList<Comment>();
-  private List<Transaction> transactions = new ArrayList<Transaction>();
+  private List<Member> members = new ArrayList<>();
+  private List<MembershipCounty> counties = new ArrayList<>();
+  private List<Comment> comments = new ArrayList<>();
+  private List<Transaction> transactions = new ArrayList<>();
 
   private NameFormatter nameFormatter = new DefaultNameFormatter();
 
@@ -161,14 +160,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
     return nameFormatter.formatFullName(name_last, name_first, name_middle);
   }
 
-  public BigDecimal getFixedDuesAmount() {
-    return fixed_dues;
-  }
-
-  public void setFixedDuesAmount(final BigDecimal dues) {
-    this.fixed_dues = dues;
-  }
-
   public BigDecimal getCalculatedDuesAmount() {
     if (CollectionUtils.isEmpty(members)) {
       return (calculated_dues == null ? BigDecimal.ZERO : calculated_dues);
@@ -192,19 +183,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setIncrementalDues(final BigDecimal dues) {
     this.incremental_dues = dues;
-  }
-
-  /**
-   * The effective dues amount that is either calculated, based off the members and counties, or specified.
-   *
-   * @return The effective dues amount for the membership.
-   */
-  public BigDecimal getEffectiveDuesAmount() {
-    if (getFixedDuesAmount() != null) {
-      return getFixedDuesAmount();
-    }
-
-    return getCalculatedDuesAmount();
   }
 
   public BigDecimal getBalance() {
