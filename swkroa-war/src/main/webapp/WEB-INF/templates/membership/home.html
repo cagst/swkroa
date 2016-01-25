@@ -138,11 +138,14 @@
                      data-ng-repeat="mem in memberships"
                      data-ng-class="{active: mem.membershipUID === membership.membershipUID}"
                      data-ng-click="getMembership(mem.membershipUID)">
-                  <div class="lead lead-in">
-                    <span data-ng-bind="mem.membershipName">zzz Membership Name</span>
-                  </div>
-                  <div data-ng-if="mem.joinDate != null">
-                    <span th:text="#{com.cagst.swkroa.membership.member.since}">zzz Member Since</span>
+                  <div>
+                    <span data-ng-bind="mem.membershipName" class="lead lead-in">
+                      zzz Membership Name
+                    </span>
+                    <span th:text="#{com.cagst.swkroa.membership.member.since}"
+                          data-ng-if="mem.joinDate != null" class="pull-right">
+                      zzz Member Since
+                    </span>
                   </div>
                   <div>
                     <span th:text="#{com.cagst.swkroa.membership.dues}">zzz Dues Of</span>

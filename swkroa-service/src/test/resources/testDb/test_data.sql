@@ -136,3 +136,8 @@ INSERT INTO deposit_transaction (deposit_id, transaction_id, create_dt_tm, creat
 
 INSERT INTO deposit (deposit_id, deposit_ref, deposit_dt, deposit_amount, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 'REF2', '2014-01-15', 90, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO deposit_transaction (deposit_id, transaction_id, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 3, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+
+INSERT INTO job (job_id, job_name, job_type, job_status, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 'Membership 2014-2015 Renewal', 'RENEWAL', 'SUCCEEDED', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO job (job_id, job_name, job_type, job_status, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 'Membership 2015-2016 Renewal', 'RENEWAL', 'FAILED', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO job (job_id, job_name, job_type, job_status, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 'Membership 2015-2016 Renewal', 'RENEWAL', 'SUCCEEDED', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO job (job_id, job_name, job_type, job_status, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (4, 'Membership 2016-2017 Renewal', 'RENEWAL', 'SUBMITTED', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);

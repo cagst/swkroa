@@ -22,7 +22,7 @@ public final class Deposit implements Serializable {
   private String deposit_ref;
   private BigDecimal deposit_amount;
 
-  private List<Transaction> transactions = new ArrayList<Transaction>();
+  private List<Transaction> transactions = new ArrayList<>();
 
   // meta-data
   private boolean active_ind = true;
@@ -85,7 +85,7 @@ public final class Deposit implements Serializable {
   }
 
   public void setTransactions(final List<Transaction> transactions) {
-    this.transactions = new ArrayList<Transaction>(transactions);
+    this.transactions = new ArrayList<>(transactions);
   }
 
   public String toString() {
