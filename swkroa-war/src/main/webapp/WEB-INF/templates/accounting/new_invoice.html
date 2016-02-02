@@ -73,7 +73,7 @@
             <tr data-ng-repeat="mem in membershipsDue">
               <td>
                 <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox"
-                       data-ng-model="mem.selected" data-ng-click="toggleCheck(mem)"/>
+                       data-ng-model="mem.selected" data-ng-click="toggleCheck()"/>
               </td>
               <td>{{mem.membershipName}}</td>
               <td>{{mem.balance | currency}}</td>

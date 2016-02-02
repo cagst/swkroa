@@ -38,8 +38,7 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
     calculateTotals($scope);
   };
 
-  $scope.toggleCheck = function(membership) {
-    membership.selected = !membership.selected;
+  $scope.toggleCheck = function() {
     calculateTotals($scope);
   };
 
@@ -49,7 +48,7 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
       if ($scope.membershipsDue[idx].selected) {
         membershipsSelected = true;
       }
-    };
+    }
 
     return membershipsSelected;
   };
@@ -62,7 +61,7 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
       if ($scope.membershipsDue[idx].selected) {
         memberships.push($scope.membershipsDue[idx].membershipUID);
       }
-    };
+    }
 
     showProcessingDialog();
 

@@ -25,7 +25,7 @@ public class TransactionListExtractor implements ResultSetExtractor<List<Transac
 
   @Override
   public List<Transaction> extractData(ResultSet rs) throws SQLException, DataAccessException {
-    Map<Long, Transaction> transactions = new HashMap<Long, Transaction>();
+    Map<Long, Transaction> transactions = new HashMap<>();
 
     while (rs.next()) {
       long transactionId = rs.getLong(TransactionMapper.TRANSACTION_ID);
@@ -39,7 +39,7 @@ public class TransactionListExtractor implements ResultSetExtractor<List<Transac
       }
     }
 
-    return new ArrayList<Transaction>(transactions.values());
+    return new ArrayList<>(transactions.values());
   }
 
   private void addChild(final Transaction trans, final TransactionEntry entry) {
