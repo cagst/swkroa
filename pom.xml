@@ -273,25 +273,6 @@
         <version>${spring-security-version}</version>
       </dependency>
 
-      <!-- Spring WebFlow Dependencies -->
-      <dependency>
-        <groupId>org.springframework.webflow</groupId>
-        <artifactId>spring-webflow</artifactId>
-        <version>${spring-webflow-version}</version>
-      </dependency>
-
-      <!-- Spring Batch dependencies -->
-      <dependency>
-        <groupId>org.springframework.batch</groupId>
-        <artifactId>spring-batch-core</artifactId>
-        <version>${spring-batch-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.batch</groupId>
-        <artifactId>spring-batch-infrastructure</artifactId>
-        <version>${spring-batch-version}</version>
-      </dependency>
-
       <!-- AspectJ Dependencies -->
       <dependency>
         <groupId>org.aspectj</groupId>

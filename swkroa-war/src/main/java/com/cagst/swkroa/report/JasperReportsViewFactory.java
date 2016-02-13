@@ -10,11 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsSingleFormatView;
 import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsCsvView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsXlsView;
 
 /**
  * Factory that will return a ...
@@ -30,7 +26,6 @@ public class JasperReportsViewFactory {
   private static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
   public static final String REPORT_FORMAT_PDF = "pdf";
-  public static final String REPORT_FORMAT_XLS = "xls";
   public static final String REPORT_FORMAT_CSV = "csv";
 
   public static AbstractJasperReportsView getJasperReportsView(final HttpServletRequest request,
@@ -47,18 +42,14 @@ public class JasperReportsViewFactory {
 
     // set possible content headers
     Properties availableHeaders = new Properties();
-    availableHeaders.put("html", "inline; filename=" + reportFilename + ".html");
     availableHeaders.put("csv", "inline; filename=" + reportFilename + ".csv");
     availableHeaders.put("pdf", "inline; filename=" + reportFilename + ".pdf");
-    availableHeaders.put("xls", "inline; filename=" + reportFilename + ".xls");
 
-    AbstractJasperReportsSingleFormatView view;
+    AbstractJasperReportsView view;
     if (REPORT_FORMAT_PDF.equals(format)) {
-      view = new JasperReportsPdfView();
-    } else if (REPORT_FORMAT_XLS.equals(format)) {
-      view = new JasperReportsXlsView();
+      view = new JasperReportsPdfClasspathView(reportUrl);
     } else if (REPORT_FORMAT_CSV.equals(format)) {
-      view = new JasperReportsCsvView();
+      view = new JasperReportsCsvClasspathView(reportUrl);
     } else {
       LOGGER.error("Unsupported report format [{}]", format);
       return null;
@@ -67,7 +58,6 @@ public class JasperReportsViewFactory {
     WebApplicationContext appCtx = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
 
     view.setJdbcDataSource(dataSource);
-    view.setUrl(reportUrl);
     view.setApplicationContext(appCtx);
 
     if (StringUtils.isNotBlank(reportFormat)) {

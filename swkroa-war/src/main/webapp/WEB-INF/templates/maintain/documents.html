@@ -57,8 +57,8 @@
               th:name="${#dates.format(document.getBeginEffectiveDate(), 'MM/dd/yyyy')}">
             zzz Begin
           </td>
-          <td th:text="${#dates.format(document.getEndEffectiveDate(), 'MMM d, yyyy')}"
-              th:name="${#dates.format(document.getEndEffectiveDate(), 'MM/dd/yyyy')}">
+          <td th:text="${document.getEndEffectiveDate()} ? ${#dates.format(document.getEndEffectiveDate(), 'MMM d, yyyy')}"
+              th:name="${document.getEndEffectiveDate()} ? ${#dates.format(document.getEndEffectiveDate(), 'MM/dd/yyyy')}">
             zzz End
           </td>
           <td>

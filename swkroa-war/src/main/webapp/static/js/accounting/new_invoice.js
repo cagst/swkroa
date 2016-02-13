@@ -63,12 +63,13 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
       }
     }
 
-    showProcessingDialog();
+//    showProcessingDialog();
 
-    membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo).success(function(data) {
-      $scope.getMemberhipsDueIn($scope.days);
-      hideProcessingDialog();
-    });
+//    membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo).success(function(data) {
+//      $scope.getMemberhipsDueIn($scope.days);
+//      hideProcessingDialog();
+//    });
+    membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo);
   };
 
   $scope.openTransactionDate = function($event) {
@@ -102,6 +103,7 @@ var determineRenewalPeriod = function($scope) {
   var currentYear = new Date().getFullYear();
 
   $scope.membershipRenewalPeriod = "(" + currentYear + " - " + (currentYear + 1) + ")";
+  $scope.transactionDescription  = "Invoice " + currentYear + " - " + (currentYear + 1);
 };
 
 var generateMembershipRenewalLetters = function(reportyType) {

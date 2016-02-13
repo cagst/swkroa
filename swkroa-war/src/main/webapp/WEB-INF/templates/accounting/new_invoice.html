@@ -121,70 +121,70 @@
         </div>
       </div>
     </div>
-  </form>
 
-  <!-- Transaction Details Dialog -->
-  <div class="modal" id="renewMembershipsDlg" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" th:text="#{invoices.renew.transaction.title}">zzz Details</h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-xs-5">
-              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.date}">
-                zzz Date
-              </label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="transactionDate" name="transactionDate"
-                       data-datepicker-popup="MM/dd/yyyy"
-                       data-is-open="openedTransactionDate"
-                       data-show-button-bar="false"
-                       data-show-weeks="false"
-                       data-ng-model="transactionDate"
-                       data-ng-required="true" />
+    <!-- Transaction Details Dialog -->
+    <div class="modal" id="renewMembershipsDlg" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" th:text="#{invoices.renew.transaction.title}">zzz Details</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-xs-5">
+                <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.date}">
+                  zzz Date
+                </label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="transactionDate" name="transactionDate"
+                         data-datepicker-options="datePickerConfig"
+                         data-uib-datepicker-popup="MM/dd/yyyy"
+                         data-is-open="openedTransactionDate"
+                         data-show-weeks="false"
+                         data-ng-model="transactionDate"
+                         data-ng-required="true" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default" data-ng-click="openTransactionDate($event)">
                       <i class="fa fa-calendar"></i>
                     </button>
                   </span>
+                </div>
+              </div>
+              <div class="col-xs-7">
+                <label class="form-label" th:text="#{com.cagst.swkroa.desc}">
+                  zzz Desc
+                </label>
+                <input type="text" class="form-control" id="transactionDesc" name="transactionDesc"
+                       data-ng-model="transactionDescription"
+                       data-ng-required="true" />
               </div>
             </div>
-            <div class="col-xs-7">
-              <label class="form-label" th:text="#{com.cagst.swkroa.desc}">
-                zzz Desc
-              </label>
-              <input type="text" class="form-control" name="desc"
-                     data-ng-model="transactionDescription"
-                     data-ng-required="true"
-                     data-ng-options="type.display for type in transactionTypes" />
+            <div class="row spacer-top">
+              <div class="col-xs-12">
+                <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.memo}">
+                  zzz Memo
+                </label>
+                <textarea class="form-control" rows="3" data-ng-model="transactionMemo"></textarea>
+              </div>
             </div>
           </div>
-          <div class="row spacer-top">
-            <div class="col-xs-12">
-              <label class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.memo}">
-                zzz Memo
-              </label>
-              <textarea class="form-control" rows="3" data-ng-model="transactionMemo"></textarea>
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary"
+                    data-ng-click="renewingMemberships()"
+                    th:text="#{invoices.renew.generate.transactions}">
+              zzz Generate
+            </button>
+            <button type="button" class="btn btn-default"
+                    data-dismiss="modal"
+                    th:text="#{com.cagst.swkroa.cancel}">
+              zzz Cancel
+            </button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary"
-                  data-ng-click="renewingMemberships()"
-                  th:text="#{invoices.renew.generate.transactions}">
-            zzz Generate
-          </button>
-          <button type="button" class="btn btn-default"
-                  data-dismiss="modal"
-                  th:text="#{com.cagst.swkroa.cancel}">
-            zzz Cancel
-          </button>
         </div>
       </div>
     </div>
-  </div>
+
+  </form>
 
 </div>
 

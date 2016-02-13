@@ -200,15 +200,14 @@ import org.springframework.util.Assert;
   @Override
   @Transactional
 //  @CacheEvict(value = "memberships", allEntries = true)
-  public int updateNextDueDate(final Set<Long> membershipIds, final User user) throws DataAccessException {
-    Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
+  public int updateNextDueDate(final long membershipId, final User user) throws DataAccessException {
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
     LOGGER.info("Billing Memberships");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("memberships", membershipIds);
+    params.addValue("membershipId", membershipId);
     params.addValue("updt_id", user.getUserUID());
 
     return getJdbcTemplate().update(stmtLoader.load(UPDATE_NEXT_DUE_DATE), params);

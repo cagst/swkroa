@@ -125,6 +125,26 @@
       </exclusions>
     </dependency>
 
+    <!-- Jasper Reporting Engine -->
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports-fonts-timesnewroman</artifactId>
+      <type>jar</type>
+      <scope>runtime</scope>
+    </dependency>
+
     <!--                   -->
     <!-- Test Dependencies -->
     <!--                   -->
