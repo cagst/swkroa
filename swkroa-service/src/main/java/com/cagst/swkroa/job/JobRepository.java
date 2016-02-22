@@ -30,7 +30,7 @@ public interface JobRepository {
    * @param jobStatus
    *    The {@link JobStatus} to retrieve jobs for.
    *
-   * @return A {@link List} of {@link Job}s that are associated with the specified status. An empty collection if none are found.
+   * @return A {@link List} of {@link Job}s that are associated with the specified Status. An empty collection if none are found.
    */
   List<Job> getJobsForStatus(final JobStatus jobStatus);
 
@@ -40,9 +40,21 @@ public interface JobRepository {
    * @param jobType
    *    The {@link JobType} to retrieves jobs for.
    *
-   * @return A {@link List} of {@link Job}s that are associated with the specified type. An empty collection if none are found.
+   * @return A {@link List} of {@link Job}s that are associated with the specified Type. An empty collection if none are found.
    */
   List<Job> getJobsForType(final JobType jobType);
+
+  /**
+   * Retrieves a {@link List} of {@link Job}s that are associated with the specified {@link JobType} and {@link JobStatus}.
+   *
+   * @param jobType
+   *    The {@link JobType} to retrieves jobs for.
+   * @param jobStatus
+   *    The {@link JobStatus} to retrieve jobs for.
+   *
+   * @return A {@link List} of {@link Job}s that are associated with the specified Type and Status. An empty collection if none are found.
+   */
+  List<Job> getJobsForTypeAndStatus(final JobType jobType, final JobStatus jobStatus);
 
   /**
    * Commits the specified {@link Job} to persistent storage.

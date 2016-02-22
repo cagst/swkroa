@@ -1,5 +1,5 @@
-ALTER TABLE membership
-       DROP COLUMN fixed_dues;
+-- ALTER TABLE membership
+--        DROP COLUMN fixed_dues;
 
 CREATE OR REPLACE VIEW _base_membership_summary AS
        SELECT ms.membership_id

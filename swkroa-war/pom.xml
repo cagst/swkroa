@@ -51,7 +51,7 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
+      <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
     <dependency>
@@ -63,8 +63,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>integration</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
 
     <!-- Used to send log4j logs to the SLF4J framework instead -->
@@ -79,14 +77,10 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
 
     <!-- Spring Core Dependencies -->
@@ -276,15 +270,9 @@
       <artifactId>flyway-core</artifactId>
     </dependency>
 
+    <!--                      -->
     <!-- Testing Dependencies -->
-
-    <!-- Apache Common IO Dependencies -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-io</artifactId>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
+    <!--                      -->
 
     <!-- Spring Testing Dependencies -->
     <dependency>
@@ -321,16 +309,13 @@
     </resources>
 
     <plugins>
-      <!-- Enable Tomcat 7 Support -->
+      <!-- Enable Tomcat 7 Support
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
         <version>2.2</version>
         <configuration>
           <contextFile>src/main/webapp/META-INF/context.xml</contextFile>
-          <additionalClassesDirs>
-            <additionalClassesDir>${project.basedir}/local</additionalClassesDir>
-          </additionalClassesDirs>
         </configuration>
         <dependencies>
           <dependency>
@@ -340,6 +325,7 @@
           </dependency>
         </dependencies>
       </plugin>
+      -->
 
       <!-- Flyway Support -->
       <plugin>

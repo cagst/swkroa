@@ -115,7 +115,7 @@ public interface MembershipService {
       throws DataAccessException;
 
   /**
-   * Creates invoice transactions for the specified memberships and updated the next due date for the membership.
+   * Creates jobs to be executed asynchronously to generate invoices for the specified memberships.
    *
    * @param transactionDate
    *        A {@link DateTime} that represents the date of the transaction.

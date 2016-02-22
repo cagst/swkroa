@@ -1,9 +1,11 @@
-SELECT job_id
-      ,job_name
-      ,job_type
-      ,job_status
-      ,job_detail
-      ,active_ind
-      ,updt_cnt AS job_updt_cnt
-FROM job
-WHERE job_type = :job_type
+SELECT j.job_id
+      ,j.job_name
+      ,j.job_type
+      ,j.job_status
+      ,j.parent_entity_id
+      ,j.parent_entity_name
+      ,j.active_ind
+      ,j.updt_cnt AS job_updt_cnt
+      ,j.create_id
+FROM job j
+WHERE j.job_type = :job_type

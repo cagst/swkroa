@@ -11,11 +11,15 @@ import java.io.Serializable;
  * @author Craig Gaskill
  */
 public final class Job implements Serializable {
+  public static final String MEMBERSHIP = "MEMBERSHIP";
+
   private long jobId;
   private String jobName;
   private JobType jobType;
   private JobStatus jobStatus;
-  private String jobDetail;
+  private long parent_entity_id;
+  private String parent_entity_name;
+  private long createId;
 
   // meta-data
   private boolean active = true;
@@ -53,12 +57,20 @@ public final class Job implements Serializable {
     this.jobStatus = status;
   }
 
-  public String getJobDetail() {
-    return jobDetail;
+  public long getParentEntityUID() {
+    return parent_entity_id;
   }
 
-  public void setJobDetail(final String detail) {
-    this.jobDetail = detail;
+  public void setParentEntityUID(final long uid) {
+    this.parent_entity_id = uid;
+  }
+
+  public String getParentEntityName() {
+    return parent_entity_name;
+  }
+
+  public void setParentEntityName(final String name) {
+    this.parent_entity_name = name;
   }
 
   public boolean isActive() {
@@ -75,6 +87,14 @@ public final class Job implements Serializable {
 
   public void setJobUpdateCount(final long updateCount) {
     this.updateCount = updateCount;
+  }
+
+  public long getCreateUID() {
+    return createId;
+  }
+
+  public void setCreateUID(final long userId) {
+    this.createId = userId;
   }
 
   @Override

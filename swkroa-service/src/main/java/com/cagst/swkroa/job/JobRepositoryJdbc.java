@@ -29,9 +29,10 @@ import java.util.Map;
 /* package */ class JobRepositoryJdbc extends BaseRepositoryJdbc implements JobRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(JobRepositoryJdbc.class);
 
-  private static final String GET_JOB_BY_UID      = "GET_JOB_BY_UID";
-  private static final String GET_JOBS_FOR_STATUS = "GET_JOBS_FOR_STATUS";
-  private static final String GET_JOBS_FOR_TYPE   = "GET_JOBS_FOR_TYPE";
+  private static final String GET_JOB_BY_UID               = "GET_JOB_BY_UID";
+  private static final String GET_JOBS_FOR_STATUS          = "GET_JOBS_FOR_STATUS";
+  private static final String GET_JOBS_FOR_TYPE            = "GET_JOBS_FOR_TYPE";
+  private static final String GET_JOBS_FOR_TYPE_AND_STATUS = "GET_JOBS_FOR_TYPE_AND_STATUS";
 
   private static final String INSERT_JOB = "INSERT_JOB";
   private static final String UPDATE_JOB = "UPDATE_JOB";
@@ -87,6 +88,18 @@ import java.util.Map;
     params.put("job_type", jobType.name());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_JOBS_FOR_TYPE), params, new JobMapper());
+  }
+
+  @Override
+  public List<Job> getJobsForTypeAndStatus(JobType jobType, JobStatus jobStatus) {
+    LOGGER.info("Calling getJobsForStatusAndType for Type [{}] and Status [{}]", jobType, jobStatus);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, String> params = new HashMap<>(2);
+    params.put("job_type", jobType.name());
+    params.put("job_status", jobStatus.name());
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_JOBS_FOR_TYPE_AND_STATUS), params, new JobMapper());
   }
 
   @Override

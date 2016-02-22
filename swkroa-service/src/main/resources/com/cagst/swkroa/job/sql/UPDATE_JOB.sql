@@ -1,11 +1,12 @@
 UPDATE job
-   SET job_name   = :job_name
-      ,job_type   = :job_type
-      ,job_status = :job_status
-      ,job_detail = :job_detail
-      ,active_ind = :active_ind
-      ,updt_id    = :updt_id
-      ,updt_dt_tm = CURRENT_TIMESTAMP
-      ,updt_cnt   = updt_cnt + 1
+   SET job_name           = :job_name
+      ,job_type           = :job_type
+      ,job_status         = :job_status
+      ,parent_entity_name = :parent_entity_name
+      ,parent_entity_id   = :parent_entity_id
+      ,active_ind         = :active_ind
+      ,updt_id            = :updt_id
+      ,updt_dt_tm         = CURRENT_TIMESTAMP
+      ,updt_cnt           = updt_cnt + 1
  WHERE job_id   = :job_id
    AND updt_cnt = :job_updt_cnt

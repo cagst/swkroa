@@ -76,6 +76,18 @@ public class JobRepositoryJdbcTest extends BaseTestRepository {
   }
 
   /**
+   * Test the getJobsForTypeAndStatus method.
+   */
+  @Test
+  public void testGetJobsForTypeAndStatus() {
+    List<Job> jobs = repo.getJobsForTypeAndStatus(JobType.RENEWAL, JobStatus.SUBMITTED);
+    assertNotNull("Ensure the collection is not null", jobs);
+    assertFalse("Ensure the collection is not empty", jobs.isEmpty());
+    assertEquals("Ensure we found the correct number of jobs", 1, jobs.size());
+
+  }
+
+  /**
    * Test the saveJob method by inserting a new Job.
    */
   @Test

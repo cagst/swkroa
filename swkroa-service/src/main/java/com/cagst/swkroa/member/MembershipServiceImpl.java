@@ -1,18 +1,5 @@
 package com.cagst.swkroa.member;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.comment.Comment;
@@ -24,6 +11,7 @@ import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.document.DocumentRepository;
 import com.cagst.swkroa.exception.NotFoundException;
+import com.cagst.swkroa.report.jasper.JasperReportLoader;
 import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionEntry;
 import com.cagst.swkroa.transaction.TransactionRepository;
@@ -33,8 +21,6 @@ import com.google.common.net.MediaType;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
-import net.sf.jasperreports.engine.util.JRLoader;
-import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +28,19 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of the {@link MembershipService} interface.
@@ -51,8 +50,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Named("membershipService")
 public final class MembershipServiceImpl implements MembershipService {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipServiceImpl.class);
-
-  private static final String MEMBERSHIP_RENEWAL_PDF = "/com/cagst/swkroa/report/jasper/accounting/MembershipDuesRenewalPdf.jasper";
 
   private final MembershipRepository membershipRepo;
   private final MemberRepository memberRepo;
@@ -196,7 +193,7 @@ public final class MembershipServiceImpl implements MembershipService {
 
   @Override
   @Async
-  @Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 1800)
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void billMemberships(final DateTime transactionDate,
                               final String transactionDescription,
                               final String transactionMemo,
@@ -206,111 +203,116 @@ public final class MembershipServiceImpl implements MembershipService {
 
     LOGGER.info("Calling createBillingInvoicesForMemberships [{}]", transactionDescription);
 
-    CodeValue renewalLetter = codeValueRepo.getCodeValueByMeaning("RENEWAL");
+    CodeValue renewalLetter = codeValueRepo.getCodeValueByMeaning(CodeValue.DOCUMENT_RENEWAL);
 
     CodeValue baseDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_BASE");
     CodeValue familyDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_FAMILY");
     CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_INC");
 
     // load the report template
-    JasperReport jasperReport = null;
+    JasperReport jasperReport = JasperReportLoader.getReport(JasperReportLoader.MEMBERSHIP_RENEWAL_PDF);
 
-    InputStream stream = this.getClass().getResourceAsStream(MEMBERSHIP_RENEWAL_PDF);
+    Connection connection = null;
     try {
-      jasperReport = (JasperReport) JRLoader.loadObject(stream);
-    } catch (JRException ex) {
-      LOGGER.error(ex.getMessage(), ex);
-    } finally {
-      IOUtils.closeQuietly(stream);
-    }
+      connection = dataSource.getConnection();
 
-    for (Long membershipId : membershipIds) {
-      Membership membership = membershipRepo.getMembershipByUID(membershipId);
-      if (membership == null) {
-        throw new NotFoundException("Membership [" + membershipId + "] was not found.");
-      }
+      for (Long membershipId : membershipIds) {
+        Membership membership = membershipRepo.getMembershipByUID(membershipId);
+        if (membership == null) {
+          throw new NotFoundException("Membership [" + membershipId + "] was not found.");
+        }
 
-      // Create the Document for the Renewal Membership Letter
-      byte[] reportContent = generateDueRenewalReport(jasperReport, membershipId, transactionDescription);
+        // Create the Document for the Renewal Membership Letter
+        byte[] reportContent = generateDueRenewalReport(jasperReport, membershipId, transactionDescription, connection);
 
-      Document document = new Document();
-      document.setParentEntityUID(membershipId);
-      document.setParentEntityName(Document.MEMBERSHIP);
-      document.setDocumentType(renewalLetter);
-      document.setDocumentName(transactionDescription);
-      document.setDocumentFormat(MediaType.PDF.toString());
-      document.setDocumentContents(reportContent);
-      document.setBeginEffectiveDate(new DateTime());
-      document.setDocumentDescription(transactionDescription);
+        Document document = new Document();
+        document.setParentEntityUID(membershipId);
+        document.setParentEntityName(Document.MEMBERSHIP);
+        document.setDocumentType(renewalLetter);
+        document.setDocumentName(transactionDescription);
+        document.setDocumentFormat(MediaType.PDF.toString());
+        document.setDocumentContents(reportContent);
+        document.setBeginEffectiveDate(new DateTime());
+        document.setDocumentDescription(transactionDescription);
 
-      // Save the Renewal Membership Letter document
-      documentRepo.saveDocument(document, user);
+        // Save the Renewal Membership Letter document
+        documentRepo.saveDocument(document, user);
 
-      List<Member> members = memberRepo.getMembersForMembership(membership);
+        List<Member> members = memberRepo.getMembersForMembership(membership);
 
-      // Create Transaction
-      Transaction invoice = new Transaction();
-      invoice.setMembershipUID(membershipId);
-      invoice.setTransactionDate(transactionDate);
-      invoice.setTransactionDescription(transactionDescription);
-      invoice.setMemo(transactionMemo);
-      invoice.setTransactionType(TransactionType.INVOICE);
-      invoice.setActive(true);
+        // Create Transaction
+        Transaction invoice = new Transaction();
+        invoice.setMembershipUID(membershipId);
+        invoice.setTransactionDate(transactionDate);
+        invoice.setTransactionDescription(transactionDescription);
+        invoice.setMemo(transactionMemo);
+        invoice.setTransactionType(TransactionType.INVOICE);
+        invoice.setActive(true);
 
-      // Create Transaction Entries
-      for (Member member : members) {
-        MemberType type = memberTypeRepo.getMemberTypeByUID(member.getMemberType().getMemberTypeUID());
-        if (type.getDuesAmount().compareTo(BigDecimal.ZERO) > 0) {
+        // Create Transaction Entries
+        for (Member member : members) {
+          MemberType type = memberTypeRepo.getMemberTypeByUID(member.getMemberType().getMemberTypeUID());
+          if (type.getDuesAmount().compareTo(BigDecimal.ZERO) > 0) {
+            TransactionEntry entry = new TransactionEntry();
+            entry.setTransaction(invoice);
+            entry.setMember(member);
+            entry.setTransactionEntryType(type.isPrimary() ? baseDues : familyDues);
+            entry.setTransactionEntryAmount(type.getDuesAmount().negate());
+            entry.setActive(true);
+
+            invoice.addEntry(entry);
+          }
+        }
+
+        // Create the incremental dues transaction entry
+        if (membership.getIncrementalDues() != null) {
+          Member primary = memberRepo.getMemberByUID(membership.getMemberUID());
+
           TransactionEntry entry = new TransactionEntry();
           entry.setTransaction(invoice);
-          entry.setMember(member);
-          entry.setTransactionEntryType(type.isPrimary() ? baseDues : familyDues);
-          entry.setTransactionEntryAmount(type.getDuesAmount().negate());
+          entry.setMember(primary);
+          entry.setTransactionEntryType(incrementalDues);
+          entry.setTransactionEntryAmount(membership.getIncrementalDues().negate());
           entry.setActive(true);
 
           invoice.addEntry(entry);
         }
+
+        // Save the Invoice (transaction)
+        transactionRepo.saveTransaction(invoice, user);
+
+        // Update Membership (next_due_dt)
+        membershipRepo.updateNextDueDate(membershipId, user);
       }
-
-      // Create the incremental dues transaction entry
-      if (membership.getIncrementalDues() != null) {
-        Member primary = memberRepo.getMemberByUID(membership.getMemberUID());
-
-        TransactionEntry entry = new TransactionEntry();
-        entry.setTransaction(invoice);
-        entry.setMember(primary);
-        entry.setTransactionEntryType(incrementalDues);
-        entry.setTransactionEntryAmount(membership.getIncrementalDues().negate());
-        entry.setActive(true);
-
-        invoice.addEntry(entry);
+    } catch (SQLException ex) {
+      LOGGER.error(ex.getMessage(), ex);
+    } finally {
+      if (connection != null) {
+        try {
+          connection.close();
+        } catch (SQLException ex) {
+          // do nothing, we are closing
+        }
       }
-
-      // Save the Invoice (transaction)
-      transactionRepo.saveTransaction(invoice, user);
-
-      // Update Membership (next_due_dt)
-      membershipRepo.updateNextDueDate(membershipId, user);
     }
 
     LOGGER.debug("CAG Finished generating transactions");
   }
 
-  private byte[] generateDueRenewalReport(final JasperReport jasperReport, final long membershipId, final String transactionDescription) {
-    if (jasperReport == null) {
-      return null;
-    }
-
+  private byte[] generateDueRenewalReport(final JasperReport jasperReport,
+                                          final long membershipId,
+                                          final String transactionDescription,
+                                          final Connection connection) {
     try {
       List<Long> membershipIds = new ArrayList<>(1);
       membershipIds.add(membershipId);
 
-      Map<String, Object> params = new HashMap<>();
+      Map<String, Object> params = new HashMap<>(2);
       params.put("memberships", membershipIds);
       params.put("membershipPeriod", transactionDescription);
 
-      return JasperRunManager.runReportToPdf(jasperReport, params, dataSource.getConnection());
-    } catch (JRException|SQLException ex) {
+      return JasperRunManager.runReportToPdf(jasperReport, params, connection);
+    } catch (JRException ex) {
       LOGGER.error(ex.getMessage(), ex);
       return null;
     }

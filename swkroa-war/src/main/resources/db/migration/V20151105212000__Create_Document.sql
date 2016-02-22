@@ -1,7 +1,7 @@
 INSERT INTO codeset (codeset_id, codeset_display, codeset_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (7, 'Document Type', 'DOCUMENT_TYPE', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (7, 'Newsletter', 'NEWSLETTER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
-INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (7, 'Renewal Notice', 'RENEWAL', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (7, 'Newsletter', 'DOCUMENT_NEWSLETTER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO codevalue (codeset_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (7, 'Renewal Notice', 'DOCUMENT_RENEWAL', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 
 CREATE TABLE document (
   document_id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
