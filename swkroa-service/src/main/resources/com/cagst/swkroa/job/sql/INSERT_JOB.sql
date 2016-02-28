@@ -1,2 +1,2 @@
-INSERT INTO job (job_name, job_type, job_status, parent_entity_name, parent_entity_id, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm)
-VALUES (:job_name, :job_type, :job_status, :parent_entity_name, :parent_entity_id, :active_ind, :create_id, CURRENT_TIMESTAMP, :updt_id, CURRENT_TIMESTAMP);
+INSERT INTO job (job_name, job_type, job_status, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm)
+VALUES (:job_name, :job_type, :job_status, :active_ind, :create_id, CURRENT_TIMESTAMP, :updt_id, CURRENT_TIMESTAMP);

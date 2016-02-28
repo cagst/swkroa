@@ -63,13 +63,9 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
       }
     }
 
-//    showProcessingDialog();
-
-//    membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo).success(function(data) {
-//      $scope.getMemberhipsDueIn($scope.days);
-//      hideProcessingDialog();
-//    });
     membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo);
+
+    $('#transactionJobSubmittedDlg').modal('show');
   };
 
   $scope.openTransactionDate = function($event) {

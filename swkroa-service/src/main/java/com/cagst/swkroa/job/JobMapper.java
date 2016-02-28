@@ -8,17 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Maps a row in the resultset into a {@link Job} objects. Used to marsah / unmarshal a {@link Job} to / form the database.
+ * Maps a row in the resultset into a {@link Job} objects. Used to marshal / unmarshal a {@link Job} to / form the database.
  *
  * @author Craig Gaskill
  */
 /* package */ final class JobMapper implements RowMapper<Job> {
-  private static final String JOB_ID             = "job_id";
-  private static final String JOB_NAME           = "job_name";
-  private static final String JOB_TYPE           = "job_type";
-  private static final String JOB_STATUS         = "job_status";
-  private static final String PARENT_ENTITY_ID   = "parent_entity_id";
-  private static final String PARENT_ENTITY_NAME = "parent_entity_name";
+  private static final String JOB_ID       = "job_id";
+  private static final String JOB_NAME     = "job_name";
+  private static final String JOB_TYPE     = "job_type";
+  private static final String JOB_STATUS   = "job_status";
 
   // meta-data
   private static final String ACTIVE_IND   = "active_ind";
@@ -33,8 +31,6 @@ import java.sql.SQLException;
     job.setJobName(rs.getString(JOB_NAME));
     job.setJobType(JobType.valueOf(rs.getString(JOB_TYPE)));
     job.setJobStatus(JobStatus.valueOf(rs.getString(JOB_STATUS)));
-    job.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
-    job.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
     job.setCreateUID(rs.getLong(CREATE_ID));
 
     job.setActive(rs.getBoolean(ACTIVE_IND));
@@ -58,8 +54,6 @@ import java.sql.SQLException;
     params.addValue(JOB_NAME, job.getJobName());
     params.addValue(JOB_TYPE, job.getJobType().name());
     params.addValue(JOB_STATUS, job.getJobStatus().name());
-    params.addValue(PARENT_ENTITY_ID, job.getParentEntityUID() != 0L ? job.getParentEntityUID() : null);
-    params.addValue(PARENT_ENTITY_NAME, job.getParentEntityName());
 
     params.addValue(ACTIVE_IND, job.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
@@ -83,8 +77,6 @@ import java.sql.SQLException;
     params.addValue(JOB_NAME, job.getJobName());
     params.addValue(JOB_TYPE, job.getJobType().name());
     params.addValue(JOB_STATUS, job.getJobStatus().name());
-    params.addValue(PARENT_ENTITY_ID, job.getParentEntityUID() != 0L ? job.getParentEntityUID() : null);
-    params.addValue(PARENT_ENTITY_NAME, job.getParentEntityName());
     params.addValue(ACTIVE_IND, job.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
 

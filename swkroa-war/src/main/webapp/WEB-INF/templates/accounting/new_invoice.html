@@ -184,6 +184,28 @@
       </div>
     </div>
 
+    <!-- Transaction Job Submitted Dialog -->
+    <div class="modal" id="transactionJobSubmittedDlg" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" th:text="#{invoices.job.submitted.title}">zzz Title</h4>
+          </div>
+          <div class="modal-body">
+            <p th:text="#{invoices.job.submitted.description}">zzz Job Submitted</p>
+            <p th:text="#{invoices.job.submitted.continue}">zzz Continue</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default"
+                    data-dismiss="modal"
+                    th:text="#{com.cagst.swkroa.close}">
+              zzz Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </form>
 
 </div>

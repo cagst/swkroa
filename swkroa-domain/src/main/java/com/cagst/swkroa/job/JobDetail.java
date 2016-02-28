@@ -4,27 +4,33 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Represents an (async) Job within the system.
  *
  * @author Craig Gaskill
  */
-public final class Job implements Serializable {
+public final class JobDetail implements Serializable {
   public static final String MEMBERSHIP = "MEMBERSHIP";
 
+  private long jobDetailId;
   private long jobId;
-  private String jobName;
-  private JobType jobType;
   private JobStatus jobStatus;
+  private long parentEntityId;
+  private String parentEntityName;
   private long createId;
-  private List<JobDetail> jobDetails = new ArrayList<>();
 
   // meta-data
   private boolean active = true;
   private long updateCount;
+
+  public long getJobDetailUID() {
+    return jobDetailId;
+  }
+
+  public void setJobDetailUID(final long jobDetailId) {
+    this.jobDetailId = jobDetailId;
+  }
 
   public long getJobUID() {
     return jobId;
@@ -32,22 +38,6 @@ public final class Job implements Serializable {
 
   public void setJobUID(final long uid) {
     this.jobId = uid;
-  }
-
-  public String getJobName() {
-    return jobName;
-  }
-
-  public void setJobName(final String name) {
-    this.jobName = name;
-  }
-
-  public JobType getJobType() {
-    return jobType;
-  }
-
-  public void setJobType(final JobType type) {
-    this.jobType = type;
   }
 
   public JobStatus getJobStatus() {
@@ -58,6 +48,22 @@ public final class Job implements Serializable {
     this.jobStatus = status;
   }
 
+  public long getParentEntityUID() {
+    return parentEntityId;
+  }
+
+  public void setParentEntityUID(final long uid) {
+    this.parentEntityId = uid;
+  }
+
+  public String getParentEntityName() {
+    return parentEntityName;
+  }
+
+  public void setParentEntityName(final String name) {
+    this.parentEntityName = name;
+  }
+
   public boolean isActive() {
     return active;
   }
@@ -66,11 +72,11 @@ public final class Job implements Serializable {
     this.active = active;
   }
 
-  public long getJobUpdateCount() {
+  public long getJobDetailUpdateCount() {
     return updateCount;
   }
 
-  public void setJobUpdateCount(final long updateCount) {
+  public void setJobDetailUpdateCount(final long updateCount) {
     this.updateCount = updateCount;
   }
 
@@ -82,18 +88,11 @@ public final class Job implements Serializable {
     this.createId = userId;
   }
 
-  public List<JobDetail> getJobDetails() {
-    return jobDetails;
-  }
-
-  public void setJobDetails(final List<JobDetail> details) {
-    this.jobDetails = details;
-  }
-
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    builder.append(jobName);
+    builder.append(parentEntityId);
+    builder.append(parentEntityName);
     builder.append(jobStatus);
 
     return builder.build();

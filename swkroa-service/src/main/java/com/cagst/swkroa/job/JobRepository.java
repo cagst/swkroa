@@ -57,6 +57,16 @@ public interface JobRepository {
   List<Job> getJobsForTypeAndStatus(final JobType jobType, final JobStatus jobStatus);
 
   /**
+   * Retrieves the {@link List} of {@link JobDetail} details associated with the specified Job (id).
+   *
+   * @param jobId
+   *    A {@link long} that uniquely identifies the job to retrieve the details for.
+   *
+   * @return The {@link List} of {@link JobDetail JobDetails} associated to the specified job, an empty list if none are found.
+   */
+  List<JobDetail> getDetailsForJob(final long jobId);
+
+  /**
    * Commits the specified {@link Job} to persistent storage.
    *
    * @param job
@@ -77,4 +87,26 @@ public interface JobRepository {
    *     if the query fails
    */
   Job saveJob(final Job job, final User user);
+
+  /**
+   * Commits the specified {@link JobDetail} to persistent storage.
+   *
+   * @param jobDetail
+   *    The {@link JobDetail} to persist.
+   * @param user
+   *    The {@link User} that performed the changes.
+   *
+   * @return The {@link JobDetail} once it has been committed to persistent storage.
+   *
+   * @throws OptimisticLockingFailureException
+   *     if the updt_cnt doesn't match (meaning someone has updated it since it was last read)
+   * @throws IncorrectResultSizeDataAccessException
+   *     if the number of rows inserted / updated exceeded the expected number
+   * @throws UsernameTakenException
+   *     if the username associated to the {@code builder} is already being used by another
+   *     user
+   * @throws DataAccessException
+   *     if the query fails
+   */
+  JobDetail saveJobDetail(final JobDetail jobDetail, final User user);
 }

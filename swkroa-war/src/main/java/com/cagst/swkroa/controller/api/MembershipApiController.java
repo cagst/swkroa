@@ -2,11 +2,17 @@ package com.cagst.swkroa.controller.api;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
+import com.cagst.swkroa.job.Job;
+import com.cagst.swkroa.job.JobDetail;
+import com.cagst.swkroa.job.JobService;
+import com.cagst.swkroa.job.JobStatus;
+import com.cagst.swkroa.job.JobType;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.member.MemberType;
@@ -53,16 +59,19 @@ public final class MembershipApiController {
   private final MembershipService membershipService;
   private final MemberRepository memberRepo;
   private final MemberTypeRepository memberTypeRepo;
+  private final JobService jobService;
 
   @Inject
   public MembershipApiController(final CodeValueRepository codeValueRepo,
                                  final MembershipService membershipService,
                                  final MemberRepository memberRepo,
-                                 final MemberTypeRepository memberTypeRepo) {
+                                 final MemberTypeRepository memberTypeRepo,
+                                 final JobService jobService) {
     this.codeValueRepo = codeValueRepo;
     this.membershipService = membershipService;
     this.memberRepo = memberRepo;
     this.memberTypeRepo = memberTypeRepo;
+    this.jobService = jobService;
   }
 
   /**
@@ -237,6 +246,24 @@ public final class MembershipApiController {
     if (billingMemberships.getTransactionDate() == null) {
       return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+
+    List<JobDetail> jobDetails = new ArrayList<>(billingMemberships.getMembershipIds().size());
+    for (long membershipId : billingMemberships.getMembershipIds()) {
+      JobDetail jobDetail = new JobDetail();
+      jobDetail.setParentEntityName(Job.MEMBERSHIP);
+      jobDetail.setParentEntityUID(membershipId);
+      jobDetail.setJobStatus(JobStatus.SUBMITTED);
+
+      jobDetails.add(jobDetail);
+    }
+
+    Job job = new Job();
+    job.setJobName(billingMemberships.getTransactionDescription());
+    job.setJobType(JobType.RENEWAL);
+    job.setJobStatus(JobStatus.SUBMITTED);
+    job.setJobDetails(jobDetails);
+
+    jobService.submitJob(job, WebAppUtils.getUser());
 
     membershipService.billMemberships(
         billingMemberships.getTransactionDate(),

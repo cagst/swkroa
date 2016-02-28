@@ -295,8 +295,6 @@ public final class MembershipServiceImpl implements MembershipService {
         }
       }
     }
-
-    LOGGER.debug("CAG Finished generating transactions");
   }
 
   private byte[] generateDueRenewalReport(final JasperReport jasperReport,

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,7 +85,27 @@ public class JobRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure the collection is not null", jobs);
     assertFalse("Ensure the collection is not empty", jobs.isEmpty());
     assertEquals("Ensure we found the correct number of jobs", 1, jobs.size());
+  }
 
+  /**
+   * Test the getDetailsForJob method and not finding any details.
+   */
+  @Test
+  public void testGetDetailsForJob_NoneFound() {
+    List<JobDetail> details = repo.getDetailsForJob(1L);
+    assertNotNull("Ensure the collection is not null", details);
+    assertTrue("Ensure the collection is empty", details.isEmpty());
+  }
+
+  /**
+   * Test the getDetailsForJob method and finding details.
+   */
+  @Test
+  public void testGetDetailsForJob_Found() {
+    List<JobDetail> details = repo.getDetailsForJob(4L);
+    assertNotNull("Ensure the collection is not null", details);
+    assertFalse("Ensure the collection is not empty", details.isEmpty());
+    assertEquals("Ensure we found the correct number of details", 5, details.size());
   }
 
   /**
@@ -95,10 +116,21 @@ public class JobRepositoryJdbcTest extends BaseTestRepository {
     User editingUser = new User();
     editingUser.setUserUID(1L);
 
+    JobDetail jobDetail1 = new JobDetail();
+    jobDetail1.setJobStatus(JobStatus.SUBMITTED);
+    jobDetail1.setParentEntityUID(1L);
+    jobDetail1.setParentEntityName(Job.MEMBERSHIP);
+
+    JobDetail jobDetail2 = new JobDetail();
+    jobDetail2.setJobStatus(JobStatus.SUBMITTED);
+    jobDetail2.setParentEntityUID(2L);
+    jobDetail2.setParentEntityName(Job.MEMBERSHIP);
+
     Job newJob = new Job();
     newJob.setJobName("Renew Membership");
     newJob.setJobType(JobType.RENEWAL);
     newJob.setJobStatus(JobStatus.SUBMITTED);
+    newJob.setJobDetails(Lists.newArrayList(jobDetail1, jobDetail2));
 
     List<Job> jobs1 = repo.getJobsForStatus(JobStatus.SUBMITTED);
     assertNotNull("Ensure the collection is not null", jobs1);
