@@ -10,7 +10,7 @@ import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.job.Job;
 import com.cagst.swkroa.job.JobDetail;
-import com.cagst.swkroa.job.JobService;
+import com.cagst.swkroa.job.JobRepository;
 import com.cagst.swkroa.job.JobStatus;
 import com.cagst.swkroa.job.JobType;
 import com.cagst.swkroa.member.Member;
@@ -59,19 +59,19 @@ public final class MembershipApiController {
   private final MembershipService membershipService;
   private final MemberRepository memberRepo;
   private final MemberTypeRepository memberTypeRepo;
-  private final JobService jobService;
+  private final JobRepository jobRepo;
 
   @Inject
   public MembershipApiController(final CodeValueRepository codeValueRepo,
                                  final MembershipService membershipService,
                                  final MemberRepository memberRepo,
                                  final MemberTypeRepository memberTypeRepo,
-                                 final JobService jobService) {
+                                 final JobRepository jobRepo) {
     this.codeValueRepo = codeValueRepo;
     this.membershipService = membershipService;
     this.memberRepo = memberRepo;
     this.memberTypeRepo = memberTypeRepo;
-    this.jobService = jobService;
+    this.jobRepo = jobRepo;
   }
 
   /**
@@ -228,15 +228,15 @@ public final class MembershipApiController {
   }
 
   /**
-   * Handles the request and bills the memberships identified by the unique identifiers passed in.
+   * Handles the request and renew the memberships identified by the unique identifiers passed in.
    *
    * @param billingMemberships
    *        The {@link BillingRunModel} that contains the membership ids to bill.
    *
    * @return A {@link ResponseEntity} that indicates if the memberships were billed successfully.
    */
-  @RequestMapping(value = "/bill", method = RequestMethod.POST)
-  public ResponseEntity billMemberships(final @RequestBody BillingRunModel billingMemberships) {
+  @RequestMapping(value = "/renew", method = RequestMethod.POST)
+  public ResponseEntity renewMemberships(final @RequestBody BillingRunModel billingMemberships) {
     LOGGER.info("Received request to bill memberships");
 
     if (CollectionUtils.isEmpty(billingMemberships.getMembershipIds())) {
@@ -263,13 +263,13 @@ public final class MembershipApiController {
     job.setJobStatus(JobStatus.SUBMITTED);
     job.setJobDetails(jobDetails);
 
-    jobService.submitJob(job, WebAppUtils.getUser());
+    jobRepo.saveJob(job, WebAppUtils.getUser());
 
-    membershipService.billMemberships(
+    membershipService.renewMemberships(
         billingMemberships.getTransactionDate(),
         billingMemberships.getTransactionDescription(),
         billingMemberships.getTransactionMemo(),
-        billingMemberships.getMembershipIds(),
+        job,
         WebAppUtils.getUser()
     );
 

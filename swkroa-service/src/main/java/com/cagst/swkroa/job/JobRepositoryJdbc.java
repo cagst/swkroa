@@ -11,6 +11,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.inject.Inject;
@@ -33,6 +35,7 @@ import java.util.Map;
   private static final String GET_JOBS_FOR_STATUS          = "GET_JOBS_FOR_STATUS";
   private static final String GET_JOBS_FOR_TYPE            = "GET_JOBS_FOR_TYPE";
   private static final String GET_JOBS_FOR_TYPE_AND_STATUS = "GET_JOBS_FOR_TYPE_AND_STATUS";
+  private static final String GET_PENDING_JOBS_FOR_TYPE    = "GET_PENDING_JOBS_FOR_TYPE";
   private static final String GET_JOB_DETAILS_FOR_JOB      = "GET_JOB_DETAILS_FOR_JOB";
 
   private static final String INSERT_JOB = "INSERT_JOB";
@@ -107,6 +110,17 @@ import java.util.Map;
   }
 
   @Override
+  public List<Job> getPendingJobsForType(JobType jobType) {
+    LOGGER.info("Calling getPendingJobsForType for Type [{}]", jobType);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, String> params = new HashMap<>(1);
+    params.put("job_type", jobType.name());
+
+    return getJdbcTemplate().query(stmtLoader.load(GET_PENDING_JOBS_FOR_TYPE), params, new JobMapper());
+  }
+
+  @Override
   public List<JobDetail> getDetailsForJob(long jobId) {
     LOGGER.info("Calling getDetailsForJob for [{}]", jobId);
 
@@ -118,6 +132,7 @@ import java.util.Map;
   }
 
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public Job saveJob(final Job job, final User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
@@ -134,13 +149,14 @@ import java.util.Map;
   }
 
   @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public JobDetail saveJobDetail(final JobDetail jobDetail, final User user)
     throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
     Assert.notNull(jobDetail, "Assertion Failed - argument [jobDetail] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling insertJobDetail for [{}, {}]", jobDetail.getParentEntityUID(), jobDetail.getParentEntityName());
+    LOGGER.info("Calling saveJobDetail for [{}, {}]", jobDetail.getParentEntityUID(), jobDetail.getParentEntityName());
 
     if (jobDetail.getJobDetailUID() == 0L) {
       return insertJobDetail(jobDetail, user);

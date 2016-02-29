@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.cagst.swkroa.codevalue.CodeValue;
+import com.cagst.swkroa.job.Job;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
@@ -115,23 +116,23 @@ public interface MembershipService {
       throws DataAccessException;
 
   /**
-   * Creates jobs to be executed asynchronously to generate invoices for the specified memberships.
+   * Generates invoices for the memberships associated to the specified Job.
    *
    * @param transactionDate
-   *        A {@link DateTime} that represents the date of the transaction.
+   *    A {@link DateTime} that represents the date of the transaction.
    * @param transactionDescription
-   *        A {@link String} that describes the transaction.
+   *    A {@link String} that describes the transaction.
    * @param transactionMemo
-   *        A {@link String} that provides additional information for the transaction.
-   * @param membershipIds
-   *        A {@link Set} of {@link Long Longs} that uniquely identify the membership to bill.
+   *    A {@link String} that provides additional information for the transaction.
+   * @param job
+   *    The {@link Job} to defines the memberships to renew.
    * @param user
-   *     The {@link User} that performed the changes.
+   *    The {@link User} that performed the changes.
    */
-  void billMemberships(final DateTime transactionDate,
-                       final String transactionDescription,
-                       final String transactionMemo,
-                       final Set<Long> membershipIds,
-                       final User user)
+  void renewMemberships(final DateTime transactionDate,
+                        final String transactionDescription,
+                        final String transactionMemo,
+                        final Job job,
+                        final User user)
   throws DataAccessException;
 }

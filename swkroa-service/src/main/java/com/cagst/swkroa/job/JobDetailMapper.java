@@ -21,10 +21,10 @@ import java.sql.SQLException;
   private static final String PARENT_ENTITY_NAME = "parent_entity_name";
 
   // meta-data
-  private static final String ACTIVE_IND   = "active_ind";
-  private static final String CREATE_ID    = "create_id";
-  private static final String UPDT_ID      = "updt_id";
-  private static final String JOB_UPDT_CNT = "job_detail_updt_cnt";
+  private static final String ACTIVE_IND          = "active_ind";
+  private static final String CREATE_ID           = "create_id";
+  private static final String UPDT_ID             = "updt_id";
+  private static final String JOB_DETAIL_UPDT_CNT = "job_detail_updt_cnt";
 
   @Override
   public JobDetail mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -37,7 +37,7 @@ import java.sql.SQLException;
     detail.setCreateUID(rs.getLong(CREATE_ID));
 
     detail.setActive(rs.getBoolean(ACTIVE_IND));
-    detail.setJobDetailUpdateCount(rs.getLong(JOB_UPDT_CNT));
+    detail.setJobDetailUpdateCount(rs.getLong(JOB_DETAIL_UPDT_CNT));
 
     return detail;
   }
@@ -84,7 +84,7 @@ import java.sql.SQLException;
     params.addValue(UPDT_ID, user.getUserUID());
 
     params.addValue(JOB_DETAIL_ID, jobDetail.getJobDetailUID());
-    params.addValue(JOB_UPDT_CNT, jobDetail.getJobDetailUpdateCount());
+    params.addValue(JOB_DETAIL_UPDT_CNT, jobDetail.getJobDetailUpdateCount());
 
     return params;
   }

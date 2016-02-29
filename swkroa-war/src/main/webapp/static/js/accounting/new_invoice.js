@@ -6,8 +6,8 @@
  * Author:  Craig Gaskill
  */
 
-swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 'membershipService',
-    function($scope, $http, codesetService, membershipService) {
+swkroaApp.controller('invoiceController', ['$scope', 'codesetService', 'membershipService',
+    function($scope, codesetService, membershipService) {
 
   $scope.membershipsDue = [];
 

@@ -57,6 +57,16 @@ public interface JobRepository {
   List<Job> getJobsForTypeAndStatus(final JobType jobType, final JobStatus jobStatus);
 
   /**
+   * Retrieves a {@link List} of {@link Job}s that are pending for the specified {@link JobType}.
+   *
+   * @param jobType
+   *    The {@link JobType} to retrieve pending jobs for.
+   *
+   * @return A {@link List} of {@link Job}s that are pending for the specified job type.
+   */
+  List<Job> getPendingJobsForType(final JobType jobType);
+
+  /**
    * Retrieves the {@link List} of {@link JobDetail} details associated with the specified Job (id).
    *
    * @param jobId

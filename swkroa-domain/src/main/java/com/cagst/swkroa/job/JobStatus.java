@@ -9,5 +9,6 @@ public enum JobStatus {
   SUBMITTED,
   INPROCESS,
   SUCCEEDED,
-  FAILED
+  FAILED,
+  PARTIAL
 }
