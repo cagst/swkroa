@@ -28,7 +28,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String NAME_LAST               = "name_last";
   private static final String NAME_MIDDLE             = "name_middle";
   private static final String NAME_FIRST              = "name_first";
-  private static final String FIXED_DUES              = "fixed_dues";
   private static final String CALCULATED_DUES         = "calculated_dues";
   private static final String INCREMENTAL_DUES        = "incremental_dues";
   private static final String BALANCE                 = "balance";
@@ -72,7 +71,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     membership.setMiddleName(rs.getString(NAME_MIDDLE));
     membership.setFirstName(rs.getString(NAME_FIRST));
 
-    membership.setFixedDuesAmount(rs.getBigDecimal(FIXED_DUES));
     membership.setCalculatedDuesAmount(rs.getBigDecimal(CALCULATED_DUES));
     membership.setIncrementalDues(rs.getBigDecimal(INCREMENTAL_DUES));
 
@@ -137,7 +135,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
     params.addValue(NEXT_DUE_DT, CGTDateTimeUtils.convertDateTimeToTimestamp(membership.getNextDueDate()));
     params.addValue(ENTITY_TYPE_CD, membership.getEntityType().getCodeValueUID());
-    params.addValue(FIXED_DUES, membership.getFixedDuesAmount());
     params.addValue(INCREMENTAL_DUES, membership.getIncrementalDues());
     params.addValue(ACTIVE_IND, membership.isActive());
     params.addValue(CLOSE_REASON_ID, membership.getCloseReasonUID() > 0 ? membership.getCloseReasonUID() : null);

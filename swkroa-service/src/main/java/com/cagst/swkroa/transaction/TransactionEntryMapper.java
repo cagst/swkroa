@@ -15,7 +15,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  * to / from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */ class TransactionEntryMapper implements RowMapper<TransactionEntry> {
   /* package */ static final String TRANSACTION_ENTRY_ID = "transaction_entry_id";
@@ -73,8 +72,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
   public static TransactionEntry mapRow(final SqlRowSet rs,
                                         final Transaction transaction,
                                         final CodeValueRepository codeValueRepo,
-                                        final MemberRepository memberRepo,
-                                        final TransactionRepository transactionRepo) {
+                                        final MemberRepository memberRepo) {
 
     TransactionEntry entry = new TransactionEntry();
     entry.setTransactionEntryUID(rs.getLong(TRANSACTION_ENTRY_ID));
@@ -138,7 +136,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
     if (entry.getRelatedTransaction() != null) {
       params.addValue(RELATED_TRANSACTION_ID, entry.getRelatedTransaction().getTransactionUID());
     } else {
-      params.addValue(RELATED_TRANSACTION_ID, entry.getRelatedTransactionUID() != 0l ? entry.getRelatedTransactionUID() : null);
+      params.addValue(RELATED_TRANSACTION_ID, entry.getRelatedTransactionUID() != 0L ? entry.getRelatedTransactionUID() : null);
     }
   }
 }

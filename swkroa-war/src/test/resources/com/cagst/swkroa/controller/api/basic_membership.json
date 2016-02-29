@@ -62,7 +62,6 @@
   "membershipUpdateCount": 0,
   "nextDueDate": "2014-10-31T05:00:00.000Z",
   "duesAmount": null,
-  "effectiveDuesAmount": 70,
   "calculatedDuesAmount": 70,
   "amountDue": null,
   "primaryMember": {

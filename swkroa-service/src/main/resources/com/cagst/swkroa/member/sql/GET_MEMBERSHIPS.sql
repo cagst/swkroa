@@ -11,7 +11,6 @@ SELECT membership_id
       ,name_last
       ,name_middle
       ,name_first
-      ,fixed_dues
       ,calculated_dues
       ,incremental_dues
       ,balance

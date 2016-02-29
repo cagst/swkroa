@@ -28,7 +28,7 @@
       <version>2.0</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
+      <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
 
@@ -123,6 +123,26 @@
           <artifactId>slf4j-log4j12</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <!-- Jasper Reporting Engine -->
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports</artifactId>
+      <type>jar</type>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports-fonts-timesnewroman</artifactId>
+      <type>jar</type>
+      <scope>runtime</scope>
     </dependency>
 
     <!--                   -->

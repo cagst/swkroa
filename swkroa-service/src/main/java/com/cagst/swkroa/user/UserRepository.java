@@ -27,7 +27,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if username is <code>null</code> or is empty.
    */
-  public User getUserByUsername(final String username) throws IllegalArgumentException;
+  User getUserByUsername(final String username) throws IllegalArgumentException;
 
   /**
    * Retrieves a {@link User} based upon the unique identifier.
@@ -42,8 +42,8 @@ public interface UserRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     when more than 1 user was found with the specified uid.
    */
-  public User getUserByUID(final long uid)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+  User getUserByUID(final long uid)
+      throws IncorrectResultSizeDataAccessException;
 
   /**
    * Updates the {@link User} account for a signin attempt.
@@ -56,7 +56,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null
    */
-  public User signinAttempt(final User user) throws IllegalArgumentException;
+  User signinAttempt(final User user) throws IllegalArgumentException;
 
   /**
    * Updates the {@link User} account for a successful sign-in.
@@ -71,7 +71,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null
    */
-  public User signinSuccessful(final User user, final String ipAddress) throws IllegalArgumentException;
+  User signinSuccessful(final User user, final String ipAddress) throws IllegalArgumentException;
 
   /**
    * Locks the user account as of NOW. Used primarily when the user has exceeded their sign-in
@@ -89,7 +89,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if {@code user} is null
    */
-  public User lockUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
+  User lockUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
 
   /**
    * Unlocks the user account as of NOW. Used by the system to automatically unlock a user account
@@ -108,7 +108,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if {@code user} is null
    */
-  public User unlockUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
+  User unlockUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
 
   /**
    * Enables the specified {@link User} account.
@@ -124,7 +124,7 @@ public interface UserRepository {
    *
    * @throws IllegalArgumentException
    */
-  public User enableUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
+  User enableUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
 
   /**
    * Disables the specified {@link User} account.
@@ -140,7 +140,7 @@ public interface UserRepository {
    *
    * @throws IllegalArgumentException
    */
-  public User disableUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
+  User disableUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
 
   /**
    * Changes the specified {@link User User} password.
@@ -160,7 +160,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null or <code>password</code> is null or empty
    */
-  public User changeUserPassword(final User user, final String newPassword, final String message)
+  User changeUserPassword(final User user, final String newPassword, final String message)
       throws IllegalArgumentException;
 
   /**
@@ -181,7 +181,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null or <code>password</code> is null or empty
    */
-  public User resetUserPassword(final User user, final String tempPassword, final String message, final User instigator)
+  User resetUserPassword(final User user, final String tempPassword, final String message, final User instigator)
       throws IllegalArgumentException;
 
   /**
@@ -192,7 +192,7 @@ public interface UserRepository {
    *
    * @return {@code true} if the username is already being used, {@code false} if not.
    */
-  public boolean doesUsernameExist(final String username);
+  boolean doesUsernameExist(final String username);
 
   /**
    * Checks to see if the specified {@code username} is currently being used.
@@ -204,10 +204,10 @@ public interface UserRepository {
    *
    * @return {@code true} if the username is already being used, {@code false} if not.
    */
-  public boolean doesUsernameExist(final String username, final User user);
+  boolean doesUsernameExist(final String username, final User user);
 
   /**
-   * Commits the specified {@link User User} to persistent storage.
+   * Commits the specified {@link User} to persistent storage.
    *
    * @param builder
    *     The {@link User} to persist.
@@ -226,7 +226,7 @@ public interface UserRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public User saveUser(final User builder, final User user)
+  User saveUser(final User builder, final User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
 
   /**
@@ -234,5 +234,5 @@ public interface UserRepository {
    *
    * @return A {@link List} of {@link User Users} defined in the system.
    */
-  public List<User> getAllUsers();
+  List<User> getAllUsers();
 }

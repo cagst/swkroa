@@ -18,6 +18,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public final class CodeValue implements Serializable, Comparable<CodeValue> {
   private static final long serialVersionUID = 571293295760168134L;
 
+  // CodeValue meanings
+  public static final String DOCUMENT_NEWSLETTER = "DOCUMENT_NEWSLETTER";
+  public static final String DOCUMENT_RENEWAL    = "DOCUMENT_RENEWAL";
+
   private long codeset_id;
   private long codevalue_id;
   private String codevalue_display;

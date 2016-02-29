@@ -3,16 +3,18 @@ package com.cagst.swkroa.controller.web;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.cagst.swkroa.report.JasperReportsViewFactory;
+import com.cagst.swkroa.report.jasper.JasperReportLoader;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -26,36 +28,13 @@ import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsV
  * Handles and retrieves the Report pages depending on the URI template.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Controller
 @RequestMapping(value = "/report")
 public final class ReportController {
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
-  private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-  private static final String BASE_PATH = "/WEB-INF/reports/jasper/";
-
-  private static final String MEMBERSHIP_LISTING_PDF    = BASE_PATH + "MembershipListingPdf.jasper";
-  private static final String MEMBERSHIP_LISTING_CSV    = BASE_PATH + "MembershipListingCsv.jasper";
-  private static final String MEMBERSHIP_STATUS         = BASE_PATH + "MembershipStatusReport.jasper";
-  private static final String MEMBERSHIP_DELINQUENT_CSV = BASE_PATH + "accounting/MembershipDelinquencyCsv.jasper";
-  private static final String MEMBERSHIP_DELINQUENT_PDF = BASE_PATH + "accounting/MembershipDelinquencyPdf.jasper";
-  private static final String MEMBERSHIP_RENEWAL_PDF    = BASE_PATH + "accounting/MembershipDuesRenewalPdf.jasper";
-  private static final String MEMBERSHIP_RENEWAL_CSV    = BASE_PATH + "accounting/MembershipDuesRenewalCsv.jasper";
-  private static final String MEMBERSHIP_REMINDER_PDF   = BASE_PATH + "accounting/MembershipDuesReminderPdf.jasper";
-  private static final String MEMBERSHIP_PAYMENTS_PDF   = BASE_PATH + "accounting/MembershipPaymentsPdf.jasper";
-  private static final String MEMBERSHIP_PAYMENTS_CSV   = BASE_PATH + "accounting/MembershipPaymentsCsv.jasper";
-  private static final String MEMBERSHIP_INVOICES_PDF   = BASE_PATH + "accounting/MembershipInvoicesPdf.jasper";
-  private static final String MEMBERSHIP_INVOICES_CSV   = BASE_PATH + "accounting/MembershipInvoicesCsv.jasper";
-
-  private static final String MEMBER_MAILINGLIST_CSV = BASE_PATH + "MemberMailingListCsv.jasper";
-  private static final String MEMBER_MAILINGLIST_PDF = BASE_PATH + "MemberMailingListPdf.jasper";
-  private static final String MEMBER_EMAILLIST_CSV   = BASE_PATH + "MemberEmailListCsv.jasper";
-  private static final String MEMBER_EMAILLIST_PDF   = BASE_PATH + "MemberEmailListPdf.jasper";
-
-  private static final String CUSTOM_MEMBERS_BY_COUNTY = BASE_PATH + "custom/MembersForCounties.jasper";
+  private static final DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
   @Inject
   private DataSource dataSource;
@@ -83,13 +62,13 @@ public final class ReportController {
 
     LOGGER.info("Received request to generate Membership Listing report.");
 
-    String reportFilename = "Membership_Listing_" + dateFormat.format(new Date());
+    String reportFilename = "Membership_Listing_" + dateFormatter.print(new DateTime());
 
     ModelAndView mav = null;
     if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_LISTING_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_LISTING_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_LISTING_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_LISTING_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
     }
 
     return mav;
@@ -106,18 +85,18 @@ public final class ReportController {
 
     LOGGER.info("Received request to generate Membership Delinquent report as [{}]", reportType);
 
-    String reportFilename = "Membership_Delinquencies_" + dateFormat.format(new Date());
+    String reportFilename = "Membership_Delinquencies_" + dateFormatter.print(new DateTime());
 
     ModelAndView mav = null;
     if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_DELINQUENT_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_DELINQUENT_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_DELINQUENT_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_DELINQUENT_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
     }
 
     Map<String, String[]> params = request.getParameterMap();
 
-    List<Long> membershipIds = new ArrayList<Long>();
+    List<Long> membershipIds = new ArrayList<>();
     for (Map.Entry<String, String[]> param : params.entrySet()) {
       if (param.getKey().contains("selectedMembership_")) {
         String[] sections = StringUtils.split(param.getKey(), "_");
@@ -144,18 +123,18 @@ public final class ReportController {
 
     LOGGER.info("Received request to generate Membership Dues Renewal report as [{}]", reportType);
 
-    String reportFilename = "Membership_Dues_Renewals_" + dateFormat.format(new Date());
+    String reportFilename = "Membership_Dues_Renewals_" + dateFormatter.print(new DateTime());
 
     ModelAndView mav = null;
     if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_RENEWAL_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_RENEWAL_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_RENEWAL_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_RENEWAL_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
     }
 
     Map<String, String[]> params = request.getParameterMap();
 
-    List<Long> membershipIds = new ArrayList<Long>();
+    List<Long> membershipIds = new ArrayList<>();
     for (Map.Entry<String, String[]> param : params.entrySet()) {
       if (param.getKey().contains("selectedMembership_")) {
         String[] sections = StringUtils.split(param.getKey(), "_");
@@ -185,16 +164,16 @@ public final class ReportController {
 
     LOGGER.info("Received request to generate Membership Dues Reminder report as [{}]", reportType);
 
-    String reportFilename = "Membership_Dues_Reminders_" + dateFormat.format(new Date());
+    String reportFilename = "Membership_Dues_Reminders_" + dateFormatter.print(new DateTime());
 
     ModelAndView mav = null;
     if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_REMINDER_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_REMINDER_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     }
 
     Map<String, String[]> params = request.getParameterMap();
 
-    List<Long> membershipIds = new ArrayList<Long>();
+    List<Long> membershipIds = new ArrayList<>();
     for (Map.Entry<String, String[]> param : params.entrySet()) {
       if (param.getKey().contains("selectedMembership_")) {
         String[] sections = StringUtils.split(param.getKey(), "_");
@@ -221,13 +200,13 @@ public final class ReportController {
 
     LOGGER.info("Received request to generate Membership Payments report as [{}]", reportType);
 
-    String reportFilename = "Membership_Payments_" + dateFormat.format(new Date());
+    String reportFilename = "Membership_Payments_" + dateFormatter.print(new DateTime());
 
     ModelAndView mav = null;
     if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_PAYMENTS_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_PAYMENTS_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_PAYMENTS_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_PAYMENTS_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
     }
 
     String startDate = request.getParameter("start_date");
@@ -252,13 +231,13 @@ public final class ReportController {
 
     LOGGER.info("Received request to generate Membership Invoices report as [{}]", reportType);
 
-    String reportFilename = "Membership_Invoices_" + dateFormat.format(new Date());
+    String reportFilename = "Membership_Invoices_" + dateFormatter.print(new DateTime());
 
     ModelAndView mav = null;
     if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_INVOICES_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_INVOICES_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBERSHIP_INVOICES_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_INVOICES_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
     }
 
     String startDate = request.getParameter("start_date");
@@ -293,9 +272,9 @@ public final class ReportController {
   public ModelAndView generateMembershipStatusReport(final HttpServletRequest request) {
     LOGGER.info("Received request to generate Membership Status report.");
 
-    String reportFilename = "Membership_Status_" + dateFormat.format(new Date());
+    String reportFilename = "Membership_Status_" + dateFormatter.print(new DateTime());
 
-    return getReportModalAndView(request, MEMBERSHIP_STATUS, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    return getReportModalAndView(request, JasperReportLoader.MEMBERSHIP_STATUS, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
   }
 
   /**
@@ -323,13 +302,13 @@ public final class ReportController {
 
     String newslettersOnly = request.getParameter("newslettersOnly");
 
-    String reportFilename = "Member_MailingList_" + dateFormat.format(new Date());
+    String reportFilename = "Member_MailingList_" + dateFormatter.print(new DateTime());
 
     ModelAndView mav = null;
     if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBER_MAILINGLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBER_MAILINGLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBER_MAILINGLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBER_MAILINGLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
     }
 
     if (mav != null) {
@@ -364,13 +343,13 @@ public final class ReportController {
 
     String newslettersOnly = request.getParameter("newslettersOnly");
 
-    String reportFilename = "Member_EmailList_" + dateFormat.format(new Date());
+    String reportFilename = "Member_EmailList_" + dateFormatter.print(new DateTime());
 
     ModelAndView mav = null;
     if (JasperReportsViewFactory.REPORT_FORMAT_PDF.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBER_EMAILLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBER_EMAILLIST_PDF, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
     } else if (JasperReportsViewFactory.REPORT_FORMAT_CSV.equalsIgnoreCase(reportType)) {
-      mav = getReportModalAndView(request, MEMBER_EMAILLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
+      mav = getReportModalAndView(request, JasperReportLoader.MEMBER_EMAILLIST_CSV, JasperReportsViewFactory.REPORT_FORMAT_CSV, reportFilename);
     }
 
     if (mav != null) {
@@ -401,9 +380,9 @@ public final class ReportController {
   public ModelAndView generateCustomMembersByCountyReportAsPdf(final HttpServletRequest request) {
     LOGGER.info("Received request to generate Custom Members by County report.");
 
-    String reportFilename = "Member_by_County" + dateFormat.format(new Date());
+    String reportFilename = "Member_by_County" + dateFormatter.print(new DateTime());
 
-    return getReportModalAndView(request, CUSTOM_MEMBERS_BY_COUNTY, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
+    return getReportModalAndView(request, JasperReportLoader.CUSTOM_MEMBERS_BY_COUNTY, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
   }
 
   private ModelAndView getReportModalAndView(final HttpServletRequest request,

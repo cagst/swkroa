@@ -1,31 +1,33 @@
 package com.cagst.swkroa.member;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import com.cagst.swkroa.codevalue.CodeValue;
-import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.comment.CommentRepository;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
-import com.cagst.swkroa.exception.NotFoundException;
+import com.cagst.swkroa.job.Job;
+import com.cagst.swkroa.job.JobDetail;
+import com.cagst.swkroa.job.JobRepository;
+import com.cagst.swkroa.job.JobService;
+import com.cagst.swkroa.job.JobStatus;
 import com.cagst.swkroa.transaction.Transaction;
-import com.cagst.swkroa.transaction.TransactionEntry;
 import com.cagst.swkroa.transaction.TransactionRepository;
-import com.cagst.swkroa.transaction.TransactionType;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation of the {@link MembershipService} interface.
@@ -38,49 +40,44 @@ public final class MembershipServiceImpl implements MembershipService {
 
   private final MembershipRepository membershipRepo;
   private final MemberRepository memberRepo;
-  private final MemberTypeRepository memberTypeRepo;
-  private final CodeValueRepository codeValueRepo;
   private final ContactRepository contactRepo;
   private final CommentRepository commentRepo;
   private final TransactionRepository transactionRepo;
+  private final JobRepository jobRepo;
+  private final JobService jobService;
 
   /**
    * Primary Constructor used to create an instance of <i>MembershipServiceImpl</i>.
    *
    * @param membershipRepo
-   *     The {@link MembershipRepository} used to retrieve {@link Membership Memberships}.
+   *    The {@link MembershipRepository} used to retrieve {@link Membership Memberships}.
    * @param memberRepo
-   *     The {@link MemberRepository} used to retrieve {@link Member Members} for a membership.
-   * @param memberTypeRepo
-   *     The {@link MemberTypeRepository} used to retrieve {@link MemberType MemberTypes} from.
-   * @param codeValueRepo
-   *     The {@link CodeValueRepository} used to retrieve {@link CodeValue} from.
+   *    The {@link MemberRepository} used to retrieve {@link Member Members} for a membership.
    * @param contactRepo
-   *     The {@link ContactRepository} used to retrieve / persist {@link Address}, {@link PhoneNumber}, and
-   *     {@link EmailAddress} objects.
+   *    The {@link ContactRepository} used to retrieve / persist {@link Address}, {@link PhoneNumber}, and
+   *    {@link EmailAddress} objects.
    * @param commentRepo
-   *     The {@link CommentRepository} used to retrieve / persist {@link Comment} objects related to a
-   *     {@link Membership}.
+   *    The {@link CommentRepository} used to retrieve / persist {@link Comment} objects related to a
+   *    {@link Membership}.
    * @param transactionRepo
-   *     The {@link TransactionRepository} used to retrieve / persist {@link Transaction} objects related to a
-   *     {@link Membership}.
+   *    The {@link TransactionRepository} used to retrieve / persist {@link Transaction} objects related to a
+   *    {@link Membership}.
    */
   @Inject
   public MembershipServiceImpl(final MembershipRepository membershipRepo,
                                final MemberRepository memberRepo,
-                               final MemberTypeRepository memberTypeRepo,
-                               final CodeValueRepository codeValueRepo,
                                final ContactRepository contactRepo,
                                final CommentRepository commentRepo,
-                               final TransactionRepository transactionRepo) {
-
+                               final TransactionRepository transactionRepo,
+                               final JobRepository jobRepo,
+                               final JobService jobService) {
     this.membershipRepo = membershipRepo;
     this.memberRepo = memberRepo;
-    this.memberTypeRepo = memberTypeRepo;
-    this.codeValueRepo = codeValueRepo;
     this.contactRepo = contactRepo;
     this.commentRepo = commentRepo;
     this.transactionRepo = transactionRepo;
+    this.jobRepo = jobRepo;
+    this.jobService = jobService;
   }
 
   @Override
@@ -167,70 +164,46 @@ public final class MembershipServiceImpl implements MembershipService {
   }
 
   @Override
-  @Transactional
-  public void billMemberships(final DateTime transactionDate,
-                              final String transactionDescription,
-                              final String transactionMemo,
-                              final Set<Long> membershipIds,
-                              final User user)
+  @Async
+  public void renewMemberships(final DateTime transactionDate,
+                               final String transactionDescription,
+                               final String transactionMemo,
+                               final Job job,
+                               final User user)
       throws DataAccessException {
+
     LOGGER.info("Calling createBillingInvoicesForMemberships [{}]", transactionDescription);
 
-    CodeValue baseDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_BASE");
-    CodeValue familyDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_FAMILY");
-    CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_INC");
+    // mark the job as being in-process
+    job.setJobStatus(JobStatus.INPROCESS);
+    jobRepo.saveJob(job, user);
 
-    for (Long membershipId : membershipIds) {
-      Membership membership = membershipRepo.getMembershipByUID(membershipId);
-      if (membership == null) {
-        throw new NotFoundException("Membership [" + membershipId + "] was not found.");
+    int succeeded = 0;
+    int failed    = 0;
+
+    for (JobDetail jobDetail : job.getJobDetails()) {
+      jobService.processRenewalJob(jobDetail, transactionDescription, transactionDate, transactionMemo, user);
+
+      if (jobDetail.getJobStatus() == JobStatus.SUCCEEDED) {
+        succeeded++;
+      } else {
+        failed++;
       }
-
-      List<Member> members = memberRepo.getMembersForMembership(membership);
-
-      // Create Transaction
-      Transaction invoice = new Transaction();
-      invoice.setMembershipUID(membershipId);
-      invoice.setTransactionDate(transactionDate);
-      invoice.setTransactionDescription(transactionDescription);
-      invoice.setMemo(transactionMemo);
-      invoice.setTransactionType(TransactionType.INVOICE);
-      invoice.setActive(true);
-
-      // Create Transaction Entries
-      for (Member member : members) {
-        MemberType type = memberTypeRepo.getMemberTypeByUID(member.getMemberType().getMemberTypeUID());
-        if (type.getDuesAmount().compareTo(BigDecimal.ZERO) > 0) {
-          TransactionEntry entry = new TransactionEntry();
-          entry.setTransaction(invoice);
-          entry.setMember(member);
-          entry.setTransactionEntryType(type.isPrimary() ? baseDues : familyDues);
-          entry.setTransactionEntryAmount(type.getDuesAmount().negate());
-          entry.setActive(true);
-
-          invoice.addEntry(entry);
-        }
-      }
-
-      // Create the incremental dues transaction entry
-      if (membership.getFixedDuesAmount() != null && membership.getFixedDuesAmount().compareTo(membership.getCalculatedDuesAmount()) > 0) {
-        Member primary = memberRepo.getMemberByUID(membership.getMemberUID());
-
-        TransactionEntry entry = new TransactionEntry();
-        entry.setTransaction(invoice);
-        entry.setMember(primary);
-        entry.setTransactionEntryType(incrementalDues);
-        entry.setTransactionEntryAmount(membership.getFixedDuesAmount().subtract(membership.getCalculatedDuesAmount()).negate());
-        entry.setActive(true);
-
-        invoice.addEntry(entry);
-      }
-
-      // Save the Invoice (transaction)
-      transactionRepo.saveTransaction(invoice, user);
     }
 
-    // Update Membership (next_due_dt)
-    membershipRepo.updateNextDueDate(membershipIds, user);
+    if (succeeded == job.getJobDetails().size()) {
+      // if all the JobDetails succeeded, then the Job succeeded
+      job.setJobStatus(JobStatus.SUCCEEDED);
+    } else if (failed == job.getJobDetails().size()) {
+      // if all the JobDetails failed, then the Job failed
+      job.setJobStatus(JobStatus.FAILED);
+    } else {
+      job.setJobStatus(JobStatus.PARTIAL);
+    }
+
+    // clear out our JobDetails list since we don't need to persist them again
+    job.setJobDetails(new ArrayList<>());
+
+    jobRepo.saveJob(job, user);
   }
 }

@@ -50,7 +50,7 @@ import java.util.Optional;
   private final CodeValueRepository codeValueRepo;
 
   /**
-   * Primary Constructor used to create an instance of the DocumentRepositoryJdbc.
+   * Primary Constructor used to create an instance of DocumentRepositoryJdbc.
    *
    * @param dataSource
    *    The {@link DataSource} used to retrieve / persist data objects.

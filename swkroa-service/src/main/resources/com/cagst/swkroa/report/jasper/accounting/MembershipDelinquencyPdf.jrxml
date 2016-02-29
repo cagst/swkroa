@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-17T05:30:09 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MembershipDelinquencyPdf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="154edfef-2cab-4b00-9282-814fdab4faf4">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SWKROADataSource"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="ReportTitle" fontName="TimesNewRoman" fontSize="18"/>
+	<style name="Text Body" fontName="TimesNewRoman" fontSize="12"/>
+	<style name="ColumnHeader" fontName="TimesNewRoman" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="PageFooter" fontName="TimesNewRoman" fontSize="10"/>
+	<parameter name="memberships" class="java.util.Collection"/>
+	<queryString>
+		<![CDATA[SELECT ms.membership_id
+      ,ms.next_due_dt
+      ,ms.calculated_dues
+      ,ms.balance
+      ,ms.owner_ident
+      ,ms.membership_name
+  FROM membership_summary ms
+ WHERE $X{IN, ms.membership_id, memberships}
+ORDER BY ms.membership_name]]>
+	</queryString>
+	<field name="membership_id" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="next_due_dt" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="calculated_dues" class="java.math.BigDecimal"/>
+	<field name="balance" class="java.math.BigDecimal"/>
+	<field name="owner_ident" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="membership_name" class="java.lang.String"/>
+	<variable name="TotalAmountDue" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	</variable>
+	<variable name="TotalMemberships" class="java.lang.Long" calculation="Count">
+		<variableExpression><![CDATA[$F{membership_id}]]></variableExpression>
+	</variable>
+	<group name="membership_id">
+		<groupExpression><![CDATA[$F{membership_id}]]></groupExpression>
+	</group>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement style="ReportTitle" x="74" y="0" width="430" height="35" uuid="1d00faa8-c46e-4662-a229-d43f2c71c016"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TimesNewRoman" size="14"/>
+				</textElement>
+				<text><![CDATA[Membership Delinquency Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<staticText>
+				<reportElement style="ColumnHeader" x="0" y="0" width="100" height="15" uuid="aaba9a5e-cfaf-45ef-a67c-15d093a3588d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<text><![CDATA[Owner ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="ColumnHeader" x="117" y="0" width="240" height="15" uuid="10bbf0e0-5a0f-483a-83d0-7fab12cc774c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="ColumnHeader" x="369" y="0" width="97" height="15" uuid="2d586935-0cac-4a9e-bed9-6ab471b8b8b8"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<text><![CDATA[Dues Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="ColumnHeader" x="472" y="0" width="100" height="15" uuid="ce08e6e5-31c1-411f-be5a-2718e593800c"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<text><![CDATA[Balance]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="14" width="572" height="1" uuid="f2eab17e-0cb4-445c-8db8-e888dec3a847"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement style="Text Body" x="0" y="0" width="100" height="15" uuid="7bd80c59-6071-45f0-b8ff-5d677e44490e"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{owner_ident}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Text Body" x="117" y="0" width="240" height="15" uuid="fe704197-8b7b-4cf9-9c8a-2f22700c5a86"/>
+				<textElement>
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{membership_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;(¤#,##0.00)">
+				<reportElement style="Text Body" x="369" y="0" width="97" height="15" uuid="20484641-b407-47de-94be-da39de425950"/>
+				<textElement textAlignment="Right">
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{calculated_dues}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;(¤#,##0.00)">
+				<reportElement style="Text Body" x="472" y="0" width="100" height="15" uuid="83090c8c-7c8e-4348-93f3-7de541f21274"/>
+				<textElement textAlignment="Right">
+					<font fontName="TimesNewRoman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="2" width="572" height="1" uuid="9606232d-6f01-4ddc-af36-41ad5890b9c2"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="PageFooter" x="0" y="0" width="74" height="15" uuid="43a503cd-7ca0-403b-939e-a11ee222d4ce"/>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+			<textField pattern="EEE, MMM d, yyyy h:mm a">
+				<reportElement style="PageFooter" x="74" y="0" width="283" height="15" uuid="df0c9a2c-9242-4522-8a23-69525a533df7"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="PageFooter" x="452" y="0" width="80" height="15" uuid="fc7ebf3f-bbb7-4441-9a7b-2bf5b47cb474"/>
+				<textElement textAlignment="Right">
+					<font fontName="TimesNewRoman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="PageFooter" x="532" y="0" width="40" height="15" uuid="5d184953-fde5-4dfa-a467-c693f1654499"/>
+				<textElement>
+					<font fontName="TimesNewRoman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="572" height="1" uuid="9cb09794-51f6-49a4-84d8-aa39624a1f59"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField pattern="¤#,##0.00;(¤#,##0.00)">
+				<reportElement style="ColumnHeader" x="472" y="1" width="100" height="15" uuid="7c27caa3-ebfe-48c9-b3a6-11e73e397455"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalAmountDue}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="ColumnHeader" x="117" y="1" width="240" height="15" uuid="74bcd856-3a6b-4149-a898-f16dba57e60a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalMemberships} + " Memberships"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

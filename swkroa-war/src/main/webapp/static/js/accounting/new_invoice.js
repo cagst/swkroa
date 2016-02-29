@@ -6,8 +6,8 @@
  * Author:  Craig Gaskill
  */
 
-swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 'membershipService',
-    function($scope, $http, codesetService, membershipService) {
+swkroaApp.controller('invoiceController', ['$scope', 'codesetService', 'membershipService',
+    function($scope, codesetService, membershipService) {
 
   $scope.membershipsDue = [];
 
@@ -21,7 +21,7 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
 
       for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
           $scope.membershipsDue[idx].selected = true;
-          $scope.totalAmount += $scope.membershipsDue[idx].effectiveDuesAmount;
+          $scope.totalAmount += $scope.membershipsDue[idx].calculatedDuesAmount;
       }
 
       $scope.totalMemberships = $scope.membershipsDue.length;
@@ -38,8 +38,7 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
     calculateTotals($scope);
   };
 
-  $scope.toggleCheck = function(membership) {
-    membership.selected = !membership.selected;
+  $scope.toggleCheck = function() {
     calculateTotals($scope);
   };
 
@@ -49,7 +48,7 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
       if ($scope.membershipsDue[idx].selected) {
         membershipsSelected = true;
       }
-    };
+    }
 
     return membershipsSelected;
   };
@@ -62,14 +61,11 @@ swkroaApp.controller('invoiceController', ['$scope', '$http', 'codesetService', 
       if ($scope.membershipsDue[idx].selected) {
         memberships.push($scope.membershipsDue[idx].membershipUID);
       }
-    };
+    }
 
-    showProcessingDialog();
+    membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo);
 
-    membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo).success(function(data) {
-      $scope.getMemberhipsDueIn($scope.days);
-      hideProcessingDialog();
-    });
+    $('#transactionJobSubmittedDlg').modal('show');
   };
 
   $scope.openTransactionDate = function($event) {
@@ -93,7 +89,7 @@ var calculateTotals = function($scope) {
 
     for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
         if ($scope.membershipsDue[idx].selected) {
-          $scope.totalAmount += $scope.membershipsDue[idx].effectiveDuesAmount;
+          $scope.totalAmount += $scope.membershipsDue[idx].calculatedDuesAmount;
           $scope.totalMemberships += 1;
         }
     }
@@ -103,6 +99,7 @@ var determineRenewalPeriod = function($scope) {
   var currentYear = new Date().getFullYear();
 
   $scope.membershipRenewalPeriod = "(" + currentYear + " - " + (currentYear + 1) + ")";
+  $scope.transactionDescription  = "Invoice " + currentYear + " - " + (currentYear + 1);
 };
 
 var generateMembershipRenewalLetters = function(reportyType) {

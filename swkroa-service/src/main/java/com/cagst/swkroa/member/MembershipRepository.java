@@ -114,8 +114,8 @@ public interface MembershipRepository {
   /**
    * Updates the next due date by 1 year for the specified memberships.
    *
-   * @param membershipIds
-   *      A {@link Set} of {@link Long} that uniquely identify the memberships to update.
+   * @param membershipId
+   *      A {@link Long} that uniquely identifies the membership to update.
    * @param user
    *      The {@link User} that performed the changes.
    *
@@ -123,5 +123,5 @@ public interface MembershipRepository {
    *
    * @throws DataAccessException if the query fails
    */
-   int updateNextDueDate(final Set<Long> membershipIds, final User user) throws DataAccessException;
+   int updateNextDueDate(final long membershipId, final User user) throws DataAccessException;
 }

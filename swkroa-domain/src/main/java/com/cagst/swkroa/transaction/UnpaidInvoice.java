@@ -1,6 +1,5 @@
 package com.cagst.swkroa.transaction;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -8,7 +7,7 @@ import java.math.BigDecimal;
  *
  * @author Craig Gaskill
  */
-public final class UnpaidInvoice extends Transaction implements Serializable {
+public final class UnpaidInvoice extends Transaction {
   private String membership_name;
   private BigDecimal transaction_amount;
   private BigDecimal amount_paid;

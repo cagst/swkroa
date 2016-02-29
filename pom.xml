@@ -54,7 +54,7 @@
 
     <!-- Apache Common Utilities -->
     <commons-lang-version>3.4</commons-lang-version>
-    <commons-io-version>1.3.2</commons-io-version>
+    <commons-io-version>2.4</commons-io-version>
     <commons-fileupload-version>1.3.1</commons-fileupload-version>
 
     <!-- Google Guava Library -->
@@ -72,7 +72,7 @@
 
     <!-- Logging Framework -->
     <slf4j-version>1.7.12</slf4j-version>
-    <logback-version>1.1.3</logback-version>
+    <logback-version>1.1.5</logback-version>
 
     <!-- JodaTime Framework -->
     <jodatime-version>2.9</jodatime-version>
@@ -126,7 +126,7 @@
         <version>${commons-lang-version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.commons</groupId>
+        <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>${commons-io-version}</version>
       </dependency>
@@ -271,25 +271,6 @@
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-taglibs</artifactId>
         <version>${spring-security-version}</version>
-      </dependency>
-
-      <!-- Spring WebFlow Dependencies -->
-      <dependency>
-        <groupId>org.springframework.webflow</groupId>
-        <artifactId>spring-webflow</artifactId>
-        <version>${spring-webflow-version}</version>
-      </dependency>
-
-      <!-- Spring Batch dependencies -->
-      <dependency>
-        <groupId>org.springframework.batch</groupId>
-        <artifactId>spring-batch-core</artifactId>
-        <version>${spring-batch-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.batch</groupId>
-        <artifactId>spring-batch-infrastructure</artifactId>
-        <version>${spring-batch-version}</version>
       </dependency>
 
       <!-- AspectJ Dependencies -->

@@ -23,10 +23,8 @@ CREATE VIEW membership_summary AS
            ,ms.close_dt_tm
            ,ms.active_ind
            ,ms.updt_cnt AS membership_updt_cnt
-           ,ms.fixed_dues
            ,ms.incremental_dues
            ,(COALESCE(SUM(mt2.dues_amount), 0) + COALESCE(ms.incremental_dues, 0)) AS calculated_dues
-           ,COALESCE(ms.fixed_dues, (COALESCE(SUM(mt2.dues_amount), 0) + COALESCE(ms.incremental_dues, 0))) as effective_dues
            ,(SELECT SUM(te.transaction_entry_amount) AS balance
                FROM transaction t
                    ,transaction_entry te
@@ -74,7 +72,6 @@ CREATE VIEW membership_summary AS
            ,ms.close_dt_tm
            ,ms.active_ind
            ,membership_updt_cnt
-           ,fixed_dues
            ,incremental_dues;
 
 CREATE VIEW member_summary AS

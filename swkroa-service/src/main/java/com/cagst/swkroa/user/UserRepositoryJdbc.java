@@ -1,7 +1,5 @@
 package com.cagst.swkroa.user;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +16,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
@@ -29,7 +26,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 /**
@@ -87,7 +83,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getUserByUsername [{}].", username);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(1);
+    Map<String, String> params = new HashMap<>(1);
     params.put("username", username);
 
     List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_USERNAME), params, new UserMapper());
@@ -105,12 +101,12 @@ import org.springframework.util.Assert;
   @Override
   @Cacheable(value = "users")
   public User getUserByUID(final long uid)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
+      throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getUserByUID [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("user_id", uid);
 
     List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_UID), params, new UserMapper());
@@ -132,7 +128,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling incrementSigninAttempts for User [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("user_id", user.getUserUID());
 
     int cnt = getJdbcTemplate().update(stmtLoader.load(SIGNIN_ATTEMPT), params);
@@ -154,7 +150,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling updateLastSigninInfo for User [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(2);
+    Map<String, Object> params = new HashMap<>(2);
     params.put("user_id", user.getUserUID());
     params.put("last_signin_ip", ipAddress);
 
@@ -180,7 +176,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling lockUserAccount for User [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(2);
+    Map<String, Long> params = new HashMap<>(2);
     params.put("user_id", user.getUserUID());
     params.put("updt_id", instigator.getUserUID());
 
@@ -206,7 +202,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling unlockUserAccount for User [{}] by User [{}].", user.getUsername(), instigator.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(2);
+    Map<String, Long> params = new HashMap<>(2);
     params.put("user_id", user.getUserUID());
     params.put("updt_id", instigator.getUserUID());
 
@@ -233,7 +229,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling enableUserAccount for User [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(2);
+    Map<String, Long> params = new HashMap<>(2);
     params.put("user_id", user.getUserUID());
     params.put("updt_id", instigator.getUserUID());
 
@@ -259,7 +255,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling disableUserAccount for User [{}]", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(2);
+    Map<String, Long> params = new HashMap<>(2);
     params.put("user_id", user.getUserUID());
     params.put("updt_id", instigator.getUserUID());
 
@@ -285,7 +281,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling changeUserPassword for User [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(2);
+    Map<String, Object> params = new HashMap<>(2);
     params.put("user_id", user.getUserUID());
     params.put("password", newPassword);
 
@@ -312,7 +308,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling resetUserPassword for User [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(3);
+    Map<String, Object> params = new HashMap<>(3);
     params.put("user_id", user.getUserUID());
     params.put("password", tempPassword);
     params.put("updt_id", instigator.getUserUID());
@@ -334,7 +330,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling doesUsernameExist for username [{}].", username);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(1);
+    Map<String, String> params = new HashMap<>(1);
     params.put("username", username);
 
     int cnt = getJdbcTemplate().queryForObject(stmtLoader.load(CHECK_USERNAME_NEW), params, Integer.class);
@@ -349,7 +345,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling doesUsernameExist for username [{}].", username);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(2);
+    Map<String, Object> params = new HashMap<>(2);
     params.put("username", username);
     params.put("user_id", user.getUserUID());
 

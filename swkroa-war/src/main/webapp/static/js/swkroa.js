@@ -598,7 +598,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
       transactionMemo: transMemo
     };
 
-    var promise = $http.post(rootUrl + '/bill', JSON.stringify(data));
+    var promise = $http.post(rootUrl + '/renew', JSON.stringify(data));
 
     promise.success = function(fn) {
       promise.then(function(response) {

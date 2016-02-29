@@ -138,30 +138,17 @@
                      data-ng-repeat="mem in memberships"
                      data-ng-class="{active: mem.membershipUID === membership.membershipUID}"
                      data-ng-click="getMembership(mem.membershipUID)">
-                  <div class="lead lead-in">
-                    <span data-ng-bind="mem.membershipName">zzz Membership Name</span>
-                    <span data-ng-show="mem.memberTypeMeaning == 'REGULAR'"
-                          th:attr="uib-tooltip=#{com.cagst.swkroa.membership.type.regular}"
-                          data-tooltip-placement="left"
-                          class="pull-right">
-                      <i class="fa fa-user"></i>
+                  <div>
+                    <span data-ng-bind="mem.membershipName" class="lead lead-in">
+                      zzz Membership Name
                     </span>
-                    <span data-ng-show="mem.memberTypeMeaning == 'FAMILY_HEAD'"
-                          th:attr="uib-tooltip=#{com.cagst.swkroa.membership.type.family}"
-                          data-tooltip-placement="left"
-                          class="pull-right">
-                      <i class="fa fa-users"></i>
+                    <span th:text="#{com.cagst.swkroa.membership.member.since}"
+                          data-ng-if="mem.joinDate != null" class="pull-right">
+                      zzz Member Since
                     </span>
-                  </div>
-                  <div data-ng-if="mem.joinDate != null">
-                    <span th:text="#{com.cagst.swkroa.membership.member.since}">zzz Member Since</span>
                   </div>
                   <div>
-                    <span th:text="#{com.cagst.swkroa.membership.fixed.dues}">zzz Dues Of</span>
-                    <span th:text="#{com.cagst.swkroa.membership.calculated.dues}" class="text-warning"
-                          data-ng-show="mem.effectiveDuesAmount != mem.calculatedDuesAmount">
-                      zzz Calculated Dues
-                    </span>
+                    <span th:text="#{com.cagst.swkroa.membership.dues}">zzz Dues Of</span>
                     <span class="pull-right text-danger"
                           th:text="#{com.cagst.swkroa.membership.pastdue}"
                           data-ng-show="mem.balance < 0">
@@ -250,7 +237,9 @@
                   </div>
                 </div>
               </div>
+
               <div>
+                <!-- List Members -->
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <span class="panel-title" th:text="#{com.cagst.swkroa.membership.members}">
@@ -263,41 +252,30 @@
                         <strong data-ng-bind="membership.primaryMember.memberName"></strong>
                       </span>
                       <small class="text-muted">({{membership.primaryMember.ownerIdent}})</small>
-                      <small class="text-muted" th:text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
-                             data-ng-show="membership.primaryMember.joinDate">
-                        zzz Since
-                      </small>
+                      <div class="pull-right">
+                        <small class="text-muted" th:text="#{com.cagst.swkroa.membership.member.detail.primary.since}"
+                               data-ng-show="membership.primaryMember.joinDate">
+                          zzz Since
+                        </small>
+                      </div>
                     </li>
                     <li class="list-group-item" data-ng-repeat="member in membership.members"
                          data-ng-show="member.memberType.primary === false && member.active === true">
                       <span>{{member.memberName}}</span>
                       <small class="text-muted">({{member.ownerIdent}})</small>
-                      <small class="text-muted" th:text="#{com.cagst.swkroa.membership.member.detail.since}">
-                        zzz Since
-                      </small>
+                      <div class="pull-right">
+                        <small class="text-muted" th:text="#{com.cagst.swkroa.membership.member.detail.since}">
+                          zzz Since
+                        </small>
+                      </div>
                     </li>
                   </ul>
                 </div>
-                <div class="spacer-top">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <span class="panel-title" th:text="#{com.cagst.swkroa.membership.counties}">
-                        zzz Counties
-                      </span>
-                    </div>
-                    <ul class="list-group list-group-hover" data-ng-repeat="membershipCounty in membership.membershipCounties">
-                      <li class="list-group-item" data-ng-class="{text_bold: membershipCounty.votingCounty === true}">
-                        {{membershipCounty.county.countyName}}
-                        <small class="text-muted text_normal"
-                               th:text="#{com.cagst.swkroa.membership.member.detail.county}">
-                          zzz County Details
-                        </small>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
 
+                <!-- List Comments -->
                 <div th:include="membership/list/detail_comments"></div>
+
+                <!-- List Transactions -->
                 <div th:include="membership/list/detail_transactions"></div>
               </div>
             </div>

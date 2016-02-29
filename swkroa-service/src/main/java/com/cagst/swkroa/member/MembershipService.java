@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.cagst.swkroa.codevalue.CodeValue;
+import com.cagst.swkroa.job.Job;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
@@ -30,7 +31,7 @@ public interface MembershipService {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Membership was found.
    */
-  public Membership getMembershipByUID(final long uid);
+  Membership getMembershipByUID(final long uid);
 
   /**
    * Retrieves the active {@link Membership Memberships} in the system.
@@ -42,7 +43,7 @@ public interface MembershipService {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-  public List<Membership> getMemberships(final Status status, final MembershipBalance balance);
+  List<Membership> getMemberships(final Status status, final MembershipBalance balance);
 
   /**
    * Retrieves a {@link List} of {@link Membership Memberships} that contain the specified <i>name</i> in one of
@@ -63,7 +64,7 @@ public interface MembershipService {
    *
    * @return A {@link List} of {@link Membership Memberships} that contain the specified name.
    */
-  public List<Membership> getMembershipsForName(final String name, final Status status, final MembershipBalance balance);
+  List<Membership> getMembershipsForName(final String name, final Status status, final MembershipBalance balance);
 
   /**
    * Retrieves all {@link Membership Memberships} that will be due in the following days.
@@ -73,7 +74,7 @@ public interface MembershipService {
    *
    * @return A {@link List} of {@link Membership Memberships} that will be due in the following days.
    */
-  public List<Membership> getMembershipsDueInXDays(final int days);
+  List<Membership> getMembershipsDueInXDays(final int days);
 
   /**
    * Commits the specified {@link Membership Membership} to persistent storage.
@@ -92,7 +93,7 @@ public interface MembershipService {
    * @throws DataAccessException
    *     if the query fails
    */
-  public Membership saveMembership(final Membership membership, final User user);
+  Membership saveMembership(final Membership membership, final User user);
 
   /**
    * Closes the memberships identified by their unique identifier for the specified reason.
@@ -108,30 +109,30 @@ public interface MembershipService {
    *
    * @return The number of memberships closed (modified)
    */
-  public int closeMemberships(final Set<Long> membershipIds,
-                              final CodeValue closeReason,
-                              final String closeText,
-                              final User user)
+  int closeMemberships(final Set<Long> membershipIds,
+                       final CodeValue closeReason,
+                       final String closeText,
+                       final User user)
       throws DataAccessException;
 
   /**
-   * Creates invoice transactions for the specified memberships and updated the next due date for the membership.
+   * Generates invoices for the memberships associated to the specified Job.
    *
    * @param transactionDate
-   *        A {@link DateTime} that represents the date of the transaction.
+   *    A {@link DateTime} that represents the date of the transaction.
    * @param transactionDescription
-   *        A {@link String} that describes the transaction.
+   *    A {@link String} that describes the transaction.
    * @param transactionMemo
-   *        A {@link String} that provides additional information for the transaction.
-   * @param membershipIds
-   *        A {@link Set} of {@link Long Longs} that uniquely identify the membership to bill.
+   *    A {@link String} that provides additional information for the transaction.
+   * @param job
+   *    The {@link Job} to defines the memberships to renew.
    * @param user
-   *     The {@link User} that performed the changes.
+   *    The {@link User} that performed the changes.
    */
-  public void billMemberships(final DateTime transactionDate,
-                              final String transactionDescription,
-                              final String transactionMemo,
-                              final Set<Long> membershipIds,
-                              final User user)
+  void renewMemberships(final DateTime transactionDate,
+                        final String transactionDescription,
+                        final String transactionMemo,
+                        final Job job,
+                        final User user)
   throws DataAccessException;
 }

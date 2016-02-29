@@ -44,10 +44,12 @@
             removeAbandonedTimeout="60"
             removeAbandoned="true"
             logAbandoned="true"
-            minEvictableIdelTimeMillis="30000"
+            minEvictableIdelTimeMillis="60000"
+            timeBetweenEvictionRunsMillis="5000"
             jmxEnabled="true"
             jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState
-                             ;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
+                             ;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer
+                             ;org.apache.tomcat.jdbc.pool.interceptor.ResetAbandonedTimer"
 
             username="swkroaadmin"
             password="cagst23824"

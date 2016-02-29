@@ -20,7 +20,8 @@
     <div class="row" data-ng-show="invoiceGroups">
       <div class="col-xs-2">
         <div class="btn-group-vertical">
-          <a class="btn btn-primary" th:href="@{/accounting/invoices/new}">
+          <a class="btn btn-primary" th:href="@{/accounting/invoices/new}"
+             data-ng-disabled="jobsPending">
             <span th:text="#{invoices.renew.button}">zzz Renew Membership</span>
           </a>
         </div>

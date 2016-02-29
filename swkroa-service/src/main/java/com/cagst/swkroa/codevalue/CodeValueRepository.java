@@ -16,15 +16,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CodeValueRepository {
-  String CLOSE_REASONS    = "CLOSE_REASONS";
-  String TITLE            = "TITLE";
-  String ADDRESS_TYPE     = "ADDRESS_TYPE";
-  String PHONE_TYPE       = "PHONE_TYPE";
-  String EMAIL_TYPE       = "EMAIL_TYPE";
-  String ENTITY_TYPE      = "ENTITY_TYPE";
-  String TRANSACTION_TYPE = "TRANSACTION_TYPE";
-  String DOCUMENT_TYPE    = "DOCUMENT_TYPE";
-
   /**
    * Retrieves a {@link CodeSet} by its unique identifier.
    *
@@ -114,5 +105,5 @@ public interface CodeValueRepository {
    *     if the query fails
    */
   CodeValue saveCodeValueForCodeSet(final CodeValue codeValue, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+      throws DataAccessException;
 }

@@ -19,6 +19,10 @@ swkroaApp.controller('invoiceController',
   $scope.page          = 0;
   $scope.pages         = 1;
 
+  $http.get('/api/jobs/pending/RENEWAL').then(function(response) {
+    $scope.jobsPending = (response.data.length > 0);
+  });
+
   $scope.getInvoiceGroups = function(start, limit) {
     transactionService.getInvoiceGroups(start, limit).success(function(data) {
       $scope.invoiceGroups = data.items;
