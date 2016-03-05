@@ -255,7 +255,16 @@ swkroaApp.controller('membershipController',
   };
 
   $scope.addTransactionEntry = function() {
-    var entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0};
+    var entryType;
+
+    for (var idx = 0; idx < $scope.entryTypes.length; idx++) {
+      if ($scope.entryTypes[idx].meaning == 'TRANS_DUES_BASE') {
+        entryType = $scope.entryTypes[idx];
+        break;
+      }
+    }
+
+    var entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0, transactionEntryType: entryType};
     $scope.transaction.transactionEntries.push(entry);
   };
 
@@ -472,7 +481,7 @@ swkroaApp.controller('membershipController',
   $scope.query            = "";
   $scope.view             = "listing";
   $scope.filterStatus     = "ACTIVE";
-  $scope.filterBalance    = "ALL"
+  $scope.filterBalance    = "ALL";
   $scope.filterText       = $scope.getFilters();
   $scope.filtering        = "off";
   $scope.showCalculations = false;

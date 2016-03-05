@@ -10,7 +10,7 @@ CREATE TABLE job (
   updt_id                BIGINT NOT NULL,
   updt_cnt               INT DEFAULT 0 NOT NULL,
   CONSTRAINT job_pk PRIMARY KEY (job_id)
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE job_detail (
   job_detail_id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -26,4 +26,4 @@ CREATE TABLE job_detail (
   updt_cnt               INT DEFAULT 0 NOT NULL,
   CONSTRAINT job_detail_pk PRIMARY KEY (job_detail_id),
   CONSTRAINT job_detail_fk1 FOREIGN KEY (job_id) REFERENCES job (job_id)
-);
+) ENGINE = InnoDB;

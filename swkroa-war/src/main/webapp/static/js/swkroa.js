@@ -518,7 +518,7 @@ swkroaApp.service('membershipService', ['$http', function($http) {
     return promise;
   };
 
-  this._saveMembership = function(membership) {
+  this.saveMembership = function(membership) {
     var promise = $http.post(rootUrl, membership);
 
     promise.success = function(fn) {

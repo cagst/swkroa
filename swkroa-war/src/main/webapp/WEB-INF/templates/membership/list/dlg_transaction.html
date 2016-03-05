@@ -116,11 +116,10 @@
                    data-ng-show="entry.active">
             <tr>
               <td class="col-xs-4">
-                <select class="form-control" name="entryType">
-                  <option data-ng-repeat="type in entryTypes"
-                          data-ng-model="entry.transactionEntryType">
-                    {{type.display}}
-                  </option>
+                <select class="form-control" name="entryType"
+                        data-ng-model="entry.transactionEntryType"
+                        data-ng-required="true"
+                        data-ng-options="type.display for type in entryTypes">
                 </select>
               </td>
               <td class="col-xs-4">
