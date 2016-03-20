@@ -26,7 +26,6 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link CodeValueRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("codeValueRepo")
 /* package */class CodeValueRepositoryJdbc extends BaseRepositoryJdbc implements CodeValueRepository {
@@ -58,7 +57,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling CodeSetByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("codeset_id", uid);
 
     List<CodeSet> codesets = getJdbcTemplate().query(stmtLoader.load(GET_CODESET_BY_UID), params, new CodeSetMapper());
@@ -90,7 +89,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling CodeValuesForCodeSet for [{}].", codeset.getDisplay());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("codeset_id", codeset.getCodeSetUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUES_FOR_CODESET), params, new CodeValueMapper());
@@ -104,7 +103,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getCodeValuesForCodeSetByMeaning for [{}].", codeSetMeaning);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(1);
+    Map<String, String> params = new HashMap<>(1);
     params.put("codeset_meaning", codeSetMeaning);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUES_FOR_CODESET_BY_MEANING), params,
@@ -121,7 +120,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getCodeValueByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("codevalue_id", uid);
 
     List<CodeValue> codevalues = getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUE_BY_UID), params,
@@ -146,7 +145,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getCodeValueByMeaning for [{}].", meaning);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>(1);
+    Map<String, String> params = new HashMap<>(1);
     params.put("meaning", meaning);
 
     List<CodeValue> codevalues = getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUE_BY_MEANING), params,
@@ -166,7 +165,7 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "codeValueLists", allEntries = true)
   public CodeValue saveCodeValueForCodeSet(final CodeValue codeValue, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     Assert.notNull(codeValue, "Assertion failed - argument codeValue cannot be null.");
     Assert.notNull(user, "Assertion failed - argument user cannot be null.");
@@ -181,7 +180,7 @@ import org.springframework.util.Assert;
   }
 
   private CodeValue insertCodeValueForCodeSet(final CodeValue codeValue, final User user)
-      throws IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     LOGGER.info("Inserting new CodeValue [{}].", codeValue.getDisplay());
 
@@ -200,7 +199,7 @@ import org.springframework.util.Assert;
   }
 
   private CodeValue updateCodeValueForCodeSet(final CodeValue codeValue, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     LOGGER.info("Updating CodeValue [{}].", codeValue.getDisplay());
 

@@ -28,20 +28,6 @@
     </mvc:message-converters>
   </mvc:annotation-driven>
 
-  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basenames">
-      <list>
-        <value>properties/i18n/common</value>
-        <value>properties/i18n/auth</value>
-        <value>properties/i18n/membership</value>
-        <value>properties/i18n/report</value>
-        <value>properties/i18n/maintenance</value>
-        <value>properties/i18n/user</value>
-        <value>properties/i18n/accounting</value>
-      </list>
-    </property>
-  </bean>
-
   <mvc:interceptors>
     <bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">
       <property name="cacheSeconds" value="0"/>

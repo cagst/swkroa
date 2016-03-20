@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+  <th:block th:replace="fragments/common :: head" />
   <script type="text/javascript" th:src="@{/static/js/report.js}"></script>
+
 </head>
 
 <body>
+<div th:replace="fragments/main :: header"></div>
+<div th:replace="fragments/main :: navigation"></div>
 
-<div data-layout-fragment="content">
+<div id="page-content">
   <div class="page-header">
     <h3 th:text="#{com.cagst.swkroa.report.member.mailinglist.report}">zzz Member Mailing List</h3>
   </div>

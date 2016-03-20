@@ -7,7 +7,6 @@ import com.cagst.swkroa.filesystem.FileDTO;
 import com.cagst.swkroa.filesystem.FileSystem;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
-import net.sf.ehcache.transaction.xa.OptimisticLockFailureException;
 import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +108,7 @@ import java.util.Optional;
 
   @Override
   public Document saveDocument(final Document document, final User user)
-      throws OptimisticLockFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+      throws DataAccessException {
 
     Assert.notNull(document, "Assertion Failed - argument [document] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");

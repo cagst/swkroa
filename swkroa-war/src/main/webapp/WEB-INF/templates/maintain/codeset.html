@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+  <th:block th:replace="fragments/common :: head" />
+
   <script type="text/javascript" th:src="@{/static/js/maintain/codeset.js}"></script>
 </head>
 
 <body>
+<div th:replace="fragments/main :: header"></div>
+<div th:replace="fragments/main :: navigation"></div>
 
-<div layout:fragment="content" data-ng-app="swkroaApp" data-ng-controller="codesetController">
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="codesetController">
   <div class="page-header">
     <h3 th:text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
   </div>

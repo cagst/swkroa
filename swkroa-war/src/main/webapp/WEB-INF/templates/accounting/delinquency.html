@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+  <th:block th:replace="fragments/common :: head" />
+
   <script type="text/javascript" th:src="@{/static/js/accounting/delinquency.js}"></script>
   <script type="text/javascript" th:src="@{/static/js/report.js}"></script>
 </head>
 
 <body>
+<div th:replace="fragments/main :: header"></div>
+<div th:replace="fragments/main :: navigation"></div>
 
-<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="delinquencyController">
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="delinquencyController">
   <div class="page-header">
     <h3 th:text="#{delinquency.title}">zzz Delinquencies</h3>
   </div>

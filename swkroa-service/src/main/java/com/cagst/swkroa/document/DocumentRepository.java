@@ -2,7 +2,6 @@ package com.cagst.swkroa.document;
 
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
-import net.sf.ehcache.transaction.xa.OptimisticLockFailureException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -59,5 +58,5 @@ public interface DocumentRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  Document saveDocument(final Document document, final User user) throws OptimisticLockFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+  Document saveDocument(final Document document, final User user) throws DataAccessException;
 }
