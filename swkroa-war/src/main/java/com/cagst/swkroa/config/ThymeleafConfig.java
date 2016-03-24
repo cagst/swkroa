@@ -1,9 +1,6 @@
 package com.cagst.swkroa.config;
 
 import org.springframework.beans.BeansException;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
@@ -28,9 +25,8 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
  */
 @Configuration
 @EnableWebMvc
-@EnableCaching
 @ComponentScan("com.cagst.swkroa")
-public class ApplicationConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+public class ThymeleafConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
   private ApplicationContext applicationContext;
 
   @Override
@@ -72,11 +68,6 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter implements Applic
     templateEngine.setMessageSource(getMessageSource());
 
     return templateEngine;
-  }
-
-  @Bean
-  public CacheManager getCacheManager() {
-    return new JCacheCacheManager();
   }
 
   private ITemplateResolver getTemplateResolver() {
