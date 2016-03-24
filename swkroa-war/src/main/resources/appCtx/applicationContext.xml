@@ -42,7 +42,9 @@
     </property>
   </bean>
 
+  <!--
   <bean id="nameFormatter" class="com.cagst.common.formatter.DefaultNameFormatter" scope="prototype"/>
   <bean id="ageFormatter" class="com.cagst.common.formatter.DefaultAgeFormatter" scope="prototype"/>
   <bean id="phoneFormatter" class="com.cagst.common.formatter.DefaultPhoneNumberFormatter" scope="prototype"/>
+  -->
 </beans>

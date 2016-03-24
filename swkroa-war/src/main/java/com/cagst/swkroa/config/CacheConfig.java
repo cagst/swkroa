@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableCaching
 public class CacheConfig {
-  @Bean
+  @Bean(name = "cacheManager")
   public CacheManager getCacheManager() {
     return new JCacheCacheManager();
   }
