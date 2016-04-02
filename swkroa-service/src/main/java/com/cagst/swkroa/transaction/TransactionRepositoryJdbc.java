@@ -37,7 +37,6 @@ import org.springframework.util.CollectionUtils;
   private static final String GET_TRANSACTION_BY_UID             = "GET_TRANSACTION_BY_UID";
   private static final String GET_TRANSACTIONS_FOR_MEMBERSHIP    = "GET_TRANSACTIONS_FOR_MEMBERSHIP";
   private static final String GET_TRANSACTIONS_FOR_DEPOSIT       = "GET_TRANSACTIONS_FOR_DEPOSIT";
-  private static final String GET_UNPAID_INVOICES_FOR_MEMBERSHIP = "GET_UNPAID_INVOICES_FOR_MEMBERSHIP";
   private static final String GET_UNPAID_INVOICES                = "GET_UNPAID_INVOICES";
 
   private static final String GET_COUNT_OF_TRANSACTIONGROUPS_FOR_TYPE = "GET_COUNT_OF_TRANSACTIONGROUPS_FOR_TYPE";
@@ -172,7 +171,7 @@ import org.springframework.util.CollectionUtils;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_UNPAID_INVOICES), new UnpaidInvoiceMapper());
+    return getJdbcTemplate().query(stmtLoader.load(GET_UNPAID_INVOICES), new UnpaidInvoideListExtractor(codeValueRepo, memberRepo));
   }
 
   @Override

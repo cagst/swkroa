@@ -1,16 +1,20 @@
-SELECT iq.membership_id
-      ,ms.membership_name
-      ,iq.transaction_id
-      ,iq.transaction_dt
-      ,iq.transaction_desc
-      ,iq.ref_num
+SELECT ms.membership_name
+      ,t.membership_id
+      ,t.transaction_id
+      ,t.transaction_dt
+      ,t.transaction_desc
+      ,t.ref_num
+      ,t.active_ind
+      ,t.updt_cnt AS transaction_updt_cnt
+      ,te.transaction_entry_id
+      ,te.related_transaction_id
+      ,te.member_id
+      ,te.transaction_entry_amount
+      ,te.transaction_entry_type_cd
+      ,te.updt_cnt AS transaction_entry_updt_cnt
       ,iq.transaction_amount
       ,IFNULL(iq.paid_amount, 0) AS amount_paid
 FROM (SELECT t.transaction_id
-            ,t.membership_id
-            ,t.transaction_dt
-            ,t.transaction_desc
-            ,t.ref_num
             ,(SELECT SUM(te.transaction_entry_amount)
                 FROM transaction_entry te
                WHERE te.transaction_id = t.transaction_id
@@ -26,6 +30,11 @@ FROM (SELECT t.transaction_id
                                     AND ms.active_ind = 1)
          AND t.transaction_type_flag = 0
          AND t.active_ind = 1) iq
+     ,transaction t
+     ,transaction_entry te
      ,membership_summary ms
 WHERE ABS(iq.transaction_amount) != ABS(IFNULL(iq.paid_amount, 0))
-  AND ms.membership_id = iq.membership_id
+  AND t.transaction_id  = iq.transaction_id
+  AND te.transaction_id = t.transaction_id
+  AND te.active_ind     = 1
+  AND ms.membership_id  = t.membership_id

@@ -5,7 +5,7 @@
 <head>
   <th:block th:replace="fragments/common :: head" />
 
-  <script type="text/javascript" th:src="@{/static/js/deposit.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/accounting/deposit.js}"></script>
 </head>
 
 <body>
@@ -155,39 +155,46 @@
               <span class="panel-title">Unpaid Invoices</span>
             </div>
             <div class="panel-body clear-padding">
-              <table class="table table-hover table-bordered table-condensed">
+              <em data-ng-show="!unpaid">
+                <label class="panel-body text-muted text-center">
+                  <i class="fa fa-spinner fa-pulse"></i>
+                  <span th:text="#{deposits.loading}">zzz Loading</span>
+                </label>
+              </em>
+              <table class="table table-hover table-bordered table-condensed"
+                     data-ng-show="unpaid">
                   <thead>
-                  <tr>
-                    <th></th>
-                    <th class="col-xs-2" th:text="#{deposits.transaction.date}">zzz Date</th>
-                    <th class="col-xs-7">
-                      <span th:text="#{deposits.transaction.membership}">zzz Membership</span>
-                      <span class="pull-right text-muted" th:text="#{deposits.transaction.description}">zzz Invoice</span>
-                    </th>
-                    <th class="col-xs-1" th:text="#{deposits.transaction.amount}">zzz Amount</th>
-                    <th class="col-xs-1" th:text="#{deposits.transaction.paid}">zzz Paid</th>
-                    <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
-                  </tr>
+                    <tr>
+                      <th></th>
+                      <th class="col-xs-2" th:text="#{deposits.transaction.date}">zzz Date</th>
+                      <th class="col-xs-7">
+                        <span th:text="#{deposits.transaction.membership}">zzz Membership</span>
+                        <span class="pull-right text-muted" th:text="#{deposits.transaction.description}">zzz Invoice</span>
+                      </th>
+                      <th class="col-xs-1" th:text="#{deposits.transaction.amount}">zzz Amount</th>
+                      <th class="col-xs-1" th:text="#{deposits.transaction.paid}">zzz Paid</th>
+                      <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
+                    </tr>
                   </thead>
-                  <tbody>
-                  <tr data-ng-repeat="inv in unpaid | orderBy: ['membershipName', 'transactionDate']"
-                      data-ng-show="!inv.transactionInDeposit">
-                    <td>
-                      <button type="button" class="btn btn-success btn-xs"
-                              th:attr="data-uib-tooltip=#{deposits.add.tooltip}"
-                              data-ng-click="addInvoiceToDeposit(inv)">
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </td>
-                    <td>{{inv.transactionDate | date: 'mediumDate'}}</td>
-                    <td>
-                      <span data-ng-bind="inv.membershipName"></span>
-                      <span class="text-muted pull-right" data-ng-bind="inv.transactionDescription"></span>
-                    </td>
-                    <td><span class="pull-right" data-ng-bind="inv.transactionAmount | currency"></span></td>
-                    <td><span class="pull-right" data-ng-bind="inv.amountPaid | currency"></span></td>
-                    <td><span class="pull-right" data-ng-bind="inv.amountRemaining | currency"></span></td>
-                  </tr>
+                  <tbody data-ng-repeat="inv in unpaid | orderBy: ['membershipName', 'transactionDate']"
+                         data-ng-show="!inv.transactionInDeposit">
+                    <tr>
+                      <td>
+                        <button type="button" class="btn btn-success btn-xs"
+                                th:attr="data-uib-tooltip=#{deposits.add.tooltip}"
+                                data-ng-click="addInvoiceToDeposit(inv)">
+                          <i class="fa fa-plus"></i>
+                        </button>
+                      </td>
+                      <td><span data-ng-bind="inv.transactionDate | date: 'mediumDate'"></span></td>
+                      <td>
+                        <span data-ng-bind="inv.membershipName"></span>
+                        <span class="text-muted pull-right" data-ng-bind="inv.transactionDescription"></span>
+                      </td>
+                      <td><span class="pull-right" data-ng-bind="inv.transactionAmount | currency"></span></td>
+                      <td><span class="pull-right" data-ng-bind="inv.amountPaid | currency"></span></td>
+                      <td><span class="pull-right" data-ng-bind="inv.amountRemaining | currency"></span></td>
+                    </tr>
                   </tbody>
                 </table>
             </div>
@@ -212,9 +219,9 @@
                   <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
                 </tr>
               </thead>
-              <tbody>
-               <tr data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
-                   data-ng-show="tx.transactionInDeposit">
+              <tbody data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
+                     data-ng-show="tx.transactionInDeposit">
+                <tr>
                   <td>
                     <button type="button" class="btn btn-danger btn-xs"
                             th:attr="data-uib-tooltip=#{deposits.remove.tooltip}"
@@ -222,14 +229,31 @@
                       <i class="fa fa-minus"></i>
                     </button>
                   </td>
-                  <td>{{tx.transactionDate | date: 'mediumDate'}}</td>
+                  <td style="width:125px">
+                    <div>
+                      <a href="#" onclick="toggleTransactionDetails(this)">
+                        <i class="fa fa-caret-right"></i>
+                      </a>
+                      {{tx.transactionDate | date: 'mediumDate'}}
+                    </div>
+                  </td>
                  <td>
                    <span data-ng-bind="tx.membershipName"></span>
                    <span class="text-muted pull-right" data-ng-bind="tx.transactionDescription"></span>
                  </td>
-                  <td>{{tx.transactionAmount | currency}}</td>
-                  <td>{{tx.amountPaid | currency}}</td>
-                  <td>{{tx.amountRemaining | currency}}</td>
+                  <td><span class="pull-right" data-ng-bind="tx.transactionAmount | currency"></span></td>
+                  <td><span class="pull-right" data-ng-bind="tx.amountPaid | currency"></span></td>
+                  <td><span class="pull-right" data-ng-bind="tx.amountRemaining | currency"></span></td>
+                </tr>
+                <tr class="details hide" data-ng-repeat="entry in tx.transactionEntries">
+                  <td></td>
+                  <td colspan="2">{{entry.transactionEntryType.display}}</td>
+                  <td style="width:100px">
+                    <div class="pull-right">
+                      {{entry.transactionEntryAmount | currency}}
+                    </div>
+                  </td>
+                  <td colspan="2"></td>
                 </tr>
               </tbody>
             </table>

@@ -14,9 +14,9 @@ import org.springframework.jdbc.core.RowMapper;
  * @author Craig Gaskill
  */
 /* package */ final class UnpaidInvoiceMapper implements RowMapper<UnpaidInvoice> {
-  private static final String TRANSACTION_ID     = "transaction_id";
-  private static final String MEMBERSHIP_ID      = "membership_id";
   private static final String MEMBERSHIP_NAME    = "membership_name";
+  private static final String MEMBERSHIP_ID      = "membership_id";
+  private static final String TRANSACTION_ID     = "transaction_id";
   private static final String TRANSACTION_DT     = "transaction_dt";
   private static final String TRANSACTION_DESC   = "transaction_desc";
   private static final String REF_NUM            = "ref_num";
@@ -30,9 +30,9 @@ import org.springframework.jdbc.core.RowMapper;
     BigDecimal transactionAmount = rs.getBigDecimal(TRANSACTION_AMOUNT).abs();
     BigDecimal paidAmount        = rs.getBigDecimal(AMOUNT_PAID).abs();
 
-    inv.setTransactionUID(rs.getLong(TRANSACTION_ID));
-    inv.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
     inv.setMembershipName(rs.getString(MEMBERSHIP_NAME));
+    inv.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
+    inv.setTransactionUID(rs.getLong(TRANSACTION_ID));
     inv.setTransactionDate(CGTDateTimeUtils.getDateTime(rs.getTimestamp(TRANSACTION_DT)));
     inv.setTransactionDescription(rs.getString(TRANSACTION_DESC));
     inv.setReferenceNumber(rs.getString(REF_NUM));

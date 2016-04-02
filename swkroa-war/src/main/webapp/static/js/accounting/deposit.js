@@ -134,6 +134,11 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
     tx.amountPaid = tx.amountRemaining;
     tx.amountRemaining = 0;
 
+    // flip the polarity of the transaction entries
+    for (var idx = 0; idx < tx.transactionEntries.length; idx++) {
+      tx.transactionEntries[idx].transactionEntryAmount = Math.abs(tx.transactionEntries[idx].transactionEntryAmount);
+    }
+
     $scope.deposit.transactions.push(tx);
     $scope.deposit.depositAmount += tx.amountPaid;
   };
@@ -153,3 +158,21 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
   };
 }]);
 
+var toggleTransactionDetails = function(transaction) {
+  var img       = $(transaction).children()[0];
+  var collapsed = $(img).hasClass("fa-caret-right");
+
+  var parentDiv = $(transaction).parent();
+  var parentCol = $(parentDiv).parent();
+  var parentRow = $(parentCol).parent();
+
+  if (collapsed) {
+    $(parentRow).siblings().removeClass("hide");
+    $(img).removeClass("fa-caret-right");
+    $(img).addClass("fa-caret-down");
+  } else {
+    $(parentRow).siblings().addClass("hide");
+    $(img).addClass("fa-caret-right");
+    $(img).removeClass("fa-caret-down");
+  }
+};
