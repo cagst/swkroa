@@ -74,8 +74,8 @@ swkroaApp.service('depositService', ['$http', function($http) {
   };
 }]);
 
-swkroaApp.controller('depositController', ['$scope', 'depositService', 'transactionService',
-    function($scope, depositService, transactionService) {
+swkroaApp.controller('depositController', ['$scope', 'depositService', 'transactionService', 'codesetService',
+    function($scope, depositService, transactionService, codesetService) {
 
   $('#createdMessage').hide();
   $('#updatedMessage').hide();
@@ -85,6 +85,10 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
 
   depositService.getDeposits().success(function(data) {
     $scope.deposits = data;
+  });
+
+  codesetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
+    $scope.entryTypes = data;
   });
 
   $scope.addDeposit = function() {
