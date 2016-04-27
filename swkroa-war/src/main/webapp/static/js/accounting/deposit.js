@@ -160,6 +160,25 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
 
     $scope.deposit.depositAmount -= transaction.amountPaid;
   };
+  
+  $scope.createTransactionEntry = function(transaction) {
+    $scope.selectedTransaction    = angular.copy(transaction);
+    $scope.selectedTransactionIdx = $scope.deposit.transactions.indexOf(transaction);
+    $scope.newTransactionEntry    = {transactionEntryAmount: 0};
+
+    $("#addEntry").modal('toggle');
+  };
+
+  $scope.addTransactionEntry = function() {
+    $('#addEntry').modal('hide');
+
+    $scope.selectedTransaction.transactionEntries.push($scope.newTransactionEntry);
+    $scope.selectedTransaction.amountPaid += $scope.newTransactionEntry.transactionEntryAmount;
+    $scope.selectedTransaction.transactionAmount += $scope.newTransactionEntry.transactionEntryAmount;
+
+    $scope.deposit.transactions[$scope.selectedTransactionIdx] = angular.copy($scope.selectedTransaction);
+    $scope.deposit.depositAmount += $scope.newTransactionEntry.transactionEntryAmount;
+  };
 }]);
 
 var toggleTransactionDetails = function(transaction) {

@@ -36,7 +36,7 @@
               <th th:text="#{deposits.number.label}">zzz Ref Num</th>
               <th th:text="#{deposits.amount}">zzz Amount</th>
               <th style="width: 24%">
-                <a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="addDeposit()">
+                <a href="#" class="btn btn-success btn-xs pull-right" data-ng-click="addDeposit()">
                   <i class="fa fa-plus"></i>
                   <span th:text="#{deposits.add.button}">zzz Add</span>
                 </a>
@@ -216,7 +216,7 @@
                   </th>
                   <th class="col-xs-1" th:text="#{deposits.transaction.amount}">zzz Amount</th>
                   <th class="col-xs-1" th:text="#{deposits.transaction.paid}">zzz Paid</th>
-                  <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
+                  <th class="col-xs-1"></th>
                 </tr>
               </thead>
               <tbody data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
@@ -243,7 +243,12 @@
                  </td>
                   <td><span class="pull-right" data-ng-bind="tx.transactionAmount | currency"></span></td>
                   <td><span class="pull-right" data-ng-bind="tx.amountPaid | currency"></span></td>
-                  <td><span class="pull-right" data-ng-bind="tx.amountRemaining | currency"></span></td>
+                  <td>
+                    <button type="button" class="btn btn-primary btn-xs pull-right"
+                            data-ng-click="createTransactionEntry(tx)">
+                      <span th:text="#{deposits.transaction.add.entry}"></span>
+                    </button>
+                  </td>
                 </tr>
                 <tr class="details hide" data-ng-repeat="entry in tx.transactionEntries">
                   <td></td>
@@ -262,6 +267,60 @@
           </div>
         </div>
       </div>
+
+      <!-- Add Entry Dialog -->
+      <div class="modal fade" id="addEntry">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"
+                  th:text="#{deposits.transaction.add.entry}">
+                zzz Add Entry
+              </h4>
+            </div>
+
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-xs-6">
+                  <label for="entryType" class="control-label"
+                         data-ng-required="true"
+                         th:text="#{com.cagst.swkroa.membership.transaction.type}">
+                    zzz Type
+                  </label>
+                  <select id="entryType" class="form-control"
+                          data-ng-model="newTransactionEntry.transactionEntryType"
+                          data-ng-required="true"
+                          data-ng-options="type.display for type in entryTypes">
+                  </select>
+                </div>
+                <div class="col-xs-6">
+                  <label for="entryAmount" class="control-label"
+                         data-ng-required="true"
+                         th:text="#{com.cagst.swkroa.membership.transaction.amount}">
+                    zzz Amount
+                  </label>
+                  <input id="entryAmount" type="number" class="form-control"
+                         data-ng-model="newTransactionEntry.transactionEntryAmount" />
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success"
+                      data-ng-click="addTransactionEntry()"
+                      th:text="#{com.cagst.swkroa.add}">
+                zzz Add
+              </button>
+              <button type="button" class="btn btn-default"
+                      data-dismiss="modal"
+                      th:text="#{com.cagst.swkroa.cancel}">
+                zzz Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </form>
   </div>
 </div>
