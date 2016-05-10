@@ -11,7 +11,9 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,5 +64,21 @@ public class DepositApiController {
     } catch (IncorrectResultSizeDataAccessException ex) {
       throw new ResourceNotFoundException(ex);
     }
+  }
+
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<Deposit> saveDeposit(final @RequestBody Deposit deposit) {
+    LOGGER.info("Received request to save deposit.");
+
+    // determine if this is a new deposit
+    boolean newDeposit = (deposit.getDepositUID() == 0);
+
+    // the transactions coming in for this deposit are "invoice" transactions that are being paid
+    // so we need to create new "payment" transactions for these "invoice" transactions and associate
+    // the "invoice" transaction to the new "payment" transaction.
+
+    // save the deposit
+
+    return null;
   }
 }

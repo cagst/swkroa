@@ -85,7 +85,7 @@ import org.springframework.util.CollectionUtils;
     List<Transaction> trans = getJdbcTemplate().query(
         stmtLoader.load(GET_TRANSACTION_BY_UID),
         params,
-        new TransactionListExtractor(codeValueRepo, memberRepo)
+        new TransactionListExtractor(codeValueRepo)
     );
 
     if (trans.size() == 1) {
@@ -112,7 +112,7 @@ import org.springframework.util.CollectionUtils;
     return getJdbcTemplate().query
         (stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP),
             params,
-            new TransactionListExtractor(codeValueRepo, memberRepo)
+            new TransactionListExtractor(codeValueRepo)
         );
   }
 
@@ -161,7 +161,7 @@ import org.springframework.util.CollectionUtils;
     return getJdbcTemplate().query(
         stmtLoader.load(GET_TRANSACTIONS_FOR_DEPOSIT),
         params,
-        new TransactionListExtractor(codeValueRepo, memberRepo)
+        new TransactionListExtractor(codeValueRepo)
     );
   }
 
@@ -171,13 +171,11 @@ import org.springframework.util.CollectionUtils;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_UNPAID_INVOICES), new UnpaidInvoideListExtractor(codeValueRepo, memberRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_UNPAID_INVOICES), new UnpaidInvoiceListExtractor(codeValueRepo));
   }
 
   @Override
-  public Transaction saveTransaction(final Transaction transaction, final User user)
-      throws DataAccessException {
-
+  public Transaction saveTransaction(final Transaction transaction, final User user) throws DataAccessException {
     Assert.notNull(transaction, "Assertion Failed - argument [transaction] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 

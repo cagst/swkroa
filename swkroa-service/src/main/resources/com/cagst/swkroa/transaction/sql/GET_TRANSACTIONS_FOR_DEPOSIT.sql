@@ -9,7 +9,6 @@ SELECT t.transaction_id
       ,t.updt_cnt AS transaction_updt_cnt
       ,te.transaction_entry_id
       ,te.related_transaction_id
-      ,te.member_id
       ,te.transaction_entry_amount
       ,te.transaction_entry_type_cd
       ,te.updt_cnt AS transaction_entry_updt_cnt

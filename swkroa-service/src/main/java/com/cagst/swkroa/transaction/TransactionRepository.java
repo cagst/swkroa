@@ -14,7 +14,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Definition of a repository that retrieves and persists {@link Transaction} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface TransactionRepository {
   /**

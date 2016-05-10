@@ -88,6 +88,14 @@ public final class Deposit implements Serializable {
     this.transactions = new ArrayList<>(transactions);
   }
 
+  public long getDepositUpdateCount() {
+    return updt_cnt;
+  }
+
+  public void setDepositUpdateCount(final long updateCount) {
+    this.updt_cnt = updateCount;
+  }
+
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
     builder.append(deposit_dt);

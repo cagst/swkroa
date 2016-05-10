@@ -1,5 +1,4 @@
 INSERT INTO transaction_entry (transaction_id
-                              ,member_id
                               ,transaction_entry_type_cd
                               ,transaction_entry_amount
                               ,related_transaction_id
@@ -9,7 +8,6 @@ INSERT INTO transaction_entry (transaction_id
                               ,updt_id
                               ,updt_dt_tm)
                       VALUES (:transaction_id
-                             ,:member_id
                              ,:transaction_entry_type_cd
                              ,:transaction_entry_amount
                              ,:related_transaction_id

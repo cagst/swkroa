@@ -179,6 +179,12 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
     $scope.deposit.transactions[$scope.selectedTransactionIdx] = angular.copy($scope.selectedTransaction);
     $scope.deposit.depositAmount += $scope.newTransactionEntry.transactionEntryAmount;
   };
+
+  $scope.save = function() {
+    depositService.saveDeposit($scope.deposit).success(function(data) {
+      var junk = data;
+    });
+  };
 }]);
 
 var toggleTransactionDetails = function(transaction) {

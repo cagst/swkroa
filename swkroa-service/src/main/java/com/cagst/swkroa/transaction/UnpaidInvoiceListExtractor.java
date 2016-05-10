@@ -1,7 +1,6 @@
 package com.cagst.swkroa.transaction;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
-import com.cagst.swkroa.member.MemberRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -12,15 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UnpaidInvoideListExtractor implements ResultSetExtractor<List<UnpaidInvoice>> {
+public class UnpaidInvoiceListExtractor implements ResultSetExtractor<List<UnpaidInvoice>> {
   private final UnpaidInvoiceMapper unpaidInvoiceMapperMapper;
   private final TransactionEntryMapper entryMapper;
 
-  public UnpaidInvoideListExtractor(final CodeValueRepository codeValueRepo,
-                                    final MemberRepository memberRepo) {
-
+  public UnpaidInvoiceListExtractor(final CodeValueRepository codeValueRepo) {
     unpaidInvoiceMapperMapper = new UnpaidInvoiceMapper();
-    entryMapper = new TransactionEntryMapper(codeValueRepo, memberRepo);
+    entryMapper = new TransactionEntryMapper(codeValueRepo);
   }
 
   @Override

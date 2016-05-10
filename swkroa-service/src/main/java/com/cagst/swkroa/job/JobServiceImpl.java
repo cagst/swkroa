@@ -148,7 +148,6 @@ public class JobServiceImpl implements JobService {
         if (type.getDuesAmount().compareTo(BigDecimal.ZERO) > 0) {
           TransactionEntry entry = new TransactionEntry();
           entry.setTransaction(invoice);
-          entry.setMember(member);
           entry.setTransactionEntryType(type.isPrimary() ? baseDues : familyDues);
           entry.setTransactionEntryAmount(type.getDuesAmount().negate());
           entry.setActive(true);
@@ -159,11 +158,8 @@ public class JobServiceImpl implements JobService {
 
       // Create the incremental dues transaction entry
       if (membership.getIncrementalDues() != null) {
-        Member primary = memberRepo.getMemberByUID(membership.getMemberUID());
-
         TransactionEntry entry = new TransactionEntry();
         entry.setTransaction(invoice);
-        entry.setMember(primary);
         entry.setTransactionEntryType(incrementalDues);
         entry.setTransactionEntryAmount(membership.getIncrementalDues().negate());
         entry.setActive(true);

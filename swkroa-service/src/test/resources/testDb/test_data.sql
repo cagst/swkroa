@@ -111,8 +111,8 @@ INSERT INTO transaction_entry (transaction_id, transaction_entry_amount, transac
 INSERT INTO transaction_entry (transaction_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, -20, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
 INSERT INTO transaction (transaction_id, membership_id, transaction_dt, transaction_type_flag, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, '2014-03-01', 0, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, -70, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
-INSERT INTO transaction_entry (transaction_id, member_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 3, -20, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO transaction_entry (transaction_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, -70, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO transaction_entry (transaction_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, -20, 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
 INSERT INTO transaction (transaction_id, membership_id, transaction_dt, transaction_type_flag, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 2, '2014-04-01', 1, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO transaction_entry (transaction_id, transaction_entry_amount, transaction_entry_type_cd, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 80, 2, CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
@@ -142,11 +142,11 @@ INSERT INTO job (job_id, job_name, job_type, job_status, create_dt_tm, create_id
 INSERT INTO job (job_id, job_name, job_type, job_status, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 'Membership 2015-2016 Renewal', 'RENEWAL', 'SUCCEEDED', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO job (job_id, job_name, job_type, job_status, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (4, 'Membership 2016-2017 Renewal', 'RENEWAL', 'SUBMITTED', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
-INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 3, 'SUCCEEDED', 1, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0)
-INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 3, 'SUCCEEDED', 2, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0)
+INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 3, 'SUCCEEDED', 1, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 3, 'SUCCEEDED', 2, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 
-INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 4, 'SUBMITTED', 1, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0)
-INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (4, 4, 'SUBMITTED', 2, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0)
-INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (5, 4, 'SUBMITTED', 3, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0)
-INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (6, 4, 'SUBMITTED', 4, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0)
-INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (7, 4, 'SUBMITTED', 5, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0)
+INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 4, 'SUBMITTED', 1, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (4, 4, 'SUBMITTED', 2, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (5, 4, 'SUBMITTED', 3, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (6, 4, 'SUBMITTED', 4, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (7, 4, 'SUBMITTED', 5, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);

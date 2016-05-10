@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
-import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,11 +16,9 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  * @author Craig Gaskill
  */
 /* package */ class TransactionEntryMapper implements RowMapper<TransactionEntry> {
-  /* package */ static final String TRANSACTION_ENTRY_ID = "transaction_entry_id";
-
+  private static final String TRANSACTION_ENTRY_ID = "transaction_entry_id";
   private static final String TRANSACTION_ID = "transaction_id";
   private static final String RELATED_TRANSACTION_ID = "related_transaction_id";
-  private static final String MEMBER_ID = "member_id";
   private static final String TRANSACTION_ENTRY_TYPE_CD = "transaction_entry_type_cd";
   private static final String TRANSACTION_ENTRY_AMOUNT = "transaction_entry_amount";
 
@@ -32,32 +29,21 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
   private static final String TRANSACTION_ENTRY_UPDT_CNT = "transaction_entry_updt_cnt";
 
   private final CodeValueRepository codeValueRepo;
-  private final MemberRepository memberRepo;
 
   /**
    * Primary Constructor used to create an instance of <i>TransactionEntryMapper</i>
    *
    * @param codeValueRepo
    *     The {@link CodeValueRepository} to use to retrieve codified values associated with the transaction entry.
-   * @param memberRepo
-   *     The {@link MemberRepository} to use to retrieve the Member associate with this transaction entry.
    */
-  public TransactionEntryMapper(final CodeValueRepository codeValueRepo,
-                                final MemberRepository memberRepo) {
-
+  public TransactionEntryMapper(final CodeValueRepository codeValueRepo) {
     this.codeValueRepo = codeValueRepo;
-    this.memberRepo = memberRepo;
   }
 
   @Override
   public TransactionEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
     TransactionEntry entry = new TransactionEntry();
     entry.setTransactionEntryUID(rs.getLong(TRANSACTION_ENTRY_ID));
-
-    long membershipId = rs.getLong(MEMBER_ID);
-    if (membershipId > 0L) {
-      entry.setMember(memberRepo.getMemberByUID(rs.getLong(MEMBER_ID)));
-    }
 
     entry.setTransactionEntryType(codeValueRepo.getCodeValueByUID(rs.getLong(TRANSACTION_ENTRY_TYPE_CD)));
     entry.setTransactionEntryAmount(rs.getBigDecimal(TRANSACTION_ENTRY_AMOUNT));
@@ -71,13 +57,11 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 
   public static TransactionEntry mapRow(final SqlRowSet rs,
                                         final Transaction transaction,
-                                        final CodeValueRepository codeValueRepo,
-                                        final MemberRepository memberRepo) {
+                                        final CodeValueRepository codeValueRepo) {
 
     TransactionEntry entry = new TransactionEntry();
     entry.setTransactionEntryUID(rs.getLong(TRANSACTION_ENTRY_ID));
     entry.setTransaction(transaction);
-    entry.setMember(memberRepo.getMemberByUID(rs.getLong(MEMBER_ID)));
     entry.setTransactionEntryType(codeValueRepo.getCodeValueByUID(rs.getLong(TRANSACTION_ENTRY_TYPE_CD)));
     entry.setTransactionEntryAmount(rs.getBigDecimal(TRANSACTION_ENTRY_AMOUNT));
     entry.setRelatedTransactionUID(rs.getLong(RELATED_TRANSACTION_ID));
@@ -126,7 +110,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
   }
 
   private static void mapCommonParameters(final MapSqlParameterSource params, final TransactionEntry entry, final User user) {
-    params.addValue(MEMBER_ID, entry.getMember() != null ? entry.getMember().getMemberUID() : null);
+//    params.addValue(MEMBER_ID, entry.getMember() != null ? entry.getMember().getMemberUID() : null);
     params.addValue(TRANSACTION_ID, entry.getTransaction().getTransactionUID());
     params.addValue(TRANSACTION_ENTRY_TYPE_CD, entry.getTransactionEntryType().getCodeValueUID());
     params.addValue(TRANSACTION_ENTRY_AMOUNT, entry.getTransactionEntryAmount());

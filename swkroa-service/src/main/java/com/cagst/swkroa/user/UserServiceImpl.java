@@ -36,7 +36,6 @@ import org.springframework.util.Assert;
  * User Service that provides authentication for SWKROA.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("userService")
 public class UserServiceImpl implements UserService, MessageSourceAware {

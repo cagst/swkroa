@@ -250,7 +250,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 
     for (TransactionEntry entry : trans.getTransactionEntries()) {
-      if (entry.getMember() == null) {
+      if (entry.getTransactionEntryAmount().compareTo(BigDecimal.valueOf(-20.00)) == 0) {
         entry.setTransactionEntryAmount(new BigDecimal(-35));
       }
     }
@@ -275,7 +275,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure it is the correct transaction (amount).", -90.00, trans.getTransactionAmount().doubleValue(), 0.001);
 
     for (TransactionEntry entry : trans.getTransactionEntries()) {
-      if (entry.getMember() == null) {
+      if (entry.getTransactionEntryAmount().compareTo(BigDecimal.valueOf(-20.00)) == 0) {
         entry.setTransactionEntryAmount(new BigDecimal(-35));
         entry.setTransactionEntryUpdateCount(entry.getTransactionEntryUpdateCount() + 1);
       }

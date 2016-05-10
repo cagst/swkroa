@@ -13,10 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * Definitions of a service that retrieves and persists {@link User} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface UserService extends UserDetailsService {
-  public static final String SYSTEM_USER = "system";
+  String SYSTEM_USER = "system";
 
   /**
    * Updates the {@link User User's} record for a successful signing in.
@@ -31,7 +30,7 @@ public interface UserService extends UserDetailsService {
    * @throws IllegalArgumentException
    *     if the <code>user</code> is <code>null</code>.
    */
-  public User signinSuccessful(final User user, final String ipAddress) throws IllegalArgumentException;
+  User signinSuccessful(final User user, final String ipAddress) throws IllegalArgumentException;
 
   /**
    * Updates the {@link User User's} record for a failed sign in.
@@ -44,7 +43,7 @@ public interface UserService extends UserDetailsService {
    * @throws IllegalArgumentException
    *     if the <code>username</code> is <code>null</code> or empty.
    */
-  public void signinFailure(final String username, final String message) throws IllegalArgumentException;
+  void signinFailure(final String username, final String message) throws IllegalArgumentException;
 
   /**
    * Clears out the session when the user signs out of the system.
@@ -52,7 +51,7 @@ public interface UserService extends UserDetailsService {
    * @param user
    *     The {@link User} that has signed out of the system.
    */
-  public void signedOut(final User user);
+  void signedOut(final User user);
 
   /**
    * Clears out the session when the user is timed out of the system due to inactivity.
@@ -60,7 +59,7 @@ public interface UserService extends UserDetailsService {
    * @param user
    *     The {@link User} that has timed out of the system.
    */
-  public void timedOut(final User user);
+  void timedOut(final User user);
 
   /**
    * Modify the current user's password. This should change the user's password in the persistent
@@ -81,8 +80,8 @@ public interface UserService extends UserDetailsService {
    *     if the oldPassword isn't valid, if the newPassword is the same as the new password,
    *     or if the newPassword is the same as the username
    */
-  public User changePassword(final User user, final String oldPassword, final String newPassword,
-                             final String confirmPassword) throws BadCredentialsException;
+  User changePassword(final User user, final String oldPassword, final String newPassword,
+                      final String confirmPassword) throws BadCredentialsException;
 
   /**
    * Reset the user's password to a random temporary password.
@@ -94,7 +93,7 @@ public interface UserService extends UserDetailsService {
    *
    * @return A {@link User} that has been updated accordingly.
    */
-  public User resetPassword(final User user, final User instigator);
+  User resetPassword(final User user, final User instigator);
 
   /**
    * Updates the user's record by clearing the locked date (unlocking) on the user's account.
@@ -106,7 +105,7 @@ public interface UserService extends UserDetailsService {
    *
    * @return A {@link User} that has been updated accordingly.
    */
-  public User unlockAccount(final User user, final User instigator);
+  User unlockAccount(final User user, final User instigator);
 
   /**
    * Enables the user's account.
@@ -118,7 +117,7 @@ public interface UserService extends UserDetailsService {
    *
    * @return The {@link User} that has been updated accordingly.
    */
-  public User enableAccount(final User user, final User instigator);
+  User enableAccount(final User user, final User instigator);
 
   /**
    * Disables the user's account.
@@ -130,9 +129,9 @@ public interface UserService extends UserDetailsService {
    *
    * @return The {@link User} that has been updated accordingly.
    */
-  public User disableAccount(final User user, final User instigator);
+  User disableAccount(final User user, final User instigator);
 
-  public boolean doesUsernameExist(final String username);
+  boolean doesUsernameExist(final String username);
 
   /**
    * Commits the specified {@link User User} to persistent storage.
@@ -154,7 +153,7 @@ public interface UserService extends UserDetailsService {
    * @throws DataAccessException
    *     if the query fails
    */
-  public User saveUser(final User builder, final User user)
+  User saveUser(final User builder, final User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
 
   /**
@@ -162,7 +161,7 @@ public interface UserService extends UserDetailsService {
    *
    * @return A {@link List} of {@link User Users} defined in the system.
    */
-  public List<User> getAllUsers();
+  List<User> getAllUsers();
 
   /**
    * Retrieves a {@link User} that is associated with the specified id.
@@ -177,7 +176,7 @@ public interface UserService extends UserDetailsService {
    * @throws IncorrectResultSizeDataAccessException
    *     when more than 1 user was found with the specified uid.
    */
-  public User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+  User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link User} that is currently signed on.
@@ -187,6 +186,6 @@ public interface UserService extends UserDetailsService {
    *
    * @return The {@link User} that is currently signed on.
    */
-  public User getProfileUser(final User user);
+  User getProfileUser(final User user);
 
 }
