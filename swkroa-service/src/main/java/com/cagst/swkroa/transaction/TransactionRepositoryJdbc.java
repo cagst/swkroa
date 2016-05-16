@@ -11,7 +11,7 @@ import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.deposit.Deposit;
-import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.deposit.DepositTransaction;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import org.springframework.util.CollectionUtils;
  * @author Craig Gaskill
  */
 @Named("transactionRepo")
-/* package */ final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implements TransactionRepository {
+public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implements TransactionRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(TransactionRepositoryJdbc.class);
 
   private static final String GET_TRANSACTION_BY_UID             = "GET_TRANSACTION_BY_UID";
@@ -50,7 +50,6 @@ import org.springframework.util.CollectionUtils;
   private static final String UPDATE_TRANSACTION_ENTRY = "UPDATE_TRANSACTION_ENTRY";
 
   private final CodeValueRepository codeValueRepo;
-  private final MemberRepository memberRepo;
 
   /**
    * Primary Constructor used to create an instance of the TransactionRepositoryJdbc.
@@ -59,17 +58,13 @@ import org.springframework.util.CollectionUtils;
    *     The {@link DataSource} to used to retrieve / persists data object.
    * @param codeValueRepo
    *     The {@link CodeValueRepository} to use to retrieve additional attributes.
-   * @param memberRepo
-   *     The {@link MemberRepository} to us to retrieve Member information.
    */
   @Inject
   public TransactionRepositoryJdbc(final DataSource dataSource,
-                                   final CodeValueRepository codeValueRepo,
-                                   final MemberRepository memberRepo) {
+                                   final CodeValueRepository codeValueRepo) {
     super(dataSource);
 
     this.codeValueRepo = codeValueRepo;
-    this.memberRepo = memberRepo;
   }
 
   @Override
@@ -149,7 +144,7 @@ import org.springframework.util.CollectionUtils;
   }
 
   @Override
-  public List<Transaction> getTransactionsForDeposit(final Deposit deposit) {
+  public List<DepositTransaction> getTransactionsForDeposit(final Deposit deposit) {
     Assert.notNull(deposit, "Assertion Failed - argument [deposit] cannot be null.");
 
     LOGGER.info("Calling getTransactionsForDeposit [{}].", deposit.getDepositNumber());
@@ -161,7 +156,7 @@ import org.springframework.util.CollectionUtils;
     return getJdbcTemplate().query(
         stmtLoader.load(GET_TRANSACTIONS_FOR_DEPOSIT),
         params,
-        new TransactionListExtractor(codeValueRepo)
+        new DepositTransactionListExtractor(codeValueRepo)
     );
   }
 

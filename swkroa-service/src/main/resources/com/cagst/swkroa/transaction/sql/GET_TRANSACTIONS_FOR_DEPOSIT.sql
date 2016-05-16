@@ -1,11 +1,14 @@
-SELECT t.transaction_id
+SELECT dt.deposit_transaction_id
+      ,dt.deposit_id
+      ,dt.active_ind AS deposit_transaction_active_ind
+      ,t.transaction_id
       ,t.membership_id
       ,t.transaction_dt
       ,t.transaction_type_flag
       ,t.transaction_desc
       ,t.ref_num
       ,t.memo_txt
-      ,t.active_ind
+      ,t.active_ind AS transaction_active_ind
       ,t.updt_cnt AS transaction_updt_cnt
       ,te.transaction_entry_id
       ,te.related_transaction_id

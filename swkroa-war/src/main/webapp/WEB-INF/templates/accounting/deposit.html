@@ -149,12 +149,17 @@
             </div>
           </div>
         </div>
+
+        <!-- Unpaid Invoices -->
         <div class="col-xs-9">
-          <div class="panel panel-default" style="height:275px; overflow-y:scroll;">
+          <div class="panel panel-default">
             <div class="panel-heading">
               <span class="panel-title">Unpaid Invoices</span>
+              <span class="pull-right">
+                <input type="text" data-ng-model="searchText" placeholder="Search"/>
+              </span>
             </div>
-            <div class="panel-body clear-padding">
+            <div class="panel-body clear-padding" style="height:225px; overflow-y:scroll;">
               <em data-ng-show="!unpaid">
                 <label class="panel-body text-muted text-center">
                   <i class="fa fa-spinner fa-pulse"></i>
@@ -176,7 +181,7 @@
                       <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
                     </tr>
                   </thead>
-                  <tbody data-ng-repeat="inv in unpaid | orderBy: ['membershipName', 'transactionDate']"
+                  <tbody data-ng-repeat="inv in unpaid | filter: searchText | orderBy: ['membershipName', 'transactionDate']"
                          data-ng-show="!inv.transactionInDeposit">
                     <tr>
                       <td>
@@ -200,11 +205,12 @@
             </div>
           </div>
 
-          <div class="spacer-top panel panel-default" style="height:275px; overflow-y:scroll;">
+          <!-- Transactions in Deposit -->
+          <div class="spacer-top panel panel-default">
             <div class="panel-heading">
               <span class="panel-title">Transactions in Deposit</span>
             </div>
-            <div class="panel-body clear-padding">
+            <div class="panel-body clear-padding" style="height:225px; overflow-y:scroll;">
               <table class="table table-hover table-bordered table-condensed">
               <thead>
                 <tr>

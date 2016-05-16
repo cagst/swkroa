@@ -11,14 +11,12 @@ import java.util.List;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.deposit.Deposit;
-import com.cagst.swkroa.member.Member;
-import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.deposit.DepositTransaction;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,7 +29,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * Test class for the TransactionRepositoryJdbc class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class TransactionRepositoryJdbcTest extends BaseTestRepository {
@@ -61,14 +58,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(typePayment);
     Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(typeSpecial);
 
-    MemberRepository memberRepo = Mockito.mock(MemberRepository.class);
-
-    Member member = new Member();
-    member.setMemberUID(2L);
-
-    Mockito.when(memberRepo.getMemberByUID(2L)).thenReturn(member);
-
-    repo = new TransactionRepositoryJdbc(createTestDataSource(), codeValueRepo, memberRepo);
+    repo = new TransactionRepositoryJdbc(createTestDataSource(), codeValueRepo);
   }
 
   /**
@@ -141,7 +131,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     Deposit deposit = new Deposit();
     deposit.setDepositUID(3L);
 
-    List<Transaction> transactions = repo.getTransactionsForDeposit(deposit);
+    List<DepositTransaction> transactions = repo.getTransactionsForDeposit(deposit);
     assertNotNull("Ensure the transaction list exists.", transactions);
     assertTrue("Ensure the transaction list is empty.", transactions.isEmpty());
   }
@@ -154,7 +144,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     Deposit deposit = new Deposit();
     deposit.setDepositUID(1L);
 
-    List<Transaction> transactions = repo.getTransactionsForDeposit(deposit);
+    List<DepositTransaction> transactions = repo.getTransactionsForDeposit(deposit);
     assertNotNull("Ensure the transaction list exists.", transactions);
     assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
     assertEquals("Ensure we found the correct number of transactions.", 2, transactions.size());
@@ -164,12 +154,11 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
    * Test the getTransactionsForMember method and finding Transactions
    */
   @Test
-  @Ignore
   public void testGetUnpaidInvoices_Found() {
     List<UnpaidInvoice> transactions = repo.getUnpaidInvoices();
     assertNotNull("Ensure the transaction list exists.", transactions);
     assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
-    assertEquals("Ensure we found the correct number of transactions.", 1, transactions.size());
+    assertEquals("Ensure we found the correct number of transactions.", 2, transactions.size());
   }
 
   /**

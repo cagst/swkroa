@@ -3,6 +3,7 @@ package com.cagst.swkroa.transaction;
 import java.util.List;
 
 import com.cagst.swkroa.deposit.Deposit;
+import com.cagst.swkroa.deposit.DepositTransaction;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
@@ -63,15 +64,15 @@ public interface TransactionRepository {
   List<TransactionGroup> getTransactionGroupsForType(final TransactionType type, final int start, final int limit);
 
   /**
-   * Retrieves a {@link List} of {@link Transaction Transactions} defined within the system for the specified
+   * Retrieves a {@link List} of {@link DepositTransaction Transactions} defined within the system for the specified
    * {@link Deposit}.
    *
    * @param deposit
    *    The {@link Deposit} to retrieve transactions for.
    *
-   * @return A {@link List} of {@link Transaction Transactions} associated with the specified Deposit.
+   * @return A {@link List} of {@link DepositTransaction Transactions} associated with the specified Deposit.
    */
-  List<Transaction> getTransactionsForDeposit(final Deposit deposit);
+  List<DepositTransaction> getTransactionsForDeposit(final Deposit deposit);
 
   /**
    * Retrieves a {@link List} of {@link Transaction Transactions} that have not been paid in full.

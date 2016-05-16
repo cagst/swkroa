@@ -2,6 +2,7 @@ SELECT ms.membership_name
       ,t.membership_id
       ,t.transaction_id
       ,t.transaction_dt
+      ,t.transaction_type_flag
       ,t.transaction_desc
       ,t.ref_num
       ,t.active_ind

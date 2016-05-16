@@ -9,15 +9,19 @@ import java.util.Map;
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.transaction.Transaction;
+import com.cagst.swkroa.transaction.TransactionEntry;
 import com.cagst.swkroa.transaction.TransactionRepository;
+import com.cagst.swkroa.transaction.TransactionType;
 import com.cagst.swkroa.user.User;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -27,7 +31,6 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link DepositRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Repository("depositRepository")
 /* package */ final class DepositRepositoryJdbc extends BaseRepositoryJdbc implements DepositRepository {
@@ -38,6 +41,9 @@ import org.springframework.util.Assert;
 
   private static final String INSERT_DEPOSIT = "INSERT_DEPOSIT";
   private static final String UPDATE_DEPOSIT = "UPDATE_DEPOSIT";
+
+  private static final String INSERT_DEPOSIT_TRANSACTION = "INSERT_DEPOSIT_TRANSACTION";
+  private static final String DELETE_DEPOSIT_TRANSACTION = "DELETE_DEPOSIT_TRANSACTION";
 
   private final TransactionRepository transactionRepo;
 
@@ -102,11 +108,41 @@ import org.springframework.util.Assert;
     }
 
     // save the transactions related to this deposit
-    for (Transaction trans : deposit.getTransactions()) {
-      transactionRepo.saveTransaction(trans, user);
+    for (DepositTransaction trans : deposit.getTransactions()) {
+      DepositTransaction depositTransaction;
 
-      // save the associations of the transaction to the deposit
-      associateTransactionToDeposit(trans, deposit, user);
+      if (trans.getDepositTransactionUID() == 0L) {
+        // Insert new Transaction
+
+        // if the transaction is an INVOICE we need to generate a PAYMENT
+        if (trans.getTransactionType() == TransactionType.INVOICE) {
+          depositTransaction = new DepositTransaction();
+          depositTransaction.setMembershipUID(trans.getMembershipUID());
+          depositTransaction.setTransactionType(TransactionType.PAYMENT);
+          depositTransaction.setTransactionDate(deposit.getDepositDate());
+          depositTransaction.setTransactionDescription(StringUtils.replace(trans.getTransactionDescription(), "Invoice", "Payment"));
+
+          for (TransactionEntry entry : trans.getTransactionEntries()) {
+            TransactionEntry paymentEntry = new TransactionEntry();
+            paymentEntry.setTransaction(depositTransaction);
+            paymentEntry.setTransactionEntryType(entry.getTransactionEntryType());
+            paymentEntry.setTransactionEntryAmount(entry.getTransactionEntryAmount().negate());
+            paymentEntry.setRelatedTransaction(trans);
+
+            depositTransaction.addEntry(paymentEntry);
+          }
+
+          Transaction savedTransaction = transactionRepo.saveTransaction(depositTransaction, user);
+
+          // save the associations of the transaction to the deposit
+          associateTransactionToDeposit(savedTransaction, deposit, user);
+        } else {
+          depositTransaction = trans;
+        }
+      } else if (!trans.isDepositTransactionActive()) {
+        // Delete existing Transaction (Relationship)
+        depositTransaction = trans;
+      }
     }
 
     return dep;
@@ -150,6 +186,17 @@ import org.springframework.util.Assert;
   }
 
   private void associateTransactionToDeposit(final Transaction transaction, final Deposit deposit, final User user) {
+    LOGGER.info("Calling associateTransactionToDeposit.");
 
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("deposit_id", deposit.getDepositUID());
+    params.addValue("transaction_id", transaction.getTransactionUID());
+    params.addValue("active_ind", true);
+    params.addValue("create_id", user.getUserUID());
+    params.addValue("updt_id", user.getUserUID());
+
+    getJdbcTemplate().update(stmtLoader.load(INSERT_DEPOSIT_TRANSACTION), params);
   }
 }

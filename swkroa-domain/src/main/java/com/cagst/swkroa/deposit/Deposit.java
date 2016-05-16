@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.cagst.swkroa.transaction.Transaction;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -22,7 +21,7 @@ public final class Deposit implements Serializable {
   private String deposit_ref;
   private BigDecimal deposit_amount;
 
-  private List<Transaction> transactions = new ArrayList<>();
+  private List<DepositTransaction> transactions = new ArrayList<>();
 
   // meta-data
   private boolean active_ind = true;
@@ -72,19 +71,19 @@ public final class Deposit implements Serializable {
     transactions.clear();
   }
 
-  public void addTransaction(final Transaction transaction) {
+  public void addTransaction(final DepositTransaction transaction) {
     this.transactions.add(transaction);
   }
 
-  public void removeTransaction(final Transaction transaction) {
+  public void removeTransaction(final DepositTransaction transaction) {
     this.transactions.remove(transaction);
   }
 
-  public List<Transaction> getTransactions() {
+  public List<DepositTransaction> getTransactions() {
     return Collections.unmodifiableList(transactions);
   }
 
-  public void setTransactions(final List<Transaction> transactions) {
+  public void setTransactions(final List<DepositTransaction> transactions) {
     this.transactions = new ArrayList<>(transactions);
   }
 

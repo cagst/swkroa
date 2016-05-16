@@ -39,7 +39,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return transaction_id;
   }
 
-  /* package */ void setTransactionUID(final long uid) {
+  protected void setTransactionUID(final long uid) {
     this.transaction_id = uid;
   }
 
