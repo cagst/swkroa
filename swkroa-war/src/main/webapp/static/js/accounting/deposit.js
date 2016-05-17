@@ -181,8 +181,19 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
   };
 
   $scope.save = function() {
-    depositService.saveDeposit($scope.deposit).success(function(data) {
-      var junk = data;
+    depositService.saveDeposit($scope.deposit).success(function(response) {
+      if (response.status == 201) {
+        $('#createdMessage').show();
+      } else if (response.status == 200) {
+        $('#updatedMessage').show();
+      }
+
+      $scope.view     = "listing";
+      $scope.original = null;
+
+      depositService.getDeposits().success(function(data) {
+        $scope.deposits = data;
+      });
     });
   };
 }]);

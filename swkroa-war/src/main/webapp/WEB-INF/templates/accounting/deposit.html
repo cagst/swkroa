@@ -19,11 +19,11 @@
       <h3 th:text="#{deposits.title}">zzz Deposit Overview</h3>
       <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
-        <div th:text="#{com.cagst.swkroa.deposit.save.created}">zzz Created</div>
+        <div th:text="#{deposits.save.created}">zzz Created</div>
       </div>
       <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
-        <div th:text="#{com.cagst.swkroa.deposit.save.updated}">zzz Updated</div>
+        <div th:text="#{deposits.save.updated}">zzz Updated</div>
       </div>
     </div>
     <div class="row" data-ng-show="deposits">
@@ -131,8 +131,7 @@
                   <button type="submit"
                           class="btn btn-primary"
                           th:text="#{deposits.create}"
-                          data-ng-show="deposit.depositUID == 0"
-                          data-ng-disabled="depositForm.$invalid">
+                          data-ng-show="deposit.depositUID == 0">
                   </button>
                   <button type="submit"
                           class="btn btn-primary"

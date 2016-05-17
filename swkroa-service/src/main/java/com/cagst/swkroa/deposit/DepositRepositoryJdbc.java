@@ -135,7 +135,8 @@ import org.springframework.util.Assert;
           Transaction savedTransaction = transactionRepo.saveTransaction(depositTransaction, user);
 
           // save the associations of the transaction to the deposit
-          associateTransactionToDeposit(savedTransaction, deposit, user);
+          long depositTransactionUID = associateTransactionToDeposit(savedTransaction, deposit, user);
+          depositTransaction.setDepositTransactionUID(depositTransactionUID);
         } else {
           depositTransaction = trans;
         }
@@ -185,10 +186,11 @@ import org.springframework.util.Assert;
     return deposit;
   }
 
-  private void associateTransactionToDeposit(final Transaction transaction, final Deposit deposit, final User user) {
+  private long associateTransactionToDeposit(final Transaction transaction, final Deposit deposit, final User user) {
     LOGGER.info("Calling associateTransactionToDeposit.");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    KeyHolder keyHolder = new GeneratedKeyHolder();
 
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("deposit_id", deposit.getDepositUID());
@@ -197,6 +199,11 @@ import org.springframework.util.Assert;
     params.addValue("create_id", user.getUserUID());
     params.addValue("updt_id", user.getUserUID());
 
-    getJdbcTemplate().update(stmtLoader.load(INSERT_DEPOSIT_TRANSACTION), params);
+    int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_DEPOSIT_TRANSACTION), params, keyHolder);
+    if (cnt == 1) {
+      return keyHolder.getKey().longValue();
+    } else {
+      return 0L;
+    }
   }
 }

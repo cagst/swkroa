@@ -6,7 +6,7 @@ INSERT INTO deposit_transaction (deposit_id
                                 ,updt_id
                                 ,updt_dt_tm)
                         VALUES (:deposit_id
-                               ,transaction_id
+                               ,:transaction_id
                                ,:active_ind
                                ,:create_id
                                ,CURRENT_TIMESTAMP

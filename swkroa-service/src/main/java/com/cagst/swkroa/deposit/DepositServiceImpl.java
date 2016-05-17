@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
+import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of the {@link DepositService} interface.
@@ -31,7 +33,7 @@ public class DepositServiceImpl implements DepositService {
    *      are related to Deposits.
    */
   @Autowired
-  public DepositServiceImpl(final DepositRepository depositRepo, final TransactionRepository transactionRepo) {
+  public DepositServiceImpl(DepositRepository depositRepo, TransactionRepository transactionRepo) {
     this.depositRepo = depositRepo;
     this.transactionRepo = transactionRepo;
   }
@@ -44,12 +46,20 @@ public class DepositServiceImpl implements DepositService {
   }
 
   @Override
-  public Deposit getDeposit(final long uid) {
+  public Deposit getDeposit(long uid) {
     LOGGER.info("Calling getDeposit for [{}].", uid);
 
     Deposit deposit = depositRepo.getDeposit(uid);
     deposit.setTransactions(transactionRepo.getTransactionsForDeposit(deposit));
 
     return deposit;
+  }
+
+  @Override
+  @Transactional
+  public Deposit saveDeposit(Deposit deposit, User user) {
+    LOGGER.info("Calling saveDeposit for [{}]", deposit.getDepositNumber());
+
+    return depositRepo.saveDeposit(deposit, user);
   }
 }

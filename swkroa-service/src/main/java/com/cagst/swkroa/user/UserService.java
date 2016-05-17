@@ -134,7 +134,7 @@ public interface UserService extends UserDetailsService {
   boolean doesUsernameExist(final String username);
 
   /**
-   * Commits the specified {@link User User} to persistent storage.
+   * Commits the specified {@link User} to persistent storage.
    *
    * @param builder
    *     The {@link User} to persist.
@@ -153,7 +153,7 @@ public interface UserService extends UserDetailsService {
    * @throws DataAccessException
    *     if the query fails
    */
-  User saveUser(final User builder, final User user)
+  User saveUser(User builder, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
 
   /**
