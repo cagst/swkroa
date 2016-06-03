@@ -82,6 +82,7 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
 
   $scope.view     = "listing";
   $scope.original = null;
+  $scope.deposit  = null;
 
   depositService.getDeposits().success(function(data) {
     $scope.deposits = data;
@@ -181,15 +182,16 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
   };
 
   $scope.save = function() {
-    depositService.saveDeposit($scope.deposit).success(function(response) {
-      if (response.status == 201) {
+    depositService.saveDeposit($scope.deposit).success(function(data, status) {
+      if (status == 201) {
         $('#createdMessage').show();
-      } else if (response.status == 200) {
+      } else if (status == 200) {
         $('#updatedMessage').show();
       }
 
       $scope.view     = "listing";
       $scope.original = null;
+      $scope.deposit  = data;
 
       depositService.getDeposits().success(function(data) {
         $scope.deposits = data;

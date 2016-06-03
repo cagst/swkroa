@@ -8,7 +8,7 @@ SELECT dt.deposit_transaction_id
       ,t.transaction_desc
       ,t.ref_num
       ,t.memo_txt
-      ,t.active_ind AS transaction_active_ind
+      ,t.active_ind
       ,t.updt_cnt AS transaction_updt_cnt
       ,te.transaction_entry_id
       ,te.related_transaction_id

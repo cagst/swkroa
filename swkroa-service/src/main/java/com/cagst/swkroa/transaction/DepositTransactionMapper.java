@@ -26,7 +26,7 @@ import java.sql.SQLException;
   private static final String MEMO_TXT              = "memo_txt";
 
   // meta-data
-  private static final String TRANSACTION_ACTIVE_IND         = "transaction_active_ind";
+  private static final String TRANSACTION_ACTIVE_IND         = "active_ind";
   private static final String DEPOSIT_TRANSACTION_ACTIVE_IND = "deposit_transaction_active_ind";
   private static final String CREATE_ID                      = "create_id";
   private static final String UPDT_ID                        = "updt_id";

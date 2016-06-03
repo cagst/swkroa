@@ -224,8 +224,7 @@
                   <th class="col-xs-1"></th>
                 </tr>
               </thead>
-              <tbody data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
-                     data-ng-show="tx.transactionInDeposit">
+              <tbody data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']">
                 <tr>
                   <td>
                     <button type="button" class="btn btn-danger btn-xs"
