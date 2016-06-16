@@ -2,6 +2,7 @@ package com.cagst.swkroa.deposit;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,13 +124,15 @@ import org.springframework.util.Assert;
           depositTransaction.setTransactionDescription(StringUtils.replace(trans.getTransactionDescription(), "Invoice", "Payment"));
 
           for (TransactionEntry entry : trans.getTransactionEntries()) {
-            TransactionEntry paymentEntry = new TransactionEntry();
-            paymentEntry.setTransaction(depositTransaction);
-            paymentEntry.setTransactionEntryType(entry.getTransactionEntryType());
-            paymentEntry.setTransactionEntryAmount(entry.getTransactionEntryAmount().negate());
-            paymentEntry.setRelatedTransaction(trans);
+            if (entry.getTransactionEntryAmount().compareTo(BigDecimal.ZERO) == 1) {
+              TransactionEntry paymentEntry = new TransactionEntry();
+              paymentEntry.setTransaction(depositTransaction);
+              paymentEntry.setTransactionEntryType(entry.getTransactionEntryType());
+              paymentEntry.setTransactionEntryAmount(entry.getTransactionEntryAmount().negate());
+              paymentEntry.setRelatedTransaction(trans);
 
-            depositTransaction.addEntry(paymentEntry);
+              depositTransaction.addEntry(paymentEntry);
+            }
           }
 
           Transaction savedTransaction = transactionRepo.saveTransaction(depositTransaction, user);

@@ -271,7 +271,7 @@
       <plugin>
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-maven-plugin</artifactId>
-        <version>3.1</version>
+        <version>4.0.1</version>
         <configuration>
           <url>jdbc:mysql://localhost:3306/swkroadb</url>
           <schemas>

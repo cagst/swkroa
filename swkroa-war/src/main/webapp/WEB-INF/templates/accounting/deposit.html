@@ -131,13 +131,14 @@
                   <button type="submit"
                           class="btn btn-primary"
                           th:text="#{deposits.create}"
-                          data-ng-show="deposit.depositUID == 0">
+                          data-ng-show="deposit.depositUID == 0"
+                          data-ng-disabled="depositForm.$invalid">
                   </button>
                   <button type="submit"
                           class="btn btn-primary"
                           th:text="#{deposits.update}"
                           data-ng-show="deposit.depositUID > 0"
-                          data-ng-disabled="hasChanges(deposit) || depositForm.$invalid">
+                          data-ng-disabled="depositForm.$invalid">
                   </button>
                   <button type="button" class="btn btn-default"
                           data-ng-click="cancelChanges()"
@@ -224,7 +225,8 @@
                   <th class="col-xs-1"></th>
                 </tr>
               </thead>
-              <tbody data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']">
+              <tbody data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
+                     data-ng-show="tx.active">
                 <tr>
                   <td>
                     <button type="button" class="btn btn-danger btn-xs"
@@ -286,20 +288,17 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-xs-6">
-                  <label for="entryType" class="control-label"
-                         data-ng-required="true"
+                  <label for="entryType" class="control-label label-required"
                          th:text="#{com.cagst.swkroa.membership.transaction.type}">
                     zzz Type
                   </label>
-                  <select id="entryType" class="form-control"
+                  <select id="entryType" name="entryType" class="form-control"
                           data-ng-model="newTransactionEntry.transactionEntryType"
-                          data-ng-required="true"
                           data-ng-options="type.display for type in entryTypes">
                   </select>
                 </div>
                 <div class="col-xs-6">
-                  <label for="entryAmount" class="control-label"
-                         data-ng-required="true"
+                  <label for="entryAmount" class="control-label label-required"
                          th:text="#{com.cagst.swkroa.membership.transaction.amount}">
                     zzz Amount
                   </label>

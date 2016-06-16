@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <th:block th:replace="fragments/common :: head" />
+</head>
+
+<body>
+<div th:replace="fragments/auth :: header"></div>
+<div th:replace="fragments/auth :: navigation"></div>
+
+<div id="page-content">
+  <div class="page-header">
+    <h3 th:text="#{signin.register.header}">zzz Register</h3>
+  </div>
+
+  <form th:action="@{/auth/register}" method="POST" autocomplete="off" class="container-center-large"
+        th:object="${registration}">
+    <div class="row" style="margin-bottom: 20px;">
+      <span id="identify" th:text="#{signin.register.identify}" style="padding: 25px">zzz Identifier</span>
+      <span id="verify" th:text="#{signin.register.verify}" style="padding: 25px">zzz Verify</span>
+      <span id="complete" th:text="#{signin.register.complete}" style="padding: 25px">zzz Complete</span>
+    </div>
+
+    <input type="hidden" th:field="*{stage}">
+
+    <div th:if="*{stage == 'identify'}">
+      <div class="row">
+        <div class="form-group">
+          <div class="col-xs-12">
+            <label for="ownerId" class="form_label label-required"
+                   th:text="#{signin.register.ownerid.label}">
+              zzz Owner ID
+            </label>
+            <input id="ownerId" name="ownerId" type="text" maxlength="15"
+                   class="form-control input-block-level"
+                   th:placeholder="#{signin.register.ownerid.prompt}"
+                   th:required="true"
+                   th:value="*{ownerId}"
+                   onblur="lostFocusOwnerId()"/>
+          </div>
+        </div>
+      </div>
+      <div class="row row-spacer">
+        <div class="col-xs-6">
+          <label for="firstName" class="form_label"
+                 th:text="#{signin.register.firstname.label}">
+            zzz Firstname
+          </label>
+          <input id="firstName" name="firstName" type="text" maxlength="50"
+                 class="form-control input-block-level"
+                 th:placeholder="#{signin.register.firstname.prompt}"
+                 th:value="*{firstName}">
+        </div>
+
+        <div class="col-xs-6">
+          <label for="lastName" class="form_label"
+                 th:text="#{signin.register.lastname.label}">
+            zzz Firstname
+          </label>
+          <input id="lastName" name="lastName" type="text" maxlength="50"
+                 class="form-control input-block-level"
+                 th:placeholder="#{signin.register.lastname.prompt}"
+                 th:value="*{lastName}">
+
+        </div>
+      </div>
+    </div>
+
+    <div th:if="*{stage == 'verify'}">
+
+    </div>
+
+    <div th:if="*{stage == 'complete'}">
+
+    </div>
+
+
+    <div class="row row-spacer">
+      <button id="continue" type="submit" class="btn btn-primary"
+              th:text="#{signin.register.continue}"
+              th:disabled="*{#strings.isEmpty(ownerId)}">
+        zzz Continue
+      </button>
+    </div>
+
+    <script type="text/javascript">
+      function lostFocusOwnerId() {
+        var id = $('#ownerId').val();
+
+        $('#continue').prop('disabled', id.length === 0);
+      }
+    </script>
+  </form>
+
+</div>
+</body>
+</html>

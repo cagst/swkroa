@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
@@ -156,6 +157,35 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure we have a valid MemberType.", member.getMemberType());
     assertEquals("Ensure it is the correct MemberType.", MemberType.REGULAR, member.getMemberType()
         .getMemberTypeMeaning());
+  }
+
+  /**
+   * Test the getMemberByOwnerId method and not finding the member.
+   */
+  @Test
+  public void testGetMemberByOwnerId_NotFound() {
+    Optional<Member> checkMember = repo.getMemberByOwnerId("BADOWNERID");
+
+    assertNotNull("Ensure a valid optional is returned", checkMember);
+    assertFalse("Ensure a member wasn't found", checkMember.isPresent());
+  }
+
+  /**
+   * Test the getMemberByOwnerId method and finding a member.
+   */
+  @Test
+  public void testGetMemberByOwnerId_Found() {
+    Optional<Member> checkMember = repo.getMemberByOwnerId("DORDUD0");
+
+    assertNotNull("Ensure a valid optional is returned", checkMember);
+    assertTrue("Ensure a member was found", checkMember.isPresent());
+
+    Member member = checkMember.get();
+    assertEquals("Ensure we found the correct member!", 2, member.getMemberUID());
+    assertNotNull("Ensure we have a valid MemberType.", member.getMemberType());
+    assertEquals("Ensure it is the correct MemberType.", MemberType.REGULAR, member.getMemberType()
+        .getMemberTypeMeaning());
+
   }
 
   /**

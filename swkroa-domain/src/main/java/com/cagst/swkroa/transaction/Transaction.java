@@ -23,6 +23,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
 
   private long transaction_id;
   private long membership_id;
+  private String membership_name;
   private DateTime transaction_dt;
   private TransactionType transaction_type;
   private String transaction_desc;
@@ -49,6 +50,14 @@ public class Transaction implements Serializable, Comparable<Transaction> {
 
   public void setMembershipUID(final long uid) {
     this.membership_id = uid;
+  }
+
+  public String getMembershipName() {
+    return membership_name;
+  }
+
+  public void setMembershipName(final String name) {
+    this.membership_name = name;
   }
 
   public DateTime getTransactionDate() {

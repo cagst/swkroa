@@ -19,6 +19,7 @@ import java.sql.SQLException;
   private static final String TRANSACTION_ID         = "transaction_id";
 
   private static final String MEMBERSHIP_ID         = "membership_id";
+  private static final String MEMBERSHIP_NAME       = "membership_name";
   private static final String TRANSACTION_DT        = "transaction_dt";
   private static final String TRANSACTION_TYPE_FLAG = "transaction_type_flag";
   private static final String TRANSACTION_DESC      = "transaction_desc";
@@ -39,6 +40,7 @@ import java.sql.SQLException;
     trans.setDepositUID(rs.getLong(DEPOSIT_ID));
     trans.setTransactionUID(rs.getLong(TRANSACTION_ID));
     trans.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
+    trans.setMembershipName(rs.getString(MEMBERSHIP_NAME));
     trans.setTransactionDate(CGTDateTimeUtils.getDateTime(rs, TRANSACTION_DT));
     trans.setTransactionType(TransactionType.values()[rs.getInt(TRANSACTION_TYPE_FLAG)]);
     trans.setTransactionDescription(rs.getString(TRANSACTION_DESC));

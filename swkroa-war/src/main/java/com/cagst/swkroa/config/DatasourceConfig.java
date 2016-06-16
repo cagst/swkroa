@@ -34,7 +34,7 @@ public class DatasourceConfig {
     return transactionManager;
   }
 
-  @Bean(name = "flyway")
+  @Bean(name = "flyway", initMethod = "migrate")
   public Flyway getFlyway() {
     Flyway flyway = new Flyway();
     flyway.setBaselineOnMigrate(true);

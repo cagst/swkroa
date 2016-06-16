@@ -81,7 +81,6 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
   $('#updatedMessage').hide();
 
   $scope.view     = "listing";
-  $scope.original = null;
   $scope.deposit  = null;
 
   depositService.getDeposits().success(function(data) {
@@ -95,7 +94,6 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
   $scope.addDeposit = function() {
     depositService.getDeposit(0).success(function(data) {
       $scope.deposit  = data;
-      $scope.original = angular.copy(data);
 
       $scope.view = "add";
     });
@@ -111,13 +109,24 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
 
     depositService.getDeposit(deposit.depositUID).success(function(data) {
       $scope.deposit  = data;
-      $scope.original = angular.copy(data);
+
+      // need to add the paidAmount to the deposit transaction so when it is removed it can be removed from the total
+      for (var idx = 0; idx < $scope.deposit.transactions.length; idx++) {
+        $scope.deposit.transactions[idx].amountPaid = $scope.deposit.transactions[idx].transactionAmount;
+        $scope.deposit.transactions[idx].amountRemaining = $scope.deposit.transactions[idx].transactionAmount;
+        $scope.deposit.transactions[idx].transactionInDeposit = true;
+      }
 
       $scope.view = "edit";
     });
 
     transactionService.getUnpaidTransactions().success(function(data) {
       $scope.unpaid = data;
+
+      // need to add the deposit transaction to the unpaid but mark it as included in deposit so if it is removed it will re-appear in the unpaid invoices section
+      for (var idx = 0; idx < $scope.deposit.transactions.length; idx++) {
+        $scope.unpaid.push($scope.deposit.transactions[idx]);
+      }
     });
   };
 
@@ -156,10 +165,15 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
       }
     }
 
-    var idx2 = $scope.deposit.transactions.indexOf(transaction);
-    $scope.deposit.transactions.splice(idx2, 1);
-
     $scope.deposit.depositAmount -= transaction.amountPaid;
+    transaction.amountPaid = 0;
+    
+    if (transaction.depositTransactionUID) {
+      transaction.active = false;
+    } else {
+      var idx2 = $scope.deposit.transactions.indexOf(transaction);
+      $scope.deposit.transactions.splice(idx2, 1);
+    }
   };
   
   $scope.createTransactionEntry = function(transaction) {
@@ -190,7 +204,6 @@ swkroaApp.controller('depositController', ['$scope', 'depositService', 'transact
       }
 
       $scope.view     = "listing";
-      $scope.original = null;
       $scope.deposit  = data;
 
       depositService.getDeposits().success(function(data) {
