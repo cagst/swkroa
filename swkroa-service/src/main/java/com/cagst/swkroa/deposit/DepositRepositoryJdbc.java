@@ -44,7 +44,7 @@ import org.springframework.util.Assert;
   private static final String UPDATE_DEPOSIT = "UPDATE_DEPOSIT";
 
   private static final String INSERT_DEPOSIT_TRANSACTION = "INSERT_DEPOSIT_TRANSACTION";
-  private static final String DELETE_DEPOSIT_TRANSACTION = "DELETE_DEPOSIT_TRANSACTION";
+  private static final String UPDATE_DEPOSIT_TRANSACTION = "UPDATE_DEPOSIT_TRANSACTION";
 
   private final TransactionRepository transactionRepo;
 
@@ -110,14 +110,12 @@ import org.springframework.util.Assert;
 
     // save the transactions related to this deposit
     for (DepositTransaction trans : deposit.getTransactions()) {
-      DepositTransaction depositTransaction;
-
       if (trans.getDepositTransactionUID() == 0L) {
         // Insert new Transaction
 
         // if the transaction is an INVOICE we need to generate a PAYMENT
         if (trans.getTransactionType() == TransactionType.INVOICE) {
-          depositTransaction = new DepositTransaction();
+          DepositTransaction depositTransaction = new DepositTransaction();
           depositTransaction.setMembershipUID(trans.getMembershipUID());
           depositTransaction.setTransactionType(TransactionType.PAYMENT);
           depositTransaction.setTransactionDate(deposit.getDepositDate());
@@ -140,12 +138,14 @@ import org.springframework.util.Assert;
           // save the associations of the transaction to the deposit
           long depositTransactionUID = associateTransactionToDeposit(savedTransaction, deposit, user);
           depositTransaction.setDepositTransactionUID(depositTransactionUID);
-        } else {
-          depositTransaction = trans;
         }
-      } else if (!trans.isDepositTransactionActive()) {
-        // Delete existing Transaction (Relationship)
-        depositTransaction = trans;
+      } else if (!trans.isDepositTransactionActive() || !trans.isActive()) {
+        // Delete (disassociate) existing Transaction (Relationship)
+        trans.setActive(false);
+        transactionRepo.saveTransaction(trans, user);
+
+        trans.setDepositTransactionActive(false);
+        disassociateDepositTransaction(trans, user);
       }
     }
 
@@ -208,5 +208,18 @@ import org.springframework.util.Assert;
     } else {
       return 0L;
     }
+  }
+
+  private void disassociateDepositTransaction(final DepositTransaction transaction, final User user) {
+    LOGGER.info("Calling disassociateDepositTransaction.");
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("active_ind", true);
+    params.addValue("updt_id", user.getUserUID());
+    params.addValue("deposit_transaction_id", transaction.getDepositTransactionUID());
+
+    getJdbcTemplate().update(stmtLoader.load(UPDATE_DEPOSIT_TRANSACTION), params);
   }
 }
