@@ -12,6 +12,10 @@ SELECT t.transaction_id
       ,te.transaction_entry_amount
       ,te.transaction_entry_type_cd
       ,te.updt_cnt AS transaction_entry_updt_cnt
+      ,(SELECT count(*)
+          FROM deposit_transaction dt
+         WHERE dt.transaction_id = t.transaction_id
+           AND dt.active_ind = 1) AS deposit_ind
   FROM transaction t
       ,transaction_entry te
  WHERE t.membership_id   = :membership_id
