@@ -104,7 +104,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetCodeValuesForCodeSetByMeaning_Found() {
-    List<CodeValue> codevalues = repo.getCodeValuesForCodeSetByMeaning("PHONE_TYPE");
+    List<CodeValue> codevalues = repo.getCodeValuesForCodeSetByType(CodeSetType.PHONE_TYPE);
     assertNotNull("Should not return NULL!", codevalues);
     assertFalse(codevalues.isEmpty());
     assertEquals(3, codevalues.size());

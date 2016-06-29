@@ -1,9 +1,8 @@
 package com.cagst.swkroa.audit;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -12,7 +11,6 @@ import org.joda.time.DateTime;
  * This class represents an auditable event within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public class AuditEvent implements Serializable {
   private static final long serialVersionUID = 5568939371877454284L;
@@ -98,13 +96,7 @@ public class AuditEvent implements Serializable {
    */
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(audit_event_type);
-    builder.append(audit_action);
-    builder.append(audit_instigator);
-    builder.append(audit_message);
-
-    return builder.build();
+    return Objects.hash(audit_event_type, audit_action, audit_instigator, audit_message);
   }
 
   /*
@@ -126,13 +118,10 @@ public class AuditEvent implements Serializable {
 
     AuditEvent rhs = (AuditEvent) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(audit_event_type, rhs.getAuditEventType());
-    builder.append(audit_action, rhs.getAuditAction());
-    builder.append(audit_instigator, rhs.getAuditInstigator());
-    builder.append(audit_message, rhs.getAuditMessage());
-
-    return builder.build();
+    return Objects.equals(audit_event_type, rhs.getAuditEventType()) &&
+        Objects.equals(audit_action, rhs.getAuditAction()) &&
+        Objects.equals(audit_instigator, rhs.getAuditInstigator()) &&
+        Objects.equals(audit_message, rhs.getAuditMessage());
   }
 
   /*

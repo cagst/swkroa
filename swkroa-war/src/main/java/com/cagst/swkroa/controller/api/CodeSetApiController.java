@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.cagst.swkroa.codevalue.CodeSet;
+import com.cagst.swkroa.codevalue.CodeSetType;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.web.util.WebAppUtils;
@@ -59,16 +60,16 @@ public final class CodeSetApiController {
   /**
    * Handles the request and retrieves the {@link CodeValue CodeValues} associated to the specified CodeSet.
    *
-   * @param codeSetMeaning
-   *    A {@link String} that represents the {@link CodeSet} to retrieve {@link CodeValue CodeValues} for.
+   * @param codeSetType
+   *    The {@link CodeSetType} that represents the {@link CodeSet} to retrieve {@link CodeValue CodeValues} for.
    *
    * @return A JSON representation of the CodeValues associated to the specified CodeSet.
    */
-  @RequestMapping(value = "/{codeSetMeaning}", method = RequestMethod.GET)
-  public List<CodeValue> getCodeValuesForCodeSet(final @PathVariable String codeSetMeaning) {
-    LOGGER.info("Received request to retrieve codevalues for codeset [{}].", codeSetMeaning);
+  @RequestMapping(value = "/{codeSetType}", method = RequestMethod.GET)
+  public List<CodeValue> getCodeValuesForCodeSet(final @PathVariable CodeSetType codeSetType) {
+    LOGGER.info("Received request to retrieve codevalues for codeset [{}].", codeSetType);
 
-    List<CodeValue> codeValues = codeValueRepo.getCodeValuesForCodeSetByMeaning(codeSetMeaning);
+    List<CodeValue> codeValues = codeValueRepo.getCodeValuesForCodeSetByType(codeSetType);
     Collections.sort(codeValues);
 
     return codeValues;
@@ -108,6 +109,6 @@ public final class CodeSetApiController {
     HttpHeaders headers = new HttpHeaders();
     headers.setLocation(locationUri.toUri());
 
-    return new ResponseEntity<CodeValue>(savedCodeValue, headers, newCodeValue ? HttpStatus.CREATED : HttpStatus.OK);
+    return new ResponseEntity<>(savedCodeValue, headers, newCodeValue ? HttpStatus.CREATED : HttpStatus.OK);
   }
 }

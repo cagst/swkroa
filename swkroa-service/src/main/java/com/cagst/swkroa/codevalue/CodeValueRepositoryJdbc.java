@@ -48,12 +48,12 @@ import org.springframework.util.Assert;
    *     The {@link DataSource} used to retrieve / persist data objects.
    */
   @Inject
-  public CodeValueRepositoryJdbc(final DataSource dataSource) {
+  public CodeValueRepositoryJdbc(DataSource dataSource) {
     super(dataSource);
   }
 
   @Override
-  public CodeSet getCodeSetByUID(final long uid) {
+  public CodeSet getCodeSetByUID(long uid) {
     LOGGER.info("Calling CodeSetByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -83,7 +83,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Cacheable(value = "codeValueLists")
-  public List<CodeValue> getCodeValuesForCodeSet(final CodeSet codeset) {
+  public List<CodeValue> getCodeValuesForCodeSet(CodeSet codeset) {
     Assert.notNull(codeset, "Assertion Failed - argument [codeset] cannot be null.");
 
     LOGGER.info("Calling CodeValuesForCodeSet for [{}].", codeset.getDisplay());
@@ -97,14 +97,14 @@ import org.springframework.util.Assert;
 
   @Override
   @Cacheable(value = "codeValueLists")
-  public List<CodeValue> getCodeValuesForCodeSetByMeaning(final String codeSetMeaning) {
-    Assert.hasText(codeSetMeaning, "Assertion Failed - argument [codeSetMeaning] cannot be null or empty.");
+  public List<CodeValue> getCodeValuesForCodeSetByType(CodeSetType codeSetType) {
+    Assert.notNull(codeSetType, "Assertion Failed - argument [codeSetType] cannot be null.");
 
-    LOGGER.info("Calling getCodeValuesForCodeSetByMeaning for [{}].", codeSetMeaning);
+    LOGGER.info("Calling getCodeValuesForCodeSetByType for [{}].", codeSetType);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     Map<String, String> params = new HashMap<>(1);
-    params.put("codeset_meaning", codeSetMeaning);
+    params.put("codeset_meaning", codeSetType.name());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUES_FOR_CODESET_BY_MEANING), params,
         new CodeValueMapper());
@@ -112,7 +112,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Cacheable(value = "codeValues")
-  public CodeValue getCodeValueByUID(final long uid) {
+  public CodeValue getCodeValueByUID(long uid) {
     if (uid == 0L) {
       return null;
     }
@@ -139,7 +139,7 @@ import org.springframework.util.Assert;
 
   @Override
   @Cacheable(value = "codeValues")
-  public CodeValue getCodeValueByMeaning(final String meaning) {
+  public CodeValue getCodeValueByMeaning(String meaning) {
     Assert.hasText(meaning, "Assertion Failed - argument [meaning] cannot be null or empty.");
 
     LOGGER.info("Calling getCodeValueByMeaning for [{}].", meaning);
@@ -164,7 +164,7 @@ import org.springframework.util.Assert;
 
   @Override
   @CacheEvict(value = "codeValueLists", allEntries = true)
-  public CodeValue saveCodeValueForCodeSet(final CodeValue codeValue, final User user)
+  public CodeValue saveCodeValueForCodeSet(CodeValue codeValue, User user)
       throws DataAccessException {
 
     Assert.notNull(codeValue, "Assertion failed - argument codeValue cannot be null.");
@@ -179,7 +179,7 @@ import org.springframework.util.Assert;
     }
   }
 
-  private CodeValue insertCodeValueForCodeSet(final CodeValue codeValue, final User user)
+  private CodeValue insertCodeValueForCodeSet(CodeValue codeValue, User user)
       throws DataAccessException {
 
     LOGGER.info("Inserting new CodeValue [{}].", codeValue.getDisplay());
@@ -198,7 +198,7 @@ import org.springframework.util.Assert;
     return codeValue;
   }
 
-  private CodeValue updateCodeValueForCodeSet(final CodeValue codeValue, final User user)
+  private CodeValue updateCodeValueForCodeSet(CodeValue codeValue, User user)
       throws DataAccessException {
 
     LOGGER.info("Updating CodeValue [{}].", codeValue.getDisplay());
