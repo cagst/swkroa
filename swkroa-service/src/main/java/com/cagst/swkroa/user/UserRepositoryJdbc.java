@@ -32,7 +32,6 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link UserRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */ final class UserRepositoryJdbc extends PersonRepositoryJdbc implements UserRepository, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryJdbc.class);

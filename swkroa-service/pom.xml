@@ -71,22 +71,10 @@
       <artifactId>swkroa-domain</artifactId>
     </dependency>
 
-    <!-- Spring AOP Dependencies -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aspects</artifactId>
-      <version>${spring-version}</version>
-    </dependency>
-
     <!-- Spring JDBC Dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-jdbc-core</artifactId>
-      <version>1.1.0.RELEASE</version>
     </dependency>
 
     <!-- Spring Web Dependencies -->
@@ -110,19 +98,6 @@
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
-    </dependency>
-
-    <!-- Google Common Spring Aspect Dependencies -->
-    <dependency>
-      <groupId>com.googlecode.commonspringaspects</groupId>
-      <artifactId>common-spring-aspects</artifactId>
-      <version>1.0.11</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- Jasper Reporting Engine -->
@@ -176,13 +151,6 @@
       <artifactId>hsqldb</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
-  <repositories>
-    <repository>
-      <id>common-spring-aspects</id>
-      <url>http://common-spring-aspects.googlecode.com/svn/maven2</url>
-    </repository>
-  </repositories>
 </project>

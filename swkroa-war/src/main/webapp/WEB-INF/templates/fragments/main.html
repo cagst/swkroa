@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div id="page-header" th:fragment="header">
+  <span id="page-title">
+    <a th:href="@{/}" href="#">
+      <img src="/static/images/swkroa_logo_small.jpg" th:src="@{/static/images/swkroa_logo_small.jpg}" />
+    </a>
+  </span>
+  <ul id="account-navigation">
+    <li>
+      <span th:text="#{com.cagst.swkroa.header.welcome}">zzz Welcome</span>
+      <a th:href="@{/profile}" th:text="${#authentication.principal.firstName}">
+        zzz Profile
+      </a>
+    </li>
+    <li>
+      <a href="/logout" th:href="@{/logout}" th:text="#{com.cagst.swkroa.header.signout}">
+        zzz Sign Out
+      </a>
+    </li>
+    <li>
+      <a href="#" th:text="#{com.cagst.swkroa.header.help}">
+        zzz Help
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div id="page-navigation" class="navbar navbar-inverse" th:fragment="navigation">
+  <div class="navbar-collapse">
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="#" th:href="@{/}" th:text="#{com.cagst.swkroa.nav.home}">
+          zzz Home
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/memberships}"
+           th:text="#{com.cagst.swkroa.nav.membership}">
+          zzz Memberships
+        </a>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <span th:text="#{com.cagst.swkroa.nav.accounting}">zzz Accounting</span>
+          <span class="caret-inverse"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a th:href="@{/accounting/invoices}"
+               th:text="#{accounting.menu.invoices}">
+              zzz Invoices
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/accounting/payments}"
+               th:text="#{accounting.menu.payments}">
+              zzz Invoices
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/accounting/delinquencies}"
+               th:text="#{accounting.menu.delinquencies}">
+              zzz Delinquencies
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/accounting/deposits}"
+               th:text="#{accounting.menu.deposits}">
+              zzz Deposits
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <span th:text="#{com.cagst.swkroa.nav.reports}">zzz Reports</span>
+          <span class="caret-inverse"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a th:href="@{/report/membership/listing}"
+               th:text="#{com.cagst.swkroa.report.membership.listing.title}">
+              zzz Membership Listing
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/report/membership/status}"
+               th:text="#{com.cagst.swkroa.report.membership.status.title}">
+              zzz Membership Past Due
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a th:href="@{/report/member/mailinglist}"
+               th:text="#{com.cagst.swkroa.report.member.mailinglist.title}">
+              zzz Member Mailing List
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/report/member/emaillist}"
+               th:text="#{com.cagst.swkroa.report.member.emaillist.title}">
+              zzz Member Email List
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a th:href="@{/report/custom/membersbycounty}">
+              Members by County
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <span th:text="#{com.cagst.swkroa.nav.maintain}">zzz Maintain</span>
+          <span class="caret-inverse"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a th:href="@{/maintain/codeset}" th:text="#{com.cagst.swkroa.maintain.menu.codeset}">
+              zzz Code Sets
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/maintain/documents}" th:text="#{com.cagst.swkroa.maintain.menu.documents}">
+              zzz Documents
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/maintain/membertype}" th:text="#{com.cagst.swkroa.maintain.menu.membertype}">
+              zzz Member Type
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/maintain/users}" th:text="#{com.cagst.swkroa.maintain.menu.user}">
+              zzz Users
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <span class="navbar-brand pull-right">
+      <a href="#" th:text="#{com.cagst.brand.title}">zzz CAGST</a>
+    </span>
+  </div>
+</div>
+
+<div th:fragment="common-dialogs">
+  <!-- Locking Error Dialog -->
+  <div class="modal fade" id="optimisticErrorMessageDlg" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" th:text="#{com.cagst.swkroa.save.failed.caption}">zzz Optimistic</h4>
+        </div>
+        <div class="modal-body">
+          <div th:text="#{com.cagst.swkroa.save.failed.message.optimistic}">zzz Update Failed?</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"
+                  data-dismiss="modal"
+                  th:text="#{com.cagst.swkroa.ok}">
+            zzz Keep
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unknown Error Dialog -->
+  <div class="modal fade" id="unknownErrorMessageDlg" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" th:text="#{com.cagst.swkroa.unknown.failure.caption}">zzz Unknown</h4>
+        </div>
+        <div class="modal-body">
+          <div th:text="#{com.cagst.swkroa.unknown.failure.message.unknown}">zzz Update Failed?</div>
+          <br/>
+          <div id="unknownErrorMessage"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"
+                  data-dismiss="modal"
+                  th:text="#{com.cagst.swkroa.ok}">
+            zzz Keep
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Processing Dialog -->
+  <div class="modal fade" id="pleaseWaitDlg" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" th:text="#{com.cagst.swkroa.processing}">zzz Processing</h4>
+        </div>
+        <div class="modal-body">
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped active" style="width: 100%">
+              <div class="bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    //  $('select').select2();
+    //  $('.date-picker').datetimePicker();
+    $(function () {
+      var pickers = $('.date-time-picker');
+      $.each(pickers, function(idx, val) {
+        $(val).datetimepicker({
+          format: 'L'
+        });
+      });
+    });
+
+  </script>
+</div>
+
+</body>
+</html>

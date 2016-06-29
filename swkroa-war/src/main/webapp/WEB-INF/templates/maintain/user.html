@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+  <th:block th:replace="fragments/common :: head" />
   <script type="text/javascript" th:src="@{/static/js/maintain/user.js}"></script>
 </head>
 
-<body data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="userController">
+<body>
+<div th:replace="fragments/main :: header"></div>
+<div th:replace="fragments/main :: navigation"></div>
 
-<div ui-view></div>
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="userController">
+  <div ui-view></div>
+</div>
 
 </body>
 </html>

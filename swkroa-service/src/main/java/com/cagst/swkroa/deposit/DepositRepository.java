@@ -2,14 +2,16 @@ package com.cagst.swkroa.deposit;
 
 import java.util.List;
 
+import com.cagst.swkroa.user.User;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 /**
  * Definition of a repository that retrieves and persists {@link Deposit} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface DepositRepository {
   /**
@@ -17,7 +19,7 @@ public interface DepositRepository {
    *
    * @return A {@link List} of {@link Deposit Deposits} within the system.
    */
-  public List<Deposit> getDeposits();
+  List<Deposit> getDeposits();
 
   /**
    * Retrieves a {@link Deposit} by its unique identifier.
@@ -32,5 +34,24 @@ public interface DepositRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Member was found.
    */
-  public Deposit getDeposit(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+  Deposit getDeposit(final long uid) throws IncorrectResultSizeDataAccessException;
+
+  /**
+   * Persists the specified {@link Deposit}.
+   *
+   * @param deposit
+   *    The {@link Deposit} to persist.
+   * @param user
+   *    The {@link User} that performed the changes.
+   *
+   * @return A {@link Deposit} after is has been persisted.
+   *
+   * @throws OptimisticLockingFailureException
+   *     if the updt_cnt doesn't match (meaning someone has updated it since it was last read)
+   * @throws IncorrectResultSizeDataAccessException
+   *     if the number of rows inserted / updated exceeded the expected number
+   * @throws DataAccessException
+   *     if the query fails
+   */
+  Deposit saveDeposit(final Deposit deposit, final User user) throws DataAccessException;
 }

@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
  * needs to change their password.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class SigninSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
   private final UserService userService;
@@ -33,13 +32,6 @@ public final class SigninSuccessHandler extends SavedRequestAwareAuthenticationS
     this.userService = userService;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.security.web.authentication.AuthenticationSuccessHandler#
-   * onAuthenticationSuccess(javax.servlet.http.HttpServletRequest,
-   * javax.servlet.http.HttpServletResponse, org.springframework.security.core.Authentication)
-   */
   @Override
   public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
                                       final Authentication auth) throws IOException, ServletException {

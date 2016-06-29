@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/main">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <script type="text/javascript" th:src="@{/static/js/deposit.js}"></script>
+  <th:block th:replace="fragments/common :: head" />
+
+  <script type="text/javascript" th:src="@{/static/js/accounting/deposit.js}"></script>
 </head>
 
 <body>
+<div th:replace="fragments/main :: header"></div>
+<div th:replace="fragments/main :: navigation"></div>
 
-<div data-layout-fragment="content" data-ng-app="swkroaApp" data-ng-controller="depositController">
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="depositController">
   <!-- Deposit Listing Page -->
   <div data-ng-show="view == 'listing'">
     <div class="page-header">
       <h3 th:text="#{deposits.title}">zzz Deposit Overview</h3>
       <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
-        <div th:text="#{com.cagst.swkroa.deposit.save.created}">zzz Created</div>
+        <div th:text="#{deposits.save.created}">zzz Created</div>
       </div>
       <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
         <strong>Success!</strong>
-        <div th:text="#{com.cagst.swkroa.deposit.save.updated}">zzz Updated</div>
+        <div th:text="#{deposits.save.updated}">zzz Updated</div>
       </div>
     </div>
     <div class="row" data-ng-show="deposits">
@@ -35,7 +36,7 @@
               <th th:text="#{deposits.number.label}">zzz Ref Num</th>
               <th th:text="#{deposits.amount}">zzz Amount</th>
               <th style="width: 24%">
-                <a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="addDeposit()">
+                <a href="#" class="btn btn-success btn-xs pull-right" data-ng-click="addDeposit()">
                   <i class="fa fa-plus"></i>
                   <span th:text="#{deposits.add.button}">zzz Add</span>
                 </a>
@@ -137,7 +138,7 @@
                           class="btn btn-primary"
                           th:text="#{deposits.update}"
                           data-ng-show="deposit.depositUID > 0"
-                          data-ng-disabled="hasChanges(deposit) || depositForm.$invalid">
+                          data-ng-disabled="depositForm.$invalid">
                   </button>
                   <button type="button" class="btn btn-default"
                           data-ng-click="cancelChanges()"
@@ -148,55 +149,68 @@
             </div>
           </div>
         </div>
+
+        <!-- Unpaid Invoices -->
         <div class="col-xs-9">
-          <div class="panel panel-default" style="height:275px; overflow-y:scroll;">
+          <div class="panel panel-default">
             <div class="panel-heading">
               <span class="panel-title">Unpaid Invoices</span>
+              <span class="pull-right">
+                <input type="text" data-ng-model="searchText" placeholder="Search"/>
+              </span>
             </div>
-            <div class="panel-body clear-padding">
-              <table class="table table-hover table-bordered table-condensed">
+            <div class="panel-body clear-padding" style="height:225px; overflow-y:scroll;">
+              <em data-ng-show="!unpaid">
+                <label class="panel-body text-muted text-center">
+                  <i class="fa fa-spinner fa-pulse"></i>
+                  <span th:text="#{deposits.loading}">zzz Loading</span>
+                </label>
+              </em>
+              <table class="table table-hover table-bordered table-condensed"
+                     data-ng-show="unpaid">
                   <thead>
-                  <tr>
-                    <th></th>
-                    <th class="col-xs-2" th:text="#{deposits.transaction.date}">zzz Date</th>
-                    <th class="col-xs-7">
-                      <span th:text="#{deposits.transaction.membership}">zzz Membership</span>
-                      <span class="pull-right text-muted" th:text="#{deposits.transaction.description}">zzz Invoice</span>
-                    </th>
-                    <th class="col-xs-1" th:text="#{deposits.transaction.amount}">zzz Amount</th>
-                    <th class="col-xs-1" th:text="#{deposits.transaction.paid}">zzz Paid</th>
-                    <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
-                  </tr>
+                    <tr>
+                      <th></th>
+                      <th class="col-xs-2" th:text="#{deposits.transaction.date}">zzz Date</th>
+                      <th class="col-xs-7">
+                        <span th:text="#{deposits.transaction.membership}">zzz Membership</span>
+                        <span class="pull-right text-muted" th:text="#{deposits.transaction.description}">zzz Invoice</span>
+                      </th>
+                      <th class="col-xs-1" th:text="#{deposits.transaction.amount}">zzz Amount</th>
+                      <th class="col-xs-1" th:text="#{deposits.transaction.paid}">zzz Paid</th>
+                      <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
+                    </tr>
                   </thead>
-                  <tbody>
-                  <tr data-ng-repeat="inv in unpaid | orderBy: ['membershipName', 'transactionDate']"
-                      data-ng-show="!inv.transactionInDeposit">
-                    <td>
-                      <button type="button" class="btn btn-success btn-xs"
-                              th:attr="data-uib-tooltip=#{deposits.add.tooltip}"
-                              data-ng-click="addInvoiceToDeposit(inv)">
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </td>
-                    <td>{{inv.transactionDate | date: 'mediumDate'}}</td>
-                    <td>
-                      <span data-ng-bind="inv.membershipName"></span>
-                      <span class="text-muted pull-right" data-ng-bind="inv.transactionDescription"></span>
-                    </td>
-                    <td><span class="pull-right" data-ng-bind="inv.transactionAmount | currency"></span></td>
-                    <td><span class="pull-right" data-ng-bind="inv.amountPaid | currency"></span></td>
-                    <td><span class="pull-right" data-ng-bind="inv.amountRemaining | currency"></span></td>
-                  </tr>
+                  <tbody data-ng-repeat="inv in unpaid | filter: searchText | orderBy: ['membershipName', 'transactionDate']"
+                         data-ng-show="!inv.transactionInDeposit">
+                    <tr>
+                      <td>
+                        <button type="button" class="btn btn-success btn-xs"
+                                th:attr="data-uib-tooltip=#{deposits.add.tooltip}"
+                                data-ng-click="addInvoiceToDeposit(inv)">
+                          <i class="fa fa-plus"></i>
+                        </button>
+                      </td>
+                      <td><span data-ng-bind="inv.transactionDate | date: 'mediumDate'"></span></td>
+                      <td>
+                        <span data-ng-bind="inv.membershipName"></span>
+                        <span class="text-muted pull-right" data-ng-bind="inv.transactionDescription"></span>
+                      </td>
+                      <td><span class="pull-right" data-ng-bind="inv.transactionAmount | currency"></span></td>
+                      <td><span class="pull-right" data-ng-bind="inv.amountPaid | currency"></span></td>
+                      <td><span class="pull-right" data-ng-bind="inv.amountRemaining | currency"></span></td>
+                    </tr>
                   </tbody>
                 </table>
             </div>
           </div>
 
-          <div class="spacer-top panel panel-default" style="height:275px; overflow-y:scroll;">
+          <!-- Transactions in Deposit -->
+          <div class="spacer-top panel panel-default">
             <div class="panel-heading">
               <span class="panel-title">Transactions in Deposit</span>
             </div>
-            <div class="panel-body clear-padding">
+            <div class="panel-body clear-padding" style="height:225px; overflow-y:scroll;">
               <table class="table table-hover table-bordered table-condensed">
               <thead>
                 <tr>
@@ -208,12 +222,12 @@
                   </th>
                   <th class="col-xs-1" th:text="#{deposits.transaction.amount}">zzz Amount</th>
                   <th class="col-xs-1" th:text="#{deposits.transaction.paid}">zzz Paid</th>
-                  <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
+                  <th class="col-xs-1"></th>
                 </tr>
               </thead>
-              <tbody>
-               <tr data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
-                   data-ng-show="tx.transactionInDeposit">
+              <tbody data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
+                     data-ng-show="tx.active">
+                <tr>
                   <td>
                     <button type="button" class="btn btn-danger btn-xs"
                             th:attr="data-uib-tooltip=#{deposits.remove.tooltip}"
@@ -221,14 +235,37 @@
                       <i class="fa fa-minus"></i>
                     </button>
                   </td>
-                  <td>{{tx.transactionDate | date: 'mediumDate'}}</td>
+                  <td style="width:125px">
+                    <div>
+                      <a href="#" onclick="toggleTransactionDetails(this)">
+                        <i class="fa fa-caret-right"></i>
+                      </a>
+                      {{tx.transactionDate | date: 'mediumDate'}}
+                    </div>
+                  </td>
                  <td>
                    <span data-ng-bind="tx.membershipName"></span>
                    <span class="text-muted pull-right" data-ng-bind="tx.transactionDescription"></span>
                  </td>
-                  <td>{{tx.transactionAmount | currency}}</td>
-                  <td>{{tx.amountPaid | currency}}</td>
-                  <td>{{tx.amountRemaining | currency}}</td>
+                  <td><span class="pull-right" data-ng-bind="tx.transactionAmount | currency"></span></td>
+                  <td><span class="pull-right" data-ng-bind="tx.amountPaid | currency"></span></td>
+                  <td>
+                    <button type="button" class="btn btn-primary btn-xs pull-right"
+                            data-ng-click="createTransactionEntry(tx)">
+                      <span th:text="#{deposits.transaction.add.entry}"></span>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="details hide" data-ng-repeat="entry in tx.transactionEntries">
+                  <td></td>
+                  <td></td>
+                  <td>{{entry.transactionEntryType.display}}</td>
+                  <td style="width:100px">
+                    <div class="pull-right">
+                      {{entry.transactionEntryAmount | currency}}
+                    </div>
+                  </td>
+                  <td colspan="2"></td>
                 </tr>
               </tbody>
             </table>
@@ -236,6 +273,57 @@
           </div>
         </div>
       </div>
+
+      <!-- Add Entry Dialog -->
+      <div class="modal fade" id="addEntry">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"
+                  th:text="#{deposits.transaction.add.entry}">
+                zzz Add Entry
+              </h4>
+            </div>
+
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-xs-6">
+                  <label for="entryType" class="control-label label-required"
+                         th:text="#{com.cagst.swkroa.membership.transaction.type}">
+                    zzz Type
+                  </label>
+                  <select id="entryType" name="entryType" class="form-control"
+                          data-ng-model="newTransactionEntry.transactionEntryType"
+                          data-ng-options="type.display for type in entryTypes">
+                  </select>
+                </div>
+                <div class="col-xs-6">
+                  <label for="entryAmount" class="control-label label-required"
+                         th:text="#{com.cagst.swkroa.membership.transaction.amount}">
+                    zzz Amount
+                  </label>
+                  <input id="entryAmount" type="number" class="form-control"
+                         data-ng-model="newTransactionEntry.transactionEntryAmount" />
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success"
+                      data-ng-click="addTransactionEntry()"
+                      th:text="#{com.cagst.swkroa.add}">
+                zzz Add
+              </button>
+              <button type="button" class="btn btn-default"
+                      data-dismiss="modal"
+                      th:text="#{com.cagst.swkroa.cancel}">
+                zzz Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </form>
   </div>
 </div>

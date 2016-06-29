@@ -173,7 +173,7 @@ swkroaApp.controller('membershipController',
     $scope.transaction    = angular.copy(transaction);
 
     syncTransactionEntryType($scope);
-    syncMember($scope);
+//    syncMember($scope);
     syncRelatedTransactions($scope);
 
     $("#modifyTransaction").modal('toggle');
@@ -273,20 +273,20 @@ var syncTransactionEntryType = function(scope) {
       }
     }
   }
-}
+};
 
-var syncMember = function(scope) {
-  for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
-    if (scope.transaction.transactionEntries[idx1].member) {
-      for (var idx2 = 0; idx2 < scope.membership.members.length; idx2++) {
-        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.membership.members[idx2].memberUID) {
-          scope.transaction.transactionEntries[idx1].member = scope.membership.members[idx2];
-          break;
-        }
-      }
-    }
-  }
-}
+//var syncMember = function(scope) {
+//  for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
+//    if (scope.transaction.transactionEntries[idx1].member) {
+//      for (var idx2 = 0; idx2 < scope.membership.members.length; idx2++) {
+//        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.membership.members[idx2].memberUID) {
+//          scope.transaction.transactionEntries[idx1].member = scope.membership.members[idx2];
+//          break;
+//        }
+//      }
+//    }
+//  }
+//}
 
 var syncRelatedTransactions = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
@@ -299,7 +299,7 @@ var syncRelatedTransactions = function(scope) {
       }
     }
   }
-}
+};
 
 var toggleTransactionDetails = function(transaction) {
   var img       = $(transaction).children()[0];

@@ -1,6 +1,7 @@
 package com.cagst.swkroa.member;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.person.PersonRepository;
@@ -15,7 +16,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface MemberRepository extends PersonRepository {
   /**
@@ -82,7 +82,20 @@ public interface MemberRepository extends PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Member was found.
    */
-   Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+  Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+
+  /**
+   * Retrieves a {@link Member} by its owner id.
+   *
+   * @param ownerId
+   *    A {@link String} that is the owner id associated with the Member to retrieve.
+   *
+   * @return An {@link Optional} that may contain a {@link Member} that is associated with the specified owner id.
+   *
+   * @throws IncorrectResultSizeDataAccessException
+   *     if more than 1 Member was found.
+   */
+  Optional<Member> getMemberByOwnerId(final String ownerId) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link List} of all {@link MembershipCounty Counties} associated with the specified

@@ -1,59 +1,83 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/auth">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <th:block th:replace="fragments/common :: head" />
+</head>
+
 <body>
 
-<div data-layout-fragment="content">
-  <div class="page-header">
-    <h3 th:text="#{com.cagst.swkroa.signin.title}">zzz Sign In</h3>
-  </div>
-  <form action="/login" th:attr="action=@{/login}"
-        method="POST"
-        autocomplete="off"
-        class="container-center-large">
+<div th:replace="fragments/auth :: header"></div>
+<div th:replace="fragments/auth :: navigation"></div>
 
+<div id="page-content">
+  <div class="page-header">
+    <h3 th:text="#{signin.title}">zzz Sign In</h3>
+  </div>
+
+  <form th:action="@{/login}" method="POST" autocomplete="off" class="container-center-large">
     <!--
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     -->
 
-    <div class="container-medium pull-right">
-      <p class="lead lead-sm" th:text="#{com.cagst.swkroa.signin.message}">
-        zzz Sign in
-      </p>
+    <div class="row divider-bottom" style="padding-bottom: 20px;">
+      <div class="container-medium pull-right">
+        <p class="lead lead-sm" th:text="#{signin.message}">
+          zzz Sign in
+        </p>
 
-      <div class="text-danger"
-           th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']}">
-        <strong th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
-        </strong>
-      </div>
-    </div>
-    <div class="container-medium divider-right" style="padding-right:20px;">
-      <div class="form-group">
-        <label for="username" class="form_label label-required"
-               th:text="#{com.cagst.swkroa.signin.username.label}">
-          zzz Username
-        </label>
-        <input id="username" name="username" type="text" maxlength="50"
-               class="form-control input-block-level"
-               th:placeholder="#{com.cagst.swkroa.signin.username.prompt}" autofocus="autofocus" />
-      </div>
-      <div class="form-group">
-        <label for="password" class="form_label label-required"
-               th:text="#{com.cagst.swkroa.signin.password.label}">
-          zzz Password
-        </label>
-        <input id="password" name="password" type="password" maxlength="50"
-               class="form-control input-block-level"
-               th:placeholder="#{com.cagst.swkroa.signin.password.prompt}" />
+        <div class="text-danger"
+             th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']}">
+          <strong th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+          </strong>
+        </div>
+
+        <!--
+        <div th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']}"
+             style="margin-top: 20px">
+          <a th:href="@{/auth/forgot}" th:text="#{signin.forgot.pwd}">
+            zzz Forgot
+          </a>
+        </div>
+        -->
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block" th:text="#{com.cagst.swkroa.signin.button}">
-        zzz Signin
-      </button>
+      <div class="container-medium divider-right" style="padding-right:20px;">
+        <div class="form-group">
+          <label for="username" class="form_label label-required"
+                 th:text="#{signin.username.label}">
+            zzz Username
+          </label>
+          <input id="username" name="username" type="text" maxlength="50"
+                 class="form-control input-block-level"
+                 th:placeholder="#{signin.username.prompt}" autofocus="autofocus" />
+        </div>
+        <div class="form-group">
+          <label for="password" class="form_label label-required"
+                 th:text="#{signin.password.label}">
+            zzz Password
+          </label>
+          <input id="password" name="password" type="password" maxlength="50"
+                 class="form-control input-block-level"
+                 th:placeholder="#{signin.password.prompt}" />
+        </div>
+
+        <button type="submit" class="btn btn-primary"
+                style="width: 60%;"
+                th:text="#{signin.button}">
+          zzz Signin
+        </button>
+
+        <a class="btn btn-success pull-right"
+            style="width: 30%;"
+            th:href="@{/auth/register}"
+            th:text="#{signin.register.button}">
+          zzz Register
+        </a>
+      </div>
     </div>
+
   </form>
 </div>
 

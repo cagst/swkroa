@@ -15,36 +15,6 @@
   <mvc:resources location="/static/css/**" mapping="/static/css/"/>
   <mvc:resources location="/static/images/**" mapping="/static/img/"/>
 
-  <!--
-  <mvc:resources location="/wro/*" mapping="/wro/*"/>
-  -->
-
   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
-
-  <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-    <property name="prefix" value="/WEB-INF/templates/"/>
-    <property name="suffix" value=".html"/>
-    <property name="templateMode" value="LEGACYHTML5"/>
-    <property name="cacheable" value="false"/>
-  </bean>
-
-  <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
-    <property name="templateResolver" ref="templateResolver"/>
-
-    <!-- Add the Dialect to Thymeleaf -->
-    <property name="additionalDialects">
-      <set>
-        <bean class="org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect"/>
-        <bean class="nz.net.ultraq.thymeleaf.LayoutDialect"/>
-      </set>
-    </property>
-  </bean>
-
-  <!-- Declare a view resolver for Thymeleaf resources -->
-  <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
-    <property name="order" value="1"/>
-    <property name="templateEngine" ref="templateEngine"/>
-    <property name="excludedViewNames" value="reports/*"/>
-  </bean>
 
 </beans>

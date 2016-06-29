@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
-import com.cagst.swkroa.member.MemberRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -16,11 +15,9 @@ public class TransactionListExtractor implements ResultSetExtractor<List<Transac
   private final TransactionMapper transactionMapper;
   private final TransactionEntryMapper entryMapper;
 
-  public TransactionListExtractor(final CodeValueRepository codeValueRepo,
-                                  final MemberRepository memberRepo) {
-
+  public TransactionListExtractor(final CodeValueRepository codeValueRepo) {
     transactionMapper = new TransactionMapper();
-    entryMapper = new TransactionEntryMapper(codeValueRepo, memberRepo);
+    entryMapper = new TransactionEntryMapper(codeValueRepo);
   }
 
   @Override

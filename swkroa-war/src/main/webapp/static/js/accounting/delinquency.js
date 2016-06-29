@@ -53,7 +53,7 @@ swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'memb
       if ($scope.delinquencies[idx].selected) {
         memberships.push($scope.delinquencies[idx].membershipUID);
       }
-    };
+    }
 
     membershipService.closeMemberships(memberships, $scope.closeReason, $scope.closeText).success(function(data) {
       $('#closeMembershipsDlg').modal('hide');

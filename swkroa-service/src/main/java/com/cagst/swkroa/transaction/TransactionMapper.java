@@ -24,6 +24,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
   private static final String TRANSACTION_DESC = "transaction_desc";
   private static final String REF_NUM = "ref_num";
   private static final String MEMO_TXT = "memo_txt";
+  private static final String DEPOSIT_IND = "deposit_ind";
 
   // meta-data
   private static final String ACTIVE_IND = "active_ind";
@@ -41,6 +42,9 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
     trans.setTransactionDescription(rs.getString(TRANSACTION_DESC));
     trans.setReferenceNumber(rs.getString(REF_NUM));
     trans.setMemo(rs.getString(MEMO_TXT));
+
+    long depositInd = rs.getLong(DEPOSIT_IND);
+    trans.setInDeposit(depositInd > 0);
 
     trans.setActive(rs.getBoolean(ACTIVE_IND));
     trans.setTransactionUpdateCount(rs.getLong(TRANSACTION_UPDT_CNT));

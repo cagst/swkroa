@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.cagst.swkroa.codevalue.CodeValue;
-import com.cagst.swkroa.member.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,7 +21,6 @@ public final class TransactionEntry implements Serializable {
   private Transaction transaction;
   private long related_transaction_id;
   private Transaction related_transaction;
-  private Member member;
   private BigDecimal transaction_entry_amount;
   private CodeValue transaction_entry_type;
 
@@ -61,14 +59,6 @@ public final class TransactionEntry implements Serializable {
 
   public void setRelatedTransaction(final Transaction trans) {
     this.related_transaction = trans;
-  }
-
-  public Member getMember() {
-    return member;
-  }
-
-  public void setMember(final Member member) {
-    this.member = member;
   }
 
   public BigDecimal getTransactionEntryAmount() {

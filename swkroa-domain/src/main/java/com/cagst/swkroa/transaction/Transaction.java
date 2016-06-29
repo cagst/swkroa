@@ -5,10 +5,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.cagst.common.util.CGTCollatorBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -19,15 +18,15 @@ import org.joda.time.DateTime;
  * @author Craig Gaskill
  */
 public class Transaction implements Serializable, Comparable<Transaction> {
-  private static final long serialVersionUID = -5519051342330445823L;
-
   private long transaction_id;
   private long membership_id;
+  private String membership_name;
   private DateTime transaction_dt;
   private TransactionType transaction_type;
   private String transaction_desc;
   private String ref_num;
   private String memo_txt;
+  private boolean deposit_ind;
 
   private List<TransactionEntry> entries = new ArrayList<TransactionEntry>();
 
@@ -39,7 +38,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return transaction_id;
   }
 
-  /* package */ void setTransactionUID(final long uid) {
+  protected void setTransactionUID(final long uid) {
     this.transaction_id = uid;
   }
 
@@ -49,6 +48,14 @@ public class Transaction implements Serializable, Comparable<Transaction> {
 
   public void setMembershipUID(final long uid) {
     this.membership_id = uid;
+  }
+
+  public String getMembershipName() {
+    return membership_name;
+  }
+
+  public void setMembershipName(final String name) {
+    this.membership_name = name;
   }
 
   public DateTime getTransactionDate() {
@@ -98,6 +105,14 @@ public class Transaction implements Serializable, Comparable<Transaction> {
 
   public void setMemo(final String memo) {
     this.memo_txt = memo;
+  }
+
+  public boolean isInDeposit() {
+    return deposit_ind;
+  }
+
+  public void setInDeposit(boolean inDeposit) {
+    this.deposit_ind = inDeposit;
   }
 
   public void clearEntries() {
@@ -151,13 +166,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(membership_id);
-    builder.append(transaction_dt);
-    builder.append(transaction_type);
-    builder.append(getTransactionAmount());
-
-    return builder.build();
+    return Objects.hash(membership_id, transaction_dt, transaction_type, getTransactionAmount());
   }
 
   @Override
@@ -174,13 +183,10 @@ public class Transaction implements Serializable, Comparable<Transaction> {
 
     Transaction rhs = (Transaction) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(membership_id, rhs.getMembershipUID());
-    builder.append(transaction_dt, rhs.getTransactionDate());
-    builder.append(transaction_type, rhs.getTransactionType());
-    builder.append(getTransactionAmount(), rhs.getTransactionAmount());
-
-    return builder.build();
+    return Objects.equals(membership_id, rhs.getMembershipUID()) &&
+        Objects.equals(transaction_dt, rhs.getTransactionDate()) &&
+        Objects.equals(transaction_type, rhs.getTransactionType()) &&
+        Objects.equals(getTransactionAmount(), rhs.getTransactionAmount());
   }
 
   @Override

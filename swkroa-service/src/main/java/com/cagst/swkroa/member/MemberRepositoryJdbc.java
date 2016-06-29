@@ -6,6 +6,8 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.common.util.CGTStringUtils;
@@ -46,6 +48,7 @@ import org.springframework.util.Assert;
   private static final String GET_MEMBERS_BY_NAME        = "GET_MEMBERS_BY_NAME";
   private static final String GET_MEMBERS_BY_NAME_COUNT  = "GET_MEMBERS_BY_NAME_COUNT";
   private static final String GET_MEMBER_BY_UID          = "GET_MEMBER_BY_UID";
+  private static final String GET_MEMBER_BY_OWNER_ID     = "GET_MEMBER_BY_OWNER_ID";
 
   private static final String GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP = "GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP";
   private static final String GET_MEMBERSHIP_COUNTY_BY_UID           = "GET_MEMBERSHIP_COUNTY_BY_UID";
@@ -98,7 +101,7 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("membership_id", membership.getMembershipUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_FOR_MEMBERSHIP), params, new MemberMapper(personRepo, memberTypeRepo));
@@ -138,11 +141,10 @@ import org.springframework.util.Assert;
 
   @Override
   public Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException {
-
     LOGGER.info("Calling getMemberByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("member_id", uid);
 
     List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_UID), params,
@@ -155,6 +157,30 @@ import org.springframework.util.Assert;
       throw new EmptyResultDataAccessException(1);
     } else {
       LOGGER.error("More than one Member with UID of [{}] was found.", uid);
+      throw new IncorrectResultSizeDataAccessException(1, members.size());
+    }
+  }
+
+  @Override
+  public Optional<Member> getMemberByOwnerId(final String ownerId) throws IncorrectResultSizeDataAccessException {
+    Objects.requireNonNull(ownerId, "Assertion Failure: argument [ownerId] cannot be null");
+
+    LOGGER.info("Calling getMemberByOwnerId for [{}]", ownerId);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, String> params = new HashMap<>(1);
+    params.put("owner_ident", ownerId);
+
+    List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_OWNER_ID), params,
+        new MemberMapper(personRepo, memberTypeRepo));
+
+    if (members.size() == 1) {
+      return Optional.of(members.get(0));
+    } else if (members.size() == 0) {
+      LOGGER.info("No Member found for OwnerId of [{}]", ownerId);
+      return Optional.empty();
+    } else {
+      LOGGER.error("More than one Member with Owner Id of [{}] was found.", ownerId);
       throw new IncorrectResultSizeDataAccessException(1, members.size());
     }
   }

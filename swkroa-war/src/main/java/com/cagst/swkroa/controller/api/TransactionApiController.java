@@ -35,7 +35,7 @@ public final class TransactionApiController {
   private final TransactionRepository transactionRepo;
 
   @Inject
-  public TransactionApiController(final TransactionRepository transactionRepo) {
+  public TransactionApiController(TransactionRepository transactionRepo) {
     this.transactionRepo = transactionRepo;
   }
 
@@ -46,8 +46,8 @@ public final class TransactionApiController {
    */
   @RequestMapping(value = "/invoices", method = RequestMethod.GET)
   public ResponseEntity<ListModel<TransactionGroup>> getTransactionGroupsForInvoices(
-      final @RequestParam(value = "start", required = false) Integer start,
-      final @RequestParam(value = "limit", required = false) Integer limit) {
+      @RequestParam(value = "start", required = false) Integer start,
+      @RequestParam(value = "limit", required = false) Integer limit) {
 
     int newStart = (start != null ? start : 0);
     int newLimit = (limit != null ? limit : 20);
@@ -69,8 +69,8 @@ public final class TransactionApiController {
    */
   @RequestMapping(value = "/payments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ListModel<TransactionGroup>> getTransactionGroupsForPayments(
-      final @RequestParam(value = "start", required = false) Integer start,
-      final @RequestParam(value = "limit", required = false) Integer limit) {
+      @RequestParam(value = "start", required = false) Integer start,
+      @RequestParam(value = "limit", required = false) Integer limit) {
 
     int newStart = (start != null ? start : 0);
     int newLimit = (limit != null ? limit : 20);
@@ -106,7 +106,7 @@ public final class TransactionApiController {
    * @return The {@link Transaction} after it has been persisted.
    */
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<Transaction> saveTransaction(final @RequestBody Transaction transaction) {
+  public ResponseEntity<Transaction> saveTransaction(@RequestBody Transaction transaction) {
     LOGGER.info("Received request to save transaction.");
 
     // determine if this is a new transaction
