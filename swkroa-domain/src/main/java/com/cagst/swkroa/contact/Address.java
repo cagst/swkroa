@@ -1,11 +1,10 @@
 package com.cagst.swkroa.contact;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Represents an Address within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class Address implements Serializable, Comparable<Address> {
   private static final long serialVersionUID = 7499345705626185164L;
@@ -151,16 +149,7 @@ public final class Address implements Serializable, Comparable<Address> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(address1);
-    builder.append(address2);
-    builder.append(address3);
-    builder.append(city);
-    builder.append(state_code);
-    builder.append(postal_code);
-    builder.append(country_code);
-
-    return builder.build();
+    return Objects.hash(address1, address2, address3, city, state_code, postal_code, country_code);
   }
 
   @Override
@@ -177,16 +166,13 @@ public final class Address implements Serializable, Comparable<Address> {
 
     Address rhs = (Address) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(address1, rhs.getAddressLine1());
-    builder.append(address2, rhs.getAddressLine2());
-    builder.append(address3, rhs.getAddressLine3());
-    builder.append(city, rhs.getCity());
-    builder.append(state_code, rhs.getState());
-    builder.append(postal_code, rhs.getPostalCode());
-    builder.append(country_code, rhs.getCountry());
-
-    return builder.build();
+    return Objects.equals(address1, rhs.getAddressLine1()) &&
+        Objects.equals(address2, rhs.getAddressLine2()) &&
+        Objects.equals(address3, rhs.getAddressLine3()) &&
+        Objects.equals(city, rhs.getCity()) &&
+        Objects.equals(state_code, rhs.getState()) &&
+        Objects.equals(postal_code, rhs.getPostalCode()) &&
+        Objects.equals(country_code, rhs.getCountry());
   }
 
   @Override

@@ -128,7 +128,7 @@ public class AuthenticationController {
     LOGGER.info("Received request to show the register page.");
 
     RegisterModel registerModel = new RegisterModel();
-    registerModel.setStage("identify");
+    registerModel.setStage(REGISTER_STAGE_IDENTIFY);
 
     ModelAndView mav = new ModelAndView("auth/register");
     mav.addObject("registration", registerModel);
@@ -141,14 +141,16 @@ public class AuthenticationController {
     LOGGER.info("Received request to register the membership.");
 
     switch (registerModel.getStage()) {
-      case REGISTER_STAGE_IDENTIFY:
-        break;
-
       case REGISTER_STAGE_VERIFY:
+        registerModel.setStage(REGISTER_STAGE_VERIFY);
         break;
 
       case REGISTER_STAGE_COMPLETE:
+        registerModel.setStage(REGISTER_STAGE_COMPLETE);
         break;
+
+      default:
+        registerModel.setStage(REGISTER_STAGE_IDENTIFY);
     }
 
     ModelAndView mav = new ModelAndView("auth/register");

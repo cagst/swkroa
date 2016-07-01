@@ -1,11 +1,10 @@
 package com.cagst.swkroa.contact;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Represents a PhoneNumber within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> {
   private static final long serialVersionUID = 8469738041039540107L;
@@ -110,11 +108,7 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(phone_number);
-    builder.append(phone_extension);
-
-    return builder.build();
+    return Objects.hash(phone_number, phone_extension);
   }
 
   @Override
@@ -131,12 +125,8 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
 
     PhoneNumber rhs = (PhoneNumber) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(phone_type_cd, rhs.getPhoneTypeCD());
-    builder.append(phone_number, rhs.getPhoneNumber());
-    builder.append(phone_extension, rhs.getPhoneExtension());
-
-    return builder.build();
+    return Objects.equals(phone_number, rhs.getPhoneNumber()) &&
+        Objects.equals(phone_extension, rhs.getPhoneExtension());
   }
 
   @Override

@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.util.Assert;
@@ -16,7 +14,6 @@ import org.springframework.util.Assert;
  * Representation of a Role within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class Role implements Serializable, Comparable<Role> {
   private static final long serialVersionUID = 5588184824390805426L;
@@ -118,10 +115,7 @@ public final class Role implements Serializable, Comparable<Role> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(role_key);
-
-    return builder.build();
+    return role_key.hashCode();
   }
 
   @Override
@@ -138,10 +132,7 @@ public final class Role implements Serializable, Comparable<Role> {
 
     Role rhs = (Role) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(role_key, rhs.getRoleKey());
-
-    return builder.build();
+    return role_key.equals(rhs.getRoleKey());
   }
 
   @Override

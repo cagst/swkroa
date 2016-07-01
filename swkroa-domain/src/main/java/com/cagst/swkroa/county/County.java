@@ -1,10 +1,9 @@
 package com.cagst.swkroa.county;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.cagst.common.util.CGTCollatorBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Represents a County within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class County implements Serializable, Comparable<County> {
   private static final long serialVersionUID = 6048112429446895825L;
@@ -90,25 +88,11 @@ public final class County implements Serializable, Comparable<County> {
     this.updt_cnt = count;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(state_code);
-    builder.append(county_code);
-
-    return builder.build();
+    return Objects.hash(state_code, county_code);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -123,18 +107,10 @@ public final class County implements Serializable, Comparable<County> {
 
     County rhs = (County) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(state_code, rhs.getState());
-    builder.append(county_code, rhs.getCountyCode());
-
-    return builder.build();
+    return Objects.equals(state_code, rhs.getState()) &&
+        Objects.equals(county_code, rhs.getCountyCode());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -144,11 +120,6 @@ public final class County implements Serializable, Comparable<County> {
     return builder.build();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final County rhs) {
     CGTCollatorBuilder builder = new CGTCollatorBuilder();

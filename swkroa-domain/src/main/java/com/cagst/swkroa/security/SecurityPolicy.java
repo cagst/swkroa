@@ -2,8 +2,6 @@ package com.cagst.swkroa.security;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,7 +9,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Representation of a Security Policy within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class SecurityPolicy implements Serializable {
   private static final long serialVersionUID = -5761738041576289806L;
@@ -71,11 +68,6 @@ public final class SecurityPolicy implements Serializable {
     this.account_locked_days = accountLockedDays;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -90,17 +82,9 @@ public final class SecurityPolicy implements Serializable {
 
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(security_policy_name);
-
-    return builder.build();
+    return security_policy_name.hashCode();
   }
 
   /*
@@ -122,9 +106,6 @@ public final class SecurityPolicy implements Serializable {
 
     SecurityPolicy rhs = (SecurityPolicy) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(security_policy_name, rhs.getSecurityPolicyName());
-
-    return builder.build();
+    return security_policy_name.equals(rhs.getSecurityPolicyName());
   }
 }

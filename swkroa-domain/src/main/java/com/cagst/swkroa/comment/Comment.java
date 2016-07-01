@@ -1,10 +1,9 @@
 package com.cagst.swkroa.comment;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.cagst.common.util.CGTCollatorBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -87,11 +86,7 @@ public final class Comment implements Serializable, Comparable<Comment> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(comment_dt);
-    builder.append(comment_txt);
-
-    return builder.build();
+    return Objects.hash(comment_dt, comment_txt);
   }
 
   @Override
@@ -108,11 +103,8 @@ public final class Comment implements Serializable, Comparable<Comment> {
 
     Comment rhs = (Comment) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(comment_dt, rhs.getCommentDate());
-    builder.append(comment_txt, rhs.getCommentText());
-
-    return builder.build();
+    return Objects.equals(comment_dt, rhs.getCommentDate()) &&
+        Objects.equals(comment_txt, rhs.getCommentText());
   }
 
   @Override

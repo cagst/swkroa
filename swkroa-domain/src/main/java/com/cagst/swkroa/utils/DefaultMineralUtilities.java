@@ -10,20 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * Default implementation of the {@link MineralUtilities} interfaces.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @JsonSerialize
 public class DefaultMineralUtilities implements MineralUtilities {
   private final Integer baseAcres = 160;
   private final BigDecimal incrementalFee = new BigDecimal(5.00);
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cagst.swkroa.utils.MineralUtilities#calculateFeesForMembershipCounty(com.cagst.swkroa.member
-   * .MembershipCounty)
-   */
   @Override
   public BigDecimal calculateFeesForMembershipCounty(final MembershipCounty county) {
     BigDecimal fee = new BigDecimal(0);
@@ -39,12 +31,6 @@ public class DefaultMineralUtilities implements MineralUtilities {
     return fee;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.cagst.swkroa.utils.MineralUtilities#calculateFeeForMembershipCounties(java.util.Collection)
-   */
   @Override
   public BigDecimal calculateFeesForMembershipCounties(final Collection<MembershipCounty> counties) {
     BigDecimal fees = new BigDecimal(0);

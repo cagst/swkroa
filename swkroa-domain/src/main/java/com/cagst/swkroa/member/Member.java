@@ -3,6 +3,7 @@ package com.cagst.swkroa.member;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.common.util.CGTStringUtils;
@@ -10,8 +11,6 @@ import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.person.Person;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -271,11 +270,7 @@ public final class Member implements Serializable, Comparable<Member> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.appendSuper(super.hashCode());
-    builder.append(owner_ident);
-
-    return builder.build();
+    return Objects.hash(super.hashCode(), owner_ident);
   }
 
   @Override
@@ -292,11 +287,8 @@ public final class Member implements Serializable, Comparable<Member> {
 
     Member rhs = (Member) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.appendSuper(super.equals(obj));
-    builder.append(owner_ident, rhs.getOwnerIdent());
-
-    return builder.build();
+    return super.equals(obj) &&
+        Objects.equals(owner_ident, rhs.getOwnerIdent());
   }
 
   @Override

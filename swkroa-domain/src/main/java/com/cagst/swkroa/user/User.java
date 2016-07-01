@@ -20,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
  * Representation of a User within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class User extends Person implements UserDetails {
   private static final long serialVersionUID = 459919042550669570L;
@@ -277,31 +276,16 @@ public final class User extends Person implements UserDetails {
     return expiryDate.toDate();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.security.core.userdetails.UserDetails#isCredentialsNonExpired()
-   */
   @Override
   public boolean isCredentialsNonExpired() {
     return true;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.security.core.userdetails.UserDetails#isEnabled()
-   */
   @Override
   public boolean isEnabled() {
     return isActive();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.security.core.userdetails.UserDetails#getAuthorities()
-   */
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return authorities;
@@ -377,11 +361,6 @@ public final class User extends Person implements UserDetails {
     this.roles.remove(role);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.person.PersonBuilder#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);

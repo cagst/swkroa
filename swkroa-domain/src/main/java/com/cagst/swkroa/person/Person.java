@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import com.cagst.common.formatter.DefaultNameFormatter;
 import com.cagst.common.formatter.NameFormatter;
@@ -12,8 +13,6 @@ import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTimeZone;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Representation of a generic Person within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public class Person implements Serializable, Comparable<Person> {
   private static final long serialVersionUID = 4546930957600757055L;
@@ -282,11 +280,7 @@ public class Person implements Serializable, Comparable<Person> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(name_last);
-    builder.append(name_first);
-
-    return builder.build();
+    return Objects.hash(name_last, name_first);
   }
 
   @Override
@@ -303,11 +297,8 @@ public class Person implements Serializable, Comparable<Person> {
 
     Person rhs = (Person) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(name_last, rhs.getLastName());
-    builder.append(name_first, rhs.getFirstName());
-
-    return builder.build();
+    return Objects.equals(name_last, rhs.getLastName()) &&
+        Objects.equals(name_first, rhs.getFirstName());
   }
 
   @Override

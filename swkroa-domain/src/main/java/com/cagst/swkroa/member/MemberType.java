@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.Collator;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -136,10 +134,7 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(member_type_display);
-
-    return builder.build();
+    return member_type_display.hashCode();
   }
 
   @Override
@@ -156,10 +151,7 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
 
     MemberType rhs = (MemberType) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(member_type_display, rhs.getMemberTypeDisplay());
-
-    return builder.build();
+    return member_type_display.equals(rhs.getMemberTypeDisplay());
   }
 
   @Override
