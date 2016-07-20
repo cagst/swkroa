@@ -7,6 +7,8 @@ import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
+import com.cagst.swkroa.document.Document;
+import com.cagst.swkroa.document.DocumentRepository;
 import com.cagst.swkroa.job.Job;
 import com.cagst.swkroa.job.JobDetail;
 import com.cagst.swkroa.job.JobRepository;
@@ -43,6 +45,7 @@ public final class MembershipServiceImpl implements MembershipService {
   private final ContactRepository contactRepo;
   private final CommentRepository commentRepo;
   private final TransactionRepository transactionRepo;
+  private final DocumentRepository documentRepo;
   private final JobRepository jobRepo;
   private final JobService jobService;
 
@@ -62,6 +65,9 @@ public final class MembershipServiceImpl implements MembershipService {
    * @param transactionRepo
    *    The {@link TransactionRepository} used to retrieve / persist {@link Transaction} objects related to a
    *    {@link Membership}.
+   * @param documentRepo
+   *    The {@link DocumentRepository} used to retrieve / persist {@link Document} objects related to a
+   *    {@link Membership}
    */
   @Inject
   public MembershipServiceImpl(final MembershipRepository membershipRepo,
@@ -69,6 +75,7 @@ public final class MembershipServiceImpl implements MembershipService {
                                final ContactRepository contactRepo,
                                final CommentRepository commentRepo,
                                final TransactionRepository transactionRepo,
+                               final DocumentRepository documentRepo,
                                final JobRepository jobRepo,
                                final JobService jobService) {
     this.membershipRepo = membershipRepo;
@@ -76,6 +83,7 @@ public final class MembershipServiceImpl implements MembershipService {
     this.contactRepo = contactRepo;
     this.commentRepo = commentRepo;
     this.transactionRepo = transactionRepo;
+    this.documentRepo = documentRepo;
     this.jobRepo = jobRepo;
     this.jobService = jobService;
   }
@@ -105,6 +113,9 @@ public final class MembershipServiceImpl implements MembershipService {
     List<Transaction> transactions = transactionRepo.getTransactionsForMembership(membership);
     Collections.sort(transactions);
     membership.setTransactions(transactions);
+
+    List<Document> documents = documentRepo.getDocumentsForMembership(membership);
+    membership.setDocuments(documents);
 
     return membership;
   }

@@ -13,6 +13,7 @@ import com.cagst.common.formatter.NameFormatter;
 import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.comment.Comment;
+import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.transaction.Transaction;
 import org.joda.time.DateTime;
 import org.springframework.util.CollectionUtils;
@@ -53,6 +54,7 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private List<MembershipCounty> counties = new ArrayList<>();
   private List<Comment> comments = new ArrayList<>();
   private List<Transaction> transactions = new ArrayList<>();
+  private List<Document> documents = new ArrayList<>();
 
   private NameFormatter nameFormatter = new DefaultNameFormatter();
 
@@ -399,6 +401,26 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setTransactions(final List<Transaction> transactions) {
     this.transactions = transactions;
+  }
+
+  public void clearDocuments() {
+    documents.clear();
+  }
+
+  public void addDocument(final Document document) {
+    this.documents.add(document);
+  }
+
+  public void removeDocument(final Document document) {
+    this.documents.remove(document);
+  }
+
+  public List<Document> getDocuments() {
+    return Collections.unmodifiableList(documents);
+  }
+
+  public void setDocuments(final List<Document> documents) {
+    this.documents = documents;
   }
 
   @Override
