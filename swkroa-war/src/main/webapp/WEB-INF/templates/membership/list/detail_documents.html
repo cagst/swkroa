@@ -29,13 +29,12 @@
             <td>{{doc.documentDescription}}</td>
             <td style="width:75px">
               <div class="pull-right">
-                <button type="button" class="btn btn-primary btn-xs"
-                        data-ng-click="editTransaction(transaction)"
-                        data-ng-show="!transaction.inDeposit"
-                        th:attr="uib-tooltip=#{membership.document.view}"
-                        data-tooltip-placement="left">
-                  <i class="fa fa-edit"></i>
-                </button>
+                <a class="btn btn-default btn-xs"
+                   target="_blank"
+                   data-ng-href="maintain/documents/{{doc.documentUID}}">
+                  <i class="fa fa-binoculars"></i>
+                  <span th:text="#{maintain.documents.action.view}">zzz View</span>
+                </a>
               </div>
             </td>
           </tr>

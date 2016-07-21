@@ -25,7 +25,7 @@
             <th th:text="#{common.date}" style="width:100px">zzz Date</th>
             <th th:text="#{common.type}">zzz Type</th>
             <th th:text="#{common.desc}">zzz Desc</th>
-            <th th:text="#{com.cagst.swkroa.membership.transaction.amount}" style="width:100px">zzz Amount</th>
+            <th th:text="#{com.cagst.swkroa.membership.transaction.amount}" style="width:100px; text-align:right">zzz Amount</th>
             <th style="width:75px"></th>
           </tr>
         </thead>
@@ -41,12 +41,21 @@
               </div>
             </td>
             <td>
-                <span data-ng-show="transaction.transactionType == 'INVOICE'"
-                      th:text="#{com.cagst.swkroa.membership.transaction.invoice}">
-                </span>
-                <span data-ng-show="transaction.transactionType == 'PAYMENT'"
-                      th:text="#{com.cagst.swkroa.membership.transaction.payment}">
-                </span>
+              <span data-ng-show="transaction.transactionType == 'INVOICE'"
+                    th:text="#{com.cagst.swkroa.membership.transaction.invoice}">
+              </span>
+              <span data-ng-show="transaction.transactionType == 'PAYMENT'"
+                    th:text="#{com.cagst.swkroa.membership.transaction.payment}">
+              </span>
+              <div class="pull-right">
+                <a class="btn btn-default btn-xs"
+                   target="_blank"
+                   data-ng-show="{{transaction.documentUID > 0}}"
+                   data-ng-href="maintain/documents/{{transaction.documentUID}}">
+                  <i class="fa fa-binoculars"></i>
+                  <span th:text="#{maintain.documents.action.view}">zzz View</span>
+                </a>
+              </div>
             </td>
             <td>{{transaction.transactionDescription}}</td>
             <td style="width:100px">

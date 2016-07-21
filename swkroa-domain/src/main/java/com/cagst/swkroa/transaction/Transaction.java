@@ -27,8 +27,9 @@ public class Transaction implements Serializable, Comparable<Transaction> {
   private String ref_num;
   private String memo_txt;
   private boolean deposit_ind;
+  private long document_id;
 
-  private List<TransactionEntry> entries = new ArrayList<TransactionEntry>();
+  private List<TransactionEntry> entries = new ArrayList<>();
 
   // meta-data
   private boolean active_ind = true;
@@ -38,7 +39,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return transaction_id;
   }
 
-  protected void setTransactionUID(final long uid) {
+  protected void setTransactionUID(long uid) {
     this.transaction_id = uid;
   }
 
@@ -46,7 +47,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return membership_id;
   }
 
-  public void setMembershipUID(final long uid) {
+  public void setMembershipUID(long uid) {
     this.membership_id = uid;
   }
 
@@ -54,7 +55,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return membership_name;
   }
 
-  public void setMembershipName(final String name) {
+  public void setMembershipName(String name) {
     this.membership_name = name;
   }
 
@@ -62,7 +63,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return transaction_dt;
   }
 
-  public void setTransactionDate(final DateTime transactionDate) {
+  public void setTransactionDate(DateTime transactionDate) {
     this.transaction_dt = transactionDate;
   }
 
@@ -70,7 +71,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return transaction_type;
   }
 
-  public void setTransactionType(final TransactionType transactionType) {
+  public void setTransactionType(TransactionType transactionType) {
     this.transaction_type = transactionType;
   }
 
@@ -87,7 +88,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return transaction_desc;
   }
 
-  public void setTransactionDescription(final String desc) {
+  public void setTransactionDescription(String desc) {
     this.transaction_desc = desc;
   }
 
@@ -95,7 +96,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return ref_num;
   }
 
-  public void setReferenceNumber(final String refNum) {
+  public void setReferenceNumber(String refNum) {
     this.ref_num = refNum;
   }
 
@@ -103,7 +104,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     return memo_txt;
   }
 
-  public void setMemo(final String memo) {
+  public void setMemo(String memo) {
     this.memo_txt = memo;
   }
 
@@ -113,6 +114,14 @@ public class Transaction implements Serializable, Comparable<Transaction> {
 
   public void setInDeposit(boolean inDeposit) {
     this.deposit_ind = inDeposit;
+  }
+
+  public long getDocumentUID() {
+    return document_id;
+  }
+
+  public void setDocumentUID(long uid) {
+    this.document_id = uid;
   }
 
   public void clearEntries() {

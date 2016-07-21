@@ -114,8 +114,8 @@ public final class MembershipServiceImpl implements MembershipService {
     Collections.sort(transactions);
     membership.setTransactions(transactions);
 
-    List<Document> documents = documentRepo.getDocumentsForMembership(membership);
-    membership.setDocuments(documents);
+//    List<Document> documents = documentRepo.getDocumentsForMembership(membership);
+//    membership.setDocuments(documents);
 
     return membership;
   }
