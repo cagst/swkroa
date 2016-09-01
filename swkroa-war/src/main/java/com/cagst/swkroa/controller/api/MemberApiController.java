@@ -50,7 +50,7 @@ public final class MemberApiController {
    */
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ListModel<Member>> getMembers(
-      final @RequestParam(value = "q", required = true) String query,
+      final @RequestParam(value = "q") String query,
       final @RequestParam(value = "status", required = false) String status,
       final @RequestParam(value = "start", required = false) Integer start,
       final @RequestParam(value = "limit", required = false) Integer limit) {

@@ -4,7 +4,6 @@
  * Provides functionality for submitting reports.
  *
  * Author:  Craig Gaskill
- * Version: 1.0.0
  */
 
 function submitReportForm(reportType, altAction) {

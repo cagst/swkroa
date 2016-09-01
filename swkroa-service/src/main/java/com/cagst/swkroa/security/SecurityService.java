@@ -19,5 +19,5 @@ public interface SecurityService {
    *
    * @return The {@link SecurityPolicy} associated with the specified user.
    */
-  public SecurityPolicy getSecurityPolicy(final User user);
+  SecurityPolicy getSecurityPolicy(final User user);
 }

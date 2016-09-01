@@ -18,6 +18,16 @@
     <!-- JQuery Support -->
     <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js}"></script>
 
+    <!-- Angular Support -->
+    <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.js}"></script>
+
+    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js}"></script>
+    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-utils/0.1.1/angular-ui-utils.min.js}"></script>
+    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-xeditable/0.1.9/js/xeditable.min.js}"></script>
+    <script type="text/javascript" th:src="@{//cdn.jsdelivr.net/angular.wizard/latest/angular-wizard.min.js}"></script>
+
+    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js}"></script>
+
   </th:block>
 
   <th:block sec:authorize="isAuthenticated()">
@@ -29,26 +39,18 @@
     <link type="text/css" th:href="@{//cdnjs.cloudflare.com/ajax/libs/angular-xeditable/0.1.9/css/xeditable.css}" rel="stylesheet" />
 
     <!-- JQuery Support -->
-    <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js}"></script>
 
     <!-- Angular Support -->
-    <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.js}"></script>
     <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular-sanitize.js}"></script>
 
-    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js}"></script>
-    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-utils/0.1.1/angular-ui-utils.min.js}"></script>
-    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-xeditable/0.1.9/js/xeditable.min.js}"></script>
-
     <script type="text/javascript" th:src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js}"></script>
 
     <script type="text/javascript" th:src="@{/static/js/swkroa.js}"></script>
   </th:block>
 
   <th:block sec:authorize="!isAuthenticated()">
     <script type="text/javascript" th:src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{/static/js/jquery.bootstrap.wizard.min.js}"></script>
   </th:block>
 </head>
 
