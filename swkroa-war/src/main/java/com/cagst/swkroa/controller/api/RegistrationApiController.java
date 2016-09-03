@@ -2,13 +2,11 @@ package com.cagst.swkroa.controller.api;
 
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
-import com.cagst.swkroa.model.RegistrationIdentification;
-import com.cagst.swkroa.person.Person;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,36 +31,15 @@ public final class RegistrationApiController {
     this.memberRepository = memberRepository;
   }
 
-  @RequestMapping(value = "/identification", method = RequestMethod.POST)
-  public ResponseEntity registerIdentification(@RequestBody RegistrationIdentification registrationIdentification) {
-    LOGGER.info("Received request to register membership identity for Owner ID [{}]", registrationIdentification.getOwnerId());
+  @RequestMapping(value = "/identification/{ownerId}", method = RequestMethod.GET)
+  public ResponseEntity<Member> registerIdentification(@PathVariable(value = "ownerId") String ownerId) {
+    LOGGER.info("Received request to register membership identity for Owner ID [{}]", ownerId);
 
-    boolean found = true;
-
-    Optional<Member> checkMember = memberRepository.getMemberByOwnerId(registrationIdentification.getOwnerId());
+    Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
-      found = false;
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     } else {
-      Member member = checkMember.get();
-      if (member.getPerson() != null) {
-        Person person = member.getPerson();
-
-        if (StringUtils.isNotBlank(registrationIdentification.getFirstName()) &&
-            !StringUtils.equalsIgnoreCase(registrationIdentification.getFirstName(), person.getFirstName())) {
-          found = false;
-        }
-
-        if (StringUtils.isNotBlank(registrationIdentification.getLastName()) &&
-            !StringUtils.equalsIgnoreCase(registrationIdentification.getLastName(), person.getLastName())) {
-          found = false;
-        }
-      }
-    }
-
-    if (found) {
-      return ResponseEntity.ok().build();
-    } else {
-      return ResponseEntity.notFound().build();
+      return new ResponseEntity<>(checkMember.get(), HttpStatus.OK);
     }
   }
 }

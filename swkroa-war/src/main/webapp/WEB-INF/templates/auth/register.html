@@ -19,105 +19,120 @@
     <h3 th:text="#{signin.register.header}">zzz Register</h3>
   </div>
 
-  <wizard>
-    <wz-step id="identify" th:attr="wz-title=#{signin.register.identify.section}">
-      <div class="container-center-large">
+  <div class="container-center-large">
+    <div id="errorMessage" class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+      </button>
+      <strong>Warning!</strong>
+
+      <div id="identifyError" data-th-text="#{signin.register.identify.error}">zzz Identify Error</div>
+      <div id="verifyError" data-th-text="#{signin.register.verify.error}">zzz Verify Error</div>
+    </div>
+
+    <wizard>
+      <wz-step id="identify" th:attr="wz-title=#{signin.register.identify.section}">
         <div class="row" style="padding-left:15px">
-          <p class="lead lead-sm" th:text="#{signin.register.identify.title}">zzz Identify</p>
-        </div>
+            <p class="lead lead-sm" th:text="#{signin.register.identify.title}">zzz Identify</p>
+          </div>
         <div class="row">
-          <div class="form-group">
-            <div class="col-xs-12">
-              <label for="ownerId" class="form_label label-required"
-                     th:text="#{signin.register.ownerid.label}">
-                zzz Owner ID
-              </label>
-              <input id="ownerId" name="ownerId" type="text" maxlength="15"
-                     class="form-control input-block-level"
-                     th:placeholder="#{signin.register.ownerid.prompt}"
-                     th:required="true"/>
+            <div class="form-group">
+              <div class="col-xs-12">
+                <label for="ownerId" class="form_label label-required"
+                       th:text="#{signin.register.ownerid.label}">
+                  zzz Owner ID
+                </label>
+                <input id="ownerId" name="ownerId" type="text" maxlength="15"
+                       class="form-control input-block-level"
+                       th:placeholder="#{signin.register.ownerid.prompt}"
+                       data-ng-model="ownerId"
+                       data-ng-change="enableIdentify()"/>
+              </div>
             </div>
           </div>
-        </div>
         <div class="row row-spacer spacer-top" style="padding-right:15px">
-          <input type="button" class="btn btn-primary pull-right"
-                 data-th-value="#{signin.register.identify.button}"
-                 data-ng-click="registerIdentification()">
-        </div>
-      </div>
-    </wz-step>
+            <input id="identifyButton" type="button" class="btn btn-primary pull-right"
+                   data-th-value="#{signin.register.identify.button}"
+                   data-ng-click="registerIdentification()">
+          </div>
+      </wz-step>
 
-    <wz-step id="verify" th:attr="wz-title=#{signin.register.verify.section}">
-      <div class="container-center-large">
+      <wz-step id="verify" th:attr="wz-title=#{signin.register.verify.section}">
         <div class="row" style="padding-left:15px">
-          <p class="lead lead-sm" th:text="#{signin.register.verify.title}">zzz Verify</p>
-        </div>
+            <p class="lead lead-sm" th:text="#{signin.register.verify.title}">zzz Verify</p>
+          </div>
         <div class="row">
-          <div class="col-xs-6">
-            <label for="firstName" class="form_label"
-                   th:text="#{signin.register.firstname.label}">
-              zzz Firstname
-            </label>
-            <input id="firstName" name="firstName" type="text" maxlength="50"
-                   class="form-control input-block-level"
-                   th:placeholder="#{signin.register.firstname.prompt}">
+            <div class="col-xs-6">
+              <label for="firstName" class="form_label"
+                     th:text="#{signin.register.firstname.label}">
+                zzz Firstname
+              </label>
+              <input id="firstName" name="firstName" type="text" maxlength="50"
+                     class="form-control input-block-level"
+                     th:placeholder="#{signin.register.firstname.prompt}"
+                     data-ng-model="firstName"
+                     data-ng-change="enableVerify()"/>
+            </div>
+            <div class="col-xs-6">
+              <label for="lastName" class="form_label"
+                     th:text="#{signin.register.lastname.label}">
+                zzz Firstname
+              </label>
+              <input id="lastName" name="lastName" type="text" maxlength="50"
+                     class="form-control input-block-level"
+                     th:placeholder="#{signin.register.lastname.prompt}"
+                     data-ng-model="lastName"
+                     data-ng-change="enableVerify()"/>
+            </div>
           </div>
-          <div class="col-xs-6">
-            <label for="lastName" class="form_label"
-                   th:text="#{signin.register.lastname.label}">
-              zzz Firstname
-            </label>
-            <input id="lastName" name="lastName" type="text" maxlength="50"
-                   class="form-control input-block-level"
-                   th:placeholder="#{signin.register.lastname.prompt}">
-          </div>
-        </div>
 
         <div class="row row-spacer">
-          <div class="col-xs-6">
-            <label for="phoneNumber" class="form_label"
-                   th:text="#{signin.register.phone.label}">
-              zzz Firstname
-            </label>
-            <input id="phoneNumber" name="phoneNumber" type="text" maxlength="50"
-                   class="form-control input-block-level"
-                   th:placeholder="#{signin.register.phone.prompt}">
+            <div class="col-xs-6">
+              <label for="phoneNumber" class="form_label"
+                     th:text="#{signin.register.phone.label}">
+                zzz Phone
+              </label>
+              <input id="phoneNumber" name="phoneNumber" type="text" maxlength="50"
+                     class="form-control input-block-level"
+                     th:placeholder="#{signin.register.phone.prompt}"
+                     data-ng-model="phoneNumber"
+                     data-ng-change="enableVerify()"/>
+            </div>
+            <div class="col-xs-6">
+              <label for="zipCode" class="form_label"
+                     th:text="#{signin.register.zipcode.label}">
+                zzz Zipcode
+              </label>
+              <input id="zipCode" name="zipCode" type="text" maxlength="50"
+                     class="form-control input-block-level"
+                     th:placeholder="#{signin.register.zipcode.prompt}"
+                     data-ng-model="zipCode"
+                     data-ng-change="enableVerify()"/>
+            </div>
           </div>
-          <div class="col-xs-6">
-            <label for="zipCode" class="form_label"
-                   th:text="#{signin.register.zipcode.label}">
-              zzz Firstname
-            </label>
-            <input id="zipCode" name="zipCode" type="text" maxlength="50"
-                   class="form-control input-block-level"
-                   th:placeholder="#{signin.register.zipcode.prompt}">
-          </div>
-        </div>
         <div class="row row-spacer spacer-top" style="padding-right:15px">
-          <input type="button" class="btn btn-primary pull-right"
-                 data-th-value="#{signin.register.verify.button}"
-                 data-ng-click="registerIdentification()">
-        </div>
-      </div>
-    </wz-step>
+            <input id="verifyButton" type="button" class="btn btn-primary pull-right"
+                   data-th-value="#{signin.register.verify.button}"
+                   data-ng-click="registerVerify()">
+          </div>
+      </wz-step>
 
-    <wz-step id="complete" th:attr="wz-title=#{signin.register.complete.section}">
-      <div class="container-center-large">
+      <wz-step id="complete" th:attr="wz-title=#{signin.register.complete.section}">
         <div class="row" style="padding-left:15px">
-          <p class="lead lead-sm" th:text="#{signin.register.complete.title}">zzz Complete</p>
-        </div>
+            <p class="lead lead-sm" th:text="#{signin.register.complete.title}">zzz Complete</p>
+          </div>
         <div class="row">
-        </div>
+          </div>
         <div class="row row-spacer spacer-top" style="padding-right:15px">
-          <input type="button" class="btn btn-primary pull-right"
-                 data-th-value="#{signin.register.complete.button}"
-                 data-ng-click="registerIdentification()">
-        </div>
-      </div>
-    </wz-step>
+            <input type="button" class="btn btn-primary pull-right"
+                   data-th-value="#{signin.register.complete.button}"
+                   data-ng-click="registerIdentification()">
+          </div>
+      </wz-step>
 
-  </wizard>
-
+    </wizard>
+  </div>
 </div>
 
 <script type="text/javascript" th:src="@{/static/js/registration.js}"></script>
