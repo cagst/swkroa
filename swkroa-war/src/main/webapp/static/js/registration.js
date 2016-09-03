@@ -52,7 +52,6 @@ function($scope, $http, WizardHandler) {
     $http.get(url)
       .then(function(response) {
         if (responseSuccessful(response)) {
-          $scope.member = response.data;
           $("#errorMessage").hide();
           WizardHandler.wizard().next();
         } else {
@@ -63,36 +62,65 @@ function($scope, $http, WizardHandler) {
   };
 
   $scope.registerVerify = function () {
+    var ownerId     = $('#ownerId').val();
+
     var firstName   = $('#firstName').val();
     var lastName    = $('#lastName').val();
     var phoneNumber = $('#phoneNumber').val();
     var zipCode     = $('#zipCode').val();
 
-    var suppliedCnt = 0;
-    var verifiedCnt = 0;
+//    var params = "?ownerId=" + ownerId;
+    var params = "";
 
-    if (firstName.length > 0) {
-      suppliedCnt++;
+    if (firstName && firstName.length > 0) {
+      if (params.length == 0) {
+        params = "?";
+      } else {
+        params = params + "&";
 
-      if (firstName.toUpperCase() === $scope.member.person.firstName.toUpperCase()) {
-        verifiedCnt++;
       }
+      params = params + "firstName=" + firstName;
     }
 
-    if (lastName.length > 0) {
-      suppliedCnt++;
-
-      if (lastName.toUpperCase() === $scope.member.person.lastName.toUpperCase()) {
-        verifiedCnt++;
+    if (lastName && lastName.length > 0) {
+      if (params.length == 0) {
+        params = "?";
+      } else {
+        params = params + "&";
       }
+
+      params = params + "lastName=" + lastName;
     }
 
-    if (suppliedCnt === verifiedCnt) {
-      $("#errorMessage").hide();
-      WizardHandler.wizard().next();
-    } else {
-      $('#errorMessage').show();
-      $('#verifyError').show();
+    if (zipCode && zipCode.length > 0) {
+      if (params.length == 0) {
+        params = "?";
+      } else {
+        params = params + "&";
+      }
+
+      params = params + "zipCode=" + zipCode;
     }
+
+    if (phoneNumber && phoneNumber.length > 0) {
+      if (params.length == 0) {
+        params = "?"
+      } else {
+        params = params + "&";
+      }
+
+      params = params + "phoneNumber=" + phoneNumber;
+    }
+
+    $http.get("/api/register/verification/" + ownerId + params)
+      .then(function(response) {
+        if (responseSuccessful(response)) {
+          $("#errorMessage").hide();
+          WizardHandler.wizard().next();
+        } else {
+          $('#errorMessage').show();
+          $('#verifyError').show();
+        }
+    });
   };
 }]);
