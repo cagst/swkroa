@@ -1,10 +1,10 @@
 package com.cagst.swkroa.transaction;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.cagst.common.util.CGTDateTimeUtils;
 import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link TransactionGroup} object. Used to unmarshal a {@link TransactionGroup} from the database.

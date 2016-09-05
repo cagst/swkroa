@@ -1,13 +1,13 @@
 package com.cagst.swkroa.user;
 
-import java.util.List;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 /**
  * Definitions of a service that retrieves and persists {@link User} objects.
@@ -176,7 +176,7 @@ public interface UserService extends UserDetailsService {
    * @throws IncorrectResultSizeDataAccessException
    *     when more than 1 user was found with the specified uid.
    */
-  User getUserByUID(final long uid) throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+  User getUserByUID(final long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link User} that is currently signed on.

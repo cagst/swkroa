@@ -15,6 +15,7 @@ function($scope, $http, WizardHandler) {
     $("#errorMessage").hide();
     $scope.enableIdentify();
     $scope.enableVerify();
+    $scope.enableComplete();
   });
 
   $scope.enableIdentify = function() {
@@ -22,10 +23,7 @@ function($scope, $http, WizardHandler) {
     var disabled = (ownerId.length == 0);
 
     $('#identifyButton').prop('disabled', disabled);
-
     $("#errorMessage").hide();
-    $('#identifyError').hide();
-    $('#verifyError').hide();
   };
 
   $scope.enableVerify = function() {
@@ -40,10 +38,26 @@ function($scope, $http, WizardHandler) {
     cnt += (zipCode.length > 0 ? 1 : 0);
 
     $('#verifyButton').prop('disabled', cnt < 2);
-
     $("#errorMessage").hide();
-    $('#identifyError').hide();
-    $('#verifyError').hide();
+  };
+
+  $scope.enableComplete = function () {
+    var emailAddress = $('#emailAddress').val();
+    var username     = $('#username').val();
+    var password     = $('#password').val();
+    var confirm      = $('#confirm').val();
+
+    var cnt = (emailAddress.length > 0 ? 1 : 0);
+    cnt += (username.length > 0 ? 1 : 0);
+    cnt += (password.length > 0 ? 1 : 0);
+    cnt += (confirm.length > 0 ? 1 : 0);
+
+    if (password === confirm) {
+      cnt++;
+    }
+
+    $('#completeButton').prop('disabled', cnt != 5);
+    $("#errorMessage").hide();
   };
 
   $scope.registerIdentification = function () {
@@ -52,11 +66,13 @@ function($scope, $http, WizardHandler) {
     $http.get(url)
       .then(function(response) {
         if (responseSuccessful(response)) {
-          $("#errorMessage").hide();
           WizardHandler.wizard().next();
+
+          $("#errorMessage").hide();
+          $("#firstName").focus();
         } else {
+          $('#errorMessageText').text(response.data);
           $('#errorMessage').show();
-          $('#identifyError').show();
         }
       });
   };
@@ -69,58 +85,70 @@ function($scope, $http, WizardHandler) {
     var phoneNumber = $('#phoneNumber').val();
     var zipCode     = $('#zipCode').val();
 
-//    var params = "?ownerId=" + ownerId;
-    var params = "";
+    $http({
+      method: 'POST',
+      url: '/api/register/verification/' + ownerId,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+      data: $.param({
+        'firstName': firstName,
+        'lastName': lastName,
+        'phoneNumber': phoneNumber,
+        'zipCode': zipCode})
+    }).then(function(response) {
+      if (responseSuccessful(response)) {
+        WizardHandler.wizard().next();
 
-    if (firstName && firstName.length > 0) {
-      if (params.length == 0) {
-        params = "?";
+        $scope.emailAddress = response.data;
+
+        $("#errorMessage").hide();
+        $("#emailAddress").focus();
       } else {
-        params = params + "&";
-
+        $('#errorMessageText').text(response.data);
+        $('#errorMessage').show();
       }
-      params = params + "firstName=" + firstName;
-    }
-
-    if (lastName && lastName.length > 0) {
-      if (params.length == 0) {
-        params = "?";
-      } else {
-        params = params + "&";
-      }
-
-      params = params + "lastName=" + lastName;
-    }
-
-    if (zipCode && zipCode.length > 0) {
-      if (params.length == 0) {
-        params = "?";
-      } else {
-        params = params + "&";
-      }
-
-      params = params + "zipCode=" + zipCode;
-    }
-
-    if (phoneNumber && phoneNumber.length > 0) {
-      if (params.length == 0) {
-        params = "?"
-      } else {
-        params = params + "&";
-      }
-
-      params = params + "phoneNumber=" + phoneNumber;
-    }
-
-    $http.get("/api/register/verification/" + ownerId + params)
-      .then(function(response) {
-        if (responseSuccessful(response)) {
-          $("#errorMessage").hide();
-          WizardHandler.wizard().next();
-        } else {
-          $('#errorMessage').show();
-          $('#verifyError').show();
-        }
     });
   };
+
+  $scope.registerComplete = function () {
+    var ownerId = $('#ownerId').val();
+
+    var firstName   = $('#firstName').val();
+    var lastName    = $('#lastName').val();
+    var phoneNumber = $('#phoneNumber').val();
+    var zipCode     = $('#zipCode').val();
+
+    var emailAddress = $('#emailAddress').val();
+    var username     = $('#username').val();
+    var password     = $('#password').val();
+    var confirm      = $('#confirm').val();
+
+    $http({
+      method: 'POST',
+      url: '/api/register/completion/' + ownerId,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+      data: $.param({
+        'firstName': firstName,
+        'lastName': lastName,
+        'phoneNumber': phoneNumber,
+        'zipCode': zipCode,
+        'emailAddress': emailAddress,
+        'username': username,
+        'password': password,
+        'confirm': confirm
+      })
+    }).then(function (response) {
+      if (responseSuccessful(response)) {
+        $scope.emailAddress = response.data;
+
+        $("#errorMessage").hide();
+        $("#emailAddress").focus();
+
+        WizardHandler.wizard().next();
+      } else {
+        $('#errorMessage').show();
+        $('#verifyError').show();
+      }
+    });
+  }
+
 }]);

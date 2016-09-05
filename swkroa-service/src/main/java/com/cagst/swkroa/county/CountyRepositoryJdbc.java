@@ -1,5 +1,12 @@
 package com.cagst.swkroa.county;
 
+import com.cagst.common.db.BaseRepositoryJdbc;
+import com.cagst.common.db.StatementLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.util.Assert;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
@@ -7,13 +14,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.util.Assert;
 
 /**
  * JDBC Template implementation of the {@link CountyRepository} interface.

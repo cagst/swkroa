@@ -1,8 +1,5 @@
 package com.cagst.swkroa.member;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.person.Person;
@@ -11,6 +8,9 @@ import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Used to marshal/un-marshal a {@link Member} to/from the database.

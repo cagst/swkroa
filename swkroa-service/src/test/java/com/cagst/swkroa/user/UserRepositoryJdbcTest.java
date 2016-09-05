@@ -1,13 +1,5 @@
 package com.cagst.swkroa.user;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
@@ -19,6 +11,15 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for UserRepositoryJdbc class.
@@ -78,6 +79,29 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
   public void testGetUserByUID_Found() {
     User user = repo.getUserByUID(11L);
     assertNotNull("Ensure user was found.", user);
+    assertEquals("Ensure we found the correct user (check username).", "cgaskill", user.getUsername());
+    assertEquals("Ensure we found the correct user (check firstname).", "Craig", user.getFirstName());
+    assertEquals("Ensure we found the correct user (check lastname).", "Gaskill", user.getLastName());
+  }
+
+  /**
+   * Tests the getUserByPersonId method and not finding the user.
+   */
+  @Test
+  public void testGetUserByPersonId_NotFound() {
+    Optional<User> check = repo.getUserByPersonId(999L);
+    assertFalse("Ensure a user was not found.", check.isPresent());
+  }
+
+  /**
+   * Tests the getUserByPersonId method and finding the user.
+   */
+  @Test
+  public void testGetUserByPersonId_Found() {
+    Optional<User> check = repo.getUserByPersonId(1L);
+    assertTrue("Ensure a user as found.", check.isPresent());
+
+    User user = check.get();
     assertEquals("Ensure we found the correct user (check username).", "cgaskill", user.getUsername());
     assertEquals("Ensure we found the correct user (check firstname).", "Craig", user.getFirstName());
     assertEquals("Ensure we found the correct user (check lastname).", "Gaskill", user.getLastName());

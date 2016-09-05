@@ -1,13 +1,13 @@
 package com.cagst.swkroa.codevalue;
 
-import java.util.List;
-
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Interface for retrieving / saving {@link CodeSet}s and {@link CodeValue}s from / to persistent storage.

@@ -1,10 +1,10 @@
 package com.cagst.swkroa.utils;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserRepository;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * This is a utility class that will perform actions for / on a {@link User}.

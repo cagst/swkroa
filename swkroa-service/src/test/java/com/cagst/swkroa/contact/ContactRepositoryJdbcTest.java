@@ -1,13 +1,5 @@
 package com.cagst.swkroa.contact;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import javax.sql.DataSource;
-import java.util.Collection;
-
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.test.BaseTestRepository;
@@ -17,6 +9,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.springframework.dao.OptimisticLockingFailureException;
+
+import javax.sql.DataSource;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for PersonRepositoryJdbc class.

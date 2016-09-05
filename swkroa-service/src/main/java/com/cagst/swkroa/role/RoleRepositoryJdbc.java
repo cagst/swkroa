@@ -1,5 +1,12 @@
 package com.cagst.swkroa.role;
 
+import com.cagst.common.db.BaseRepositoryJdbc;
+import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
@@ -9,13 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
-import com.cagst.swkroa.user.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 /**
  * JDBC Template implementation of the {@link RoleRepository} interface.

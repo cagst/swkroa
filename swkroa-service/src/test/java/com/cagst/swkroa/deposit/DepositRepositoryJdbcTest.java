@@ -1,23 +1,11 @@
 package com.cagst.swkroa.deposit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
-import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepositoryJdbc;
 import com.cagst.swkroa.transaction.UnpaidInvoice;
 import com.cagst.swkroa.user.User;
-import com.google.common.collect.Lists;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -28,6 +16,14 @@ import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test class for the {@link DepositRepositoryJdbc} class.

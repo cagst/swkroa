@@ -1,18 +1,18 @@
 package com.cagst.swkroa.user;
 
-import java.util.List;
-
 import com.cagst.swkroa.security.SecurityPolicy;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * Definition of a repository that retrieves and persists {@link User} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface UserRepository {
   /**
@@ -27,7 +27,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if username is <code>null</code> or is empty.
    */
-  User getUserByUsername(final String username) throws IllegalArgumentException;
+  User getUserByUsername(String username) throws IllegalArgumentException;
 
   /**
    * Retrieves a {@link User} based upon the unique identifier.
@@ -42,8 +42,22 @@ public interface UserRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     when more than 1 user was found with the specified uid.
    */
-  User getUserByUID(final long uid)
-      throws IncorrectResultSizeDataAccessException;
+  User getUserByUID(long uid) throws IncorrectResultSizeDataAccessException;
+
+  /**
+   * Retrieves a {@link User} based upon the unique identifier for the Person associated to the User record.
+   *
+   * @param personId
+   *     A {@link long} that identifies the Person to retrieve the User for.
+   *
+   * @return The {@link User} that is associated with the specified personId.
+   *
+   * @throws EmptyResultDataAccessException
+   *     when no user was found with the specified personId.
+   * @throws IncorrectResultSizeDataAccessException
+   *     when more than 1 user was found with the specified personId.
+   */
+  Optional<User> getUserByPersonId(long personId);
 
   /**
    * Updates the {@link User} account for a signin attempt.
@@ -56,7 +70,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null
    */
-  User signinAttempt(final User user) throws IllegalArgumentException;
+  User signinAttempt(User user) throws IllegalArgumentException;
 
   /**
    * Updates the {@link User} account for a successful sign-in.
@@ -71,7 +85,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null
    */
-  User signinSuccessful(final User user, final String ipAddress) throws IllegalArgumentException;
+  User signinSuccessful(User user, String ipAddress) throws IllegalArgumentException;
 
   /**
    * Locks the user account as of NOW. Used primarily when the user has exceeded their sign-in
@@ -89,7 +103,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if {@code user} is null
    */
-  User lockUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
+  User lockUserAccount(User user, String message, User instigator) throws IllegalArgumentException;
 
   /**
    * Unlocks the user account as of NOW. Used by the system to automatically unlock a user account
@@ -108,7 +122,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if {@code user} is null
    */
-  User unlockUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
+  User unlockUserAccount(User user, String message, User instigator) throws IllegalArgumentException;
 
   /**
    * Enables the specified {@link User} account.
@@ -124,7 +138,7 @@ public interface UserRepository {
    *
    * @throws IllegalArgumentException
    */
-  User enableUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
+  User enableUserAccount(User user, String message, User instigator) throws IllegalArgumentException;
 
   /**
    * Disables the specified {@link User} account.
@@ -140,7 +154,7 @@ public interface UserRepository {
    *
    * @throws IllegalArgumentException
    */
-  User disableUserAccount(final User user, final String message, final User instigator) throws IllegalArgumentException;
+  User disableUserAccount(User user, String message, User instigator) throws IllegalArgumentException;
 
   /**
    * Changes the specified {@link User User} password.
@@ -160,7 +174,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null or <code>password</code> is null or empty
    */
-  User changeUserPassword(final User user, final String newPassword, final String message)
+  User changeUserPassword(User user, String newPassword, String message)
       throws IllegalArgumentException;
 
   /**
@@ -181,7 +195,7 @@ public interface UserRepository {
    * @throws IllegalArgumentException
    *     if <code>user</code> is null or <code>password</code> is null or empty
    */
-  User resetUserPassword(final User user, final String tempPassword, final String message, final User instigator)
+  User resetUserPassword(User user, String tempPassword, String message, User instigator)
       throws IllegalArgumentException;
 
   /**
@@ -192,7 +206,7 @@ public interface UserRepository {
    *
    * @return {@code true} if the username is already being used, {@code false} if not.
    */
-  boolean doesUsernameExist(final String username);
+  boolean doesUsernameExist(String username);
 
   /**
    * Checks to see if the specified {@code username} is currently being used.
@@ -204,7 +218,7 @@ public interface UserRepository {
    *
    * @return {@code true} if the username is already being used, {@code false} if not.
    */
-  boolean doesUsernameExist(final String username, final User user);
+  boolean doesUsernameExist(String username, User user);
 
   /**
    * Commits the specified {@link User} to persistent storage.
@@ -226,7 +240,7 @@ public interface UserRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  User saveUser(final User builder, final User user)
+  User saveUser(User builder, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
 
   /**

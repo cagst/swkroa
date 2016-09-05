@@ -1,9 +1,9 @@
 package com.cagst.swkroa.county;
 
+import org.springframework.jdbc.core.RowMapper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Maps a row in the resultset into a {@link County} object. Used to marshal / unmarshal a

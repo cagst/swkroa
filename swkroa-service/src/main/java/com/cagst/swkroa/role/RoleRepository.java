@@ -1,10 +1,10 @@
 package com.cagst.swkroa.role;
 
+import com.cagst.swkroa.user.User;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
-import com.cagst.swkroa.user.User;
 
 /**
  * Definition of a repository that retrieves and persists {@link Role} and {@link Privilege}

@@ -1,12 +1,12 @@
 package com.cagst.swkroa.codevalue;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.cagst.common.codevalue.CGTCodeValue;
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link CGTCodeValue} object. Used to unmarshall a CodeValue

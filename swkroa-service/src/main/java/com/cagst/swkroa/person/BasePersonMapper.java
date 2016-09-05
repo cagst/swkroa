@@ -1,13 +1,13 @@
 package com.cagst.swkroa.person;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Locale;
-
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Locale;
 
 /**
  * Used to marshal/unmarshal a {@link Person} to/from the database.

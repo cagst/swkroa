@@ -1,10 +1,5 @@
 package com.cagst.swkroa.filesystem;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.vfs2.FileSystemException;
 import org.junit.After;
@@ -16,6 +11,11 @@ import org.junit.runners.JUnit4;
 
 import java.nio.file.NoSuchFileException;
 import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for the {@link FileSystemImpl} class.
