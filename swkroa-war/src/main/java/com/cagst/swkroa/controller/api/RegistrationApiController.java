@@ -10,6 +10,7 @@ import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserRepository;
 import com.cagst.swkroa.user.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
-import javax.swing.text.html.Option;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -42,6 +43,7 @@ public final class RegistrationApiController {
   private MemberRepository memberRepository;
   private ContactRepository contactRepo;
   private UserRepository userRepo;
+  private UserService userService;
 
   /**
    * Default Constructor
@@ -65,6 +67,11 @@ public final class RegistrationApiController {
     this.userRepo = userRepo;
   }
 
+  @Inject
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
+
   @RequestMapping(value = "/identification/{ownerId}", method = RequestMethod.GET)
   public ResponseEntity<String> registerIdentification(@PathVariable(value = "ownerId") String ownerId) {
     LOGGER.info("Received request to identify membership for Owner ID [{}]", ownerId);
@@ -73,21 +80,21 @@ public final class RegistrationApiController {
     if (!checkMember.isPresent()) {
       String msg = resourceBundle.getString("signin.register.identify.notfound");
       return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
-    } else {
-      Member member = checkMember.get();
-      if (member.getPerson() == null) {
-        String msg = resourceBundle.getString("signin.register.identify.noperson");
-        return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
-      }
-
-      Optional<User> user = userRepo.getUserByPersonId(member.getPerson().getPersonUID());
-      if (user.isPresent()) {
-        String msg = resourceBundle.getString("signin.register.identify.exists");
-        return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
-      }
-
-      return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    Member member = checkMember.get();
+    if (member.getPerson() == null) {
+      String msg = resourceBundle.getString("signin.register.identify.noperson");
+      return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
+    }
+
+    Optional<User> user = userService.getUserByPersonId(member.getPerson().getPersonUID());
+    if (user.isPresent()) {
+      String msg = resourceBundle.getString("signin.register.identify.exists");
+      return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
+    }
+
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @RequestMapping(value = "/verification/{ownerId}", method = RequestMethod.POST)
@@ -100,32 +107,46 @@ public final class RegistrationApiController {
   ) {
     LOGGER.info("Received request to verify membership for Owner ID [{}]", ownerId);
 
+    // performing the same operations as the registerIdentify method
+    // in case this API was called maliciously or out of order
     Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      String msg = resourceBundle.getString("signin.register.identify.notfound");
+      return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
     }
 
     Member member = checkMember.get();
+    if (member.getPerson() == null) {
+      String msg = resourceBundle.getString("signin.register.identify.noperson");
+      return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
+    }
+
+    Optional<User> user = userService.getUserByPersonId(member.getPerson().getPersonUID());
+    if (user.isPresent()) {
+      String msg = resourceBundle.getString("signin.register.identify.exists");
+      return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
+    }
 
     boolean verified = verify(member, firstName, lastName, zipCode, phoneNumber);
 
-    if (verified) {
-      List<EmailAddress> emailAddresses = contactRepo.getEmailAddressesForMember(member);
-      EmailAddress primaryEmailAddress = null;
-      for (EmailAddress emailAddress : emailAddresses) {
-        if (emailAddress.isPrimary()) {
-          primaryEmailAddress = emailAddress;
-          break;
-        } else if (primaryEmailAddress == null) {
-          primaryEmailAddress = emailAddress;
-        }
-      }
-
-      String email = (primaryEmailAddress != null ? primaryEmailAddress.getEmailAddress() : null);
-      return new ResponseEntity<>(email, HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    if (!verified) {
+      String msg = resourceBundle.getString("signin.register.verify.error");
+      return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
     }
+
+    List<EmailAddress> emailAddresses = contactRepo.getEmailAddressesForMember(member);
+    EmailAddress primaryEmailAddress = null;
+    for (EmailAddress emailAddress : emailAddresses) {
+      if (emailAddress.isPrimary()) {
+        primaryEmailAddress = emailAddress;
+        break;
+      } else if (primaryEmailAddress == null) {
+        primaryEmailAddress = emailAddress;
+      }
+    }
+
+    String email = (primaryEmailAddress != null ? primaryEmailAddress.getEmailAddress() : null);
+    return new ResponseEntity<>(email, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/completion/{ownerId}", method = RequestMethod.POST)
@@ -142,16 +163,65 @@ public final class RegistrationApiController {
   ) {
     LOGGER.info("Received request to verify membership for Owner ID [{}]", ownerId);
 
+    // performing the same operations as the registerIdentify method
+    // and performing the same operations as the registerVerify method
+    // in case this API was called maliciously or out of order
     Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      String msg = resourceBundle.getString("signin.register.identify.notfound");
+      return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
     }
 
     Member member = checkMember.get();
+    if (member.getPerson() == null) {
+      String msg = resourceBundle.getString("signin.register.identify.noperson");
+      return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
+    }
+
+    Optional<User> checkUser = userService.getUserByPersonId(member.getPerson().getPersonUID());
+    if (checkUser.isPresent()) {
+      String msg = resourceBundle.getString("signin.register.identify.exists");
+      return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
+    }
 
     boolean verified = verify(member, firstName, lastName, zipCode, phoneNumber);
+    if (!verified) {
+      String msg = resourceBundle.getString("signin.register.verify.error");
+      return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
+    }
 
-    return null;
+    if (!StringUtils.equals(password, confirm)) {
+      String msg = resourceBundle.getString("signin.register.complete.password.mismatch");
+      return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+    }
+
+    boolean usernameTaken = userService.doesUsernameExist(username);
+    if (usernameTaken) {
+      String msgFormat = resourceBundle.getString("signin.register.complete.username.exists");
+      String msg = MessageFormat.format(msgFormat, username);
+
+      return new ResponseEntity<>(msg, HttpStatus.CONFLICT);
+    }
+
+    Optional<User> checkSystemUser = userRepo.getUserByUsername(UserService.SYSTEM_USER);
+    if (!checkSystemUser.isPresent()) {
+      LOGGER.error("Unable to find the 'system' user.");
+      return new ResponseEntity<>("Unable to find the 'system' user.", HttpStatus.NOT_FOUND);
+    }
+
+    User systemUser = checkSystemUser.get();
+
+    User user = new User();
+    user.setPersonUID(member.getPerson().getPersonUID());
+    user.setUsername(username);
+    user.setPassword(password);
+    user.setPasswordTemporary(false);
+    user.setPasswordChangedDate(new DateTime());
+    user.setActive(true);
+
+    userService.registerUser(user, systemUser);
+
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   private boolean verify(Member member, String firstName, String lastName, String zipCode, String phoneNumber) {

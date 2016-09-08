@@ -8,6 +8,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Definitions of a service that retrieves and persists {@link User} objects.
@@ -30,7 +31,7 @@ public interface UserService extends UserDetailsService {
    * @throws IllegalArgumentException
    *     if the <code>user</code> is <code>null</code>.
    */
-  User signinSuccessful(final User user, final String ipAddress) throws IllegalArgumentException;
+  User signinSuccessful(User user, String ipAddress) throws IllegalArgumentException;
 
   /**
    * Updates the {@link User User's} record for a failed sign in.
@@ -43,7 +44,7 @@ public interface UserService extends UserDetailsService {
    * @throws IllegalArgumentException
    *     if the <code>username</code> is <code>null</code> or empty.
    */
-  void signinFailure(final String username, final String message) throws IllegalArgumentException;
+  void signinFailure(String username, String message) throws IllegalArgumentException;
 
   /**
    * Clears out the session when the user signs out of the system.
@@ -51,7 +52,7 @@ public interface UserService extends UserDetailsService {
    * @param user
    *     The {@link User} that has signed out of the system.
    */
-  void signedOut(final User user);
+  void signedOut(User user);
 
   /**
    * Clears out the session when the user is timed out of the system due to inactivity.
@@ -59,7 +60,7 @@ public interface UserService extends UserDetailsService {
    * @param user
    *     The {@link User} that has timed out of the system.
    */
-  void timedOut(final User user);
+  void timedOut(User user);
 
   /**
    * Modify the current user's password. This should change the user's password in the persistent
@@ -80,8 +81,8 @@ public interface UserService extends UserDetailsService {
    *     if the oldPassword isn't valid, if the newPassword is the same as the new password,
    *     or if the newPassword is the same as the username
    */
-  User changePassword(final User user, final String oldPassword, final String newPassword,
-                      final String confirmPassword) throws BadCredentialsException;
+  User changePassword(User user, String oldPassword, String newPassword, String confirmPassword)
+      throws BadCredentialsException;
 
   /**
    * Reset the user's password to a random temporary password.
@@ -93,7 +94,7 @@ public interface UserService extends UserDetailsService {
    *
    * @return A {@link User} that has been updated accordingly.
    */
-  User resetPassword(final User user, final User instigator);
+  User resetPassword(User user, User instigator);
 
   /**
    * Updates the user's record by clearing the locked date (unlocking) on the user's account.
@@ -105,7 +106,7 @@ public interface UserService extends UserDetailsService {
    *
    * @return A {@link User} that has been updated accordingly.
    */
-  User unlockAccount(final User user, final User instigator);
+  User unlockAccount(User user, User instigator);
 
   /**
    * Enables the user's account.
@@ -117,7 +118,7 @@ public interface UserService extends UserDetailsService {
    *
    * @return The {@link User} that has been updated accordingly.
    */
-  User enableAccount(final User user, final User instigator);
+  User enableAccount(User user, User instigator);
 
   /**
    * Disables the user's account.
@@ -129,9 +130,9 @@ public interface UserService extends UserDetailsService {
    *
    * @return The {@link User} that has been updated accordingly.
    */
-  User disableAccount(final User user, final User instigator);
+  User disableAccount(User user, User instigator);
 
-  boolean doesUsernameExist(final String username);
+  boolean doesUsernameExist(String username);
 
   /**
    * Commits the specified {@link User} to persistent storage.
@@ -157,6 +158,29 @@ public interface UserService extends UserDetailsService {
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
 
   /**
+   * Registers a {@link User}. The associated Person object must already exist.
+   *
+   * @param builder
+   *     The {@link User} to persist.
+   * @param user
+   *     The {@link User} that performed the changes.
+   *
+   * @return A {@link User} once it has been committed to persistent storage.
+   *
+   * @throws OptimisticLockingFailureException
+   *     if the updt_cnt doesn't match (meaning someone has updated it since it was last read)
+   * @throws IncorrectResultSizeDataAccessException
+   *     if the number of rows inserted / updated exceeded the expected number
+   * @throws UsernameTakenException
+   *     if the username associated to the {@code builder} is already being used by another
+   *     user
+   * @throws DataAccessException
+   *     if the query fails
+   */
+  User registerUser(User builder, User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
+
+  /**
    * Retrieves a {@link List} of all {@link User Users} that are in the system.
    *
    * @return A {@link List} of {@link User Users} defined in the system.
@@ -176,7 +200,20 @@ public interface UserService extends UserDetailsService {
    * @throws IncorrectResultSizeDataAccessException
    *     when more than 1 user was found with the specified uid.
    */
-  User getUserByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+  User getUserByUID(long uid) throws IncorrectResultSizeDataAccessException;
+
+  /**
+   * Retrieves a {@link User} based upon the unique identifier for the Person associated to the User record.
+   *
+   * @param personId
+   *     A {@link long} that identifies the Person to retrieve the User for.
+   *
+   * @return The {@link User} that is associated with the specified personId.
+   *
+   * @throws IncorrectResultSizeDataAccessException
+   *     when more than 1 user was found with the specified personId.
+   */
+  Optional<User> getUserByPersonId(long personId) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link User} that is currently signed on.

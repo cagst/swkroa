@@ -78,7 +78,7 @@ import java.util.Optional;
   }
 
   @Override
-  public User getUserByUsername(String username) throws IllegalArgumentException {
+  public Optional<User> getUserByUsername(String username) throws IllegalArgumentException {
     Assert.hasLength(username, "Assertion Failed - argument [username] cannot be null or empty");
 
     LOGGER.info("Calling getUserByUsername [{}].", username);
@@ -89,13 +89,13 @@ import java.util.Optional;
 
     List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_USERNAME), params, new UserMapper());
     if (users.size() == 1) {
-      return users.get(0);
+      return Optional.of(users.get(0));
     } else if (users.size() == 0) {
       LOGGER.warn("User [{}] was not found!", username);
-      return null;
+      return Optional.empty();
     } else {
       LOGGER.error("More than 1 user with username of [{}] was found!", username);
-      return null;
+      return Optional.empty();
     }
   }
 
@@ -373,21 +373,37 @@ import java.util.Optional;
 
   @Override
   @CacheEvict(value = "users", key = "#builder.getUserUID()")
-  public User saveUser(User builder, User user)
+  public User saveUser(User newUser, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(builder, "Assertion Failed - argument [builder] cannot be null");
+    Assert.notNull(newUser, "Assertion Failed - argument [newUser] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling saveUser for [{}]", builder.getUsername());
+    LOGGER.info("Calling saveUser for [{}]", newUser.getUsername());
 
     // save the Person portion of the User
-    savePerson(builder, user);
+    savePerson(newUser, user);
 
-    if (builder.getUserUID() == 0L) {
-      return insertUser(builder, user);
+    if (newUser.getUserUID() == 0L) {
+      return insertUser(newUser, user);
     } else {
-      return updateUser(builder, user);
+      return updateUser(newUser, user);
+    }
+  }
+
+  @Override
+  public User registerUser(User newUser, User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
+
+    Assert.notNull(newUser, "Assertion Failed - argument [newUser] cannot be null");
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+
+    LOGGER.info("Calling saveUser for [{}]", newUser.getUsername());
+
+    if (newUser.getUserUID() == 0L) {
+      return insertUser(newUser, user);
+    } else {
+      return updateUser(newUser, user);
     }
   }
 

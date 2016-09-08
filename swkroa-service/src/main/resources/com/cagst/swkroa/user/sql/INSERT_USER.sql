@@ -1,6 +1,7 @@
 INSERT INTO user (person_id
                  ,username
                  ,password
+                 ,password_changed_dt_tm
                  ,temporary_pwd_ind
                  ,account_locked_dt_tm
                  ,account_expired_dt_tm
@@ -12,6 +13,7 @@ INSERT INTO user (person_id
          VALUES (:person_id
                 ,:username
                 ,:password
+                ,:password_changed_dt_tm
                 ,:temporary_pwd_ind
                 ,:account_locked_dt_tm
                 ,:account_expired_dt_tm

@@ -101,6 +101,7 @@ import java.util.Locale;
     params.addValue(PERSON_ID, builder.getPersonUID());
     params.addValue(USERNAME, builder.getUsername());
     params.addValue(PASSWORD, builder.getPassword());
+    params.addValue(PASSWORD_CHANGED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(builder.getPasswordChangedDate()));
     params.addValue(TEMPORARY_PWD_IND, builder.isPasswordTemporary());
     params.addValue(ACCOUNT_LOCKED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(builder.getAccountLockedDate()));
     params.addValue(ACCOUNT_EXPIRED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(builder.getAccountExpiredDate()));

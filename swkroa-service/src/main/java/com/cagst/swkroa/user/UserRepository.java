@@ -21,13 +21,12 @@ public interface UserRepository {
    * @param username
    *     The {@link String} username that identifies the {@link User} to retrieve.
    *
-   * @return The {@link User} associated to the specified username. <code>null</code> if no
-   * {@link User} is associated to this username.
+   * @return An {@link Optional} that may contain the {@link User} associated to the specified username.
    *
    * @throws IllegalArgumentException
    *     if username is <code>null</code> or is empty.
    */
-  User getUserByUsername(String username) throws IllegalArgumentException;
+  Optional<User> getUserByUsername(String username) throws IllegalArgumentException;
 
   /**
    * Retrieves a {@link User} based upon the unique identifier.
@@ -52,8 +51,6 @@ public interface UserRepository {
    *
    * @return The {@link User} that is associated with the specified personId.
    *
-   * @throws EmptyResultDataAccessException
-   *     when no user was found with the specified personId.
    * @throws IncorrectResultSizeDataAccessException
    *     when more than 1 user was found with the specified personId.
    */
@@ -241,6 +238,29 @@ public interface UserRepository {
    *     if the query fails
    */
   User saveUser(User builder, User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
+
+  /**
+   * Registers a {@link User}. The associated Person object must already exist.
+   *
+   * @param builder
+   *     The {@link User} to persist.
+   * @param user
+   *     The {@link User} that performed the changes.
+   *
+   * @return A {@link User} once it has been committed to persistent storage.
+   *
+   * @throws OptimisticLockingFailureException
+   *     if the updt_cnt doesn't match (meaning someone has updated it since it was last read)
+   * @throws IncorrectResultSizeDataAccessException
+   *     if the number of rows inserted / updated exceeded the expected number
+   * @throws UsernameTakenException
+   *     if the username associated to the {@code builder} is already being used by another
+   *     user
+   * @throws DataAccessException
+   *     if the query fails
+   */
+  User registerUser(User builder, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException;
 
   /**

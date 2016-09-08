@@ -44,8 +44,8 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetUserByUsername_NotFound() {
-    User user = repo.getUserByUsername("billybob");
-    assertNull("Ensure user was not found.", user);
+    Optional<User> checkUser = repo.getUserByUsername("billybob");
+    assertFalse("Ensure user was not found.", checkUser.isPresent());
   }
 
   /**
@@ -53,9 +53,12 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetUserByUsername_Found() {
-    User user = repo.getUserByUsername("cgaskill");
+    Optional<User> checkUser = repo.getUserByUsername("cgaskill");
 
-    assertNotNull("Ensure user was found.", user);
+    assertTrue("Ensure user was found.", checkUser.isPresent());
+
+    User user = checkUser.get();
+
     assertEquals("Ensure we found the correct user (check username).", "cgaskill", user.getUsername());
     assertEquals("Ensure we found the correct user (check firstname).", "Craig", user.getFirstName());
     assertEquals("Ensure we found the correct user (check lastname).", "Gaskill", user.getLastName());
@@ -112,8 +115,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetUserByUsername_WillExpired() {
-    User user = repo.getUserByUsername("temp");
-    assertNotNull("Ensure user was found.", user);
+    Optional<User> checkUser = repo.getUserByUsername("temp");
+    assertTrue("Ensure user was found.", checkUser.isPresent());
+
+    User user = checkUser.get();
     assertEquals("Ensure we found the correct user (check username).", "temp", user.getUsername());
 
     assertNotNull("Ensure the user account has an expiration date.", user.getAccountExpiredDate());
@@ -125,8 +130,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetUserByUsername_Expired() {
-    User user = repo.getUserByUsername("expire");
-    assertNotNull("Ensure user was found.", user);
+    Optional<User> checkUser = repo.getUserByUsername("expire");
+    assertTrue("Ensure user was found.", checkUser.isPresent());
+
+    User user = checkUser.get();
     assertEquals("Ensure we found the correct user (check username).", "expire", user.getUsername());
 
     assertNotNull("Ensure the user account has an expiration date.", user.getAccountExpiredDate());
@@ -138,8 +145,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetUserByUsername_Locked() {
-    User user = repo.getUserByUsername("locked");
-    assertNotNull("Ensure user was found.", user);
+    Optional<User> checkUser = repo.getUserByUsername("locked");
+    assertTrue("Ensure user was found.", checkUser.isPresent());
+
+    User user = checkUser.get();
     assertEquals("Ensure we found the correct user (check username).", "locked", user.getUsername());
     assertEquals("Ensure we found the correct user (check sign-in attempts).", 5, user.getSigninAttempts());
 
@@ -152,8 +161,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testSigninAttempt() {
-    User user1 = repo.getUserByUsername("cgaskill");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("cgaskill");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertEquals("Ensure we found the correct user (check username).", "cgaskill", user1.getUsername());
     assertEquals("Ensure we found the correct user (check sign-in attempts).", 0, user1.getSigninAttempts());
     assertEquals("Ensure we found the correct user (check update count).", 0, user1.getUserUpdateCount());
@@ -163,8 +174,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure it is the same user.", "cgaskill", user.getUsername());
     assertEquals("Ensure the user's sign-in attempts has been incremented.", 1, user.getSigninAttempts());
 
-    User user2 = repo.getUserByUsername("cgaskill");
-    assertNotNull("Ensure user was found.", user2);
+    Optional<User> checkUser2 = repo.getUserByUsername("cgaskill");
+    assertTrue("Ensure user was found.", checkUser2.isPresent());
+
+    User user2 = checkUser2.get();
     assertEquals("Ensure we found the correct user (check username).", "cgaskill", user2.getUsername());
     assertEquals("Ensure the user's sign-in attempts is correct.", 1, user2.getSigninAttempts());
   }
@@ -174,8 +187,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testLockUserAccount() throws Exception {
-    User user1 = repo.getUserByUsername("cgaskill");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("cgaskill");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertTrue("Ensure user account is not locked.", user1.isAccountNonLocked());
     assertEquals("Ensure the user account has not been updated.", 0, user1.getUserUpdateCount());
 
@@ -183,8 +198,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure user is valid.", user2);
     assertFalse("Ensure user account is locked.", user2.isAccountNonLocked());
 
-    User user3 = repo.getUserByUsername("cgaskill");
-    assertNotNull("Ensure user was found.", user3);
+    Optional<User> checkUser3 = repo.getUserByUsername("cgaskill");
+    assertTrue("Ensure user was found.", checkUser3.isPresent());
+
+    User user3 = checkUser3.get();
     assertFalse("Ensure user account is locked.", user3.isAccountNonLocked());
   }
 
@@ -193,16 +210,20 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testUnlockUserAccount() throws Exception {
-    User user1 = repo.getUserByUsername("locked");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("locked");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertFalse("Ensure user account is locked.", user1.isAccountNonLocked());
 
     User user2 = repo.unlockUserAccount(user1, "Manually unlocked", user1);
     assertNotNull("Ensure user was found.", user2);
     assertTrue("Ensure user account is not locked.", user2.isAccountNonLocked());
 
-    User user3 = repo.getUserByUsername("locked");
-    assertNotNull("Ensure user was found.", user3);
+    Optional<User> checkUser3 = repo.getUserByUsername("locked");
+    assertTrue("Ensure user was found.", checkUser3.isPresent());
+
+    User user3 = checkUser3.get();
     assertTrue("Ensure user account is still not locked.", user3.isAccountNonLocked());
   }
 
@@ -211,8 +232,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testEnableUserAccount() {
-    User user1 = repo.getUserByUsername("disabled");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("disabled");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertFalse("Ensure user account is disabled.", user1.isActive());
     assertFalse("Ensure user account is disabled.", user1.isEnabled());
 
@@ -221,8 +244,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertTrue("Ensure user account is enabled.", user2.isActive());
     assertTrue("Ensure user account is enabled.", user2.isEnabled());
 
-    User user3 = repo.getUserByUsername("disabled");
-    assertNotNull("Ensure user was found.", user3);
+    Optional<User> checkUser3 = repo.getUserByUsername("disabled");
+    assertTrue("Ensure user was found.", checkUser3.isPresent());
+
+    User user3 = checkUser3.get();
     assertTrue("Ensure user account is enabled.", user3.isActive());
     assertTrue("Ensure user account is enabled.", user3.isEnabled());
   }
@@ -232,8 +257,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testDisableUserAccount() {
-    User user1 = repo.getUserByUsername("enabled");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("enabled");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertTrue("Ensure user account is enabled.", user1.isActive());
     assertTrue("Ensure user account is enabled.", user1.isEnabled());
 
@@ -242,8 +269,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertFalse("Ensure user account is disabled.", user2.isActive());
     assertFalse("Ensure user account is disabled.", user2.isEnabled());
 
-    User user3 = repo.getUserByUsername("enabled");
-    assertNotNull("Ensure user was found.", user3);
+    Optional<User> checkUser3 = repo.getUserByUsername("enabled");
+    assertTrue("Ensure user was found.", checkUser3.isPresent());
+
+    User user3 = checkUser3.get();
     assertFalse("Ensure user account is disabled.", user3.isActive());
     assertFalse("Ensure user account is disabled.", user3.isEnabled());
   }
@@ -255,8 +284,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
   public void testSigninSuccessful() {
     String ipAddress = "127.0.0.1";
 
-    User user1 = repo.getUserByUsername("temp");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("temp");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertEquals("Ensure the correct user was found (check username).", "temp", user1.getUsername());
     assertNull("Ensure user has not signed in (no last sign-in date).", user1.getLastSigninDate());
     assertNull("Ensure user has not signed in (no last sign-in ip).", user1.getLastSigninIp());
@@ -266,8 +297,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure user is valid.", user);
     assertEquals("Ensure it is the correct user (check username).", "temp", user.getUsername());
 
-    User user2 = repo.getUserByUsername("temp");
-    assertNotNull("Ensure user was found.", user2);
+    Optional<User> checkUser2 = repo.getUserByUsername("temp");
+    assertTrue("Ensure user was found.", checkUser2.isPresent());
+
+    User user2 = checkUser2.get();
     assertEquals("Ensure we found the correct user (check username).", "temp", user2.getUsername());
     assertNotNull("Ensure the user has a last sign-in date.", user2.getLastSigninDate());
     assertNotNull("Ensure the user has a last sign-in ip.", user2.getLastSigninIp());
@@ -279,8 +312,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testChangeUserPassword() {
-    User user1 = repo.getUserByUsername("temp");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("temp");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertEquals("Ensure we found the correct user (check username).", "temp", user1.getUsername());
     assertEquals("Ensure we found the correct user (check password).", "password1", user1.getPassword());
     assertTrue("Ensure the user account is temporary.", user1.isPasswordTemporary());
@@ -297,8 +332,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testChangeUserPassword_NullPassword() {
-    User user1 = repo.getUserByUsername("temp");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("temp");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertEquals("Ensure we found the correct user (check username).", "temp", user1.getUsername());
     assertEquals("Ensure we found the correct user (check password).", "password1", user1.getPassword());
 
@@ -310,8 +347,10 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testChangeUserPassword_EmptyPassword() {
-    User user1 = repo.getUserByUsername("temp");
-    assertNotNull("Ensure user was found.", user1);
+    Optional<User> checkUser1 = repo.getUserByUsername("temp");
+    assertTrue("Ensure user was found.", checkUser1.isPresent());
+
+    User user1 = checkUser1.get();
     assertEquals("Ensure we found the correct user (check username).", "temp", user1.getUsername());
     assertEquals("Ensure we found the correct user (check password).", "password1", user1.getPassword());
 
@@ -383,7 +422,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testDoesUsernameExist_Existing() {
-    User user = repo.getUserByUsername("cgaskill");
+    User user = repo.getUserByUsername("cgaskill").get();
 
     boolean used1 = repo.doesUsernameExist("cgaskill", user);
     assertFalse("Ensure the username is not being used (it is the username for the specified user).", used1);

@@ -31,6 +31,7 @@ import org.springframework.util.Assert;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User Service that provides authentication for SWKROA.
@@ -101,12 +102,12 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
     LOGGER.info("Calling loadUserByUsername for [{}].", userName);
 
-    User user = userRepo.getUserByUsername(userName);
-    if (user == null) {
+    Optional<User> checkUser = userRepo.getUserByUsername(userName);
+    if (!checkUser.isPresent()) {
       throw new UsernameNotFoundException(null);
     }
 
-    user = userRepo.signinAttempt(user);
+    User user = userRepo.signinAttempt(checkUser.get());
 
     // retrieve SecurityPolicy for user
     SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
@@ -304,17 +305,31 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User saveUser(final User builder, final User user)
+  public User saveUser(final User saveUser, final User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(builder, "[Assertion Failed] - argument [builder] cannot be null");
+    Assert.notNull(saveUser, "[Assertion Failed] - argument [saveUser] cannot be null");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
 
-    if (builder.getUserUID() == 0) {
-      builder.setPassword(passwordEncoder.encode(builder.getPassword()));
+    if (saveUser.getUserUID() == 0) {
+      saveUser.setPassword(passwordEncoder.encode(saveUser.getPassword()));
     }
 
-    return userRepo.saveUser(builder, user);
+    return userRepo.saveUser(saveUser, user);
+  }
+
+  @Override
+  public User registerUser(User registerUser, User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
+
+    Assert.notNull(registerUser, "[Assertion Failed] - argument [registerUser] cannot be null");
+    Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
+
+    if (registerUser.getUserUID() == 0) {
+      registerUser.setPassword(passwordEncoder.encode(registerUser.getPassword()));
+    }
+
+    return userRepo.registerUser(registerUser, user);
   }
 
   @Override
@@ -337,6 +352,21 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
 
     return user;
+  }
+
+  @Override
+  public Optional<User> getUserByPersonId(long personId) {
+    Optional<User> checkUser = userRepo.getUserByPersonId(personId);
+
+    if (checkUser.isPresent()) {
+      User user = checkUser.get();
+
+      // retrieve SecurityPolicy for user
+      SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
+      user.setSecurityPolicy(securityPolicy);
+    }
+
+    return checkUser;
   }
 
   @Override

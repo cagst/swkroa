@@ -145,8 +145,8 @@ function($scope, $http, WizardHandler) {
 
         WizardHandler.wizard().next();
       } else {
+        $('#errorMessageText').text(response.data);
         $('#errorMessage').show();
-        $('#verifyError').show();
       }
     });
   }

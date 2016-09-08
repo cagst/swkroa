@@ -178,6 +178,18 @@
         </div>
       </wz-step>
 
+      <wz-step id="finish" th:attr="wz-title=#{signin.register.finish.section}">
+        <div class="row" style="padding-left:15px">
+          <p class="lead lead-sm" th:text="#{signin.register.finish.title}">zzz Identify</p>
+        </div>
+        <div class="row" style="padding-right:15px">
+          <a id="signinButton" class="btn btn-primary"
+                 data-th-text="#{signin.register.finish.signin}"
+                 data-th-href="@{/auth/signin}">
+            zzz Sign In
+          </a>
+        </div>
+      </wz-step>
     </wizard>
   </div>
 </div>
