@@ -62,11 +62,11 @@ public final class MembershipApiController {
   private final JobRepository jobRepo;
 
   @Inject
-  public MembershipApiController(final CodeValueRepository codeValueRepo,
-                                 final MembershipService membershipService,
-                                 final MemberRepository memberRepo,
-                                 final MemberTypeRepository memberTypeRepo,
-                                 final JobRepository jobRepo) {
+  public MembershipApiController(CodeValueRepository codeValueRepo,
+                                 MembershipService membershipService,
+                                 MemberRepository memberRepo,
+                                 MemberTypeRepository memberTypeRepo,
+                                 JobRepository jobRepo) {
     this.codeValueRepo = codeValueRepo;
     this.membershipService = membershipService;
     this.memberRepo = memberRepo;
@@ -80,10 +80,10 @@ public final class MembershipApiController {
    * @return A JSON representation of the active Memberships within the system.
    */
   @RequestMapping(method = RequestMethod.GET)
-  public List<Membership> getMemberships(final @RequestParam(value = "q", required = false) String query,
-                                         final @RequestParam(value = "dueInDays", required = false) Integer dueInDays,
-                                         final @RequestParam(value = "status", required = false) String status,
-                                         final @RequestParam(value = "balance", required = false) String balance) {
+  public List<Membership> getMemberships(@RequestParam(value = "q", required = false) String query,
+                                         @RequestParam(value = "dueInDays", required = false) Integer dueInDays,
+                                         @RequestParam(value = "status", required = false) String status,
+                                         @RequestParam(value = "balance", required = false) String balance) {
 
     LOGGER.info("Received request to retrieve memberships using query [{}], status [{}], and balance [{}]", query, status, balance);
 

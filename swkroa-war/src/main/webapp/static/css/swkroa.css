@@ -504,6 +504,16 @@ div.list-group-item.active:hover {
   color: #fff;
 }
 
+.wizard {
+  padding: 10px;
+}
+
+.wizard_active {
+  padding: 10px;
+  color: #dddddd;
+  background-color: #357ebd;
+  border-radius: 5px;
+}
 
 /* ========================================================================= *
  * Make JQuery UI Spinner compatible with Bootstrap Styling                  *

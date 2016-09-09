@@ -1,11 +1,10 @@
 package com.cagst.swkroa.codevalue;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.common.util.CGTStringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Represents a CodeValue within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class CodeValue implements Serializable, Comparable<CodeValue> {
   private static final long serialVersionUID = 571293295760168134L;
@@ -146,11 +144,7 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(getCodeSetUID());
-    builder.append(getDisplay());
-
-    return builder.build();
+    return Objects.hash(codeset_id, codevalue_display);
   }
 
   @Override
@@ -167,11 +161,8 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
 
     CodeValue rhs = (CodeValue) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(getCodeSetUID(), rhs.getCodeSetUID());
-    builder.append(getDisplay(), rhs.getDisplay());
-
-    return builder.build();
+    return Objects.equals(codeset_id, rhs.getCodeSetUID()) &&
+        Objects.equals(codevalue_display, rhs.getDisplay());
   }
 
   @Override

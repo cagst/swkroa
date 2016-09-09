@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.text.Collator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Represents an EmailAddress within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class EmailAddress implements Serializable, Comparable<EmailAddress> {
   private static final long serialVersionUID = 722090805243595723L;
@@ -97,10 +94,7 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(email_address);
-
-    return builder.build();
+    return email_address.hashCode();
   }
 
   @Override
@@ -117,10 +111,7 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
 
     EmailAddress rhs = (EmailAddress) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(email_address, rhs.getEmailAddress());
-
-    return builder.build();
+    return email_address.equals(rhs.getEmailAddress());
   }
 
   @Override

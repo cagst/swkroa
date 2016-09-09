@@ -1,23 +1,14 @@
 package com.cagst.swkroa.model;
 
 /**
- * A model that contains information needed to register a Member.
+ * The Identification model for the Registration process.
  *
  * @author Craig Gaskill
  */
-public class RegisterModel {
-  private String stage;
+public class RegistrationIdentification {
   private String ownerId;
   private String firstName;
   private String lastName;
-
-  public String getStage() {
-    return stage;
-  }
-
-  public void setStage(String stage) {
-    this.stage = stage;
-  }
 
   public String getOwnerId() {
     return ownerId;
@@ -39,7 +30,7 @@ public class RegisterModel {
     return lastName;
   }
 
-  public  void setLastName(String lastName) {
+  public void setLastName(String lastName) {
     this.lastName = lastName;
   }
 }

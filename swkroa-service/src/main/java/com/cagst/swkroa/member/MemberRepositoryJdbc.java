@@ -1,14 +1,5 @@
 package com.cagst.swkroa.member;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 import com.cagst.common.db.StatementLoader;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.codevalue.CodeValue;
@@ -34,6 +25,15 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * JDBC Template implementation of the {@link MemberRepository} interface.

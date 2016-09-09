@@ -16,6 +16,11 @@ SELECT t.transaction_id
           FROM deposit_transaction dt
          WHERE dt.transaction_id = t.transaction_id
            AND dt.active_ind = 1) AS deposit_ind
+      ,(SELECT max(d.document_id)
+          FROM document d
+         WHERE d.parent_entity_name = 'TRANSACTION'
+           AND d.parent_entity_id = t.transaction_id
+           AND d.active_ind = 1) AS document_id
   FROM transaction t
       ,transaction_entry te
  WHERE t.membership_id   = :membership_id

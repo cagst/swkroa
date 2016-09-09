@@ -1,11 +1,11 @@
 package com.cagst.swkroa.transaction;
 
+import com.cagst.common.util.CGTDateTimeUtils;
+import org.springframework.jdbc.core.RowMapper;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.cagst.common.util.CGTDateTimeUtils;
-import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Maps a row in the resultset into an {@link UnpaidInvoice} object. Used to marshal / unmarshal an {@link UnpaidInvoice} to /

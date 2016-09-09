@@ -3,8 +3,6 @@ package com.cagst.swkroa.codevalue;
 import java.io.Serializable;
 import java.text.Collator;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,21 +10,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Represents a CodeSet within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class CodeSet implements Serializable, Comparable<CodeSet> {
-  private static final long serialVersionUID = 2888223786343786452L;
-
-  // CodeSets meanings
-  public static final String CLOSE_REASONS    = "CLOSE_REASONS";
-  public static final String TITLE            = "TITLE";
-  public static final String ADDRESS_TYPE     = "ADDRESS_TYPE";
-  public static final String PHONE_TYPE       = "PHONE_TYPE";
-  public static final String EMAIL_TYPE       = "EMAIL_TYPE";
-  public static final String ENTITY_TYPE      = "ENTITY_TYPE";
-  public static final String TRANSACTION_TYPE = "TRANSACTION_TYPE";
-  public static final String DOCUMENT_TYPE    = "DOCUMENT_TYPE";
-
   private long codeset_id;
   private String codeset_display;
   private String codeset_meaning;
@@ -132,10 +117,7 @@ public final class CodeSet implements Serializable, Comparable<CodeSet> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(codeset_display);
-
-    return builder.build();
+    return codeset_display.hashCode();
   }
 
   @Override
@@ -152,10 +134,7 @@ public final class CodeSet implements Serializable, Comparable<CodeSet> {
 
     CodeSet rhs = (CodeSet) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(codeset_display, rhs.getDisplay());
-
-    return builder.build();
+    return codeset_display.equals(rhs.getDisplay());
   }
 
   @Override

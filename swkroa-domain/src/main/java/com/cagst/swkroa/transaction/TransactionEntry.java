@@ -2,11 +2,10 @@ package com.cagst.swkroa.transaction;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -104,12 +103,7 @@ public final class TransactionEntry implements Serializable {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(transaction);
-    builder.append(transaction_entry_type);
-    builder.append(transaction_entry_amount);
-
-    return builder.build();
+    return Objects.hash(transaction, transaction_entry_type, transaction_entry_amount);
   }
 
   @Override
@@ -126,11 +120,8 @@ public final class TransactionEntry implements Serializable {
 
     TransactionEntry rhs = (TransactionEntry) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(transaction, rhs.getTransaction());
-    builder.append(transaction_entry_type, rhs.getTransactionEntryType());
-    builder.append(transaction_entry_amount, rhs.getTransactionEntryAmount());
-
-    return builder.build();
+    return Objects.equals(transaction, rhs.getTransaction()) &&
+        Objects.equals(transaction_entry_type, rhs.getTransactionEntryType()) &&
+        Objects.equals(transaction_entry_amount, rhs.getTransactionEntryAmount());
   }
 }

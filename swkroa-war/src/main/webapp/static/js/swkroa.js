@@ -15,7 +15,8 @@ var swkroaApp = angular.module('swkroaApp',
     ['ui.bootstrap',
      'ui.utils',
      'ui.router',
-     'xeditable']
+     'xeditable',
+     'mgo-angular-wizard']
 );
 
 angular.module('swkroaApp').filter('tel', function () {

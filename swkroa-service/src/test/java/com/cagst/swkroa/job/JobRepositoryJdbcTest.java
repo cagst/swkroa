@@ -1,10 +1,5 @@
 package com.cagst.swkroa.job;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import com.google.common.collect.Lists;
@@ -15,6 +10,11 @@ import org.junit.runners.JUnit4;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for the {@link JobRepositoryJdbc} class.

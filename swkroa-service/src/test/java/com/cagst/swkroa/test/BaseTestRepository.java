@@ -1,10 +1,10 @@
 package com.cagst.swkroa.test;
 
-import javax.sql.DataSource;
-
 import com.cagst.common.db.DataSourceFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import javax.sql.DataSource;
 
 /**
  * Base class for all repository test classes that creates the common test database that can be shared by all repositories.

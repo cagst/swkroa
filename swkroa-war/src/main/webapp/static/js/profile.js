@@ -4,7 +4,6 @@
  * Provides functionality for the User Profile pages.
  *
  * Author:  Craig Gaskill
- * Version: 1.0.0
  */
 
 swkroaApp.config(function($stateProvider, $urlRouterProvider) {
@@ -42,7 +41,7 @@ swkroaApp.controller('profileController',
       $scope.share = {
         user: data,
         successMessage: null
-      }
+      };
     $("#successMessage").hide();
   });
 

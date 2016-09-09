@@ -3,8 +3,6 @@ package com.cagst.swkroa.member;
 import java.io.Serializable;
 
 import com.cagst.swkroa.county.County;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -99,10 +97,7 @@ public final class MembershipCounty implements Serializable {
    */
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(county);
-
-    return builder.build();
+    return county.hashCode();
   }
 
   /*
@@ -124,10 +119,7 @@ public final class MembershipCounty implements Serializable {
 
     MembershipCounty rhs = (MembershipCounty) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(county, rhs.getCounty());
-
-    return builder.build();
+    return county.equals(rhs.getCounty());
   }
 
   /*

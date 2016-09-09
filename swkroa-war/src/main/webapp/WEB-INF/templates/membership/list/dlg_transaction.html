@@ -10,12 +10,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title"
-              th:text="#{com.cagst.swkroa.membership.transaction.update}"
+              th:text="#{membership.transaction.update}"
               data-ng-show="transactionIdx > -1">
             zzz Modify transaction
           </h4>
           <h4 class="modal-title"
-              th:text="#{com.cagst.swkroa.membership.transaction.create}"
+              th:text="#{membership.transaction.create}"
               data-ng-show="transactionIdx == -1">
             zzz Create transaction
           </h4>
@@ -56,7 +56,7 @@
           <div class="row spacer-top">
             <div class="col-xs-4"
                  data-ng-class="{'has-error': type.$invalid}">
-              <label for="type" class="form-label" th:text="#{com.cagst.swkroa.membership.transaction.type}">
+              <label for="type" class="form-label" th:text="#{common.type}">
                 zzz Type
               </label>
               <select id="type" name="type" class="form-control"
@@ -81,7 +81,7 @@
             </div>
 
             <div class="col-xs-4">
-              <label for="desc" class="form-label" th:text="#{com.cagst.swkroa.desc}">
+              <label for="desc" class="form-label" th:text="#{common.desc}">
                 zzz Desc
               </label>
               <input id="desc" name="desc" type="text" class="form-control"
@@ -108,7 +108,7 @@
                   <i class="fa fa-plus"></i>
                 </button>
               </th>
-              <th class="col-xs-4" th:text="#{com.cagst.swkroa.membership.transaction.type}">zzz Type</th>
+              <th class="col-xs-4" th:text="#{common.type}">zzz Type</th>
               <th class="col-xs-2" th:text="#{com.cagst.swkroa.membership.transaction.amount}">zzz Amount</th>
               <th class="col-xs-5" data-ng-show="entry.relatedTransactionUID > 0 ||
                               (transaction.transactionType == 'PAYMENT' &&

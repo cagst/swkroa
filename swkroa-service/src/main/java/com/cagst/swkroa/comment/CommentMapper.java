@@ -1,12 +1,12 @@
 package com.cagst.swkroa.comment;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link Comment} object. Used to marshal / unmarshal a {@link Comment} to / from

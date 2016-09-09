@@ -3,8 +3,6 @@ package com.cagst.swkroa.role;
 import java.io.Serializable;
 import java.text.Collator;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,7 +10,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Representation of a Privilege within the system.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class Privilege implements Serializable, Comparable<Privilege> {
   private static final long serialVersionUID = -3136199957460235366L;
@@ -74,10 +71,7 @@ public final class Privilege implements Serializable, Comparable<Privilege> {
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append(privilege_key);
-
-    return builder.build();
+    return privilege_key.hashCode();
   }
 
   @Override
@@ -94,10 +88,7 @@ public final class Privilege implements Serializable, Comparable<Privilege> {
 
     Privilege rhs = (Privilege) obj;
 
-    EqualsBuilder builder = new EqualsBuilder();
-    builder.append(privilege_key, rhs.getPrivilegeKey());
-
-    return builder.build();
+    return privilege_key.equals(rhs.getPrivilegeKey());
   }
 
   @Override

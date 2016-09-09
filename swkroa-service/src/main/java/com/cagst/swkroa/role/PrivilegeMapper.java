@@ -1,9 +1,9 @@
 package com.cagst.swkroa.role;
 
+import org.springframework.jdbc.core.RowMapper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Maps a row in the resultset into a {@link Privilege} object. Used to marshal / unmarshall a

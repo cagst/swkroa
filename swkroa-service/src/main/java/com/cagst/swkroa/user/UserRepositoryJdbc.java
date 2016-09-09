@@ -1,10 +1,5 @@
 package com.cagst.swkroa.user;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
@@ -28,6 +23,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 /**
  * JDBC Template implementation of the {@link UserRepository} interface.
  *
@@ -40,6 +41,7 @@ import org.springframework.util.Assert;
 
   private static final String GET_USER_BY_USERNAME    = "GET_USER_BY_USERNAME";
   private static final String GET_USER_BY_UID         = "GET_USER_BY_UID";
+  private static final String GET_USER_BY_PERSON_ID   = "GET_USER_BY_PERSON_ID";
   private static final String SIGNIN_ATTEMPT          = "SIGNIN_ATTEMPT";
   private static final String SIGNIN_SUCCESSFUL       = "SIGNIN_SUCCESSFUL";
   private static final String CHANGE_USER_PASSWORD    = "CHANGE_USER_PASSWORD";
@@ -66,17 +68,17 @@ import org.springframework.util.Assert;
    * @param contactRepo
    *     The {@link ContactRepository} to use to populate contact objects.
    */
-  public UserRepositoryJdbc(final DataSource dataSource, final ContactRepository contactRepo) {
+  public UserRepositoryJdbc(DataSource dataSource, ContactRepository contactRepo) {
     super(dataSource, contactRepo);
   }
 
   @Override
-  public void setMessageSource(final MessageSource messageSource) {
+  public void setMessageSource(MessageSource messageSource) {
     messages = new MessageSourceAccessor(messageSource);
   }
 
   @Override
-  public User getUserByUsername(final String username) throws IllegalArgumentException {
+  public Optional<User> getUserByUsername(String username) throws IllegalArgumentException {
     Assert.hasLength(username, "Assertion Failed - argument [username] cannot be null or empty");
 
     LOGGER.info("Calling getUserByUsername [{}].", username);
@@ -87,21 +89,19 @@ import org.springframework.util.Assert;
 
     List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_USERNAME), params, new UserMapper());
     if (users.size() == 1) {
-      return users.get(0);
+      return Optional.of(users.get(0));
     } else if (users.size() == 0) {
       LOGGER.warn("User [{}] was not found!", username);
-      return null;
+      return Optional.empty();
     } else {
       LOGGER.error("More than 1 user with username of [{}] was found!", username);
-      return null;
+      return Optional.empty();
     }
   }
 
   @Override
   @Cacheable(value = "users")
-  public User getUserByUID(final long uid)
-      throws IncorrectResultSizeDataAccessException {
-
+  public User getUserByUID(long uid) throws IncorrectResultSizeDataAccessException {
     LOGGER.info("Calling getUserByUID [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -115,13 +115,32 @@ import org.springframework.util.Assert;
       LOGGER.warn("User [{}] was not found!", uid);
       throw new EmptyResultDataAccessException(1);
     } else {
-      LOGGER.error("More than 1 user with username of [{}] was found!", uid);
+      LOGGER.error("More than 1 user with ID of [{}] was found!", uid);
       throw new IncorrectResultSizeDataAccessException(1, users.size());
     }
   }
 
   @Override
-  public User signinAttempt(final User user) throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
+  public Optional<User> getUserByPersonId(long personId) throws IncorrectResultSizeDataAccessException {
+    LOGGER.info("Calling getUserByPersonId [{}].", personId);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Long> params = new HashMap<>(1);
+    params.put("person_id", personId);
+
+    List<User> users = getJdbcTemplate().query(stmtLoader.load(GET_USER_BY_PERSON_ID), params, new UserMapper());
+    if (users.size() == 1) {
+      return Optional.of(users.get(0));
+    } else if (users.size() == 0) {
+      return Optional.empty();
+    } else {
+      LOGGER.error("More than 1 user with person_id of [{}] was found!", personId);
+      throw new IncorrectResultSizeDataAccessException(1, users.size());
+    }
+  }
+
+  @Override
+  public User signinAttempt(User user) throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
     LOGGER.info("Calling incrementSigninAttempts for User [{}].", user.getUsername());
@@ -141,7 +160,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public User signinSuccessful(final User user, final String ipAddress) throws IllegalArgumentException,
+  public User signinSuccessful(User user, final String ipAddress) throws IllegalArgumentException,
       IncorrectResultSizeDataAccessException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -166,7 +185,7 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_LOCKED)
-  public User lockUserAccount(final User user, final @AuditMessage String message, final @AuditInstigator User instigator)
+  public User lockUserAccount(User user, @AuditMessage String message, @AuditInstigator User instigator)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -192,7 +211,7 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_UNLOCKED)
-  public User unlockUserAccount(final User user, final @AuditMessage String message, final @AuditInstigator User instigator)
+  public User unlockUserAccount(User user, @AuditMessage String message, @AuditInstigator User instigator)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -219,7 +238,7 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_ENABLED)
-  public User enableUserAccount(final User user, final @AuditMessage String message, final @AuditInstigator User instigator)
+  public User enableUserAccount(User user, @AuditMessage String message, @AuditInstigator User instigator)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -245,7 +264,7 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_ACCOUNT_DISABLED)
-  public User disableUserAccount(final User user, final @AuditMessage String message, final @AuditInstigator User instigator)
+  public User disableUserAccount(User user, @AuditMessage String message, @AuditInstigator User instigator)
       throws IllegalArgumentException, IncorrectResultSizeDataAccessException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -271,8 +290,8 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_PASSWORD_CHANGED)
-  public User changeUserPassword(final @AuditInstigator User user, final String newPassword,
-                                 final @AuditMessage String message) throws IllegalArgumentException {
+  public User changeUserPassword(@AuditInstigator User user, String newPassword,
+                                 @AuditMessage String message) throws IllegalArgumentException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
     Assert.hasLength(newPassword, "Assertion Failed - argument [password] cannot be null or empty");
@@ -298,8 +317,8 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_PASSWORD_RESET)
-  public User resetUserPassword(final User user, final String tempPassword, final @AuditMessage String message,
-                                final @AuditInstigator User instigator) throws IllegalArgumentException {
+  public User resetUserPassword(User user, String tempPassword, @AuditMessage String message,
+                                @AuditInstigator User instigator) throws IllegalArgumentException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
     Assert.hasLength(tempPassword, "Assertion Failed - argument [tempPassword] cannot be null or empty");
@@ -323,7 +342,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public boolean doesUsernameExist(final String username) {
+  public boolean doesUsernameExist(String username) {
     Assert.hasLength(username, "Assertion Failed - argument [username] cannot be null or empty");
 
     LOGGER.info("Calling doesUsernameExist for username [{}].", username);
@@ -337,7 +356,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public boolean doesUsernameExist(final String username, final User user) {
+  public boolean doesUsernameExist(String username, User user) {
     Assert.hasLength(username, "Assertion Failed - argument [username] cannot be null or empty");
     Assert.notNull(user, "Assertion failed - argument [user] cannot be null");
 
@@ -354,21 +373,37 @@ import org.springframework.util.Assert;
 
   @Override
   @CacheEvict(value = "users", key = "#builder.getUserUID()")
-  public User saveUser(final User builder, final User user)
+  public User saveUser(User newUser, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(builder, "Assertion Failed - argument [builder] cannot be null");
+    Assert.notNull(newUser, "Assertion Failed - argument [newUser] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling saveUser for [{}]", builder.getUsername());
+    LOGGER.info("Calling saveUser for [{}]", newUser.getUsername());
 
     // save the Person portion of the User
-    savePerson(builder, user);
+    savePerson(newUser, user);
 
-    if (builder.getUserUID() == 0L) {
-      return insertUser(builder, user);
+    if (newUser.getUserUID() == 0L) {
+      return insertUser(newUser, user);
     } else {
-      return updateUser(builder, user);
+      return updateUser(newUser, user);
+    }
+  }
+
+  @Override
+  public User registerUser(User newUser, User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
+
+    Assert.notNull(newUser, "Assertion Failed - argument [newUser] cannot be null");
+    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+
+    LOGGER.info("Calling saveUser for [{}]", newUser.getUsername());
+
+    if (newUser.getUserUID() == 0L) {
+      return insertUser(newUser, user);
+    } else {
+      return updateUser(newUser, user);
     }
   }
 
@@ -385,7 +420,7 @@ import org.springframework.util.Assert;
    * Place helper methods below this line. *
    */
 
-  private User insertUser(final User newUser, final User user)
+  private User insertUser(User newUser, User user)
       throws IncorrectResultSizeDataAccessException, UsernameTakenException {
 
     LOGGER.info("Calling insertUser for [{}]", newUser.getUsername());
@@ -409,7 +444,7 @@ import org.springframework.util.Assert;
     return newUser;
   }
 
-  private User updateUser(final User updateUser, final User user)
+  private User updateUser(User updateUser, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
     LOGGER.info("Calling updateUser for [{}]", updateUser.getUsername());

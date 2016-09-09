@@ -1,6 +1,7 @@
 package com.cagst.swkroa.controller.web;
 
 import com.cagst.swkroa.codevalue.CodeSet;
+import com.cagst.swkroa.codevalue.CodeSetType;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.document.Document;
@@ -89,7 +90,7 @@ public final class MaintenanceController {
 
     ModelAndView mav = new ModelAndView("maintain/documents");
     mav.addObject("documents", documentRepository.getGlobalDocuments());
-    mav.addObject("documentTypes", codeValueRepository.getCodeValuesForCodeSetByMeaning(CodeSet.DOCUMENT_TYPE));
+    mav.addObject("documentTypes", codeValueRepository.getCodeValuesForCodeSetByType(CodeSetType.DOCUMENT_TYPE));
 
     return mav;
   }

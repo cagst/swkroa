@@ -1,20 +1,5 @@
 package com.cagst.swkroa.controller.api;
 
-/**
- * Handles and retrieves {@link User} objects depending upon the URI template.
- *
- * @author Craig Gaskill
- *
- * @version 1.0.0
- *
- */
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
 import com.cagst.swkroa.exception.BadRequestException;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.user.User;
@@ -24,7 +9,6 @@ import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,6 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Handles and retrieves {@link User} objects depending upon the URI template.
+ *
+ * @author Craig Gaskill
+ *
+ */
 @RestController
 public final class UserApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserApiController.class);
@@ -91,8 +87,6 @@ public final class UserApiController {
 
     try {
       return userService.getUserByUID(userUID);
-    } catch (EmptyResultDataAccessException ex) {
-      throw new ResourceNotFoundException(ex);
     } catch (IncorrectResultSizeDataAccessException ex) {
       throw new ResourceNotFoundException(ex);
     }
@@ -126,8 +120,6 @@ public final class UserApiController {
       } else {
         return null;
       }
-    } catch (EmptyResultDataAccessException ex) {
-      throw new ResourceNotFoundException(ex);
     } catch (IncorrectResultSizeDataAccessException ex) {
       throw new ResourceNotFoundException(ex);
     }
@@ -160,9 +152,9 @@ public final class UserApiController {
       headers.setLocation(locationUri.toUri());
 
       if (user.getUserUID() == 0) {
-        return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
       } else {
-        return new ResponseEntity<User>(savedUser, headers, HttpStatus.OK);
+        return new ResponseEntity<>(savedUser, headers, HttpStatus.OK);
       }
     } catch (UsernameTakenException ex) {
       LOGGER.debug("Unable to save user due to [{}]", ex.getLocalizedMessage());
@@ -208,15 +200,15 @@ public final class UserApiController {
    *     The password we want to change to (entered again for confirmation purposes).
    */
   @RequestMapping(value = "/api/changepwd", method = RequestMethod.POST)
-  public ResponseEntity<User> changePassword(final @RequestParam String oldPassword,
-                                             final @RequestParam String newPassword,
-                                             final @RequestParam String confirmPassword)
+  public ResponseEntity<User> changePassword(@RequestParam String oldPassword,
+                                             @RequestParam String newPassword,
+                                             @RequestParam String confirmPassword)
       throws IOException {
 
     User user = WebAppUtils.getUser();
     if (user == null) {
       LOGGER.error("Unable to determine current user.");
-      return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(user, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     LOGGER.info("Changing password for user [{}]", user.getUsername());
@@ -225,7 +217,7 @@ public final class UserApiController {
       user = userService.changePassword(user, oldPassword, newPassword, confirmPassword);
       WebAppUtils.setUser(user);
 
-      return new ResponseEntity<User>(user, HttpStatus.OK);
+      return new ResponseEntity<>(user, HttpStatus.OK);
     } catch (AuthenticationException ex) {
       LOGGER.debug("Unable to change password due to [{}]", ex.getLocalizedMessage());
       throw new BadRequestException(ex.getLocalizedMessage(), ex);

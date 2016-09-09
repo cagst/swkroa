@@ -1,10 +1,9 @@
 package com.cagst.swkroa.security;
 
-import javax.inject.Named;
-
 import com.cagst.swkroa.user.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+
+import javax.inject.Named;
 
 /**
  * An implementation of the {@link SecurityService} interface.

@@ -7,5 +7,5 @@ package com.cagst.swkroa.transaction;
  */
 public enum TransactionType {
   INVOICE,
-  PAYMENT;
+  PAYMENT
 }

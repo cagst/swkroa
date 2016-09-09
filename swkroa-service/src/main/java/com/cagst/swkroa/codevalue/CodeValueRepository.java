@@ -1,13 +1,13 @@
 package com.cagst.swkroa.codevalue;
 
-import java.util.List;
-
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Interface for retrieving / saving {@link CodeSet}s and {@link CodeValue}s from / to persistent storage.
@@ -25,7 +25,7 @@ public interface CodeValueRepository {
    * @return The {@link CodeSet} that corresponds to the specified {@link long} unique identifier, <code>null</code> if
    * the CodeSet does not exist.
    */
-  CodeSet getCodeSetByUID(final long uid);
+  CodeSet getCodeSetByUID(long uid);
 
   /**
    * Retrieves a {@link List} of {@link CodeSet CodeSets} that are active within the system.
@@ -43,19 +43,19 @@ public interface CodeValueRepository {
    * @return A {@link List} of {@link CodeValue} that are associated to the specified {@link CodeSet}, an empty list if
    * no CodeValues are associated to the CodeSet.
    */
-  List<CodeValue> getCodeValuesForCodeSet(final CodeSet codeSet);
+  List<CodeValue> getCodeValuesForCodeSet(CodeSet codeSet);
 
   /**
    * Retrieves a {@link List} of {@link CodeValue} that are associated to the {@link CodeSet} associated with the
-   * specified meaning.
+   * specified type.
    *
-   * @param codeSetMeaning
-   *     The meaning associated to the code set we want the code values for.
+   * @param codeSetType
+   *     The {@link CodeSetType} of the code set we want the code values for.
    *
    * @return A {@link List} of {@link CodeValue} that are associated to the specified {@link CodeSet} meaning, an empty
    * list if no CodeValues are associated to the CodeSet meaning.
    */
-  List<CodeValue> getCodeValuesForCodeSetByMeaning(final String codeSetMeaning);
+  List<CodeValue> getCodeValuesForCodeSetByType(CodeSetType codeSetType);
 
   /**
    * Retrieves a {@link CodeValue} by its unique identifier.
@@ -70,7 +70,7 @@ public interface CodeValueRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 CodeValue was found.
    */
-  CodeValue getCodeValueByUID(final long uid);
+  CodeValue getCodeValueByUID(long uid);
 
   /**
    * Retrieves a {@link CodeValue} by its meaning.
@@ -85,7 +85,7 @@ public interface CodeValueRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 CodeValue was found.
    */
-  CodeValue getCodeValueByMeaning(final String meaning);
+  CodeValue getCodeValueByMeaning(String meaning);
 
   /**
    * Persists the specified {@link CodeValue}.
@@ -104,6 +104,6 @@ public interface CodeValueRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  CodeValue saveCodeValueForCodeSet(final CodeValue codeValue, final User user)
+  CodeValue saveCodeValueForCodeSet(CodeValue codeValue, User user)
       throws DataAccessException;
 }
