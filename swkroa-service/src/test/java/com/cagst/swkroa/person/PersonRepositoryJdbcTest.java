@@ -1,5 +1,11 @@
 package com.cagst.swkroa.person;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import javax.sql.DataSource;
+
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
@@ -11,12 +17,6 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import javax.sql.DataSource;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for PersonRepositoryJdbc class.

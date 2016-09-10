@@ -1,5 +1,7 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserService;
 import com.cagst.swkroa.web.util.WebAppUtils;
@@ -13,8 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Handles and retrieves the Home page depending on the URI template.

@@ -1,5 +1,12 @@
 package com.cagst.swkroa.deposit;
 
+import javax.inject.Inject;
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.transaction.Transaction;
@@ -20,13 +27,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
-
-import javax.inject.Inject;
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * JDBC Template implementation of the {@link DepositRepository} interface.

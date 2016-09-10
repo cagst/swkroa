@@ -1,6 +1,11 @@
 package com.cagst.swkroa.controller.web;
 
-import com.cagst.swkroa.codevalue.CodeSet;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.cagst.swkroa.codevalue.CodeSetType;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
@@ -26,12 +31,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.inject.Inject;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Handles and retrieves the CodeSet pages depending on the URI template.

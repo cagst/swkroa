@@ -1,13 +1,13 @@
 package com.cagst.swkroa.user;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.cagst.swkroa.security.SecurityPolicy;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Definition of a repository that retrieves and persists {@link User} objects.

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 <div id="page-header" th:fragment="header">
@@ -114,7 +116,7 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown">
+      <li class="dropdown" sec:authorize="hasRole('ADMIN')">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <span th:text="#{com.cagst.swkroa.nav.maintain}">zzz Maintain</span>
           <span class="caret-inverse"></span>

@@ -1,5 +1,14 @@
 package com.cagst.swkroa.document;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.nio.file.FileAlreadyExistsException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
@@ -17,15 +26,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.nio.file.FileAlreadyExistsException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * A JDBC Implementation of the {@link DocumentRepository} interface.

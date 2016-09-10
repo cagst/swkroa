@@ -1,5 +1,14 @@
 package com.cagst.swkroa.filesystem;
 
+import javax.annotation.Nullable;
+import javax.inject.Named;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.NoSuchFileException;
+import java.util.Optional;
+
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,15 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import javax.annotation.Nullable;
-import javax.inject.Named;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.NoSuchFileException;
-import java.util.Optional;
 
 /**
  * An implementation of the {@link FileSystem} interface using the Apache Commons VFS.

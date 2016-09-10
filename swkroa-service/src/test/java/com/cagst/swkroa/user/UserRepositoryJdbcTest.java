@@ -1,5 +1,14 @@
 package com.cagst.swkroa.user;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
@@ -11,15 +20,6 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for UserRepositoryJdbc class.

@@ -1,13 +1,13 @@
 package com.cagst.swkroa.report.jasper;
 
+import java.io.InputStream;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.InputStream;
 
 /**
  * A class that provides methods for loading jasper report files from the classpath.

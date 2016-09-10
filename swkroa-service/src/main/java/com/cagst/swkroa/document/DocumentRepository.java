@@ -1,12 +1,12 @@
 package com.cagst.swkroa.document;
 
+import java.util.List;
+
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import java.util.List;
 
 /**
  * Definition of a repository that retrieves and persists {@link Document} objects.

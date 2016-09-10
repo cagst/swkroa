@@ -52,7 +52,7 @@ function($scope, $http, WizardHandler) {
     cnt += (password.length > 0 ? 1 : 0);
     cnt += (confirm.length > 0 ? 1 : 0);
 
-    if (password === confirm) {
+    if (password === confirm && password.length > 5) {
       cnt++;
     }
 

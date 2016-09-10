@@ -1,14 +1,22 @@
 package com.cagst.swkroa.user;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.Optional;
+
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
 import com.cagst.swkroa.contact.ContactRepository;
+import com.cagst.swkroa.role.Role;
 import com.cagst.swkroa.role.RoleRepository;
+import com.cagst.swkroa.role.RoleType;
 import com.cagst.swkroa.security.SecurityPolicy;
 import com.cagst.swkroa.security.SecurityService;
 import com.cagst.swkroa.utils.RandomPasswordGenerator;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -27,11 +35,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * User Service that provides authentication for SWKROA.
@@ -145,18 +148,19 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   @Transactional
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_SIGNIN_SUCCESSFUL)
   public User signinSuccessful(final @AuditInstigator User user, final String ipAddress) {
-    User newUser = userRepo.signinSuccessful(user, ipAddress);
+    User signedInUser = userRepo.signinSuccessful(user, ipAddress);
 
-    // Collection<Privilege> privs = roleRepo.getPrivilegesForUser(newUser);
-    // if (CollectionUtils.isEmpty(privs)) {
-    // LOGGER.warn("No privileges found for user [{}].", newUser.getUsername());
-    // }
-    //
-    // for (Privilege priv : privs) {
-    // user.addGrantedAuthority(priv.getPrivilegeKey());
-    // }
+    List<Role> roles = roleRepo.getRolesForUser(signedInUser);
+    if (CollectionUtils.isEmpty(roles)) {
+      LOGGER.warn("No roles found for user [{}].", signedInUser.getUsername());
+    } else {
+      for (Role role : roles) {
+        user.addRole(role);
+        user.addGrantedAuthority("ROLE_" + role.getRoleKey());
+      }
+    }
 
-    return newUser;
+    return signedInUser;
   }
 
   @Override
@@ -324,6 +328,14 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
     Assert.notNull(registerUser, "[Assertion Failed] - argument [registerUser] cannot be null");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
+
+    Optional<Role> checkMemberRole = roleRepo.getRoleByKey(RoleType.MEMBER.name());
+    if (!checkMemberRole.isPresent()) {
+      LOGGER.warn("Unable to find the role [{}]", RoleType.MEMBER);
+    }
+    else {
+      registerUser.addRole(checkMemberRole.get());
+    }
 
     if (registerUser.getUserUID() == 0) {
       registerUser.setPassword(passwordEncoder.encode(registerUser.getPassword()));

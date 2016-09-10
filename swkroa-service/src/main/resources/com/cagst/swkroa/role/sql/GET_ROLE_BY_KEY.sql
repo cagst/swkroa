@@ -4,4 +4,5 @@ SELECT r.role_id
       ,r.updt_cnt AS role_updt_cnt
       ,r.active_ind
   FROM role r
- WHERE r.active_ind = 1
+ WHERE r.role_key = :role_key
+   AND r.active_ind = 1

@@ -1,11 +1,11 @@
 package com.cagst.swkroa.filesystem;
 
-import org.apache.commons.vfs2.FileSystemException;
-
 import javax.annotation.Nullable;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NoSuchFileException;
 import java.util.Optional;
+
+import org.apache.commons.vfs2.FileSystemException;
 
 /**
  * Defines methods available to persist files to an external filesystem instead of the database.

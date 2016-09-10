@@ -1,5 +1,8 @@
 package com.cagst.swkroa.config;
 
+import javax.inject.Inject;
+import javax.servlet.Filter;
+
 import com.cagst.swkroa.security.ForceChangePasswordFilter;
 import com.cagst.swkroa.security.SigninSuccessHandler;
 import com.cagst.swkroa.user.UserService;
@@ -14,9 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.inject.Inject;
-import javax.servlet.Filter;
 
 /**
  * Configuration class for the system's Security framework.

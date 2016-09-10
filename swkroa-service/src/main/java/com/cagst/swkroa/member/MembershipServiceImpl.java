@@ -1,5 +1,12 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.comment.CommentRepository;
@@ -23,13 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Implementation of the {@link MembershipService} interface.

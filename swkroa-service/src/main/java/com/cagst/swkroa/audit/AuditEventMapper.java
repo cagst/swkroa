@@ -1,13 +1,13 @@
 package com.cagst.swkroa.audit;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.common.util.CGTDateTimeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Used to marshal/unmarshal a {@link AuditEvent} to/from the database.

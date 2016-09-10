@@ -1,9 +1,9 @@
 package com.cagst.swkroa.codevalue;
 
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Maps a row in the resultset into a {@link CodeSet} object. Used to unmarshall a CodeSet from the

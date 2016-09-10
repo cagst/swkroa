@@ -1,16 +1,16 @@
 package com.cagst.swkroa.security;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.WebUtils;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.WebUtils;
 
 /**
  * This filter will transfer the CSRF token from the request to a cookie to support CSRF in Angular

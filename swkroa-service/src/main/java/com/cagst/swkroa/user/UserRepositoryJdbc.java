@@ -1,5 +1,11 @@
 package com.cagst.swkroa.user;
 
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
@@ -7,6 +13,8 @@ import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.person.PersonRepositoryJdbc;
+import com.cagst.swkroa.role.Role;
+import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
@@ -22,12 +30,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
-
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * JDBC Template implementation of the {@link UserRepository} interface.
@@ -55,8 +57,9 @@ import java.util.Optional;
 
   private static final String GET_ALL_USERS = "GET_ALL_USERS";
 
-  private static final String INSERT_USER = "INSERT_USER";
-  private static final String UPDATE_USER = "UPDATE_USER";
+  private static final String INSERT_USER     = "INSERT_USER";
+  private static final String UPDATE_USER     = "UPDATE_USER";
+  private static final String MERGE_USER_ROLE = "MERGE_USER_ROLE";
 
   private MessageSourceAccessor messages;
 
@@ -372,39 +375,57 @@ import java.util.Optional;
   }
 
   @Override
-  @CacheEvict(value = "users", key = "#builder.getUserUID()")
-  public User saveUser(User newUser, User user)
+  @CacheEvict(value = "users", key = "#saveUser.getUserUID()")
+  public User saveUser(User saveUser, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(newUser, "Assertion Failed - argument [newUser] cannot be null");
+    Assert.notNull(saveUser, "Assertion Failed - argument [saveUser] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling saveUser for [{}]", newUser.getUsername());
+    LOGGER.info("Calling saveUser for [{}]", saveUser.getUsername());
 
     // save the Person portion of the User
-    savePerson(newUser, user);
+    savePerson(saveUser, user);
 
-    if (newUser.getUserUID() == 0L) {
-      return insertUser(newUser, user);
+    User savedUser;
+    if (saveUser.getUserUID() == 0L) {
+      savedUser = insertUser(saveUser, user);
     } else {
-      return updateUser(newUser, user);
+      savedUser = updateUser(saveUser, user);
     }
+
+    if (CollectionUtils.isNotEmpty(savedUser.getRoles())) {
+      for (Role role : savedUser.getRoles()) {
+        mergeUserRole(savedUser.getUserUID(), role.getRoleUID(), user);
+      }
+    }
+
+    return savedUser;
   }
 
   @Override
-  public User registerUser(User newUser, User user)
+  public User registerUser(User registerUser, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(newUser, "Assertion Failed - argument [newUser] cannot be null");
+    Assert.notNull(registerUser, "Assertion Failed - argument [registerUser] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling saveUser for [{}]", newUser.getUsername());
+    LOGGER.info("Calling saveUser for [{}]", registerUser.getUsername());
 
-    if (newUser.getUserUID() == 0L) {
-      return insertUser(newUser, user);
+    User registeredUser;
+    if (registerUser.getUserUID() == 0L) {
+      registeredUser = insertUser(registerUser, user);
     } else {
-      return updateUser(newUser, user);
+      registeredUser = updateUser(registerUser, user);
     }
+
+    if (CollectionUtils.isNotEmpty(registeredUser.getRoles())) {
+      for (Role role : registeredUser.getRoles()) {
+        mergeUserRole(registeredUser.getUserUID(), role.getRoleUID(), user);
+      }
+    }
+
+    return registeredUser;
   }
 
   @Override
@@ -417,7 +438,7 @@ import java.util.Optional;
   }
 
   /**
-   * Place helper methods below this line. *
+   * Place helper methods below this line.
    */
 
   private User insertUser(User newUser, User user)
@@ -467,5 +488,18 @@ import java.util.Optional;
     }
 
     return updateUser;
+  }
+
+  private void mergeUserRole(long userId, long roleId, User user) {
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    Map<String, Long> params = new HashMap<>();
+    params.put("user_id", userId);
+    params.put("role_id", roleId);
+    params.put("active_ind", 1L);
+    params.put("create_id", user.getUserUID());
+    params.put("updt_id", user.getUserUID());
+
+    getJdbcTemplate().update(stmtLoader.load(MERGE_USER_ROLE), params);
   }
 }

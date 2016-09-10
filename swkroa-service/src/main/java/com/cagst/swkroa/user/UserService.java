@@ -1,14 +1,14 @@
 package com.cagst.swkroa.user;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Definitions of a service that retrieves and persists {@link User} objects.

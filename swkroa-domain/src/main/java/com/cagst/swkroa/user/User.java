@@ -39,8 +39,8 @@ public final class User extends Person implements UserDetails {
 
   private SecurityPolicy securityPolicy;
 
-  private final Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-  private Collection<Role> roles = new ArrayList<Role>();
+  private final Collection<GrantedAuthority> authorities = new ArrayList<>();
+  private Collection<Role> roles = new ArrayList<>();
 
   /**
    * Gets the unique identifier for the User object.
@@ -350,7 +350,7 @@ public final class User extends Person implements UserDetails {
   }
 
   public void clearRoles() {
-    roles = new ArrayList<Role>();
+    roles = new ArrayList<>();
   }
 
   public void addRole(final Role role) {

@@ -1,14 +1,14 @@
 package com.cagst.swkroa.member;
 
+import java.util.List;
+import java.util.Set;
+
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * Definition of a repository that retrieves and persists {@link Membership} objects.

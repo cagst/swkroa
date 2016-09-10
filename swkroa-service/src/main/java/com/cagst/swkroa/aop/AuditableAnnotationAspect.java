@@ -1,5 +1,8 @@
 package com.cagst.swkroa.aop;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import com.cagst.swkroa.audit.AuditEvent;
 import com.cagst.swkroa.audit.AuditEventRepository;
 import com.cagst.swkroa.audit.AuditEventType;
@@ -18,9 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 /**
  * The AOP {@link Aspect} for the {@link Auditable} annotation.
