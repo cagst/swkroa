@@ -13,9 +13,9 @@ swkroaApp.controller('registrationController',
 function($scope, $http, WizardHandler) {
   angular.element(document).ready(function () {
     $("#errorMessage").hide();
-    $scope.enableIdentify();
-    $scope.enableVerify();
-    $scope.enableComplete();
+//    $scope.enableIdentify();
+//    $scope.enableVerify();
+//    $scope.enableComplete();
   });
 
   $scope.enableIdentify = function() {

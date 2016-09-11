@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/deposits")
+@RolesAllowed({"ROLE_STAFF", "ROLE_ADMIN"})
 public class DepositApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(DepositApiController.class);
 

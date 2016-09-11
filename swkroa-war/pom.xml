@@ -108,6 +108,12 @@
       <artifactId>spring-security-config</artifactId>
     </dependency>
 
+    <!-- JSR-250 Annotations -->
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+    </dependency>
+
     <!-- Servlet Dependencies -->
     <dependency>
       <groupId>javax.servlet</groupId>

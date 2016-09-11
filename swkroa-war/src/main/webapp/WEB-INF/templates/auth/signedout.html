@@ -13,9 +13,16 @@
 <div id="page-content">
   <div class="container-center-medium container-outline">
     <img alt="" th:src="@{/static/images/info_icon.png}" style="vertical-align:middle;" />
-      <span style="padding-left:10px;" th:text="#{signedout.message}">
-        zzz Signed Out
-      </span>
+    <span style="padding-left:10px;" th:text="#{signedout.message}">
+      zzz Signed Out
+    </span>
+  </div>
+  <div class="text-center row-spacer">
+    <a id="signinButton" class="btn btn-primary"
+       data-th-text="#{signin.register.finish.signin}"
+       data-th-href="@{/auth/signin}">
+      zzz Sign In
+    </a>
   </div>
 </div>
 </body>

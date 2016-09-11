@@ -90,6 +90,12 @@
     <!-- Google JSR-305 Annotations -->
     <jsr305.version>3.0.1</jsr305.version>
 
+    <!-- JSR-330 CDI Dependency Injection Annotations  -->
+    <jsr330.version>1</jsr330.version>
+
+    <!-- JSR-250 Annotations (RolesAllowed) -->
+    <jsr250.version>1.0</jsr250.version>
+
     <!-- MySQL -->
     <mysql-version>5.1.30</mysql-version>
 
@@ -336,11 +342,18 @@
         <version>${jstl-version}</version>
       </dependency>
 
-      <!-- JSR-330 Dependencies -->
+      <!-- JSR-330 Annotations -->
       <dependency>
         <groupId>javax.inject</groupId>
         <artifactId>javax.inject</artifactId>
-        <version>1</version>
+        <version>${jsr330.version}</version>
+      </dependency>
+
+      <!-- JSR-250 Annotations -->
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>jsr250-api</artifactId>
+        <version>${jsr250.version}</version>
       </dependency>
 
       <!-- MySQL Dependencies -->

@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -31,7 +32,8 @@ import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsV
  */
 @Controller
 @RequestMapping(value = "/report")
-public final class ReportController {
+@RolesAllowed({"ROLE_STAFF", "ROLE_ADMIN"})
+public class ReportController {
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
   private static final DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -57,8 +59,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/listing", method = RequestMethod.POST)
-  public ModelAndView generateMembershipListingReportAsPdf(final @RequestParam("reportType") String reportType,
-                                                           final HttpServletRequest request) {
+  public ModelAndView generateMembershipListingReportAsPdf(@RequestParam("reportType") String reportType,
+                                                           HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Membership Listing report.");
 
@@ -80,8 +82,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/delinquent", method = RequestMethod.POST)
-  public ModelAndView generateMembershipDelinquentReport(final @RequestParam("reportType") String reportType,
-                                                         final HttpServletRequest request) {
+  public ModelAndView generateMembershipDelinquentReport(@RequestParam("reportType") String reportType,
+                                                         HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Membership Delinquent report as [{}]", reportType);
 
@@ -118,8 +120,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/renew", method = RequestMethod.POST)
-  public ModelAndView generateMembershipDuesRenewalReport(final @RequestParam("reportType") String reportType,
-                                                          final HttpServletRequest request) {
+  public ModelAndView generateMembershipDuesRenewalReport(@RequestParam("reportType") String reportType,
+                                                          HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Membership Dues Renewal report as [{}]", reportType);
 
@@ -159,8 +161,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/remind", method = RequestMethod.POST)
-  public ModelAndView generateMembershipDuesRemindReport(final @RequestParam("reportType") String reportType,
-                                                         final HttpServletRequest request) {
+  public ModelAndView generateMembershipDuesRemindReport(@RequestParam("reportType") String reportType,
+                                                         HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Membership Dues Reminder report as [{}]", reportType);
 
@@ -195,8 +197,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/payments", method = RequestMethod.POST)
-  public ModelAndView generateMembershipPaymentsReport(final @RequestParam("reportType") String reportType,
-                                                       final HttpServletRequest request) {
+  public ModelAndView generateMembershipPaymentsReport(@RequestParam("reportType") String reportType,
+                                                       HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Membership Payments report as [{}]", reportType);
 
@@ -226,8 +228,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/invoices", method = RequestMethod.POST)
-  public ModelAndView generateMembershipInvoicesReport(final @RequestParam("reportType") String reportType,
-                                                       final HttpServletRequest request) {
+  public ModelAndView generateMembershipInvoicesReport(@RequestParam("reportType") String reportType,
+                                                       HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Membership Invoices report as [{}]", reportType);
 
@@ -269,7 +271,7 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/membership/status", method = RequestMethod.POST)
-  public ModelAndView generateMembershipStatusReport(final HttpServletRequest request) {
+  public ModelAndView generateMembershipStatusReport(HttpServletRequest request) {
     LOGGER.info("Received request to generate Membership Status report.");
 
     String reportFilename = "Membership_Status_" + dateFormatter.print(new DateTime());
@@ -295,8 +297,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/member/mailinglist", method = RequestMethod.POST)
-  public ModelAndView generateMemberMailingList(final @RequestParam("reportType") String reportType,
-                                                final HttpServletRequest request) {
+  public ModelAndView generateMemberMailingList(@RequestParam("reportType") String reportType,
+                                                HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Member Mailing List report.");
 
@@ -336,8 +338,8 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/member/emaillist", method = RequestMethod.POST)
-  public ModelAndView generateMemberEmailList(final @RequestParam("reportType") String reportType,
-                                              final HttpServletRequest request) {
+  public ModelAndView generateMemberEmailList(@RequestParam("reportType") String reportType,
+                                              HttpServletRequest request) {
 
     LOGGER.info("Received request to generate Member Email List report.");
 
@@ -377,7 +379,7 @@ public final class ReportController {
    * @return The generated report.
    */
   @RequestMapping(value = "/custom/membersbycounty.pdf", method = RequestMethod.GET)
-  public ModelAndView generateCustomMembersByCountyReportAsPdf(final HttpServletRequest request) {
+  public ModelAndView generateCustomMembersByCountyReportAsPdf(HttpServletRequest request) {
     LOGGER.info("Received request to generate Custom Members by County report.");
 
     String reportFilename = "Member_by_County" + dateFormatter.print(new DateTime());
@@ -385,10 +387,10 @@ public final class ReportController {
     return getReportModalAndView(request, JasperReportLoader.CUSTOM_MEMBERS_BY_COUNTY, JasperReportsViewFactory.REPORT_FORMAT_PDF, reportFilename);
   }
 
-  private ModelAndView getReportModalAndView(final HttpServletRequest request,
-                                             final String reportUrl,
-                                             final String format,
-                                             final String filename) {
+  private ModelAndView getReportModalAndView(HttpServletRequest request,
+                                             String reportUrl,
+                                             String format,
+                                             String filename) {
 
     AbstractJasperReportsView view = JasperReportsViewFactory.getJasperReportsView(
         request,

@@ -8,15 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * An exception handler class that will generate a common error message to be sent back.
+ * An exception handler class that will generate common error messages to be sent back for {@link RestController}.
  *
  * @author Craig Gaskill
  */
-@ControllerAdvice
+@ControllerAdvice(annotations = RestController.class)
 public class StandardExceptionHandler extends ResponseEntityExceptionHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(StandardExceptionHandler.class);
 
@@ -24,14 +25,14 @@ public class StandardExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<ErrorEntity> handleBadRequest(final RuntimeException ex, final WebRequest request) {
     ErrorEntity error = new ErrorEntity(HttpStatus.BAD_REQUEST.toString(), ex.getLocalizedMessage());
 
-    return new ResponseEntity<ErrorEntity>(error, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(OptimisticLockingFailureException.class)
   protected ResponseEntity<ErrorEntity> handleOptimisticLockingFailure(final RuntimeException ex, final WebRequest request) {
     ErrorEntity error = new ErrorEntity(HttpStatus.CONFLICT.toString(), ex.getLocalizedMessage());
 
-    return new ResponseEntity<ErrorEntity>(error, HttpStatus.CONFLICT);
+    return new ResponseEntity<>(error, HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(Exception.class)
@@ -40,6 +41,6 @@ public class StandardExceptionHandler extends ResponseEntityExceptionHandler {
 
     LOGGER.error(ex.getMessage(), ex);
 
-    return new ResponseEntity<ErrorEntity>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Context reloadable="true">
+  <!--
+  <Resources
+      cachingAllowed="true"
+      cacheMaxSize="1024"/>
+  -->
+
   <!-- maxActive:
   Maximum number of database connections in pool. Make sure you configure all your mysqld max_connections
   large enough to handle all of your db connections. Set to -1 for no limit.

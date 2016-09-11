@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -39,7 +40,8 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @RequestMapping(value = "/maintain")
-public final class MaintenanceController {
+@RolesAllowed("ROLE_ADMIN")
+public class MaintenanceController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MaintenanceController.class);
 
   private DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
@@ -56,7 +58,7 @@ public final class MaintenanceController {
    *    The {@link CodeValueRepository} to use to retrieve codified values.
    */
   @Inject
-  public MaintenanceController(final DocumentRepository documentRepository, final CodeValueRepository codeValueRepository) {
+  public MaintenanceController(DocumentRepository documentRepository, CodeValueRepository codeValueRepository) {
     this.documentRepository = documentRepository;
     this.codeValueRepository = codeValueRepository;
   }
@@ -103,7 +105,7 @@ public final class MaintenanceController {
    * @return A {@link ResponseEntity} that contains the document for display.
    */
   @RequestMapping(value = "documents/{documentId}", method = RequestMethod.GET)
-  public ResponseEntity<byte[]> viewDocument(final @PathVariable("documentId") long documentId) {
+  public ResponseEntity<byte[]> viewDocument(@PathVariable("documentId") long documentId) {
     LOGGER.info("Received request to view the document [{}]", documentId);
 
     Document document = documentRepository.getDocumentByUID(documentId);
@@ -136,11 +138,11 @@ public final class MaintenanceController {
    */
   @RequestMapping(value = "documents/upload", method = RequestMethod.POST)
   public ModelAndView uploadDocument(
-      final @RequestParam("uploadFile") MultipartFile uploadFile,
-      final @RequestParam("documentDesc") String documentDescription,
-      final @RequestParam("documentTypeUID") long documentTypeUID,
-      final @RequestParam("beginDate") Date beginDate,
-      final @RequestParam("endDate") Date endDate) {
+      @RequestParam("uploadFile") MultipartFile uploadFile,
+      @RequestParam("documentDesc") String documentDescription,
+      @RequestParam("documentTypeUID") long documentTypeUID,
+      @RequestParam("beginDate") Date beginDate,
+      @RequestParam("endDate") Date endDate) {
 
     LOGGER.info("Received request to upload the file.");
 
@@ -172,11 +174,11 @@ public final class MaintenanceController {
 
   @RequestMapping(value = "documents", method = RequestMethod.POST)
   public ModelAndView saveDocument(
-      final @RequestParam("documentUID") long documentId,
-      final @RequestParam("editDocumentDesc") String documentDescription,
-      final @RequestParam("editDocumentTypeUID") long documentTypeUID,
-      final @RequestParam("editBeginDate") Date beginDate,
-      final @RequestParam("editEndDate") Date endDate) {
+      @RequestParam("documentUID") long documentId,
+      @RequestParam("editDocumentDesc") String documentDescription,
+      @RequestParam("editDocumentTypeUID") long documentTypeUID,
+      @RequestParam("editBeginDate") Date beginDate,
+      @RequestParam("editEndDate") Date endDate) {
 
     LOGGER.info("Received request to save document [{}]", documentId);
     Document document = documentRepository.getDocumentByUID(documentId);

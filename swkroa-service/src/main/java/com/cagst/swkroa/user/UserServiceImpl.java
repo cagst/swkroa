@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     } else {
       for (Role role : roles) {
         user.addRole(role);
-        user.addGrantedAuthority("ROLE_" + role.getRoleKey());
+        user.addGrantedAuthority(role.getRoleKey());
       }
     }
 
@@ -329,9 +329,9 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(registerUser, "[Assertion Failed] - argument [registerUser] cannot be null");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
 
-    Optional<Role> checkMemberRole = roleRepo.getRoleByKey(RoleType.MEMBER.name());
+    Optional<Role> checkMemberRole = roleRepo.getRoleByKey(RoleType.ROLE_MEMBER.name());
     if (!checkMemberRole.isPresent()) {
-      LOGGER.warn("Unable to find the role [{}]", RoleType.MEMBER);
+      LOGGER.warn("Unable to find the role [{}]", RoleType.ROLE_MEMBER);
     }
     else {
       registerUser.addRole(checkMemberRole.get());

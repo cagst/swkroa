@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private static final int STRENGTH = 12;
 
@@ -45,8 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(WebSecurity web) throws Exception {
-    web.ignoring()
-        .antMatchers("/static/**");
+    web.ignoring().antMatchers("/static/**");
   }
 
   @Override
@@ -58,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .antMatchers("/public/**").permitAll()
           .antMatchers("/auth/**").permitAll()
           .antMatchers("/api/register/**").permitAll()
-          .antMatchers("/**").authenticated()
+          .anyRequest().authenticated()
         .and().formLogin()
           .loginPage("/auth/signin")
           .loginProcessingUrl("/login")

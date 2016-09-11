@@ -6,7 +6,7 @@ package com.cagst.swkroa.role;
  * @author Craig Gaskill
  */
 public enum RoleType {
-  ADMIN,
-  STAFF,
-  MEMBER
+  ROLE_ADMIN,
+  ROLE_STAFF,
+  ROLE_MEMBER
 }

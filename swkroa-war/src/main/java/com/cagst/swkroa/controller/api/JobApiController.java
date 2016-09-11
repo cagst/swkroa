@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import java.util.List;
 
@@ -20,18 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/jobs")
-public final class JobApiController {
+@RolesAllowed({"ROLE_STAFF", "ROLE_ADMIN"})
+public class JobApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(JobApiController.class);
 
   private final JobRepository jobRepo;
 
   @Inject
-  public JobApiController(final JobRepository jobRepo) {
+  public JobApiController(JobRepository jobRepo) {
     this.jobRepo = jobRepo;
   }
 
   @RequestMapping(value = "/pending/{jobType}", method = RequestMethod.GET)
-  public List<Job> getPendingJobsForType(final @PathVariable("jobType") JobType jobType) {
+  public List<Job> getPendingJobsForType(@PathVariable("jobType") JobType jobType) {
     LOGGER.info("Received request to retrieve pending jobs for type [{}].", jobType);
 
     return jobRepo.getPendingJobsForType(jobType);
