@@ -34,11 +34,14 @@ public final class HomeController {
    * @return The name of the page.
    */
   @RequestMapping(value = "/", method = RequestMethod.GET)
-  // @PreAuthorize("isAuthenticated()")
-  public String getHomePage() {
+  public String getHomePage(HttpServletRequest request) {
     LOGGER.info("Received request to show the home page.");
 
-    return "home";
+    if (request.isUserInRole("ROLE_MEMBER")) {
+      return "redirect:member/home";
+    } else {
+      return "home";
+    }
   }
 
   /**

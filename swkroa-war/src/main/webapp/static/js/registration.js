@@ -9,144 +9,124 @@
 swkroaApp.controller('registrationController',
                      ['$scope',
                       '$http',
-                      'WizardHandler',
-function($scope, $http, WizardHandler) {
-  angular.element(document).ready(function () {
-    $("#errorMessage").hide();
-//    $scope.enableIdentify();
-//    $scope.enableVerify();
-//    $scope.enableComplete();
-  });
+                      'codesetService',
+function($scope, $http, codesetService) {
+  $scope.errorText = "";
+  $scope.step = "IDENTIFY";
 
-  $scope.enableIdentify = function() {
-    var ownerId  = $('#ownerId').val();
-    var disabled = (ownerId.length == 0);
-
-    $('#identifyButton').prop('disabled', disabled);
-    $("#errorMessage").hide();
+  $scope.registerUser = {
+    ownerId: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    zipCode: "",
+    emailAddress: "",
+    username: "",
+    password: "",
+    confirm: "",
+    question1: "",
+    answer1: "",
+    question2: "",
+    answer2: "",
+    question3: "",
+    answer3: ""
   };
 
   $scope.enableVerify = function() {
-    var firstName   = $('#firstName').val();
-    var lastName    = $('#lastName').val();
-    var phoneNumber = $('#phoneNumber').val();
-    var zipCode     = $('#zipCode').val();
+    var cnt = ($scope.registerUser.firstName.length > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.lastName.length > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.phoneNumber.length > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.zipCode.length > 0 ? 1 : 0);
 
-    var cnt = (firstName.length > 0 ? 1 : 0);
-    cnt += (lastName.length > 0 ? 1 : 0);
-    cnt += (phoneNumber.length > 0 ? 1 : 0);
-    cnt += (zipCode.length > 0 ? 1 : 0);
-
-    $('#verifyButton').prop('disabled', cnt < 2);
-    $("#errorMessage").hide();
+    return (cnt > 1);
   };
 
   $scope.enableComplete = function () {
-    var emailAddress = $('#emailAddress').val();
-    var username     = $('#username').val();
-    var password     = $('#password').val();
-    var confirm      = $('#confirm').val();
+    var cnt = ($scope.registerUser.emailAddress.length > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.username.length > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.password.length > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.confirm.length > 0 ? 1 : 0);
 
-    var cnt = (emailAddress.length > 0 ? 1 : 0);
-    cnt += (username.length > 0 ? 1 : 0);
-    cnt += (password.length > 0 ? 1 : 0);
-    cnt += (confirm.length > 0 ? 1 : 0);
-
-    if (password === confirm && password.length > 5) {
+    if ($scope.registerUser.password === $scope.registerUser.confirm && $scope.registerUser.password.length > 5) {
       cnt++;
     }
 
-    $('#completeButton').prop('disabled', cnt != 5);
-    $("#errorMessage").hide();
+    cnt += ($scope.registerUser.question1 > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.answer1.length > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.question2 > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.answer2.length > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.question3 > 0 ? 1 : 0);
+    cnt += ($scope.registerUser.answer3.length > 0 ? 1 : 0);
+
+    return (cnt == 11);
   };
 
   $scope.registerIdentification = function () {
-    var url = "/api/register/identification/" + $('#ownerId').val();
+    var url = "/api/register/identification/" + $scope.registerUser.ownerId;
 
     $http.get(url)
       .then(function(response) {
         if (responseSuccessful(response)) {
-          WizardHandler.wizard().next();
-
-          $("#errorMessage").hide();
-          $("#firstName").focus();
+          $scope.errorText = "";
+          $scope.step = 'VERIFY';
         } else {
-          $('#errorMessageText').text(response.data);
-          $('#errorMessage').show();
+          $scope.errorText = response.data;
         }
       });
   };
 
   $scope.registerVerify = function () {
-    var ownerId     = $('#ownerId').val();
-
-    var firstName   = $('#firstName').val();
-    var lastName    = $('#lastName').val();
-    var phoneNumber = $('#phoneNumber').val();
-    var zipCode     = $('#zipCode').val();
-
     $http({
       method: 'POST',
-      url: '/api/register/verification/' + ownerId,
+      url: '/api/register/verification/' + $scope.registerUser.ownerId,
       headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
       data: $.param({
-        'firstName': firstName,
-        'lastName': lastName,
-        'phoneNumber': phoneNumber,
-        'zipCode': zipCode})
+        'firstName': $scope.registerUser.firstName,
+        'lastName': $scope.registerUser.lastName,
+        'phoneNumber': $scope.registerUser.phoneNumber,
+        'zipCode': $scope.registerUser.zipCode})
     }).then(function(response) {
       if (responseSuccessful(response)) {
-        WizardHandler.wizard().next();
+        codesetService.getCodeValuesForCodeSet('SECURITY_QUESTION').success(function(data) {
+          $scope.questions = data;
+        });
 
-        $scope.emailAddress = response.data;
-
-        $("#errorMessage").hide();
-        $("#emailAddress").focus();
+        $scope.errorText = "";
+        $scope.step = "COMPLETE";
+        $scope.registerUser.emailAddress = response.data;
       } else {
-        $('#errorMessageText').text(response.data);
-        $('#errorMessage').show();
+        $scope.errorText = response.data;
       }
     });
   };
 
   $scope.registerComplete = function () {
-    var ownerId = $('#ownerId').val();
-
-    var firstName   = $('#firstName').val();
-    var lastName    = $('#lastName').val();
-    var phoneNumber = $('#phoneNumber').val();
-    var zipCode     = $('#zipCode').val();
-
-    var emailAddress = $('#emailAddress').val();
-    var username     = $('#username').val();
-    var password     = $('#password').val();
-    var confirm      = $('#confirm').val();
-
     $http({
       method: 'POST',
-      url: '/api/register/completion/' + ownerId,
+      url: '/api/register/completion/' + $scope.registerUser.ownerId,
       headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
       data: $.param({
-        'firstName': firstName,
-        'lastName': lastName,
-        'phoneNumber': phoneNumber,
-        'zipCode': zipCode,
-        'emailAddress': emailAddress,
-        'username': username,
-        'password': password,
-        'confirm': confirm
+        'firstName': $scope.registerUser.firstName,
+        'lastName': $scope.registerUser.lastName,
+        'phoneNumber': $scope.registerUser.phoneNumber,
+        'zipCode': $scope.registerUser.zipCode,
+        'emailAddress': $scope.registerUser.emailAddress,
+        'username': $scope.registerUser.username,
+        'password': $scope.registerUser.password,
+        'confirm': $scope.registerUser.confirm,
+        'question1': $scope.registerUser.question1,
+        'answer1' : $scope.registerUser.answer1,
+        'question2': $scope.registerUser.question2,
+        'answer2' : $scope.registerUser.answer2,
+        'question3': $scope.registerUser.question3,
+        'answer3' : $scope.registerUser.answer3
       })
     }).then(function (response) {
       if (responseSuccessful(response)) {
-        $scope.emailAddress = response.data;
-
-        $("#errorMessage").hide();
-        $("#emailAddress").focus();
-
-        WizardHandler.wizard().next();
+        $scope.errorText = "";
+        $scope.step = "FINISH";
       } else {
-        $('#errorMessageText').text(response.data);
-        $('#errorMessage').show();
+        $scope.errorText = response.data;
       }
     });
   }

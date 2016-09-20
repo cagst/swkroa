@@ -27,9 +27,8 @@ import org.springframework.util.Assert;
  * A JDBC Template implementation of the {@link PersonRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
-@Named("personRepository")
+@Named("personRepo")
 public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(PersonRepositoryJdbc.class);
 

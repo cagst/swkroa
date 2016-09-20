@@ -269,4 +269,14 @@ public interface UserRepository {
    * @return A {@link List} of {@link User Users} defined in the system.
    */
   List<User> getAllUsers();
+
+  /**
+   * Retieves a {@link List} of {@link UserQuestion} for the specified {@link User}.
+   *
+   * @param user
+   *    The {@link User} to retrieve the list of security questions for.
+   *
+   * @return The {@link List} of {@link UserQuestion} associated with the specified {@link User}.
+   */
+  List<UserQuestion> getSecurityQuestionsForUser(User user);
 }

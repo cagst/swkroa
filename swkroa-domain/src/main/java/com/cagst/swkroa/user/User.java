@@ -3,6 +3,7 @@ package com.cagst.swkroa.user;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.role.Role;
@@ -39,8 +40,9 @@ public final class User extends Person implements UserDetails {
 
   private SecurityPolicy securityPolicy;
 
-  private final Collection<GrantedAuthority> authorities = new ArrayList<>();
-  private Collection<Role> roles = new ArrayList<>();
+  private final List<GrantedAuthority> authorities = new ArrayList<>();
+  private final List<Role> roles = new ArrayList<>();
+  private final List<UserQuestion> questions = new ArrayList<>();
 
   /**
    * Gets the unique identifier for the User object.
@@ -57,7 +59,7 @@ public final class User extends Person implements UserDetails {
    * @param userUID
    *     {@link long} the unique identifier for the User.
    */
-  public void setUserUID(final long userUID) {
+  public void setUserUID(long userUID) {
     this.user_id = userUID;
   }
 
@@ -77,7 +79,7 @@ public final class User extends Person implements UserDetails {
    * @param username
    *     The {@link String} username to associate to this User.
    */
-  public void setUsername(final String username) {
+  public void setUsername(String username) {
     this.username = username;
   }
 
@@ -97,7 +99,7 @@ public final class User extends Person implements UserDetails {
    * @param password
    *     The {@link String} password to associate to this User.
    */
-  public void setPassword(final String password) {
+  public void setPassword(String password) {
     this.password = password;
   }
 
@@ -116,7 +118,7 @@ public final class User extends Person implements UserDetails {
    * @param lastSignin
    *     The {@link DateTime} this User lasted signed in.
    */
-  public void setLastSigninDate(final DateTime lastSignin) {
+  public void setLastSigninDate(DateTime lastSignin) {
     this.last_signin_dt_tm = lastSignin;
   }
 
@@ -135,7 +137,7 @@ public final class User extends Person implements UserDetails {
    * @param lastSigninIp
    *     The IP address of where the user last signed in from.
    */
-  public void setLastSigninIp(final String lastSigninIp) {
+  public void setLastSigninIp(String lastSigninIp) {
     this.last_signin_ip = lastSigninIp;
   }
 
@@ -154,7 +156,7 @@ public final class User extends Person implements UserDetails {
    * @param signinAttempts
    *     The number of times this User has attempted to sign in.
    */
-  public void setSigninAttempts(final int signinAttempts) {
+  public void setSigninAttempts(int signinAttempts) {
     this.signin_attempts = signinAttempts;
   }
 
@@ -172,7 +174,7 @@ public final class User extends Person implements UserDetails {
    *     <code>true</code> if the User's password is temporary and should changed the next time
    *     they sign in.
    */
-  public void setPasswordTemporary(final boolean temporaryPwd) {
+  public void setPasswordTemporary(boolean temporaryPwd) {
     this.temporary_pwd_ind = temporaryPwd;
   }
 
@@ -194,7 +196,7 @@ public final class User extends Person implements UserDetails {
    * @param accountLockedDate
    *     The {@link DateTime} this account was locked.
    */
-  public void setAccountedLockedDate(final DateTime accountLockedDate) {
+  public void setAccountedLockedDate(DateTime accountLockedDate) {
     this.account_locked_dt_tm = accountLockedDate;
   }
 
@@ -207,7 +209,7 @@ public final class User extends Person implements UserDetails {
     return (account_expired_dt_tm == null || account_expired_dt_tm.isAfterNow());
   }
 
-  public void setAccountExpiredDate(final DateTime expiredDate) {
+  public void setAccountExpiredDate(DateTime expiredDate) {
     this.account_expired_dt_tm = expiredDate;
   }
 
@@ -215,7 +217,7 @@ public final class User extends Person implements UserDetails {
     return password_changed_dt_tm;
   }
 
-  public void setPasswordChangedDate(final DateTime changedDate) {
+  public void setPasswordChangedDate(DateTime changedDate) {
     this.password_changed_dt_tm = changedDate;
   }
 
@@ -291,11 +293,11 @@ public final class User extends Person implements UserDetails {
     return authorities;
   }
 
-  public void addGrantedAuthority(final GrantedAuthority authority) {
+  public void addGrantedAuthority(GrantedAuthority authority) {
     authorities.add(authority);
   }
 
-  public void addGrantedAuthority(final String authority) {
+  public void addGrantedAuthority(String authority) {
     authorities.add(new SimpleGrantedAuthority(authority));
   }
 
@@ -314,7 +316,7 @@ public final class User extends Person implements UserDetails {
    * @param updateCount
    *     {@link long} the number of times the object has been updated.
    */
-  /* package */void setUserUpdateCount(final long updateCount) {
+  /* package */void setUserUpdateCount(long updateCount) {
     this.updt_cnt = updateCount;
   }
 
@@ -333,7 +335,7 @@ public final class User extends Person implements UserDetails {
    * @param createDtTm
    *     The {@link DateTime} of when this object was created.
    */
-  public void setCreateDateTime(final DateTime createDtTm) {
+  public void setCreateDateTime(DateTime createDtTm) {
     this.create_dt_tm = createDtTm;
   }
 
@@ -341,24 +343,40 @@ public final class User extends Person implements UserDetails {
     return securityPolicy;
   }
 
-  public void setSecurityPolicy(final SecurityPolicy securityPolicy) {
+  public void setSecurityPolicy(SecurityPolicy securityPolicy) {
     this.securityPolicy = securityPolicy;
   }
 
-  public Collection<Role> getRoles() {
+  public List<Role> getRoles() {
     return roles;
   }
 
   public void clearRoles() {
-    roles = new ArrayList<>();
+    roles.clear();
   }
 
-  public void addRole(final Role role) {
+  public void addRole(Role role) {
     this.roles.add(role);
   }
 
-  public void deleteRole(final Role role) {
+  public void deleteRole(Role role) {
     this.roles.remove(role);
+  }
+
+  public List<UserQuestion> getUserQuestions() {
+    return questions;
+  }
+
+  public void clearQuestions() {
+    this.questions.clear();
+  }
+
+  public void addQuestion(UserQuestion question) {
+    this.questions.add(question);
+  }
+
+  public void deleteQuestion(UserQuestion question) {
+    this.questions.remove(question);
   }
 
   @Override

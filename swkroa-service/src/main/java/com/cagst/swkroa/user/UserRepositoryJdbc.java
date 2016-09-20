@@ -1,5 +1,7 @@
 package com.cagst.swkroa.user;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +38,7 @@ import org.springframework.util.Assert;
  *
  * @author Craig Gaskill
  */
+@Named(value = "userRepo")
 /* package */ final class UserRepositoryJdbc extends PersonRepositoryJdbc implements UserRepository, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryJdbc.class);
 
@@ -61,6 +64,9 @@ import org.springframework.util.Assert;
   private static final String UPDATE_USER     = "UPDATE_USER";
   private static final String MERGE_USER_ROLE = "MERGE_USER_ROLE";
 
+  private static final String INSERT_USER_QUESTION = "INSERT_USER_QUESTION";
+  private static final String UPDATE_USER_QUESTION = "UPDATE_USER_QUESTION";
+
   private MessageSourceAccessor messages;
 
   /**
@@ -71,6 +77,7 @@ import org.springframework.util.Assert;
    * @param contactRepo
    *     The {@link ContactRepository} to use to populate contact objects.
    */
+  @Inject
   public UserRepositoryJdbc(DataSource dataSource, ContactRepository contactRepo) {
     super(dataSource, contactRepo);
   }
@@ -400,6 +407,16 @@ import org.springframework.util.Assert;
       }
     }
 
+    if (CollectionUtils.isNotEmpty(savedUser.getUserQuestions())) {
+      for (UserQuestion userQuestion : savedUser.getUserQuestions()) {
+        if (userQuestion.getUserQuestionUID() > 0) {
+          updateUserQuestion(savedUser.getUserUID(), userQuestion, user);
+        } else {
+          insertUserQuestion(savedUser.getUserUID(), userQuestion, user);
+        }
+      }
+    }
+
     return savedUser;
   }
 
@@ -425,6 +442,16 @@ import org.springframework.util.Assert;
       }
     }
 
+    if (CollectionUtils.isNotEmpty(registeredUser.getUserQuestions())) {
+      for (UserQuestion userQuestion : registeredUser.getUserQuestions()) {
+        if (userQuestion.getUserQuestionUID() > 0) {
+          updateUserQuestion(registeredUser.getUserUID(), userQuestion, user);
+        } else {
+          insertUserQuestion(registeredUser.getUserUID(), userQuestion, user);
+        }
+      }
+    }
+
     return registeredUser;
   }
 
@@ -435,6 +462,11 @@ import org.springframework.util.Assert;
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
     return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ALL_USERS), new UserMapper());
+  }
+
+  @Override
+  public List<UserQuestion> getSecurityQuestionsForUser(User user) {
+    return null;
   }
 
   /**
@@ -502,4 +534,49 @@ import org.springframework.util.Assert;
 
     getJdbcTemplate().update(stmtLoader.load(MERGE_USER_ROLE), params);
   }
+
+  private UserQuestion insertUserQuestion(long userId, UserQuestion userQuestion, User user) {
+    LOGGER.info("Calling insertUserQuestion for User [{}] with Question [{}]", userId, userQuestion.getQuestionCD());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_USER_QUESTION),
+        UserQuestionMaper.mapInsertStatement(userId, userQuestion, user),
+        keyHolder);
+
+    if (cnt == 1) {
+      return UserQuestion.builder()
+          .setUserQuestionUID(keyHolder.getKey().longValue())
+          .setQuestionCD(userQuestion.getQuestionCD())
+          .setAnswer(userQuestion.getAnswer())
+          .setActive(userQuestion.isActive())
+          .setUserQuestionUpdateCount(userQuestion.getUserQuestionUpdateCount())
+          .build();
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+  }
+
+  private UserQuestion updateUserQuestion(long userId, UserQuestion userQuestion, User user) {
+    LOGGER.info("Calling updateUserQuestion for User [{}] with Question [{}]", userId, userQuestion.getQuestionCD());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(UPDATE_USER_QUESTION),
+        UserQuestionMaper.mapUpdateStatement(userQuestion, user));
+
+    if (cnt == 1) {
+      return UserQuestion.builder()
+          .setUserQuestionUID(userQuestion.getUserQuestionUID())
+          .setQuestionCD(userQuestion.getQuestionCD())
+          .setAnswer(userQuestion.getAnswer())
+          .setActive(userQuestion.isActive())
+          .setUserQuestionUpdateCount(userQuestion.getUserQuestionUpdateCount() + 1)
+          .build();
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+  }
+
 }

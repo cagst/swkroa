@@ -14,8 +14,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 @AutoValue
 public abstract class Role implements Serializable, Comparable<Role> {
-  private static final long serialVersionUID = 5588184824390805426L;
-
   public abstract long getRoleUID();
 
   public abstract String getRoleName();

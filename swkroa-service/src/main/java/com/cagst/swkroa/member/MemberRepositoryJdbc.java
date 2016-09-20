@@ -48,6 +48,7 @@ import org.springframework.util.Assert;
   private static final String GET_MEMBERS_BY_NAME        = "GET_MEMBERS_BY_NAME";
   private static final String GET_MEMBERS_BY_NAME_COUNT  = "GET_MEMBERS_BY_NAME_COUNT";
   private static final String GET_MEMBER_BY_UID          = "GET_MEMBER_BY_UID";
+  private static final String GET_MEMBER_BY_PERSON_UID   = "GET_MEMBER_BY_PERSON_UID";
   private static final String GET_MEMBER_BY_OWNER_ID     = "GET_MEMBER_BY_OWNER_ID";
 
   private static final String GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP = "GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP";
@@ -81,9 +82,11 @@ import org.springframework.util.Assert;
    *     The {@link ContactRepository} to use to populate contact objects.
    */
   @Inject
-  public MemberRepositoryJdbc(final DataSource dataSource, final PersonRepository personRepo,
-                              final MemberTypeRepository memberTypeRepo,
-                              final CountyRepository countyRepo, final ContactRepository contactRepo) {
+  public MemberRepositoryJdbc(DataSource dataSource,
+                              PersonRepository personRepo,
+                              MemberTypeRepository memberTypeRepo,
+                              CountyRepository countyRepo,
+                              ContactRepository contactRepo) {
 
     super(dataSource, contactRepo);
 
@@ -94,7 +97,7 @@ import org.springframework.util.Assert;
 
   @Override
 //  @Cacheable(value = "membersList", key = "#membership.getMembershipUID()")
-  public List<Member> getMembersForMembership(final Membership membership) {
+  public List<Member> getMembersForMembership(Membership membership) {
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
 
     LOGGER.info("Calling getMembersForMembership for [{}].", membership.getMembershipUID());
@@ -108,7 +111,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Member> getMembersByName(final String name, final Status status, final int start, final int limit) {
+  public List<Member> getMembersByName(String name, Status status, int start, int limit) {
     LOGGER.info("Calling getMembersByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
@@ -125,7 +128,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public long getMembersByNameCount(final String name, final Status status) {
+  public long getMembersByNameCount(String name, Status status) {
     LOGGER.info("Calling getMembersByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
@@ -140,7 +143,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException {
+  public Member getMemberByUID(long uid) throws IncorrectResultSizeDataAccessException {
     LOGGER.info("Calling getMemberByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -162,7 +165,29 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public Optional<Member> getMemberByOwnerId(final String ownerId) throws IncorrectResultSizeDataAccessException {
+  public Optional<Member> getMemberByPersonUID(long uid) throws IncorrectResultSizeDataAccessException {
+    LOGGER.info("Calling getMemberByPersonUID for [{}]", uid);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    Map<String, Long> params = new HashMap<>(1);
+    params.put("person_id", uid);
+
+    List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_PERSON_UID),
+        params,
+        new MemberMapper(personRepo, memberTypeRepo));
+
+    if (members.size() == 1) {
+      return Optional.of(members.get(0));
+    } else if (members.size() == 0) {
+      return Optional.empty();
+    } else {
+      LOGGER.error("More than one Member with Person ID of [{}] was found.", uid);
+      throw new IncorrectResultSizeDataAccessException(1, members.size());
+    }
+  }
+
+  @Override
+  public Optional<Member> getMemberByOwnerId(String ownerId) throws IncorrectResultSizeDataAccessException {
     Objects.requireNonNull(ownerId, "Assertion Failure: argument [ownerId] cannot be null");
 
     LOGGER.info("Calling getMemberByOwnerId for [{}]", ownerId);
@@ -187,7 +212,7 @@ import org.springframework.util.Assert;
 
   @Override
 //  @Cacheable(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
-  public List<MembershipCounty> getMembershipCountiesForMembership(final Membership membership) {
+  public List<MembershipCounty> getMembershipCountiesForMembership(Membership membership) {
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
 
     LOGGER.info("Calling getMembershipCountiesForMembership for [{}].", membership.getMembershipUID());
@@ -202,7 +227,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public MembershipCounty getMembershipCountyByUID(final long uid) throws IncorrectResultSizeDataAccessException {
+  public MembershipCounty getMembershipCountyByUID(long uid) throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMembershipCountyByUID for [{}].", uid);
 
@@ -225,7 +250,7 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public String generateOwnerId(final String firstName, final String lastName) {
+  public String generateOwnerId(String firstName, String lastName) {
     Assert.hasText(firstName, "Assertion Failure - argument [firstName] cannot be null or empty.");
     Assert.isTrue(firstName.length() > 2, "Assertion Failure - argument [firstName] must have at least 3 characters.");
     Assert.hasText(lastName, "Assertion Failure - argument [lastName] cannot be null or empty.");
@@ -246,7 +271,7 @@ import org.springframework.util.Assert;
   @Override
   @Transactional
 //  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
-  public Member saveMember(final Member member, final Membership membership, final User user)
+  public Member saveMember(Member member, Membership membership, User user)
       throws DataAccessException {
 
     Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
@@ -291,9 +316,9 @@ import org.springframework.util.Assert;
   @Override
   @Transactional
 //  @CacheEvict(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
-  public MembershipCounty saveMembershipCounty(final MembershipCounty county,
-                                               final Membership membership,
-                                               final User user)
+  public MembershipCounty saveMembershipCounty(MembershipCounty county,
+                                               Membership membership,
+                                               User user)
       throws DataAccessException {
 
     Assert.notNull(county, "Assertion Failed - argument [builder] cannot be null");
@@ -311,7 +336,7 @@ import org.springframework.util.Assert;
   @Override
   @Transactional
 //  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
-  public Member closeMember(final Member member, final CodeValue closeReason, final String closeText, final User user)
+  public Member closeMember(Member member, CodeValue closeReason, String closeText, User user)
       throws IncorrectResultSizeDataAccessException {
 
     Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
@@ -340,7 +365,7 @@ import org.springframework.util.Assert;
     }
   }
 
-  private Member insertMember(final Member member, final Membership membership, final User user)
+  private Member insertMember(Member member, Membership membership, User user)
       throws DataAccessException {
 
     LOGGER.info("Inserting new Member [{}]", member.getMembershipUID());
@@ -360,7 +385,7 @@ import org.springframework.util.Assert;
     return member;
   }
 
-  private Member updateMember(final Member member, final Membership membership, final User user)
+  private Member updateMember(Member member, Membership membership, User user)
       throws DataAccessException {
 
     LOGGER.info("Updating Member [{}]", member.getMembershipUID());
@@ -382,9 +407,9 @@ import org.springframework.util.Assert;
     return member;
   }
 
-  private MembershipCounty insertMembershipCounty(final MembershipCounty county,
-                                                  final Membership membership,
-                                                  final User user)
+  private MembershipCounty insertMembershipCounty(MembershipCounty county,
+                                                  Membership membership,
+                                                  User user)
       throws DataAccessException {
 
     LOGGER.info("Inserting new MembershipCounty [{}]", county.getCounty().getCountyName());
@@ -404,9 +429,9 @@ import org.springframework.util.Assert;
     return county;
   }
 
-  private MembershipCounty updateMembershipCounty(final MembershipCounty county,
-                                                  final Membership membership,
-                                                  final User user)
+  private MembershipCounty updateMembershipCounty(MembershipCounty county,
+                                                  Membership membership,
+                                                  User user)
       throws DataAccessException {
 
     LOGGER.info("Updating MembershipCounty [{}]", county.getCounty().getCountyName());

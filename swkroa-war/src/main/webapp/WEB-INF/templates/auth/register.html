@@ -12,24 +12,24 @@
 <div th:replace="fragments/auth :: header"></div>
 <div th:replace="fragments/auth :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="registrationController">
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="registrationController" data-ng-cloak="">
   <div class="page-header">
     <h3 th:text="#{signin.register.header}">zzz Register</h3>
   </div>
 
   <div class="container-center-large">
-    <div id="errorMessage" class="alert alert-danger alert-dismissible" role="alert">
+    <div class="alert alert-danger alert-dismissible" role="alert" data-ng-show="errorText">
       <button type="button" class="close" data-dismiss="alert">
         <span aria-hidden="true">&times;</span>
         <span class="sr-only">Close</span>
       </button>
       <strong>Warning!</strong>
 
-      <div id="errorMessageText">zzz Error</div>
+      <div data-ng-bind="errorText">zzz Error</div>
     </div>
 
-    <wizard>
-      <wz-step id="identify" th:attr="wz-title=#{signin.register.identify.section}">
+    <div id="identify" th:attr="wz-title=#{signin.register.identify.section}"
+         data-ng-show="step == 'IDENTIFY'">
         <div class="row" style="padding-left:15px">
           <p class="lead lead-sm" th:text="#{signin.register.identify.title}">zzz Identify</p>
         </div>
@@ -43,19 +43,20 @@
               <input id="ownerId" name="ownerId" type="text" maxlength="15" autofocus
                      class="form-control input-block-level"
                      th:placeholder="#{signin.register.ownerid.prompt}"
-                     data-ng-model="ownerId"
-                     data-ng-change="enableIdentify()"/>
+                     data-ng-model="registerUser.ownerId"/>
             </div>
           </div>
         </div>
         <div class="row row-spacer spacer-top" style="padding-right:15px">
           <input id="identifyButton" type="button" class="btn btn-primary pull-right"
                  data-th-value="#{signin.register.identify.button}"
+                 data-ng-disabled="!registerUser.ownerId"
                  data-ng-click="registerIdentification()">
         </div>
-      </wz-step>
+      </div>
 
-      <wz-step id="verify" th:attr="wz-title=#{signin.register.verify.section}">
+    <div id="verify" th:attr="wz-title=#{signin.register.verify.section}"
+         data-ng-show="step == 'VERIFY'">
         <div class="row" style="padding-left:15px">
           <p class="lead lead-sm" th:text="#{signin.register.verify.title}">zzz Verify</p>
         </div>
@@ -65,10 +66,10 @@
                    th:text="#{signin.register.firstname.label}">
               zzz Firstname
             </label>
-            <input id="firstName" name="firstName" type="text" maxlength="50"
+            <input id="firstName" type="text" maxlength="50"
                    class="form-control input-block-level"
                    th:placeholder="#{signin.register.firstname.prompt}"
-                   data-ng-model="firstName"
+                   data-ng-model="registerUser.firstName"
                    data-ng-change="enableVerify()"/>
           </div>
           <div class="col-xs-6">
@@ -76,10 +77,10 @@
                    th:text="#{signin.register.lastname.label}">
               zzz Lastname
             </label>
-            <input id="lastName" name="lastName" type="text" maxlength="50"
+            <input id="lastName" type="text" maxlength="50"
                    class="form-control input-block-level"
                    th:placeholder="#{signin.register.lastname.prompt}"
-                   data-ng-model="lastName"
+                   data-ng-model="registerUser.lastName"
                    data-ng-change="enableVerify()"/>
           </div>
         </div>
@@ -93,7 +94,7 @@
             <input id="phoneNumber" name="phoneNumber" type="text" maxlength="50"
                    class="form-control input-block-level"
                    th:placeholder="#{signin.register.phone.prompt}"
-                   data-ng-model="phoneNumber"
+                   data-ng-model="registerUser.phoneNumber"
                    data-ng-change="enableVerify()"/>
           </div>
           <div class="col-xs-6">
@@ -104,18 +105,20 @@
             <input id="zipCode" name="zipCode" type="text" maxlength="50"
                    class="form-control input-block-level"
                    th:placeholder="#{signin.register.zipcode.prompt}"
-                   data-ng-model="zipCode"
+                   data-ng-model="registerUser.zipCode"
                    data-ng-change="enableVerify()"/>
           </div>
         </div>
         <div class="row row-spacer spacer-top" style="padding-right:15px">
           <input id="verifyButton" type="button" class="btn btn-primary pull-right"
                  data-th-value="#{signin.register.verify.button}"
+                 data-ng-disabled="!enableVerify()"
                  data-ng-click="registerVerify()">
         </div>
-      </wz-step>
+      </div>
 
-      <wz-step id="complete" th:attr="wz-title=#{signin.register.complete.section}">
+    <div id="complete" th:attr="wz-title=#{signin.register.complete.section}"
+         data-ng-show="step == 'COMPLETE'">
         <div class="row" style="padding-left:15px">
           <p class="lead lead-sm" th:text="#{signin.register.complete.title}">zzz Complete</p>
         </div>
@@ -128,7 +131,7 @@
             <input id="emailAddress" name="emailAddress" type="text" maxlength="50"
                    class="form-control input-block-level"
                    th:placeholder="#{signin.register.email.prompt}"
-                   data-ng-model="emailAddress"
+                   data-ng-model="registerUser.emailAddress"
                    data-ng-change="enableComplete()"/>
           </div>
         </div>
@@ -141,7 +144,7 @@
             <input id="username" name="username" type="text" maxlength="50"
                    class="form-control input-block-level"
                    th:placeholder="#{signin.register.username.prompt}"
-                   data-ng-model="username"
+                   data-ng-model="registerUser.username"
                    data-ng-change="enableComplete()"/>
           </div>
         </div>
@@ -154,7 +157,7 @@
             <input id="password" name="password" type="password" maxlength="50"
                    class="form-control input-block-level"
                    th:placeholder="#{signin.register.password.prompt}"
-                   data-ng-model="password"
+                   data-ng-model="registerUser.password"
                    data-ng-change="enableComplete()"/>
           </div>
           <div class="col-xs-6">
@@ -165,18 +168,96 @@
             <input id="confirm" name="confirm" type="password" maxlength="50"
                    class="form-control input-block-level"
                    th:placeholder="#{signin.register.confirm.prompt}"
-                   data-ng-model="confirm"
+                   data-ng-model="registerUser.confirm"
                    data-ng-change="enableComplete()"/>
           </div>
         </div>
+
+        <div class="row row-spacer spacer-top">
+          <div class="col-xs-6">
+            <label for="question1" class="form_label label-required"
+                   th:text="#{signin.register.confirm.question1}">
+              zzz Question 1
+            </label>
+            <select id="question1" name="question1" class="form-control"
+                    data-ng-options="question.codeValueUID as question.display for question in questions"
+                    data-ng-model="registerUser.question1"
+                    data-ng-change="enableComplete()">
+            </select>
+          </div>
+          <div class="col-xs-6">
+            <label for="answer1" class="form_label label-required"
+                   th:text="#{signin.register.confirm.answer1}">
+              zzz Answer 1
+            </label>
+            <input id="answer1" type="text" maxlength="50"
+                   class="form-control input-block-level"
+                   th:placeholder="#{signin.register.confirm.response}"
+                   data-ng-model="registerUser.answer1"
+                   data-ng-change="enableComplete()">
+          </div>
+        </div>
+
+        <div class="row row-spacer spacer-top">
+          <div class="col-xs-6">
+            <label for="question2" class="form_label label-required"
+                   th:text="#{signin.register.confirm.question2}">
+              zzz Question 2
+            </label>
+            <select id="question2" name="question2" class="form-control"
+                    data-ng-options="question.codeValueUID as question.display for question in questions"
+                    data-ng-model="registerUser.question2"
+                    data-ng-change="enableComplete()">
+            </select>
+          </div>
+          <div class="col-xs-6">
+            <label for="answer2" class="form_label label-required"
+                   th:text="#{signin.register.confirm.answer2}">
+              zzz Answer 2
+            </label>
+            <input id="answer2" type="text" maxlength="50"
+                   class="form-control input-block-level"
+                   th:placeholder="#{signin.register.confirm.response}"
+                   data-ng-model="registerUser.answer2"
+                   data-ng-change="enableComplete()">
+          </div>
+        </div>
+
+        <div class="row row-spacer spacer-top">
+          <div class="col-xs-6">
+            <label for="question3" class="form_label label-required"
+                   th:text="#{signin.register.confirm.question3}">
+              zzz Question 3
+            </label>
+            <select id="question3" name="question1" class="form-control"
+                    data-ng-options="question.codeValueUID as question.display for question in questions"
+                    data-ng-model="registerUser.question3"
+                    data-ng-change="enableComplete()">
+            </select>
+          </div>
+          <div class="col-xs-6">
+            <label for="answer3" class="form_label label-required"
+                   th:text="#{signin.register.confirm.answer3}">
+              zzz Answer 3
+            </label>
+            <input id="answer3" type="text" maxlength="50"
+                   class="form-control input-block-level"
+                   th:placeholder="#{signin.register.confirm.response}"
+                   data-ng-model="registerUser.answer3"
+                   data-ng-change="enableComplete()">
+          </div>
+        </div>
+
         <div class="row row-spacer spacer-top" style="padding-right:15px">
           <input id="completeButton" type="button" class="btn btn-primary pull-right"
                  data-th-value="#{signin.register.complete.button}"
+                 data-ng-disabled="!enableComplete()"
                  data-ng-click="registerComplete()">
         </div>
-      </wz-step>
+      </div>
 
-      <wz-step id="finish" th:attr="wz-title=#{signin.register.finish.section}">
+    <div id="finish" th:attr="wz-title=#{signin.register.finish.section}"
+         data-ng-show="step == 'FINISH'">
         <div class="row" style="padding-left:15px">
           <p class="lead lead-sm" th:text="#{signin.register.finish.title}">zzz Identify</p>
         </div>
@@ -187,8 +268,7 @@
             zzz Sign In
           </a>
         </div>
-      </wz-step>
-    </wizard>
+      </div>
   </div>
 </div>
 

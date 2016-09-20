@@ -160,6 +160,31 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
   }
 
   /**
+   * Test the getMemberByPersonUID method and not finding the member.
+   */
+  @Test
+  public void testGetMemberByPersonUID_NotFound() {
+    Optional<Member> check = repo.getMemberByPersonUID(999L);
+    assertFalse("Ensure the Member was not found.", check.isPresent());
+  }
+
+  /**
+   * Test the getMemberByUID method and finding the member.
+   */
+  @Test
+  public void testGetMemberByPersonUID_Found() {
+    Optional<Member> check = repo.getMemberByPersonUID(11L);
+
+    assertTrue("Ensure the member was found.", check.isPresent());
+
+    Member member = check.get();
+    assertEquals("Ensure we found the correct member!", 2, member.getMemberUID());
+    assertNotNull("Ensure we have a valid MemberType.", member.getMemberType());
+    assertEquals("Ensure it is the correct MemberType.", MemberType.REGULAR, member.getMemberType()
+        .getMemberTypeMeaning());
+  }
+
+  /**
    * Test the getMemberByOwnerId method and not finding the member.
    */
   @Test

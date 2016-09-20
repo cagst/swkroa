@@ -27,7 +27,7 @@ public interface MemberRepository extends PersonRepository {
    *
    * @return A {@link List} of {@link Member Members} associated with the specified Membership.
    */
-   List<Member> getMembersForMembership(final Membership membership);
+   List<Member> getMembersForMembership(Membership membership);
 
   /**
    * Retrieves all active {@link Member Members} in the system that has the name in one of the following fields:
@@ -49,7 +49,7 @@ public interface MemberRepository extends PersonRepository {
    *
    * @return A {@link List} of {@link Member Members} in the system that starts with the specified name.
    */
-  List<Member> getMembersByName(final String name, final Status status, final int start, final int limit);
+  List<Member> getMembersByName(String name, Status status, int start, int limit);
 
   /**
    * Retrieves all active {@link Member Members} in the system that has the name in one of the following fields:
@@ -67,7 +67,7 @@ public interface MemberRepository extends PersonRepository {
    *
    * @return The number of {@link Member Members} in the system that starts with the specified name.
    */
-  long getMembersByNameCount(final String name, final Status status);
+  long getMembersByNameCount(String name, Status status);
 
   /**
    * Retrieves a {@link Member} by its unique identifier.
@@ -82,7 +82,20 @@ public interface MemberRepository extends PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Member was found.
    */
-  Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+  Member getMemberByUID(long uid) throws IncorrectResultSizeDataAccessException;
+
+  /**
+   * Retrieves a {@link Member} by the unique identifier of the Person associated with the Member.
+   *
+   * @param uid
+   *    A {@link long}| that uniquely identifies the Person the member is associated with.
+   *
+   * @return A {@link Optional} that may contain the {Member} associated with the specified Person.
+   *
+   * @throws IncorrectResultSizeDataAccessException
+   *    if more than 1 Member was found.
+   */
+  Optional<Member> getMemberByPersonUID(long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link Member} by its owner id.
@@ -95,7 +108,7 @@ public interface MemberRepository extends PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Member was found.
    */
-  Optional<Member> getMemberByOwnerId(final String ownerId) throws IncorrectResultSizeDataAccessException;
+  Optional<Member> getMemberByOwnerId(String ownerId) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link List} of all {@link MembershipCounty Counties} associated with the specified
@@ -107,7 +120,7 @@ public interface MemberRepository extends PersonRepository {
    * @return A {@link List} of {@link MembershipCounty Counties} associated with the specified
    * Membership.
    */
-   List<MembershipCounty> getMembershipCountiesForMembership(final Membership membership);
+   List<MembershipCounty> getMembershipCountiesForMembership(Membership membership);
 
   /**
    * Retrieves a {@link MembershipCounty} by its unique identifier.
@@ -122,7 +135,7 @@ public interface MemberRepository extends PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MembershipCounty was found.
    */
-   MembershipCounty getMembershipCountyByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+   MembershipCounty getMembershipCountyByUID(long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Generates an Owner Id based upon the specified first-name and last-name.
@@ -135,7 +148,7 @@ public interface MemberRepository extends PersonRepository {
    * @return A {@link String} that represents a unique Owner Id based upon the specified first /
    * last names.
    */
-   String generateOwnerId(final String firstName, final String lastName);
+   String generateOwnerId(String firstName, String lastName);
 
   /**
    * Commits the specified {@link Member Member} to persistent storage.
@@ -156,7 +169,7 @@ public interface MemberRepository extends PersonRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-   Member saveMember(final Member member, final Membership membership, final User user) throws DataAccessException;
+   Member saveMember(Member member, Membership membership, User user) throws DataAccessException;
 
   /**
    * Commits the specified {@link MembershipCounty MembershipCounty} to persistent storage.
@@ -177,9 +190,9 @@ public interface MemberRepository extends PersonRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-   MembershipCounty saveMembershipCounty(final MembershipCounty builder,
-                                         final Membership membership,
-                                         final User user) throws DataAccessException;
+   MembershipCounty saveMembershipCounty(MembershipCounty builder,
+                                         Membership membership,
+                                         User user) throws DataAccessException;
 
   /**
    * Closes the member for the specified reason.
@@ -196,6 +209,6 @@ public interface MemberRepository extends PersonRepository {
    * @return A {@link Member} once it has been closed.
    */
 
-   Member closeMember(final Member member, final CodeValue closeReason, final String closeText, final User user)
+   Member closeMember(Member member, CodeValue closeReason, String closeText, User user)
       throws DataAccessException;
 }

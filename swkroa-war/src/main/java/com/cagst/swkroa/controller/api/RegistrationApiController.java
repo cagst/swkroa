@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
@@ -14,6 +15,7 @@ import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserQuestion;
 import com.cagst.swkroa.user.UserRepository;
 import com.cagst.swkroa.user.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +42,7 @@ public final class RegistrationApiController {
 
   private final ResourceBundle resourceBundle;
 
-  private MemberRepository memberRepository;
+  private MemberRepository memberRepo;
   private ContactRepository contactRepo;
   private UserRepository userRepo;
   private UserService userService;
@@ -53,8 +55,8 @@ public final class RegistrationApiController {
   }
 
   @Inject
-  public void setMemberRepository(MemberRepository memberRepository) {
-    this.memberRepository = memberRepository;
+  public void setMemberRepository(MemberRepository memberRepo) {
+    this.memberRepo = memberRepo;
   }
 
   @Inject
@@ -76,7 +78,7 @@ public final class RegistrationApiController {
   public ResponseEntity<String> registerIdentification(@PathVariable(value = "ownerId") String ownerId) {
     LOGGER.info("Received request to identify membership for Owner ID [{}]", ownerId);
 
-    Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
+    Optional<Member> checkMember = memberRepo.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
       String msg = resourceBundle.getString("signin.register.identify.notfound");
       return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
@@ -109,7 +111,7 @@ public final class RegistrationApiController {
 
     // performing the same operations as the registerIdentify method
     // in case this API was called maliciously or out of order
-    Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
+    Optional<Member> checkMember = memberRepo.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
       String msg = resourceBundle.getString("signin.register.identify.notfound");
       return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
@@ -159,14 +161,20 @@ public final class RegistrationApiController {
       @RequestParam(value = "emailAddress") String emailAddress,
       @RequestParam(value = "username") String username,
       @RequestParam(value = "password") String password,
-      @RequestParam(value = "confirm") String confirm
+      @RequestParam(value = "confirm") String confirm,
+      @RequestParam(value = "question1") long question1,
+      @RequestParam(value = "answer1") String answer1,
+      @RequestParam(value = "question2") long question2,
+      @RequestParam(value = "answer2") String answer2,
+      @RequestParam(value = "question3") long question3,
+      @RequestParam(value = "answer3") String answer3
   ) {
     LOGGER.info("Received request to verify membership for Owner ID [{}]", ownerId);
 
     // performing the same operations as the registerIdentify method
     // and performing the same operations as the registerVerify method
     // in case this API was called maliciously or out of order
-    Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
+    Optional<Member> checkMember = memberRepo.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
       String msg = resourceBundle.getString("signin.register.identify.notfound");
       return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
@@ -218,6 +226,21 @@ public final class RegistrationApiController {
     user.setPasswordTemporary(false);
     user.setPasswordChangedDate(new DateTime());
     user.setActive(true);
+
+    user.addQuestion(UserQuestion.builder()
+        .setQuestionCD(question1)
+        .setAnswer(answer1)
+        .build());
+
+    user.addQuestion(UserQuestion.builder()
+        .setQuestionCD(question2)
+        .setAnswer(answer2)
+        .build());
+
+    user.addQuestion(UserQuestion.builder()
+        .setQuestionCD(question3)
+        .setAnswer(answer3)
+        .build());
 
     userService.registerUser(user, systemUser);
 

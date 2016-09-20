@@ -39,13 +39,13 @@
           zzz Home
         </a>
       </li>
-      <li>
+      <li id="menuMemberships" sec:authorize="hasRole('STAFF')">
         <a th:href="@{/memberships}"
            th:text="#{com.cagst.swkroa.nav.membership}">
           zzz Memberships
         </a>
       </li>
-      <li class="dropdown" sec:authorize="hasRole('STAFF')">
+      <li id="menuAccounting" class="dropdown" sec:authorize="hasRole('STAFF')">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <span th:text="#{com.cagst.swkroa.nav.accounting}">zzz Accounting</span>
           <span class="caret-inverse"></span>
@@ -77,7 +77,7 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown" sec:authorize="hasRole('STAFF')">
+      <li id="menuReports" class="dropdown" sec:authorize="hasRole('STAFF')">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <span th:text="#{com.cagst.swkroa.nav.reports}">zzz Reports</span>
           <span class="caret-inverse"></span>
@@ -116,7 +116,7 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown" sec:authorize="hasRole('ADMIN')">
+      <li id="menuMaintain" class="dropdown" sec:authorize="hasRole('ADMIN')">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <span th:text="#{com.cagst.swkroa.nav.maintain}">zzz Maintain</span>
           <span class="caret-inverse"></span>
