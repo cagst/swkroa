@@ -473,25 +473,17 @@
 
   <repositories>
     <repository>
-      <id>cagst-release</id>
-      <name>CAGST Release Repository</name>
-      <url>http://repo.cagst.com/content/repositories/releases</url>
+      <id>libs-release</id>
+      <name>libs-release</name>
+      <url>http://www.cagst.com:51081/artifactory/libs-release/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
     </repository>
     <repository>
-      <id>cagst-external</id>
-      <name>CAGST External (3rd Party) Repository</name>
-      <url>http://repo.cagst.com/content/repositories/thirdparty/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>cagst-snapshot</id>
-      <name>CAGST Snapshot Repository</name>
-      <url>http://repo.cagst.com/content/repositories/snapshots</url>
+      <id>libs-snapshot</id>
+      <name>libs-snapshot</name>
+      <url>http://www.cagst.com:51081/artifactory/libs-snapshot/</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
@@ -600,13 +592,13 @@
   <distributionManagement>
     <repository>
       <id>cagst-release</id>
-      <name>CAGST Release Repository</name>
-      <url>http://repo.cagst.com/content/repositories/releases</url>
+      <name>cagst.com-releases</name>
+      <url>http://www.cagst.com:51081/artifactory/cagst-release/</url>
     </repository>
     <snapshotRepository>
       <id>cagst-snapshot</id>
-      <name>CAGST Snapshot Repository</name>
-      <url>http://repo.cagst.com/content/repositories/snapshots</url>
+      <name>cagst.com-snapshots</name>
+      <url>http://www.cagst.com:51081/artifactory/cagst-snapshot/</url>
     </snapshotRepository>
     <site>
       <id>cagst-site</id>

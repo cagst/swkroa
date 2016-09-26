@@ -2,6 +2,7 @@ package com.cagst.swkroa.user;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -316,7 +317,27 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
 
     if (saveUser.getUserUID() == 0) {
+      // encode the password
       saveUser.setPassword(passwordEncoder.encode(saveUser.getPassword()));
+    }
+
+    if (CollectionUtils.isNotEmpty(saveUser.getUserQuestions())) {
+      List<UserQuestion> questions = new ArrayList<>(saveUser.getUserQuestions().size());
+
+      // encode the answers
+      for (UserQuestion question : saveUser.getUserQuestions()) {
+        questions.add(UserQuestion.builder()
+            .setUserQuestionUID(question.getUserQuestionUID())
+            .setQuestionCD(question.getQuestionCD())
+            .setAnswer(passwordEncoder.encode(question.getAnswer()))
+            .setActive(question.isActive())
+            .setUserQuestionUpdateCount(question.getUserQuestionUpdateCount())
+            .build()
+        );
+      }
+
+      saveUser.clearQuestions();
+      saveUser.getUserQuestions().addAll(questions);
     }
 
     return userRepo.saveUser(saveUser, user);
@@ -338,7 +359,27 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     }
 
     if (registerUser.getUserUID() == 0) {
+      // encode the password
       registerUser.setPassword(passwordEncoder.encode(registerUser.getPassword()));
+    }
+
+    if (CollectionUtils.isNotEmpty(registerUser.getUserQuestions())) {
+      List<UserQuestion> questions = new ArrayList<>(registerUser.getUserQuestions().size());
+
+      // encode the answers
+      for (UserQuestion question : registerUser.getUserQuestions()) {
+        questions.add(UserQuestion.builder()
+            .setUserQuestionUID(question.getUserQuestionUID())
+            .setQuestionCD(question.getQuestionCD())
+            .setAnswer(passwordEncoder.encode(question.getAnswer()))
+            .setActive(question.isActive())
+            .setUserQuestionUpdateCount(question.getUserQuestionUpdateCount())
+            .build()
+        );
+      }
+
+      registerUser.clearQuestions();
+      registerUser.getUserQuestions().addAll(questions);
     }
 
     return userRepo.registerUser(registerUser, user);

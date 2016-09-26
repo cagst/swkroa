@@ -17,26 +17,28 @@
     <span data-ng-bind="membership.membershipName" class="lead lead-in">
       zzz Membership Name
     </span>
-    <span th:text="#{com.cagst.swkroa.membership.member.since}"
+    <span th:text="#{member.membership.member.since}"
           data-ng-if="membership.joinDate != null" class="pull-right">
       zzz Member Since
     </span>
   </div>
 
   <div>
-    <span th:text="#{com.cagst.swkroa.membership.dues}">zzz Dues Of</span>
+    <span th:text="#{member.membership.dues}">
+      zzz Dues Of
+    </span>
     <span class="pull-right text-danger"
-          th:text="#{com.cagst.swkroa.membership.pastdue}"
+          th:text="#{member.membership.pastdue}"
           data-ng-show="membership.balance < 0">
       zzz Past Due
     </span>
     <span class="pull-right text-success"
-          th:text="#{com.cagst.swkroa.membership.credit}"
+          th:text="#{member.membership.credit}"
           data-ng-show="membership.balance > 0">
       zzz Credit
     </span>
     <span class="pull-right"
-          th:text="#{com.cagst.swkroa.membership.paid}"
+          th:text="#{member.membership.paid}"
           data-ng-show="membership.balance === 0">
       zzz Paid
     </span>

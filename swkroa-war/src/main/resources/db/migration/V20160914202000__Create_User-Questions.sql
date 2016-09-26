@@ -2,7 +2,7 @@ CREATE TABLE user_question (
   user_question_id       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id                BIGINT UNSIGNED NOT NULL,
   question_cd            BIGINT UNSIGNED NOT NULL,
-  answer                 VARCHAR(50) NOT NULL,
+  answer                 CHAR(60) NOT NULL,
   active_ind             BOOLEAN DEFAULT 1 NOT NULL,
   create_dt_tm           DATETIME NOT NULL,
   create_id              BIGINT NOT NULL,
