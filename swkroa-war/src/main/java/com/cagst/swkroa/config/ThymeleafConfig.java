@@ -53,7 +53,8 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
         "properties/i18n/report",
         "properties/i18n/maintenance",
         "properties/i18n/user",
-        "properties/i18n/accounting"
+        "properties/i18n/accounting",
+        "properties/i18n/member"
     );
     messageSource.setDefaultEncoding("UTF-8");
 
