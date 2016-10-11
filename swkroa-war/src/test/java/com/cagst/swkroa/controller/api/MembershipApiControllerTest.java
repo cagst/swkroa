@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+import com.cagst.swkroa.LoadingPolicy;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.user.User;
@@ -58,11 +60,11 @@ public class MembershipApiControllerTest {
    */
   @Test
   public void testGetMembershipByUID_NotFound() throws Exception {
-    when(membershipService.getMembershipByUID(anyLong())).thenThrow(EmptyResultDataAccessException.class);
+    when(membershipService.getMembershipByUID(anyLong(), any())).thenThrow(EmptyResultDataAccessException.class);
 
     mockMvc.perform(get("/api/memberships/123")).andExpect(status().isNotFound());
 
-    verify(membershipService, times(1)).getMembershipByUID(anyLong());
+    verify(membershipService, times(1)).getMembershipByUID(anyLong(), any());
   }
 
   /**
@@ -74,11 +76,11 @@ public class MembershipApiControllerTest {
     membership.setMembershipUID(123);
     membership.setBalance(new BigDecimal(123.45));
 
-    when(membershipService.getMembershipByUID(123)).thenReturn(membership);
+    when(membershipService.getMembershipByUID(123, LoadingPolicy.ALL)).thenReturn(membership);
 
     mockMvc.perform(get("/api/memberships/123").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
-    verify(membershipService, times(1)).getMembershipByUID(anyLong());
+    verify(membershipService, times(1)).getMembershipByUID(anyLong(), any());
   }
 
   /**

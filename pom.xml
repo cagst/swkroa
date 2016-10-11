@@ -96,11 +96,11 @@
     <!-- JSR-250 Annotations (RolesAllowed) -->
     <jsr250.version>1.0</jsr250.version>
 
+    <!-- HikariCp JDBC Framework -->
+    <hikari-version>2.4.6</hikari-version>
+
     <!-- MySQL -->
     <mysql-version>5.1.30</mysql-version>
-
-    <!-- Flyway DB Migration Framework -->
-    <flyway-version>3.2</flyway-version>
 
     <!-- JUnit/Mockito/PowerMock Testing Framework -->
     <junit-version>4.11</junit-version>
@@ -356,6 +356,13 @@
         <version>${jsr250.version}</version>
       </dependency>
 
+      <!-- HikariCp JDBC Framework -->
+      <dependency>
+        <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP</artifactId>
+        <version>${hikari-version}</version>
+      </dependency>
+
       <!-- MySQL Dependencies -->
       <dependency>
         <groupId>mysql</groupId>
@@ -421,14 +428,9 @@
         <version>${jsr305.version}</version>
       </dependency>
 
-      <!-- Flyway DB Migration Framework -->
-      <dependency>
-        <groupId>org.flywaydb</groupId>
-        <artifactId>flyway-core</artifactId>
-        <version>${flyway-version}</version>
-      </dependency>
-
+      <!--                      -->
       <!-- Testing Dependencies -->
+      <!--                      -->
 
       <!-- JUnit Dependencies -->
       <dependency>

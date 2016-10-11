@@ -17,7 +17,9 @@ swkroaApp.controller('memberController',
   function ($scope, $http, codesetService, contactService, membershipService, transactionService, $filter) {
     var membershipId = $('#membershipUID').val();
 
-    membershipService.getMembership(membershipId).then(function(response) {
+    var including = ['LOAD_MEMBERS'];
+
+    membershipService.getMembership(membershipId, including).then(function(response) {
       if (responseSuccessful(response)) {
         $scope.membership = response.data;
       }

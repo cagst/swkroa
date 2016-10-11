@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.cagst.swkroa.LoadingPolicy;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.job.Job;
@@ -27,11 +28,11 @@ import com.cagst.swkroa.model.CloseMembershipsModel;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -118,7 +119,8 @@ public final class MembershipApiController {
    * @return A {@link Membership} that represents the {@link Membership} for the specified membership ID.
    */
   @RequestMapping(value = "/{membershipId}", method = RequestMethod.GET)
-  public Membership getMembership(final @PathVariable("membershipId") long membershipId) {
+  public Membership getMembership(@PathVariable(value = "membershipId") long membershipId,
+                                  @RequestParam(value = "including", required = false) String[] including) {
     LOGGER.info("Received request to retrieve membership [{}].", membershipId);
 
     if (membershipId == 0L) {
@@ -134,10 +136,17 @@ public final class MembershipApiController {
     }
 
     try {
-      return membershipService.getMembershipByUID(membershipId);
+      LoadingPolicy loadingPolicy = new LoadingPolicy();
+      if (ArrayUtils.isEmpty(including)) {
+        loadingPolicy = LoadingPolicy.ALL;
+      } else {
+        for (String include : including) {
+          loadingPolicy.addAttribute(include);
+        }
+      }
+
+      return membershipService.getMembershipByUID(membershipId, loadingPolicy);
     } catch (EmptyResultDataAccessException ex) {
-      throw new ResourceNotFoundException(ex);
-    } catch (IncorrectResultSizeDataAccessException ex) {
       throw new ResourceNotFoundException(ex);
     }
   }
@@ -154,7 +163,7 @@ public final class MembershipApiController {
    * OwnerId could be determined.
    */
   @RequestMapping(value = "/ownerId/{firstName}/{lastName}", method = RequestMethod.GET)
-  public String generateOwnerId(final @PathVariable String firstName, final @PathVariable String lastName) {
+  public String generateOwnerId(@PathVariable String firstName, @PathVariable String lastName) {
     String ownerId = StringUtils.EMPTY;
 
     try {
@@ -176,7 +185,7 @@ public final class MembershipApiController {
    * @return The {@link Membership} after it has been persisted.
    */
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<Membership> saveMembership(final @RequestBody Membership membership, final HttpServletRequest request) {
+  public ResponseEntity<Membership> saveMembership(@RequestBody Membership membership, HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", membership.getMembershipUID());
 
     // determine if this is a new membership before we save it (since we will update the membership after the save)
@@ -206,7 +215,7 @@ public final class MembershipApiController {
    * @return A {@link ResponseEntity} that indicates if the memberships were closed successfully.
    */
   @RequestMapping(value = "/close", method = RequestMethod.POST)
-  public ResponseEntity closeMemberships(final @RequestBody CloseMembershipsModel closeMemberships) {
+  public ResponseEntity closeMemberships(@RequestBody CloseMembershipsModel closeMemberships) {
     LOGGER.info("Received request to close memberships");
 
     if (CollectionUtils.isEmpty(closeMemberships.getMembershipIds())) {
@@ -236,7 +245,7 @@ public final class MembershipApiController {
    * @return A {@link ResponseEntity} that indicates if the memberships were billed successfully.
    */
   @RequestMapping(value = "/renew", method = RequestMethod.POST)
-  public ResponseEntity renewMemberships(final @RequestBody BillingRunModel billingMemberships) {
+  public ResponseEntity renewMemberships(@RequestBody BillingRunModel billingMemberships) {
     LOGGER.info("Received request to bill memberships");
 
     if (CollectionUtils.isEmpty(billingMemberships.getMembershipIds())) {

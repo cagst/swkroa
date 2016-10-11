@@ -5,6 +5,7 @@ import javax.servlet.Filter;
 
 import com.cagst.swkroa.security.ForceChangePasswordFilter;
 import com.cagst.swkroa.security.SigninSuccessHandler;
+import com.cagst.swkroa.security.SignoutHandler;
 import com.cagst.swkroa.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private static final int STRENGTH = 12;
 
   private SigninSuccessHandler signinSuccessHandler;
+  private SignoutHandler signoutHandler;
 
   @Bean
   public PasswordEncoder getPasswordEncoder() {
@@ -41,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     auth.userDetailsService(userService).passwordEncoder(getPasswordEncoder());
 
     signinSuccessHandler = new SigninSuccessHandler(userService);
+    signoutHandler = new SignoutHandler();
   }
 
   @Override
@@ -71,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .invalidateHttpSession(true)
           .deleteCookies("JSESSIONID")
           .logoutSuccessUrl("/auth/signedout")
+          .logoutSuccessHandler(signoutHandler)
         .and().addFilterAfter(getChangePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 

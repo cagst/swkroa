@@ -13,36 +13,59 @@
 <div id="page-content" data-ng-app="swkroaApp" data-ng-controller="memberController" data-ng-cloak>
   <input id="membershipUID" type="hidden" th:value="${membershipUID}"/>
 
-  <div>
-    <span data-ng-bind="membership.membershipName" class="lead lead-in">
-      zzz Membership Name
-    </span>
-    <span th:text="#{member.membership.member.since}"
-          data-ng-if="membership.joinDate != null" class="pull-right">
-      zzz Member Since
-    </span>
+  <h1 data-ng-if="membership.primaryMember.memberType.memberTypeMeaning == 'ASSOCIATE'">
+    <span th:text="#{member.type.associate}">zzz Associate</span>
+  </h1>
+  <h1 data-ng-if="membership.primaryMember.memberType.memberTypeMeaning == 'FAMILY_HEAD'">
+    <span th:text="#{member.type.family}">zzz Family</span>
+  </h1>
+  <h1 data-ng-if="membership.primaryMember.memberType.memberTypeMeaning == 'REGULAR'">
+    <span th:text="#{member.type.regular}">zzz Regular</span>
+  </h1>
+
+  <!-- Primary Member / Membership -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <span class="panel-title" th:text="#{member.primary.heading}">
+        zzz Primary Member
+      </span>
+    </div>
+
+    <div class="panel-body">
+      <div>
+        <span data-ng-bind="membership.membershipName" class="lead lead-in">zzz Membership Name</span>
+        <small>
+          (<span data-ng-bind="membership.primaryMember.ownerIdent">zzz Owner Id</span>)
+        </small>
+        <span th:text="#{member.membership.member.since}"
+              data-ng-if="membership.joinDate != null" class="pull-right">
+          zzz Member Since
+        </span>
+      </div>
+
+      <div>
+        <span th:text="#{member.membership.dues}">
+          zzz Dues Of
+        </span>
+        <span class="pull-right text-danger"
+              th:text="#{member.membership.pastdue}"
+              data-ng-show="membership.balance < 0">
+          zzz Past Due
+        </span>
+        <span class="pull-right text-success"
+              th:text="#{member.membership.credit}"
+              data-ng-show="membership.balance > 0">
+          zzz Credit
+        </span>
+        <span class="pull-right"
+              th:text="#{member.membership.paid}"
+              data-ng-show="membership.balance === 0">
+          zzz Paid
+        </span>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <span th:text="#{member.membership.dues}">
-      zzz Dues Of
-    </span>
-    <span class="pull-right text-danger"
-          th:text="#{member.membership.pastdue}"
-          data-ng-show="membership.balance < 0">
-      zzz Past Due
-    </span>
-    <span class="pull-right text-success"
-          th:text="#{member.membership.credit}"
-          data-ng-show="membership.balance > 0">
-      zzz Credit
-    </span>
-    <span class="pull-right"
-          th:text="#{member.membership.paid}"
-          data-ng-show="membership.balance === 0">
-      zzz Paid
-    </span>
-  </div>
 </div>
 
   <script type="text/javascript" th:src="@{/static/js/member.js}"></script>

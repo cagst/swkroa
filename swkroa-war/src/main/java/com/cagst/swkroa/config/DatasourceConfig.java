@@ -2,7 +2,6 @@ package com.cagst.swkroa.config;
 
 import javax.sql.DataSource;
 
-import org.flywaydb.core.Flyway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -32,15 +31,5 @@ public class DatasourceConfig {
     transactionManager.setDataSource(getDatasource());
 
     return transactionManager;
-  }
-
-  @Bean(name = "flyway", initMethod = "migrate")
-  public Flyway getFlyway() {
-    Flyway flyway = new Flyway();
-    flyway.setBaselineOnMigrate(true);
-    flyway.setDataSource(getDatasource());
-    flyway.setValidateOnMigrate(false);
-
-    return flyway;
   }
 }

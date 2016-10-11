@@ -211,10 +211,18 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!-- Flyway Dependencies for DB Migrations -->
+    <!-- HikariCp JDBC Framework -->
     <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- MySQL Dependencies -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!--                      -->
