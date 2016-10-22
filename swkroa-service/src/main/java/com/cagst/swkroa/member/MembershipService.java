@@ -24,6 +24,7 @@ public interface MembershipService {
   String LOAD_COUNTIES = "LOAD_COUNTIES";
   String LOAD_MEMBERS = "LOAD_MEMBERS";
   String LOAD_TRANSACTIONS = "LOAD_TRANSACTIONS";
+  String LOAD_DOCUMENTS = "LOAD_DOCUMENTS";
 
   /**
    * Retrieves a {@link Membership} by its unique identifier.

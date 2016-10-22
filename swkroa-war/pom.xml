@@ -262,45 +262,6 @@
       </resource>
     </resources>
 
-    <plugins>
-      <!-- Enable Tomcat 7 Support
-      <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-          <contextFile>src/main/webapp/META-INF/context.xml</contextFile>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      -->
-
-      <!-- Flyway Support -->
-      <plugin>
-        <groupId>org.flywaydb</groupId>
-        <artifactId>flyway-maven-plugin</artifactId>
-        <version>4.0.1</version>
-        <configuration>
-          <url>jdbc:mysql://localhost:3306/swkroadb</url>
-          <schemas>
-            <schema>swkroadb</schema>
-          </schemas>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
   </build>
 
   <profiles>

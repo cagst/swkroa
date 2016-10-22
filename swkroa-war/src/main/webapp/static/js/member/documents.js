@@ -6,22 +6,20 @@
  * Author:  Craig Gaskill
  */
 
-swkroaApp.controller('memberController',
+swkroaApp.controller('documentController',
                      ['$scope',
                       '$http',
                       'codesetService',
                       'contactService',
                       'membershipService',
-                      'transactionService',
-                      '$filter',
-  function ($scope, $http, codesetService, contactService, membershipService, transactionService, $filter) {
+  function ($scope, $http, codesetService, contactService, membershipService) {
     var membershipId = $('#membershipUID').val();
 
-    var including = ['LOAD_MEMBERS'];
+    var including = ['LOAD_DOCUMENTS'];
 
     membershipService.getMembership(membershipId, including).then(function(response) {
       if (responseSuccessful(response)) {
-        $scope.membership = response.data;
+        $scope.documents = response.data.documents;
       }
     });
 

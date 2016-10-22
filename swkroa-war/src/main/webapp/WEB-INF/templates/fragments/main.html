@@ -34,115 +34,82 @@
 <div id="page-navigation" class="navbar navbar-inverse" th:fragment="navigation">
   <div class="navbar-collapse">
     <ul class="nav navbar-nav">
-      <li>
-        <a href="#" th:href="@{/}" th:text="#{com.cagst.swkroa.nav.home}">
-          zzz Home
-        </a>
+      <li id="menuHome">
+        <a href="#" th:href="@{/}" th:text="#{swkroa.nav.home}">zzz Home</a>
       </li>
       <li id="menuMemberships" sec:authorize="hasRole('STAFF')">
-        <a th:href="@{/memberships}"
-           th:text="#{com.cagst.swkroa.nav.membership}">
-          zzz Memberships
-        </a>
+        <a th:href="@{/memberships}" th:text="#{swkroa.nav.membership}">zzz Memberships</a>
       </li>
       <li id="menuAccounting" class="dropdown" sec:authorize="hasRole('STAFF')">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <span th:text="#{com.cagst.swkroa.nav.accounting}">zzz Accounting</span>
+          <span th:text="#{swkroa.nav.accounting}">zzz Accounting</span>
           <span class="caret-inverse"></span>
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a th:href="@{/accounting/invoices}"
-               th:text="#{accounting.menu.invoices}">
-              zzz Invoices
-            </a>
+            <a th:href="@{/accounting/invoices}" th:text="#{accounting.menu.invoices}">zzz Invoices</a>
           </li>
           <li>
-            <a th:href="@{/accounting/payments}"
-               th:text="#{accounting.menu.payments}">
-              zzz Invoices
-            </a>
+            <a th:href="@{/accounting/payments}" th:text="#{accounting.menu.payments}">zzz Invoices</a>
           </li>
           <li>
-            <a th:href="@{/accounting/delinquencies}"
-               th:text="#{accounting.menu.delinquencies}">
-              zzz Delinquencies
-            </a>
+            <a th:href="@{/accounting/delinquencies}" th:text="#{accounting.menu.delinquencies}">zzz Delinquencies</a>
           </li>
           <li>
-            <a th:href="@{/accounting/deposits}"
-               th:text="#{accounting.menu.deposits}">
-              zzz Deposits
-            </a>
+            <a th:href="@{/accounting/deposits}" th:text="#{accounting.menu.deposits}">zzz Deposits</a>
           </li>
         </ul>
       </li>
       <li id="menuReports" class="dropdown" sec:authorize="hasRole('STAFF')">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <span th:text="#{com.cagst.swkroa.nav.reports}">zzz Reports</span>
+          <span th:text="#{swkroa.nav.reports}">zzz Reports</span>
           <span class="caret-inverse"></span>
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a th:href="@{/report/membership/listing}"
-               th:text="#{com.cagst.swkroa.report.membership.listing.title}">
-              zzz Membership Listing
-            </a>
+            <a th:href="@{/report/membership/listing}" th:text="#{report.membership.listing.title}">zzz Listing</a>
           </li>
           <li>
-            <a th:href="@{/report/membership/status}"
-               th:text="#{com.cagst.swkroa.report.membership.status.title}">
-              zzz Membership Past Due
-            </a>
+            <a th:href="@{/report/membership/status}" th:text="#{report.membership.status.title}">zzz Past Due</a>
           </li>
           <li class="divider"></li>
           <li>
-            <a th:href="@{/report/member/mailinglist}"
-               th:text="#{com.cagst.swkroa.report.member.mailinglist.title}">
-              zzz Member Mailing List
-            </a>
+            <a th:href="@{/report/member/mailinglist}" th:text="#{report.member.mailinglist.title}">zzz Mailing List</a>
           </li>
           <li>
-            <a th:href="@{/report/member/emaillist}"
-               th:text="#{com.cagst.swkroa.report.member.emaillist.title}">
-              zzz Member Email List
-            </a>
+            <a th:href="@{/report/member/emaillist}" th:text="#{report.member.emaillist.title}">zzz Email List</a>
           </li>
           <li class="divider"></li>
           <li>
-            <a th:href="@{/report/custom/membersbycounty}">
-              Members by County
-            </a>
+            <a th:href="@{/report/custom/membersbycounty}">Members by County</a>
           </li>
         </ul>
       </li>
       <li id="menuMaintain" class="dropdown" sec:authorize="hasRole('ADMIN')">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <span th:text="#{com.cagst.swkroa.nav.maintain}">zzz Maintain</span>
+          <span th:text="#{swkroa.nav.maintain}">zzz Maintain</span>
           <span class="caret-inverse"></span>
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a th:href="@{/maintain/codeset}" th:text="#{com.cagst.swkroa.maintain.menu.codeset}">
-              zzz Code Sets
-            </a>
+            <a th:href="@{/maintain/codeset}" th:text="#{maintain.menu.codeset}">zzz Code Sets</a>
           </li>
           <li>
-            <a th:href="@{/maintain/documents}" th:text="#{com.cagst.swkroa.maintain.menu.documents}">
-              zzz Documents
-            </a>
+            <a th:href="@{/maintain/documents}" th:text="#{maintain.menu.documents}">zzz Documents</a>
           </li>
           <li>
-            <a th:href="@{/maintain/membertype}" th:text="#{com.cagst.swkroa.maintain.menu.membertype}">
-              zzz Member Type
-            </a>
+            <a th:href="@{/maintain/membertype}" th:text="#{maintain.menu.membertype}">zzz Member Type</a>
           </li>
           <li>
-            <a th:href="@{/maintain/users}" th:text="#{com.cagst.swkroa.maintain.menu.user}">
-              zzz Users
-            </a>
+            <a th:href="@{/maintain/users}" th:text="#{maintain.menu.user}">zzz Users</a>
           </li>
         </ul>
+      </li>
+      <li id="menuTransactions" sec:authorize="hasRole('MEMBER')">
+        <a th:href="@{/member/transactions}" th:text="#{swkroa.nav.transactions}">zzz Transactions</a>
+      </li>
+      <li id="menuDocuments" sec:authorize="hasRole('MEMBER')">
+        <a th:href="@{/member/documents}" th:text="#{swkroa.nav.documents}">zzz Documents</a>
       </li>
     </ul>
     <span class="navbar-brand pull-right">
