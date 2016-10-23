@@ -35,13 +35,15 @@
       <div class="panel-body">
         <div>
           <span data-ng-bind="membership.membershipName" class="lead lead-in">zzz Membership Name</span>
-          <small>
-            (<span data-ng-bind="membership.primaryMember.ownerIdent">zzz Owner Id</span>)
-          </small>
+          <small>(<span data-ng-bind="membership.primaryMember.ownerIdent">zzz Owner Id</span>)</small>
           <span th:text="#{member.membership.member.since}"
                 data-ng-if="membership.joinDate != null" class="pull-right">
-          zzz Member Since
-        </span>
+            zzz Member Since
+          </span>
+        </div>
+        <div data-ng-show="membership.spouse">
+          <span th:text="#{member.spouse}">zzz Spouse</span>
+          <small>(<span data-ng-bind="membership.spouse.ownerIdent">zzz Spouse Owner Id</span>)</small>
         </div>
 
         <div>

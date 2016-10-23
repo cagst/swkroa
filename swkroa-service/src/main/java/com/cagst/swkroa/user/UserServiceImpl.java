@@ -11,6 +11,8 @@ import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
 import com.cagst.swkroa.contact.ContactRepository;
+import com.cagst.swkroa.member.Member;
+import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.role.Role;
 import com.cagst.swkroa.role.RoleRepository;
 import com.cagst.swkroa.role.RoleType;
@@ -63,6 +65,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   private final SecurityService securityService;
   private final ContactRepository contactRepo;
   private final PasswordEncoder passwordEncoder;
+  private final MemberRepository memberRepository;
 
   private MessageSourceAccessor messages;
 
@@ -81,17 +84,19 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
    *     The {@link PasswordEncoder} to use to check / encode user passwords.
    */
   @Inject
-  public UserServiceImpl(final UserRepository userRepo,
-                         final RoleRepository roleRepo,
-                         final SecurityService securityService,
-                         final ContactRepository contactRepo,
-                         final PasswordEncoder passwordEncoder) {
-
+  public UserServiceImpl(UserRepository userRepo,
+                         RoleRepository roleRepo,
+                         SecurityService securityService,
+                         ContactRepository contactRepo,
+                         PasswordEncoder passwordEncoder,
+                         MemberRepository memberRepository
+  ) {
     this.userRepo = userRepo;
     this.roleRepo = roleRepo;
     this.securityService = securityService;
     this.contactRepo = contactRepo;
     this.passwordEncoder = passwordEncoder;
+    this.memberRepository = memberRepository;
   }
 
   @Override
@@ -400,9 +405,18 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
     user.setSecurityPolicy(securityPolicy);
 
-    user.setAddresses(contactRepo.getAddressesForPerson(user));
-    user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
-    user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
+    Optional<Member> checkMember = memberRepository.getMemberByPersonUID(user.getPersonUID());
+    if (checkMember.isPresent()) {
+      Member member = checkMember.get();
+
+      user.setAddresses(contactRepo.getAddressesForMember(member));
+      user.setPhoneNumbers(contactRepo.getPhoneNumbersForMember(member));
+      user.setEmailAddresses(contactRepo.getEmailAddressesForMember(member));
+    } else {
+      user.setAddresses(contactRepo.getAddressesForPerson(user));
+      user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
+      user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
+    }
 
     return user;
   }
@@ -420,19 +434,5 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     }
 
     return checkUser;
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public User getProfileUser(final User user) {
-    // retrieve SecurityPolicy for user
-    SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
-    user.setSecurityPolicy(securityPolicy);
-
-    user.setAddresses(contactRepo.getAddressesForPerson(user));
-    user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
-    user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
-
-    return user;
   }
 }

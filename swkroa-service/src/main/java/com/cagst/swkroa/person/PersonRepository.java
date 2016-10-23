@@ -1,6 +1,9 @@
 package com.cagst.swkroa.person;
 
+import javax.annotation.Nullable;
+
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -15,7 +18,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * </ul>
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface PersonRepository {
   /**
@@ -31,14 +33,15 @@ public interface PersonRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Member was found.
    */
-  public Person getPersonByUID(final long uid) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  Person getPersonByUID(long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Commits the specified {@link Person Person} to persistent storage.
    *
    * @param person
    *     The {@link Person} to persist.
+   * @param userType
+   *     The {@link UserType} this person is associated with, if {@code null} MEMBER will be used.
    * @param user
    *     The {@link User} that performed the changes.
    *
@@ -51,6 +54,5 @@ public interface PersonRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public Person savePerson(final Person person, final User user) throws OptimisticLockingFailureException,
-      IncorrectResultSizeDataAccessException, DataAccessException;
+  Person savePerson(Person person, @Nullable  UserType userType, User user) throws DataAccessException;
 }

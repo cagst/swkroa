@@ -3,23 +3,19 @@ package com.cagst.swkroa.member;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.codevalue.CodeValue;
-import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
-import com.cagst.swkroa.contact.EmailAddress;
-import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.county.CountyRepository;
 import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.person.PersonRepositoryJdbc;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -103,9 +99,8 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getMembersForMembership for [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("membership_id", membership.getMembershipUID());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("membership_id", membership.getMembershipUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_FOR_MEMBERSHIP), params, new MemberMapper(personRepo, memberTypeRepo));
   }
@@ -118,11 +113,11 @@ import org.springframework.util.Assert;
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(4);
-    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
-    params.put("status", status.toString());
-    params.put("start", start);
-    params.put("limit", limit);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.addValue("status", status.toString());
+    params.addValue("start", start);
+    params.addValue("limit", limit);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_BY_NAME), params, new MemberMapper(personRepo, memberTypeRepo));
   }
@@ -135,9 +130,9 @@ import org.springframework.util.Assert;
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(2);
-    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
-    params.put("status", status.toString());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.addValue("status", status.toString());
 
     return getJdbcTemplate().queryForObject(stmtLoader.load(GET_MEMBERS_BY_NAME_COUNT), params, Long.class);
   }
@@ -147,8 +142,8 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getMemberByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("member_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("member_id", uid);
 
     List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_UID), params,
         new MemberMapper(personRepo, memberTypeRepo));
@@ -169,8 +164,8 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getMemberByPersonUID for [{}]", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("person_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("person_id", uid);
 
     List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_PERSON_UID),
         params,
@@ -193,8 +188,8 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getMemberByOwnerId for [{}]", ownerId);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(1);
-    params.put("owner_ident", ownerId);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("owner_ident", ownerId);
 
     List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_OWNER_ID), params,
         new MemberMapper(personRepo, memberTypeRepo));
@@ -218,9 +213,8 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getMembershipCountiesForMembership for [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-
-    Map<String, Long> params = new HashMap<String, Long>(1);
-    params.put("membership_id", membership.getMembershipUID());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("membership_id", membership.getMembershipUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP), params,
         new MembershipCountyMapper(countyRepo));
@@ -232,8 +226,8 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getMembershipCountyByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
-    params.put("membership_county_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("membership_county_id", uid);
 
     List<MembershipCounty> counties = getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_COUNTY_BY_UID), params,
         new MembershipCountyMapper(countyRepo));
@@ -261,8 +255,8 @@ import org.springframework.util.Assert;
     String partial = StringUtils.left(lastName, 3).toUpperCase() + StringUtils.left(firstName, 3).toUpperCase();
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>();
-    params.put("ownerIdent", partial + '%');
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("ownerIdent", partial + '%');
 
     int cnt = getJdbcTemplate().queryForObject(stmtLoader.load(GET_PARTIAL_OWNERID_COUNT), params, Integer.class);
     return (partial + cnt);
@@ -282,7 +276,7 @@ import org.springframework.util.Assert;
 
     // save the Person portion of the Member
     if (member.getPerson() != null) {
-      personRepo.savePerson(member.getPerson(), user);
+      personRepo.savePerson(member.getPerson(), UserType.MEMBER, user);
     }
 
     Member savedMember;
@@ -290,24 +284,6 @@ import org.springframework.util.Assert;
       savedMember = insertMember(member, membership, user);
     } else {
       savedMember = updateMember(member, membership, user);
-    }
-
-    for (Address address : member.getAddresses()) {
-      address.setParentEntityUID(savedMember.getMemberUID());
-      address.setParentEntityName(ContactRepository.ENTITY_MEMBER);
-      getContactRepository().saveAddress(address, user);
-    }
-
-    for (PhoneNumber phone : member.getPhoneNumbers()) {
-      phone.setParentEntityUID(savedMember.getMemberUID());
-      phone.setParentEntityName(ContactRepository.ENTITY_MEMBER);
-      getContactRepository().savePhoneNumber(phone, user);
-    }
-
-    for (EmailAddress email : member.getEmailAddresses()) {
-      email.setParentEntityUID(savedMember.getMemberUID());
-      email.setParentEntityName(ContactRepository.ENTITY_MEMBER);
-      getContactRepository().saveEmailAddress(email, user);
     }
 
     return savedMember;

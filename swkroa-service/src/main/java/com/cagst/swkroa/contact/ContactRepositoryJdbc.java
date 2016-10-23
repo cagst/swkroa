@@ -3,19 +3,19 @@ package com.cagst.swkroa.contact;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
@@ -47,93 +47,93 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
    *     The {@link DataSource} used to retrieve / persist data objects.
    */
   @Inject
-  public ContactRepositoryJdbc(final DataSource dataSource) {
+  public ContactRepositoryJdbc(DataSource dataSource) {
     super(dataSource);
   }
 
   @Override
-  public List<Address> getAddressesForMember(final Member member) {
+  public List<Address> getAddressesForMember(Member member) {
     Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
 
     LOGGER.info("Calling getAddressesForMember for [{}].", member.getMemberUID());
 
-    return getAddressesForEntity(member.getMemberUID(), ENTITY_MEMBER);
+    return getAddressesForEntity(member.getMemberUID(), UserType.MEMBER.name());
   }
 
   @Override
-  public List<Address> getAddressesForPerson(final Person person) {
+  public List<Address> getAddressesForPerson(Person person) {
     Assert.notNull(person, "Assertion Failed - argument [person] cannot be null");
 
     LOGGER.info("Calling getAddressesForPerson for [{}].", person.getPersonUID());
 
-    return getAddressesForEntity(person.getPersonUID(), ENTITY_PERSON);
+    return getAddressesForEntity(person.getPersonUID(), UserType.STAFF.name());
   }
 
-  private List<Address> getAddressesForEntity(final long id, final String name) {
+  private List<Address> getAddressesForEntity(long id, String name) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(2);
-    params.put("parent_entity_id", id);
-    params.put("parent_entity_name", name);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("parent_entity_id", id);
+    params.addValue("parent_entity_name", name);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_ADDRESSES_FOR_ENTITY), params, new AddressMapper());
   }
 
   @Override
-  public List<PhoneNumber> getPhoneNumbersForMember(final Member member) {
+  public List<PhoneNumber> getPhoneNumbersForMember(Member member) {
     Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
 
     LOGGER.info("Calling getPhoneNumbersForMember for [{}].", member.getMemberUID());
 
-    return getPhoneNumbersForEntity(member.getMemberUID(), ENTITY_MEMBER);
+    return getPhoneNumbersForEntity(member.getMemberUID(), UserType.MEMBER.name());
   }
 
   @Override
-  public List<PhoneNumber> getPhoneNumbersForPerson(final Person person) {
+  public List<PhoneNumber> getPhoneNumbersForPerson(Person person) {
     Assert.notNull(person, "Assertion Failed - argument [person] cannot be null");
 
     LOGGER.info("Calling getPhoneNumbersForPerson for [{}].", person.getPersonUID());
 
-    return getPhoneNumbersForEntity(person.getPersonUID(), ENTITY_PERSON);
+    return getPhoneNumbersForEntity(person.getPersonUID(), UserType.STAFF.name());
   }
 
-  private List<PhoneNumber> getPhoneNumbersForEntity(final long id, final String name) {
+  private List<PhoneNumber> getPhoneNumbersForEntity(long id, String name) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(2);
-    params.put("parent_entity_id", id);
-    params.put("parent_entity_name", name);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("parent_entity_id", id);
+    params.addValue("parent_entity_name", name);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_PHONENUMBERS_FOR_ENTITY), params, new PhoneNumberMapper());
   }
 
   @Override
-  public List<EmailAddress> getEmailAddressesForMember(final Member member) {
+  public List<EmailAddress> getEmailAddressesForMember(Member member) {
     Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
 
     LOGGER.info("Calling getEmailAddressesForMember for [{}].", member.getMemberUID());
 
-    return getEmailAddressesForEntity(member.getMemberUID(), ENTITY_MEMBER);
+    return getEmailAddressesForEntity(member.getMemberUID(), UserType.MEMBER.name());
   }
 
   @Override
-  public List<EmailAddress> getEmailAddressesForPerson(final Person person) {
+  public List<EmailAddress> getEmailAddressesForPerson(Person person) {
     Assert.notNull(person, "Assertion Failed - argument [person] cannot be null");
 
     LOGGER.info("Calling getEmailAddressesForPerson for [{}].", person.getPersonUID());
 
-    return getEmailAddressesForEntity(person.getPersonUID(), ENTITY_PERSON);
+    return getEmailAddressesForEntity(person.getPersonUID(), UserType.STAFF.name());
   }
 
-  private List<EmailAddress> getEmailAddressesForEntity(final long id, final String name) {
+  private List<EmailAddress> getEmailAddressesForEntity(long id, String name) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(2);
-    params.put("parent_entity_id", id);
-    params.put("parent_entity_name", name);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("parent_entity_id", id);
+    params.addValue("parent_entity_name", name);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_EMAILADDRESSES_FOR_ENTITY), params, new EmailAddressMapper());
   }
 
   @Override
-  public Address saveAddress(final Address address, final User user) {
+  public Address saveAddress(Address address, User user) {
     Assert.notNull(address, "Assertion Failure - argument [address] cannot be null");
     Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
 
@@ -146,7 +146,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     }
   }
 
-  private Address insert(final Address address, final User user) {
+  private Address insert(Address address, User user) {
     LOGGER.info("Inserting address [{}].", address.toString());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -164,7 +164,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     return address;
   }
 
-  private Address update(final Address address, final User user) {
+  private Address update(Address address, User user) {
     LOGGER.info("Updating address [{}].", address.toString());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -184,7 +184,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
   }
 
   @Override
-  public PhoneNumber savePhoneNumber(final PhoneNumber phoneNumber, final User user) {
+  public PhoneNumber savePhoneNumber(PhoneNumber phoneNumber, User user) {
     Assert.notNull(phoneNumber, "Assertion Failure - argument [phoneNumber] cannot be null");
     Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
 
@@ -197,7 +197,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     }
   }
 
-  private PhoneNumber insert(final PhoneNumber phoneNumber, final User user) {
+  private PhoneNumber insert(PhoneNumber phoneNumber, User user) {
     LOGGER.info("Inserting phone number [{}].", phoneNumber.getPhoneNumber());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -215,7 +215,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     return phoneNumber;
   }
 
-  private PhoneNumber update(final PhoneNumber phoneNumber, final User user) {
+  private PhoneNumber update(PhoneNumber phoneNumber, User user) {
     LOGGER.info("Updating phone number [{}].", phoneNumber.getPhoneNumber());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -236,7 +236,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
   }
 
   @Override
-  public EmailAddress saveEmailAddress(final EmailAddress emailAddress, final User user) {
+  public EmailAddress saveEmailAddress(EmailAddress emailAddress, User user) {
     Assert.notNull(emailAddress, "Assertion Failure - argument [emailAddress] cannot be null");
     Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
 
@@ -249,7 +249,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     }
   }
 
-  public EmailAddress insert(final EmailAddress emailAddress, final User user) {
+  public EmailAddress insert(EmailAddress emailAddress, User user) {
     LOGGER.info("Inserting email address [{}].", emailAddress.getEmailAddress());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -267,7 +267,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     return emailAddress;
   }
 
-  public EmailAddress update(final EmailAddress emailAddress, final User user) {
+  public EmailAddress update(EmailAddress emailAddress, User user) {
     LOGGER.info("Updating email address [{}].", emailAddress.getEmailAddress());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());

@@ -10,6 +10,7 @@ import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,7 +77,7 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
 
     assertEquals("Ensure our new Person doesn't have an Id yet.", 0, person.getPersonUID());
 
-    Person newPerson = repo.savePerson(person, user);
+    Person newPerson = repo.savePerson(person, UserType.STAFF, user);
     assertNotNull("Ensure we have a new Person.", newPerson);
     assertTrue("Ensure the Person has an Id.", newPerson.getPersonUID() > 0L);
     assertEquals("Ensure it is the same person.", newPerson.getLastName(), person.getLastName());
@@ -92,7 +93,7 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
     person.setLastName("Gaskill");
     person.setFirstName("Craig");
 
-    Person updatedPerson = repo.savePerson(person, user);
+    Person updatedPerson = repo.savePerson(person, UserType.STAFF, user);
     assertNotNull("Ensure we have a Person.", person);
     assertEquals("Ensure the Person Id is corect.", updatedPerson.getPersonUID(), person.getPersonUID());
     assertEquals("Ensure the Person update count has been incremented.", 1, updatedPerson.getPersonUpdateCount());
@@ -111,6 +112,6 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
     // force a failure due to update count
     person.setPersonUpdateCount(99L);
 
-    repo.savePerson(person, user);
+    repo.savePerson(person, UserType.STAFF, user);
   }
 }

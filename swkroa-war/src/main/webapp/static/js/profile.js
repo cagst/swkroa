@@ -32,8 +32,8 @@ swkroaApp.config(function($stateProvider, $urlRouterProvider) {
 });
 
 swkroaApp.controller('profileController',
-  ['$scope', '$http', 'codesetService', 'contactService', '$state',
-  function($scope, $http, codesetService, contactService, $state) {
+  ['$scope', '$http', 'codesetService', 'contactService',
+  function($scope, $http, codesetService, contactService) {
 
   $scope.contactService = contactService;
 
@@ -86,10 +86,6 @@ swkroaApp.controller('modifyProfileController', ['$scope', '$http', 'codesetServ
 
   $scope.states = $scope.contactService.getStates();
 
-//  $http.get('/api/codeset/TITLE/').success(function(data) {
-//    $scope.titles = data;
-//  });
-
   codesetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
     $scope.titles = data;
   });
@@ -99,7 +95,7 @@ swkroaApp.controller('modifyProfileController', ['$scope', '$http', 'codesetServ
   };
 
   $scope.save = function() {
-    $http.post('/profile', $scope.share.user).
+    $http.post('/api/users', $scope.share.user).
       success(function(data) {
         if ($scope.share.user.userUID == 0) {
           $scope.share.user = data;

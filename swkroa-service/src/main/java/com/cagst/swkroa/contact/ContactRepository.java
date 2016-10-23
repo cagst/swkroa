@@ -20,9 +20,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
  * @author Craig Gaskill
  */
 public interface ContactRepository {
-  public static final String ENTITY_MEMBER = "MEMBER";
-  public static final String ENTITY_PERSON = "PERSON";
-
   /**
    * Retrieves a {@link List} of {@link Address Addresses} associated to the specified
    * {@link Member}.
@@ -32,7 +29,7 @@ public interface ContactRepository {
    *
    * @return A {@link List} of {@link Address Addresses} associated to the member.
    */
-  public List<Address> getAddressesForMember(final Member member);
+  List<Address> getAddressesForMember(Member member);
 
   /**
    * Retrieves a {@link List} of {@link Address Addresses} associated to the specified
@@ -43,7 +40,7 @@ public interface ContactRepository {
    *
    * @return A {@link List} of {@link Address Addresses} associated to the person.
    */
-  public List<Address> getAddressesForPerson(final Person person);
+  List<Address> getAddressesForPerson(Person person);
 
   /**
    * Retrieves a {@link List} of {@link PhoneNumber PhoneNumbers} associated to the specified
@@ -54,7 +51,7 @@ public interface ContactRepository {
    *
    * @return A {@link List} of {@link PhoneNumber PhoneNumbers} associated to the member.
    */
-  public List<PhoneNumber> getPhoneNumbersForMember(final Member member);
+  List<PhoneNumber> getPhoneNumbersForMember(Member member);
 
   /**
    * Retrieves a {@link List} of {@link PhoneNumber PhoneNumbers} associated to the specified
@@ -65,7 +62,7 @@ public interface ContactRepository {
    *
    * @return A {@link List} of {@link PhoneNumber PhoneNumbers} associated to the person.
    */
-  public List<PhoneNumber> getPhoneNumbersForPerson(final Person person);
+  List<PhoneNumber> getPhoneNumbersForPerson(Person person);
 
   /**
    * Retrieves a {@link List} of {@link EmailAddress} associated to the specified {@link Member}.
@@ -75,7 +72,7 @@ public interface ContactRepository {
    *
    * @return A {@link List} of {@link EmailAddress EmailAddresses} associated to the member.
    */
-  public List<EmailAddress> getEmailAddressesForMember(final Member member);
+  List<EmailAddress> getEmailAddressesForMember(Member member);
 
   /**
    * Retrieves a {@link List} of {@link EmailAddress} associated to the specified {@link Person}.
@@ -85,7 +82,7 @@ public interface ContactRepository {
    *
    * @return A {@link List} of {@link EmailAddress EmailAddresses} associated to the person.
    */
-  public List<EmailAddress> getEmailAddressesForPerson(final Person person);
+  List<EmailAddress> getEmailAddressesForPerson(Person person);
 
   /**
    * Commits the specified {@link Address Address} to persistent storage.
@@ -104,8 +101,7 @@ public interface ContactRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public Address saveAddress(final Address address, final User user) throws OptimisticLockingFailureException,
-      IncorrectResultSizeDataAccessException, DataAccessException;
+  Address saveAddress(Address address, User user) throws DataAccessException;
 
   /**
    * Commits the specified {@link PhoneNumber PhoneNumber} to persistent storage.
@@ -124,8 +120,7 @@ public interface ContactRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public PhoneNumber savePhoneNumber(final PhoneNumber phoneNumber, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+  PhoneNumber savePhoneNumber(PhoneNumber phoneNumber, User user) throws DataAccessException;
 
   /**
    * Commits the specified {@link EmailAddress EmailAddress} to persistent storage.
@@ -144,6 +139,5 @@ public interface ContactRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  public EmailAddress saveEmailAddress(final EmailAddress emailAddress, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+  EmailAddress saveEmailAddress(EmailAddress emailAddress, User user) throws DataAccessException;
 }

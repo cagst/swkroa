@@ -392,7 +392,7 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling saveUser for [{}]", saveUser.getUsername());
 
     // save the Person portion of the User
-    savePerson(saveUser, user);
+    savePerson(saveUser, saveUser.getUserType(), user);
 
     User savedUser;
     if (saveUser.getUserUID() == 0L) {

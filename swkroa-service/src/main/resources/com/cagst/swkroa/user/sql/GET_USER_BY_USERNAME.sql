@@ -9,6 +9,7 @@ SELECT u.user_id
       ,u.account_locked_dt_tm
       ,u.account_expired_dt_tm
       ,u.password_changed_dt_tm
+      ,u.user_type
       ,u.active_ind
       ,u.updt_cnt AS user_updt_cnt
       ,u.create_dt_tm AS user_create_dt_tm

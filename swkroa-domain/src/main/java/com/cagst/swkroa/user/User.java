@@ -39,6 +39,7 @@ public final class User extends Person implements UserDetails {
   private DateTime create_dt_tm;
 
   private SecurityPolicy securityPolicy;
+  private UserType userType;
 
   private final List<GrantedAuthority> authorities = new ArrayList<>();
   private final List<Role> roles = new ArrayList<>();
@@ -345,6 +346,14 @@ public final class User extends Person implements UserDetails {
 
   public void setSecurityPolicy(SecurityPolicy securityPolicy) {
     this.securityPolicy = securityPolicy;
+  }
+
+  public UserType getUserType() {
+    return userType;
+  }
+
+  public void setUserType(UserType userType) {
+    this.userType = userType;
   }
 
   public List<Role> getRoles() {

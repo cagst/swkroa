@@ -1,11 +1,10 @@
 package com.cagst.swkroa.person;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
@@ -14,11 +13,13 @@ import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
@@ -58,12 +59,12 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
   }
 
   @Override
-  public Person getPersonByUID(final long uid) {
+  public Person getPersonByUID(long uid) {
     LOGGER.info("Calling getPersonByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>();
-    params.put("person_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("person_id", uid);
 
     List<Person> persons = getJdbcTemplate().query(stmtLoader.load(GET_PERSON_BY_UID), params, new PersonMapper());
     if (persons.size() == 1) {
@@ -78,7 +79,7 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
   }
 
   @Override
-  public Person savePerson(final Person person, final User user) {
+  public Person savePerson(Person person, @Nullable UserType userType, User user) {
     Assert.notNull(person, "Assertion Failure - argument [person] cannot be null");
     Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
 
@@ -93,26 +94,26 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
 
     for (Address address : person.getAddresses()) {
       address.setParentEntityUID(savedPerson.getPersonUID());
-      address.setParentEntityName(ContactRepository.ENTITY_PERSON);
+      address.setParentEntityName(userType != null ? userType.name() : UserType.MEMBER.name());
       contactRepo.saveAddress(address, user);
     }
 
     for (PhoneNumber phone : person.getPhoneNumbers()) {
       phone.setParentEntityUID(savedPerson.getPersonUID());
-      phone.setParentEntityName(ContactRepository.ENTITY_PERSON);
+      phone.setParentEntityName(userType != null ? userType.name() : UserType.MEMBER.name());
       contactRepo.savePhoneNumber(phone, user);
     }
 
     for (EmailAddress email : person.getEmailAddresses()) {
       email.setParentEntityUID(savedPerson.getPersonUID());
-      email.setParentEntityName(ContactRepository.ENTITY_PERSON);
+      email.setParentEntityName(userType != null ? userType.name() : UserType.MEMBER.name());
       contactRepo.saveEmailAddress(email, user);
     }
 
     return savedPerson;
   }
 
-  private Person insert(final Person person, final User user) {
+  private Person insert(Person person, User user) {
     LOGGER.info("Inserting person [{}, {}].", person.getLastName(), person.getFirstName());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -130,7 +131,7 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
     return person;
   }
 
-  private Person update(final Person person, final User user) {
+  private Person update(Person person, User user) {
     LOGGER.info("Updating person [{}, {}].", person.getLastName(), person.getFirstName());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());

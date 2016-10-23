@@ -215,14 +215,4 @@ public interface UserService extends UserDetailsService {
    */
   Optional<User> getUserByPersonId(long personId) throws IncorrectResultSizeDataAccessException;
 
-  /**
-   * Retrieves a {@link User} that is currently signed on.
-   *
-   * @param user
-   *     The {@link User} that is currently signed in.
-   *
-   * @return The {@link User} that is currently signed on.
-   */
-  User getProfileUser(final User user);
-
 }

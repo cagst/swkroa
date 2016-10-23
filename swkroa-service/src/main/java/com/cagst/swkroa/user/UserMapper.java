@@ -33,6 +33,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String ACCOUNT_LOCKED_DATE = "account_locked_dt_tm";
   private static final String ACCOUNT_EXPIRED_DATE = "account_expired_dt_tm";
   private static final String PASSWORD_CHANGED_DATE = "password_changed_dt_tm";
+  private static final String USER_TYPE = "user_type";
 
   // meta-data
   private static final String ACTIVE_IND = "active_ind";
@@ -75,6 +76,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     user.setAccountedLockedDate(CGTDateTimeUtils.getDateTime(rs, ACCOUNT_LOCKED_DATE));
     user.setAccountExpiredDate(CGTDateTimeUtils.getDateTime(rs, ACCOUNT_EXPIRED_DATE));
     user.setPasswordChangedDate(CGTDateTimeUtils.getDateTime(rs, PASSWORD_CHANGED_DATE));
+    user.setUserType(UserType.valueOf(rs.getString(USER_TYPE)));
 
     // meta-data
     user.setActive(rs.getBoolean(ACTIVE_IND));
@@ -104,6 +106,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     params.addValue(TEMPORARY_PWD_IND, newUser.isPasswordTemporary());
     params.addValue(ACCOUNT_LOCKED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(newUser.getAccountLockedDate()));
     params.addValue(ACCOUNT_EXPIRED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(newUser.getAccountExpiredDate()));
+    params.addValue(USER_TYPE, newUser.getUserType().name());
     params.addValue(ACTIVE_IND, newUser.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
     params.addValue(UPDT_ID, user.getUserUID());
@@ -127,6 +130,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     params.addValue(TEMPORARY_PWD_IND, saveUser.isPasswordTemporary());
     params.addValue(ACCOUNT_LOCKED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(saveUser.getAccountLockedDate()));
     params.addValue(ACCOUNT_EXPIRED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(saveUser.getAccountExpiredDate()));
+    params.addValue(USER_TYPE, saveUser.getUserType().name());
     params.addValue(ACTIVE_IND, saveUser.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
 

@@ -5,6 +5,7 @@ INSERT INTO user (person_id
                  ,temporary_pwd_ind
                  ,account_locked_dt_tm
                  ,account_expired_dt_tm
+                 ,user_type
                  ,active_ind
                  ,create_id
                  ,create_dt_tm
@@ -17,6 +18,7 @@ INSERT INTO user (person_id
                 ,:temporary_pwd_ind
                 ,:account_locked_dt_tm
                 ,:account_expired_dt_tm
+                ,:user_type
                 ,:active_ind
                 ,:create_id
                 ,CURRENT_TIMESTAMP

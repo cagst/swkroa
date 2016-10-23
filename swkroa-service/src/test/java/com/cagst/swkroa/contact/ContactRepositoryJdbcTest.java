@@ -12,6 +12,7 @@ import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -139,7 +140,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
 
     Address newAddress = new Address();
     newAddress.setParentEntityUID(member.getMemberUID());
-    newAddress.setParentEntityName(ContactRepository.ENTITY_MEMBER);
+    newAddress.setParentEntityName(UserType.MEMBER.name());
     newAddress.setAddressTypeCD(1L);
     newAddress.setAddressLine1("ADDRESS_LINE_1");
     newAddress.setCity("CITY");
@@ -222,7 +223,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
 
     PhoneNumber phone = new PhoneNumber();
     phone.setParentEntityUID(member.getMemberUID());
-    phone.setParentEntityName(ContactRepository.ENTITY_MEMBER);
+    phone.setParentEntityName(UserType.MEMBER.name());
     phone.setPhoneTypeCD(1L);
     phone.setPhoneNumber("NUMBER");
     phone.setPhoneExtension("EXT");
@@ -303,7 +304,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
 
     EmailAddress email = new EmailAddress();
     email.setParentEntityUID(member.getMemberUID());
-    email.setParentEntityName(ContactRepository.ENTITY_MEMBER);
+    email.setParentEntityName(UserType.MEMBER.name());
     email.setEmailTypeCD(1L);
     email.setEmailAddress("emailme@aol.com");
 
