@@ -132,6 +132,7 @@ CREATE TABLE user (
   account_locked_dt_tm      DATETIME NULL,
   account_expired_dt_tm     DATETIME NULL,
   password_changed_dt_tm    DATETIME NULL,
+  user_type                 VARCHAR(25) DEFAULT 'STAFF',
   active_ind                BOOLEAN DEFAULT 1 NOT NULL,
   create_dt_tm              TIMESTAMP NOT NULL,
   create_id                 BIGINT NOT NULL,

@@ -168,11 +168,11 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
     assertFalse(codevalues1.isEmpty());
     assertEquals(3, codevalues1.size());
 
-    CodeValue builder = new CodeValue();
-    builder.setCodeSetUID(2L);
-    builder.setDisplay("TEST_DISPLAY");
-    builder.setMeaning("TEST_MEANING");
-    builder.setActive(true);
+    CodeValue builder = CodeValue.builder()
+        .setCodeSetUID(2L)
+        .setDisplay("TEST_DISPLAY")
+        .setMeaning("TEST_MEANING")
+        .build();
 
     CodeValue cv = repo.saveCodeValueForCodeSet(builder, user);
     assertNotNull("Ensure the codevalue is not null.", cv);
@@ -190,14 +190,16 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testSaveCodeValue_Update() {
-    CodeValue codevalue1 = repo.getCodeValueByMeaning("FAX");
-    assertNotNull("Ensure a codevalue was found.", codevalue1);
-    assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue1.getMeaning());
+    CodeValue codevalue = repo.getCodeValueByMeaning("FAX");
+    assertNotNull("Ensure a codevalue was found.", codevalue);
+    assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue.getMeaning());
 
-    String newDisplay = codevalue1.getDisplay() + "-EDITED";
-    codevalue1.setDisplay(newDisplay);
+    String newDisplay = codevalue.getDisplay() + "-EDITED";
+    CodeValue editedCodeValue = CodeValue.builder(codevalue)
+        .setDisplay(newDisplay)
+        .build();
 
-    CodeValue cv = repo.saveCodeValueForCodeSet(codevalue1, user);
+    CodeValue cv = repo.saveCodeValueForCodeSet(editedCodeValue, user);
     assertNotNull("Ensure the codevalue is not null.", cv);
     assertEquals("Ensure it has been edited.", newDisplay, cv.getDisplay());
     assertTrue("Ensure it has a valid UID.", cv.getCodeValueUpdateCount() > 0L);
@@ -215,9 +217,11 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
 
     String newDisplay = cv.getDisplay() + "-EDITED";
 
-    cv.setDisplay(newDisplay);
-    cv.setCodeValueUpdateCount(cv.getCodeValueUpdateCount() + 1);
+    CodeValue editedCodeVale = CodeValue.builder(cv)
+        .setDisplay(newDisplay)
+        .setCodeValueUpdateCount(cv.getCodeValueUpdateCount() + 1)
+        .build();
 
-    repo.saveCodeValueForCodeSet(cv, user);
+    repo.saveCodeValueForCodeSet(editedCodeVale, user);
   }
 }

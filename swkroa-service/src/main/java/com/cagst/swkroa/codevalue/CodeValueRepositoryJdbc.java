@@ -187,15 +187,16 @@ import org.springframework.util.Assert;
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
-    int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_CODEVALUE),
-        CodeValueMapper.mapInsertStatement(codeValue, user), keyHolder);
-    if (cnt == 1) {
-      codeValue.setCodeValueUID(keyHolder.getKey().longValue());
-    } else {
+    int cnt = getJdbcTemplate().update(
+        stmtLoader.load(INSERT_CODEVALUE),
+        CodeValueMapper.mapInsertStatement(codeValue, user),
+        keyHolder);
+
+    if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return codeValue;
+    return CodeValue.builder(codeValue).setCodeValueUID(keyHolder.getKey().longValue()).build();
   }
 
   private CodeValue updateCodeValueForCodeSet(CodeValue codeValue, User user)
@@ -205,17 +206,17 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    int cnt = getJdbcTemplate().update(stmtLoader.load(UPDATE_CODEVALUE),
+    int cnt = getJdbcTemplate().update(
+        stmtLoader.load(UPDATE_CODEVALUE),
         CodeValueMapper.mapUpdateStatement(codeValue, user));
+
     if (cnt == 1) {
-      codeValue.setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount() + 1);
+      return CodeValue.builder(codeValue).setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount() + 1).build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");
     } else {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
-
-    return codeValue;
   }
 }

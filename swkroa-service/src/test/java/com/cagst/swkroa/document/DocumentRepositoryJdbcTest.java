@@ -59,10 +59,12 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
     when(fileSystem.saveFileForEntity(anyString(), anyLong(), anyString(), anyString(), anyString(), anyObject()))
         .thenReturn(Optional.of(testFile));
 
-    renewalCodeValue = new CodeValue();
-    renewalCodeValue.setCodeValueUID(1L);
-    renewalCodeValue.setDisplay("Renewal Letter");
-    renewalCodeValue.setMeaning("RENEWAL");
+    renewalCodeValue = CodeValue.builder()
+        .setCodeValueUID(1L)
+        .setDisplay("Renewal Letter")
+        .setMeaning("RENEWAL")
+        .build();
+
 
     when(codeValueRepo.getCodeValueByUID(anyLong())).thenReturn(renewalCodeValue);
 

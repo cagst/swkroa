@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,29 +36,31 @@ import org.springframework.dao.OptimisticLockingFailureException;
 public class TransactionRepositoryJdbcTest extends BaseTestRepository {
   private TransactionRepositoryJdbc repo;
 
-  private CodeValue typeDues = new CodeValue();
-  private CodeValue typePayment = new CodeValue();
-  private CodeValue typeSpecial = new CodeValue();
+  private final CodeValue typeDues = CodeValue.builder()
+      .setCodeValueUID(1L)
+      .setDisplay("Annual Dues")
+      .setMeaning("ANNUAL DUES")
+      .build();
+
+  private final CodeValue typePayment = CodeValue.builder()
+      .setCodeValueUID(2L)
+      .setDisplay("Payment")
+      .setMeaning("PAYMENT")
+      .build();
+
+  private final CodeValue typeSpecial = CodeValue.builder()
+      .setCodeValueUID(3L)
+      .setDisplay("Special Funds")
+      .setMeaning("SPECIAL FUNDS")
+      .build();
 
   @Before
   public void setUp() {
-    CodeValueRepository codeValueRepo = Mockito.mock(CodeValueRepository.class);
+    CodeValueRepository codeValueRepo = mock(CodeValueRepository.class);
 
-    typeDues.setCodeValueUID(1L);
-    typeDues.setDisplay("Annual Dues");
-    typeDues.setMeaning("ANNUAL DUES");
-
-    typePayment.setCodeValueUID(2L);
-    typePayment.setDisplay("Payment");
-    typePayment.setMeaning("PAYMENT");
-
-    typeSpecial.setCodeValueUID(3L);
-    typeSpecial.setDisplay("Special Funds");
-    typeSpecial.setMeaning("SPECIAL FUNDS");
-
-    Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(typeDues);
-    Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(typePayment);
-    Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(typeSpecial);
+    when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(typeDues);
+    when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(typePayment);
+    when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(typeSpecial);
 
     repo = new TransactionRepositoryJdbc(createTestDataSource(), codeValueRepo);
   }

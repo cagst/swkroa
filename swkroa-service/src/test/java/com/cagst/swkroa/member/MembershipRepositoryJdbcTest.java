@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +24,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
@@ -37,10 +38,25 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
 
   private CodeValueRepository codeValueRepo;
 
-  private final CodeValue associate = new CodeValue();
-  private final CodeValue regular = new CodeValue();
-  private final CodeValue family = new CodeValue();
-  private final CodeValue closeReason = new CodeValue();
+  private final CodeValue associate = CodeValue.builder()
+      .setCodeValueUID(1L)
+      .setDisplay("Associate Membership")
+      .build();
+
+  private final CodeValue regular = CodeValue.builder()
+      .setCodeValueUID(2L)
+      .setDisplay("Regular Membership")
+      .build();
+
+  private final CodeValue family = CodeValue.builder()
+      .setCodeValueUID(3L)
+      .setDisplay("Family Membership")
+      .build();
+
+  private final CodeValue closeReason = CodeValue.builder()
+      .setCodeValueUID(99L)
+      .setDisplay("Close Reason")
+      .build();
 
   private User user;
 
@@ -49,25 +65,13 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     user = new User();
     user.setUserUID(1L);
 
-    MemberRepository memberRepo = Mockito.mock(MemberRepository.class);
+    MemberRepository memberRepo = mock(MemberRepository.class);
 
-    codeValueRepo = Mockito.mock(CodeValueRepository.class);
+    codeValueRepo = mock(CodeValueRepository.class);
 
-    associate.setCodeValueUID(1L);
-    associate.setDisplay("Associate Membership");
-
-    regular.setCodeValueUID(2L);
-    regular.setDisplay("Regular Membership");
-
-    family.setCodeValueUID(3L);
-    family.setDisplay("Family Membership");
-
-    closeReason.setCodeValueUID(99L);
-    closeReason.setDisplay("Close Reason");
-
-    Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(associate);
-    Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(regular);
-    Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(family);
+    when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(associate);
+    when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(regular);
+    when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(family);
 
     repo = new MembershipRepositoryJdbc(createTestDataSource(), memberRepo, codeValueRepo);
     repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
@@ -262,7 +266,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testCloseMemberships_Failed_NoMemberships() {
-    repo.closeMemberships(new HashSet<Long>(), closeReason, null, user);
+    repo.closeMemberships(new HashSet<>(), closeReason, null, user);
   }
 
   /**

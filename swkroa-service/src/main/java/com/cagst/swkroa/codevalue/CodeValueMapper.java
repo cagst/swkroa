@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */class CodeValueMapper implements RowMapper<CodeValue> {
   private static final String CODESET_ID = "codeset_id";
@@ -27,22 +26,16 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String UPDT_ID = "updt_id";
   private static final String CODEVALUE_UPDT_CNT = "codevalue_updt_cnt";
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public CodeValue mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-    CodeValue codevalueBuilder = new CodeValue();
-    codevalueBuilder.setCodeSetUID(rs.getLong(CODESET_ID));
-    codevalueBuilder.setCodeValueUID(rs.getLong(CODEVALUE_ID));
-    codevalueBuilder.setDisplay(rs.getString(CODEVALUE_DISPLAY));
-    codevalueBuilder.setMeaning(rs.getString(CODEVALUE_MEANING));
-    codevalueBuilder.setActive(rs.getBoolean(ACTIVE_IND));
-    codevalueBuilder.setCodeValueUpdateCount(rs.getLong(CODEVALUE_UPDT_CNT));
-
-    return codevalueBuilder;
+    return CodeValue.builder()
+        .setCodeSetUID(rs.getLong(CODESET_ID))
+        .setCodeValueUID(rs.getLong(CODEVALUE_ID))
+        .setDisplay(rs.getString(CODEVALUE_DISPLAY))
+        .setMeaning(rs.getString(CODEVALUE_MEANING))
+        .setActive(rs.getBoolean(ACTIVE_IND))
+        .setCodeValueUpdateCount(rs.getLong(CODEVALUE_UPDT_CNT))
+        .build();
   }
 
   /**

@@ -39,7 +39,7 @@ public final class User extends Person implements UserDetails {
   private DateTime create_dt_tm;
 
   private SecurityPolicy securityPolicy;
-  private UserType userType;
+  private UserType userType = UserType.STAFF;
 
   private final List<GrantedAuthority> authorities = new ArrayList<>();
   private final List<Role> roles = new ArrayList<>();
