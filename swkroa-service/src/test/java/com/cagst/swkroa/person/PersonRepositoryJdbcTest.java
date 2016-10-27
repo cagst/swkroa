@@ -7,15 +7,12 @@ import static org.junit.Assert.assertTrue;
 import javax.sql.DataSource;
 
 import com.cagst.common.db.StatementLoader;
-import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
-import com.cagst.swkroa.user.UserType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
@@ -29,8 +26,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
 public class PersonRepositoryJdbcTest extends BaseTestRepository {
   private PersonRepositoryJdbc repo;
 
-  private ContactRepository contactRepo;
-
   private User user;
 
   @Before
@@ -38,11 +33,9 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
     user = new User();
     user.setUserUID(1L);
 
-    contactRepo = Mockito.mock(ContactRepository.class);
-
     DataSource dataSource = createTestDataSource();
 
-    repo = new PersonRepositoryJdbc(dataSource, contactRepo);
+    repo = new PersonRepositoryJdbc(dataSource);
     repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
   }
 
@@ -77,7 +70,7 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
 
     assertEquals("Ensure our new Person doesn't have an Id yet.", 0, person.getPersonUID());
 
-    Person newPerson = repo.savePerson(person, UserType.STAFF, user);
+    Person newPerson = repo.savePerson(person, user);
     assertNotNull("Ensure we have a new Person.", newPerson);
     assertTrue("Ensure the Person has an Id.", newPerson.getPersonUID() > 0L);
     assertEquals("Ensure it is the same person.", newPerson.getLastName(), person.getLastName());
@@ -93,7 +86,7 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
     person.setLastName("Gaskill");
     person.setFirstName("Craig");
 
-    Person updatedPerson = repo.savePerson(person, UserType.STAFF, user);
+    Person updatedPerson = repo.savePerson(person, user);
     assertNotNull("Ensure we have a Person.", person);
     assertEquals("Ensure the Person Id is corect.", updatedPerson.getPersonUID(), person.getPersonUID());
     assertEquals("Ensure the Person update count has been incremented.", 1, updatedPerson.getPersonUpdateCount());
@@ -112,6 +105,6 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
     // force a failure due to update count
     person.setPersonUpdateCount(99L);
 
-    repo.savePerson(person, UserType.STAFF, user);
+    repo.savePerson(person, user);
   }
 }

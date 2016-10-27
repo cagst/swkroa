@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.Collator;
 
 import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -25,44 +26,20 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 })
 @JsonDeserialize(builder = AutoValue_CodeSet.Builder.class)
 public abstract class CodeSet implements Serializable, Comparable<CodeSet> {
-  /**
-   * Gets the unique identifier for the CodeSet;
-   *
-   * @return A {@link long} that uniquely identifies the CodeSet.
-   */
+  private static final long serialVersionUID = -8900456520585097319L;
+
   @JsonProperty(value = "codeSetUID", required = true)
   public abstract long getCodeSetUID();
 
-  /**
-   * Gets the display / name of the CodeSet.
-   *
-   * @return The {@link String} display / name of the CodeSet.
-   */
   @JsonProperty(value = "display", required = true)
   public abstract String getDisplay();
 
-  /**
-   * Gets the meaning of the CodeSet.
-   *
-   * @return A {@link String} that represents the meaning of the CodeSet.
-   */
   @JsonProperty(value = "meaning", required = true)
   public abstract String getMeaning();
 
-  /**
-   * Gets the active status of the CodeSet.
-   *
-   * @return {@link boolean} <code>true</code> if the CodeSet is active, <code>false</code>
-   * otherwise.
-   */
   @JsonProperty(value = "active")
   public abstract boolean isActive();
 
-  /**
-   * Gets the number of times this object has been updated.
-   *
-   * @return {@link long} number of times the object has been updated.
-   */
   @JsonProperty(value = "codeSetUpdateCount")
   public abstract long getCodeSetUpdateCount();
 
@@ -114,49 +91,18 @@ public abstract class CodeSet implements Serializable, Comparable<CodeSet> {
 
   @AutoValue.Builder
   interface Builder {
-    /**
-     * Sets the unique identifier for the CodeSet.
-     *
-     * @param uid
-     *     A {@link long} that uniquely identifies the CodeSet.
-     */
     @JsonProperty(value = "codeSetUID", required = true)
     Builder setCodeSetUID(long uid);
 
-    /**
-     * Sets the display / name of the CodeSet.
-     *
-     * @param display
-     *     The {@link String} display / name for the CodeSet.
-     */
     @JsonProperty(value = "display", required = true)
     Builder setDisplay(String display);
 
-    /**
-     * Sets the meaning for the CodeSet.
-     *
-     * @param meaning
-     *     A {@link String} that represents the meaning of the CodeSet.
-     */
     @JsonProperty(value = "meaning", required = true)
     Builder setMeaning(String meaning);
 
-    /**
-     * Sets the active status of the CodeSet.
-     *
-     * @param active
-     *     {@link boolean} <code>true</code> to make the CodeSet active, <code>false</code> to
-     *     make the object inactive.
-     */
     @JsonProperty(value = "active")
     Builder setActive(boolean active);
 
-    /**
-     * Sets the number of times this object has been updated.
-     *
-     * @param updateCount
-     *     {@link long} the number of times the object has been updated.
-     */
     @JsonProperty(value = "codeSetUpdateCount")
     Builder setCodeSetUpdateCount(long updateCount);
 

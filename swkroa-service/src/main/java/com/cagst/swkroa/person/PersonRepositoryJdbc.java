@@ -1,6 +1,5 @@
 package com.cagst.swkroa.person;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
@@ -8,12 +7,7 @@ import java.util.List;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
-import com.cagst.swkroa.contact.Address;
-import com.cagst.swkroa.contact.ContactRepository;
-import com.cagst.swkroa.contact.EmailAddress;
-import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.user.User;
-import com.cagst.swkroa.user.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -37,25 +31,15 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
   private static final String INSERT_PERSON = "INSERT_PERSON";
   private static final String UPDATE_PERSON = "UPDATE_PERSON";
 
-  private final ContactRepository contactRepo;
-
   /**
    * Primary Constructor used to create an instance of <i>PersonRepositoryJdbc</i>.
    *
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.
-   * @param contactRepo
-   *     The {@link ContactRepository} to use to populate contact objects.
    */
   @Inject
-  public PersonRepositoryJdbc(final DataSource dataSource, final ContactRepository contactRepo) {
+  public PersonRepositoryJdbc(DataSource dataSource) {
     super(dataSource);
-
-    this.contactRepo = contactRepo;
-  }
-
-  protected ContactRepository getContactRepository() {
-    return contactRepo;
   }
 
   @Override
@@ -79,7 +63,7 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
   }
 
   @Override
-  public Person savePerson(Person person, @Nullable UserType userType, User user) {
+  public Person savePerson(Person person, User user) {
     Assert.notNull(person, "Assertion Failure - argument [person] cannot be null");
     Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
 
@@ -90,24 +74,6 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
       savedPerson = insert(person, user);
     } else {
       savedPerson = update(person, user);
-    }
-
-    for (Address address : person.getAddresses()) {
-      address.setParentEntityUID(savedPerson.getPersonUID());
-      address.setParentEntityName(userType != null ? userType.name() : UserType.MEMBER.name());
-      contactRepo.saveAddress(address, user);
-    }
-
-    for (PhoneNumber phone : person.getPhoneNumbers()) {
-      phone.setParentEntityUID(savedPerson.getPersonUID());
-      phone.setParentEntityName(userType != null ? userType.name() : UserType.MEMBER.name());
-      contactRepo.savePhoneNumber(phone, user);
-    }
-
-    for (EmailAddress email : person.getEmailAddresses()) {
-      email.setParentEntityUID(savedPerson.getPersonUID());
-      email.setParentEntityName(userType != null ? userType.name() : UserType.MEMBER.name());
-      contactRepo.saveEmailAddress(email, user);
     }
 
     return savedPerson;

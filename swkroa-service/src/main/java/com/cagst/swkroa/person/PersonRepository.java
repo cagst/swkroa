@@ -3,7 +3,6 @@ package com.cagst.swkroa.person;
 import javax.annotation.Nullable;
 
 import com.cagst.swkroa.user.User;
-import com.cagst.swkroa.user.UserType;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -40,8 +39,6 @@ public interface PersonRepository {
    *
    * @param person
    *     The {@link Person} to persist.
-   * @param userType
-   *     The {@link UserType} this person is associated with, if {@code null} MEMBER will be used.
    * @param user
    *     The {@link User} that performed the changes.
    *
@@ -54,5 +51,5 @@ public interface PersonRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  Person savePerson(Person person, @Nullable  UserType userType, User user) throws DataAccessException;
+  Person savePerson(Person person, @Nullable User user) throws DataAccessException;
 }

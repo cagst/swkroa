@@ -71,6 +71,16 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
     return templateEngine;
   }
 
+//  @Bean
+//  @Primary
+//  public ObjectMapper getObjectMapper() {
+//    ObjectMapper objectMapper = new ObjectMapper();
+//    objectMapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
+//    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//
+//    return objectMapper;
+//  }
+
   private ITemplateResolver getTemplateResolver() {
     SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
     templateResolver.setApplicationContext(applicationContext);

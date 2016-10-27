@@ -33,6 +33,7 @@
       </div>
 
       <div class="panel-body">
+        <!-- Primary Member -->
         <div>
           <span data-ng-bind="membership.membershipName" class="lead lead-in">zzz Membership Name</span>
           <small>(<span data-ng-bind="membership.primaryMember.ownerIdent">zzz Owner Id</span>)</small>
@@ -41,31 +42,87 @@
             zzz Member Since
           </span>
         </div>
+
+        <!-- Spouse -->
         <div data-ng-show="membership.spouse">
           <span th:text="#{member.spouse}">zzz Spouse</span>
           <small>(<span data-ng-bind="membership.spouse.ownerIdent">zzz Spouse Owner Id</span>)</small>
         </div>
 
+        <!-- Dues -->
         <div>
-        <span th:text="#{member.membership.dues}">
-          zzz Dues Of
-        </span>
+          <span th:text="#{member.membership.dues}">
+            zzz Dues Of
+          </span>
           <span class="pull-right text-danger"
                 th:text="#{member.membership.pastdue}"
                 data-ng-show="membership.balance < 0">
-          zzz Past Due
-        </span>
+            zzz Past Due
+          </span>
           <span class="pull-right text-success"
                 th:text="#{member.membership.credit}"
                 data-ng-show="membership.balance > 0">
-          zzz Credit
-        </span>
+            zzz Credit
+          </span>
           <span class="pull-right"
                 th:text="#{member.membership.paid}"
                 data-ng-show="membership.balance === 0">
-          zzz Paid
-        </span>
+            zzz Paid
+          </span>
         </div>
+
+        <!-- Addresses -->
+        <div data-ng-show="membership.primaryMember.addresses.length > 0">
+          <h4 class="divider-bottom">Addresses</h4>
+
+          <div data-ng-repeat="address in membership.primaryMember.addresses" class="row">
+            <div class="col-xs-1">
+              <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+            </div>
+            <div class="col-xs-4">
+              <div data-ng-bind="address.addressLine1"></div>
+              <div data-ng-bind="address.addressLine2"></div>
+              <div data-ng-bind="address.addressLine3"></div>
+              <div>
+                {{address.city}}, {{address.state}} {{address.postalCode | zip}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Numbers -->
+        <div data-ng-show="membership.primaryMember.phoneNumbers.length > 0">
+          <h4 class="divider-bottom">Phone Numbers</h4>
+
+          <div data-ng-repeat="phone in membership.primaryMember.phoneNumbers" class="row">
+            <div class="col-xs-1">
+              <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+            </div>
+            <div class="col-xs=4">
+          <span>
+            {{phone.phoneNumber | tel}}
+          </span>
+              <span data-ng-show="phone.phoneExtension">
+            Ext. {{phone.phoneExtension}}
+          </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email Addresses -->
+        <div data-ng-show="membership.primaryMember.emailAddresses.length > 0">
+          <h4 class="divider-bottom">Email Addresses</h4>
+
+          <div data-ng-repeat="email in membership.primaryMember.emailAddresses" class="row">
+            <div class="col-xs-1">
+              <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
+            </div>
+            <div class="col-xs=4">
+              <span data-ng-bind="email.emailAddress"></span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

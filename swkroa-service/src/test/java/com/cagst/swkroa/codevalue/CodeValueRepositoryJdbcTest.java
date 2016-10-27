@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
 /**
@@ -134,16 +133,8 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = EmptyResultDataAccessException.class)
   public void testGetCodeValueByMeaning_NoneFound() {
-    CodeValue codevalue = repo.getCodeValueByMeaning("IPHONE");
+    CodeValue codevalue = repo.getCodeValueByMeaning(CodeSetType.PHONE_TYPE, "IPHONE");
     assertNull("Ensure a codevalue was not found.", codevalue);
-  }
-
-  /**
-   * Test the getCodeValueByMeaning and finding too many.
-   */
-  @Test(expected = IncorrectResultSizeDataAccessException.class)
-  public void testGetCodeValueByMeaning_TooManyFound() {
-    repo.getCodeValueByMeaning("HOME");
   }
 
   /**
@@ -151,7 +142,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetCodeValueByMeaning_OneFound() {
-    CodeValue codevalue = repo.getCodeValueByMeaning("FAX");
+    CodeValue codevalue = repo.getCodeValueByMeaning(CodeSetType.PHONE_TYPE, "FAX");
     assertNotNull("Ensure a codevalue was found.", codevalue);
     assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue.getMeaning());
   }
@@ -190,7 +181,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testSaveCodeValue_Update() {
-    CodeValue codevalue = repo.getCodeValueByMeaning("FAX");
+    CodeValue codevalue = repo.getCodeValueByMeaning(CodeSetType.PHONE_TYPE, "FAX");
     assertNotNull("Ensure a codevalue was found.", codevalue);
     assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue.getMeaning());
 
@@ -211,7 +202,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = OptimisticLockingFailureException.class)
   public void testSaveCodeValue_Update_Failed() {
-    CodeValue cv = repo.getCodeValueByMeaning("FAX");
+    CodeValue cv = repo.getCodeValueByMeaning(CodeSetType.PHONE_TYPE, "FAX");
     assertNotNull("Ensure a codevalue was found.", cv);
     assertEquals("Ensure it was the correct codevalue.", "FAX", cv.getMeaning());
 

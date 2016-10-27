@@ -75,6 +75,8 @@ public interface CodeValueRepository {
   /**
    * Retrieves a {@link CodeValue} by its meaning.
    *
+   * @param codeSetType
+   *    The {@link CodeSetType} to retrieve the code value from.
    * @param meaning
    *     The meaning associated to the CodeValue to retrieve.
    *
@@ -85,7 +87,7 @@ public interface CodeValueRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 CodeValue was found.
    */
-  CodeValue getCodeValueByMeaning(String meaning);
+  CodeValue getCodeValueByMeaning(CodeSetType codeSetType, String meaning);
 
   /**
    * Persists the specified {@link CodeValue}.

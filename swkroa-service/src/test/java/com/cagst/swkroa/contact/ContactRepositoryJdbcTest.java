@@ -173,12 +173,14 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct number of addresses.", 2, addresses1.size());
 
     Address address1 = addresses1.iterator().next();
-    address1.setAddressLine1(address1.getAddressLine1() + "_EDITED");
+    String newAddressLine1 = address1.getAddressLine1() + "_EDITED";
+
+    address1.setAddressLine1(newAddressLine1);
 
     Address address2 = repo.saveAddress(address1, user);
     assertNotNull("Ensure we have a new address.", address2);
     assertEquals("Ensure the address was updated.", 1, address2.getAddressUpdateCount());
-    assertEquals("Ensure it is the correct address.", address2.getAddressLine1(), address1.getAddressLine1());
+    assertEquals("Ensure it is the correct address.", address2.getAddressLine1(), newAddressLine1);
 
     Collection<Address> addresses2 = repo.getAddressesForMember(member);
     assertNotNull("Ensure the addresses collection is not null.", addresses2);
@@ -200,9 +202,9 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct number of addresses.", 2, addresses1.size());
 
     Address address1 = addresses1.iterator().next();
-    address1.setAddressLine1(address1.getAddressLine1() + "_EDITED");
 
     // force a failure due to update count
+    address1.setAddressLine1(address1.getAddressLine1() + "_EDITED");
     address1.setAddressUpdateCount(99L);
 
     repo.saveAddress(address1, user);

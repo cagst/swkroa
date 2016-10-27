@@ -5,19 +5,25 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
 
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
+import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.person.Person;
+import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
@@ -30,11 +36,18 @@ import org.springframework.dao.OptimisticLockingFailureException;
 public class UserRepositoryJdbcTest extends BaseTestRepository {
   private UserRepositoryJdbc repo;
 
+  private PersonRepository personRepo;
+
   @Before
   public void setUp() {
-    ContactRepository contactRepo = Mockito.mock(ContactRepository.class);
+    personRepo = mock(PersonRepository.class);
 
-    repo = new UserRepositoryJdbc(createTestDataSource(), contactRepo);
+    ContactRepository contactRepo = mock(ContactRepository.class);
+    MemberRepository memberRepo = mock(MemberRepository.class);
+
+    when(memberRepo.getMemberByPersonUID(anyLong())).thenReturn(Optional.empty());
+
+    repo = new UserRepositoryJdbc(createTestDataSource(), personRepo, memberRepo, contactRepo);
     repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
   }
 
@@ -447,6 +460,11 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     newUser.setUsername("uname");
     newUser.setPassword("myPwd");
 
+    Person person = new Person();
+    person.setPersonUID(1L);
+
+    when(personRepo.savePerson(any(), any())).thenReturn(person);
+
     User user = repo.saveUser(newUser, editingUser);
     assertNotNull("Ensure we have a new User", user);
     assertTrue("Ensure our new user has an Id", user.getUserUID() > 0L);
@@ -461,9 +479,14 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     User editingUser = new User();
     editingUser.setUserUID(1L);
 
+    Person person = new Person();
+    person.setPersonUID(1L);
+
+    when(personRepo.savePerson(any(), any())).thenReturn(person);
+
     User existingUser = new User();
     existingUser.setUserUID(11L);
-    existingUser.setPersonUID(1L);
+    existingUser.setPersonUID(person.getPersonUID());
     existingUser.setLastName("Last");
     existingUser.setFirstName("First");
     existingUser.setUsername("uname");
@@ -489,6 +512,11 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     existingUser.setFirstName("First");
     existingUser.setUsername("uname");
     existingUser.setPassword("myPwd");
+
+    Person person = new Person();
+    person.setPersonUID(1L);
+
+    when(personRepo.savePerson(any(), any())).thenReturn(person);
 
     // force failure due to updt_cnt mis-match
     existingUser.setUserUpdateCount(existingUser.getUserUpdateCount() + 1);

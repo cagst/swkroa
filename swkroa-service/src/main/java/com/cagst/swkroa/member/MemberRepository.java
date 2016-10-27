@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.cagst.swkroa.codevalue.CodeValue;
-import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,7 +16,7 @@ import org.springframework.dao.OptimisticLockingFailureException;
  *
  * @author Craig Gaskill
  */
-public interface MemberRepository extends PersonRepository {
+public interface MemberRepository {
   /**
    * Retrieves a {@link List} of all {@link Member Members} associated with the specified
    * Membership.

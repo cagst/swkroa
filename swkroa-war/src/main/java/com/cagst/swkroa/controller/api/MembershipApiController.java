@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.cagst.swkroa.LoadingPolicy;
+import com.cagst.swkroa.codevalue.CodeSetType;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.job.Job;
@@ -129,7 +130,7 @@ public final class MembershipApiController {
       primary.setPerson(new Person());
 
       Membership membership = new Membership();
-      membership.setEntityType(codeValueRepo.getCodeValueByMeaning("ENTITY_INDIVIDUAL"));
+      membership.setEntityType(codeValueRepo.getCodeValueByMeaning(CodeSetType.EMAIL_TYPE, "ENTITY_INDIVIDUAL"));
       membership.addMember(primary);
 
       return membership;

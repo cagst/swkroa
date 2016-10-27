@@ -7,13 +7,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.codevalue.CodeValue;
+import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
+import com.cagst.swkroa.contact.EmailAddress;
+import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.county.CountyRepository;
 import com.cagst.swkroa.person.PersonRepository;
-import com.cagst.swkroa.person.PersonRepositoryJdbc;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserType;
 import com.google.common.collect.Lists;
@@ -37,7 +40,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  */
 @Named("memberRepo")
-/* package */ final class MemberRepositoryJdbc extends PersonRepositoryJdbc implements MemberRepository {
+/* package */ final class MemberRepositoryJdbc extends BaseRepositoryJdbc implements MemberRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberRepositoryJdbc.class);
 
   private static final String GET_MEMBERS_FOR_MEMBERSHIP = "GET_MEMBERS_FOR_MEMBERSHIP";
@@ -62,6 +65,7 @@ import org.springframework.util.Assert;
   private final PersonRepository personRepo;
   private final MemberTypeRepository memberTypeRepo;
   private final CountyRepository countyRepo;
+  private final ContactRepository contactRepo;
 
   /**
    * Primary constructor used to create an instance of the MemberRepositoryJdbc.
@@ -84,11 +88,12 @@ import org.springframework.util.Assert;
                               CountyRepository countyRepo,
                               ContactRepository contactRepo) {
 
-    super(dataSource, contactRepo);
+    super(dataSource);
 
     this.personRepo = personRepo;
     this.memberTypeRepo = memberTypeRepo;
     this.countyRepo = countyRepo;
+    this.contactRepo = contactRepo;
   }
 
   @Override
@@ -276,7 +281,7 @@ import org.springframework.util.Assert;
 
     // save the Person portion of the Member
     if (member.getPerson() != null) {
-      personRepo.savePerson(member.getPerson(), UserType.MEMBER, user);
+      personRepo.savePerson(member.getPerson(), user);
     }
 
     Member savedMember;
@@ -284,6 +289,26 @@ import org.springframework.util.Assert;
       savedMember = insertMember(member, membership, user);
     } else {
       savedMember = updateMember(member, membership, user);
+    }
+
+    for (Address address : member.getPerson().getAddresses()) {
+      address.setParentEntityUID(member.getMemberUID());
+      address.setParentEntityName(UserType.MEMBER.name());
+
+      contactRepo.saveAddress(address, user);
+    }
+
+    for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
+      phone.setParentEntityUID(member.getMemberUID());
+      phone.setParentEntityName(UserType.MEMBER.name());
+
+      contactRepo.savePhoneNumber(phone, user);
+    }
+
+    for (EmailAddress email : member.getPerson().getEmailAddresses()) {
+      email.setParentEntityUID(member.getMemberUID());
+      email.setParentEntityName(UserType.MEMBER.name());
+      contactRepo.saveEmailAddress(email, user);
     }
 
     return savedMember;

@@ -8,13 +8,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
+import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
-import com.cagst.swkroa.person.PersonRepositoryJdbc;
+import com.cagst.swkroa.contact.EmailAddress;
+import com.cagst.swkroa.contact.PhoneNumber;
+import com.cagst.swkroa.member.Member;
+import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.person.Person;
+import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.role.Role;
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
@@ -39,7 +46,7 @@ import org.springframework.util.Assert;
  * @author Craig Gaskill
  */
 @Named(value = "userRepo")
-/* package */ final class UserRepositoryJdbc extends PersonRepositoryJdbc implements UserRepository, MessageSourceAware {
+/* package */ final class UserRepositoryJdbc extends BaseRepositoryJdbc implements UserRepository, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryJdbc.class);
 
   private static final String MSG_USERNAME_EXISTS = "com.cagst.swkroa.username.exists";
@@ -67,19 +74,33 @@ import org.springframework.util.Assert;
   private static final String INSERT_USER_QUESTION = "INSERT_USER_QUESTION";
   private static final String UPDATE_USER_QUESTION = "UPDATE_USER_QUESTION";
 
+  private PersonRepository personRepo;
+  private ContactRepository contactRepo;
+  private MemberRepository memberRepo;
   private MessageSourceAccessor messages;
 
   /**
    * Primary constructor used to create an instance of <i>UserRepositoryJdbc</i>.
    *
    * @param dataSource
-   *     The {@link DataSource} used to retrieve / persist data objects.
+   *    The {@link DataSource} used to retrieve / persist data objects.
+   * @param personRepo
+   *    The {@link PersonRepository} to use to retrieve / persist Person objects.
    * @param contactRepo
-   *     The {@link ContactRepository} to use to populate contact objects.
+   *    The {@link ContactRepository} to use to populate contact objects.
+   * @param memberRepo
+   *    The {@link MemberRepository} to use to retrieve Member objects.
    */
   @Inject
-  public UserRepositoryJdbc(DataSource dataSource, ContactRepository contactRepo) {
-    super(dataSource, contactRepo);
+  public UserRepositoryJdbc(DataSource dataSource,
+                            PersonRepository personRepo,
+                            MemberRepository memberRepo,
+                            ContactRepository contactRepo) {
+    super(dataSource);
+
+    this.personRepo = personRepo;
+    this.contactRepo = contactRepo;
+    this.memberRepo = memberRepo;
   }
 
   @Override
@@ -391,8 +412,11 @@ import org.springframework.util.Assert;
 
     LOGGER.info("Calling saveUser for [{}]", saveUser.getUsername());
 
+    Optional<Member> member = memberRepo.getMemberByPersonUID(saveUser.getPersonUID());
+
     // save the Person portion of the User
-    savePerson(saveUser, saveUser.getUserType(), user);
+    Person savedPerson = personRepo.savePerson(saveUser, user);
+    saveUser.setPersonUID(savedPerson.getPersonUID());
 
     User savedUser;
     if (saveUser.getUserUID() == 0L) {
@@ -416,6 +440,43 @@ import org.springframework.util.Assert;
         }
       }
     }
+
+    for (Address address : savedUser.getAddresses()) {
+      if (member.isPresent()) {
+        address.setParentEntityUID(member.get().getMemberUID());
+        address.setParentEntityName(UserType.MEMBER.name());
+      } else {
+        address.setParentEntityUID(savedUser.getUserUID());
+        address.setParentEntityName(UserType.STAFF.name());
+      }
+
+      contactRepo.saveAddress(address, user);
+    }
+
+    for (PhoneNumber phone : savedUser.getPhoneNumbers()) {
+      if (member.isPresent()) {
+        phone.setParentEntityUID(member.get().getMemberUID());
+        phone.setParentEntityName(UserType.MEMBER.name());
+      } else {
+        phone.setParentEntityUID(savedUser.getUserUID());
+        phone.setParentEntityName(UserType.STAFF.name());
+      }
+
+      contactRepo.savePhoneNumber(phone, user);
+    }
+
+    for (EmailAddress email : savedUser.getEmailAddresses()) {
+      if (member.isPresent()) {
+        email.setParentEntityUID(member.get().getMemberUID());
+        email.setParentEntityName(UserType.MEMBER.name());
+      } else {
+        email.setParentEntityUID(savedUser.getUserUID());
+        email.setParentEntityName(UserType.STAFF.name());
+      }
+
+      contactRepo.saveEmailAddress(email, user);
+    }
+
 
     return savedUser;
   }

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cagst.swkroa.codevalue.CodeSetType;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.document.Document;
@@ -105,11 +106,11 @@ public class JobServiceImpl implements JobService {
       throw new NotFoundException("Membership [" + membershipId + "] was not found.");
     }
 
-    CodeValue renewalLetter = codeValueRepo.getCodeValueByMeaning(CodeValue.DOCUMENT_RENEWAL);
+    CodeValue renewalLetter = codeValueRepo.getCodeValueByMeaning(CodeSetType.DOCUMENT_TYPE, CodeValue.DOCUMENT_RENEWAL);
 
-    CodeValue baseDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_BASE");
-    CodeValue familyDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_FAMILY");
-    CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning("TRANS_DUES_INC");
+    CodeValue baseDues = codeValueRepo.getCodeValueByMeaning(CodeSetType.TRANSACTION_ENTRY_TYPE, "TRANS_DUES_BASE");
+    CodeValue familyDues = codeValueRepo.getCodeValueByMeaning(CodeSetType.TRANSACTION_ENTRY_TYPE, "TRANS_DUES_FAMILY");
+    CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning(CodeSetType.TRANSACTION_ENTRY_TYPE, "TRANS_DUES_INC");
 
     try {
       // load the report template

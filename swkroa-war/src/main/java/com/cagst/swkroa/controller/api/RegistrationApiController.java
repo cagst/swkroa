@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.cagst.swkroa.codevalue.CodeSetType;
+import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
@@ -18,12 +20,14 @@ import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserQuestion;
 import com.cagst.swkroa.user.UserRepository;
 import com.cagst.swkroa.user.UserService;
+import com.cagst.swkroa.user.UserType;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/api/register")
-public final class RegistrationApiController {
+public class RegistrationApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationApiController.class);
 
   private final ResourceBundle resourceBundle;
@@ -46,6 +50,7 @@ public final class RegistrationApiController {
   private ContactRepository contactRepo;
   private UserRepository userRepo;
   private UserService userService;
+  private CodeValueRepository codeValueRepository;
 
   /**
    * Default Constructor
@@ -72,6 +77,11 @@ public final class RegistrationApiController {
   @Inject
   public void setUserService(UserService userService) {
     this.userService = userService;
+  }
+
+  @Inject
+  public void setCodeValueRepository(CodeValueRepository codeValueRepository) {
+    this.codeValueRepository = codeValueRepository;
   }
 
   @RequestMapping(value = "/identification/{ownerId}", method = RequestMethod.GET)
@@ -152,6 +162,7 @@ public final class RegistrationApiController {
   }
 
   @RequestMapping(value = "/completion/{ownerId}", method = RequestMethod.POST)
+  @Transactional
   public ResponseEntity<String> registerComplete(
       @PathVariable(value = "ownerId") String ownerId,
       @RequestParam(value = "firstName", required = false) String firstName,
@@ -225,6 +236,7 @@ public final class RegistrationApiController {
     user.setPassword(password);
     user.setPasswordTemporary(false);
     user.setPasswordChangedDate(new DateTime());
+    user.setUserType(UserType.MEMBER);
     user.setActive(true);
 
     user.addQuestion(UserQuestion.builder()
@@ -243,6 +255,36 @@ public final class RegistrationApiController {
         .build());
 
     userService.registerUser(user, systemUser);
+
+    List<EmailAddress> emailAddresses = contactRepo.getEmailAddressesForMember(member);
+    EmailAddress primaryEmailAddress = null;
+    for (EmailAddress email : emailAddresses) {
+      if (email.isPrimary()) {
+        primaryEmailAddress = email;
+        break;
+      } else if (primaryEmailAddress == null) {
+        primaryEmailAddress = email;
+      }
+    }
+
+    if (primaryEmailAddress != null) {
+      if (!StringUtils.equals(primaryEmailAddress.getEmailAddress(), emailAddress)) {
+        contactRepo.saveEmailAddress(primaryEmailAddress, systemUser);
+      }
+    } else {
+      CodeValue codeValue = codeValueRepository.getCodeValueByMeaning(CodeSetType.EMAIL_TYPE, "EMAIL_HOME");
+      if (codeValue != null) {
+        primaryEmailAddress = new EmailAddress();
+        primaryEmailAddress.setEmailAddress(emailAddress);
+        primaryEmailAddress.setPrimary(true);
+        primaryEmailAddress.setActive(true);
+        primaryEmailAddress.setEmailTypeCD(codeValue.getCodeValueUID());
+        primaryEmailAddress.setParentEntityUID(member.getMemberUID());
+        primaryEmailAddress.setParentEntityName(UserType.MEMBER.name());
+
+        contactRepo.saveEmailAddress(primaryEmailAddress, systemUser);
+      }
+    }
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

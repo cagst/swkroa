@@ -155,11 +155,11 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_ADDRESS),
         AddressMapper.mapInsertStatement(address, user), keyHolder);
 
-    if (cnt == 1) {
-      address.setAddressUID(keyHolder.getKey().longValue());
-    } else {
+    if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
+
+    address.setAddressUID(keyHolder.getKey().longValue());
 
     return address;
   }
@@ -173,14 +173,13 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
         .update(stmtLoader.load(UPDATE_ADDRESS), AddressMapper.mapUpdateStatement(address, user));
     if (cnt == 1) {
       address.setAddressUpdateCount(address.getAddressUpdateCount() + 1);
+      return address;
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");
     } else {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
-
-    return address;
   }
 
   @Override

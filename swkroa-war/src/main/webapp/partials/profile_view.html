@@ -36,7 +36,7 @@
       <h4 class="divider-bottom">Addresses</h4>
 
       <div data-ng-repeat="address in share.user.addresses" class="row">
-        <div class="col-xs-2">
+        <div class="col-xs-1">
           <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
         </div>
         <div class="col-xs-4">
@@ -54,7 +54,7 @@
       <h4 class="divider-bottom">Phone Numbers</h4>
 
       <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
-        <div class="col-xs-2">
+        <div class="col-xs-1">
           <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
         </div>
         <div class="col-xs=4">
@@ -72,7 +72,7 @@
       <h4 class="divider-bottom">Email Addresses</h4>
 
       <div data-ng-repeat="email in share.user.emailAddresses" class="row">
-        <div class="col-xs-2">
+        <div class="col-xs-1">
           <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
         </div>
         <div class="col-xs=4">
