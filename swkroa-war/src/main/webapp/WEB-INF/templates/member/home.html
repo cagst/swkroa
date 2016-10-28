@@ -27,9 +27,9 @@
     <!-- Primary Member / Membership -->
     <div class="panel panel-default">
       <div class="panel-heading">
-      <span class="panel-title" th:text="#{member.primary.heading}">
-        zzz Primary Member
-      </span>
+        <span class="panel-title" th:text="#{member.primary.heading}">
+          zzz Primary Member
+        </span>
       </div>
 
       <div class="panel-body">
@@ -71,58 +71,140 @@
           </span>
         </div>
 
-        <!-- Addresses -->
-        <div data-ng-show="membership.primaryMember.addresses.length > 0">
-          <h4 class="divider-bottom">Addresses</h4>
+        <div class="row">
+          <div class="col-xs-6">
+            <!-- Addresses -->
+            <div data-ng-show="membership.primaryMember.addresses.length > 0">
+              <h4 class="divider-bottom">Addresses</h4>
 
-          <div data-ng-repeat="address in membership.primaryMember.addresses" class="row">
-            <div class="col-xs-1">
-              <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+              <div data-ng-repeat="address in membership.primaryMember.addresses" class="row">
+                <div class="col-xs-3">
+                  <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+                </div>
+                <div class="col-xs-9">
+                  <div data-ng-bind="address.addressLine1"></div>
+                  <div data-ng-bind="address.addressLine2"></div>
+                  <div data-ng-bind="address.addressLine3"></div>
+                  <div>
+                    {{address.city}}, {{address.state}} {{address.postalCode | zip}}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-xs-4">
-              <div data-ng-bind="address.addressLine1"></div>
-              <div data-ng-bind="address.addressLine2"></div>
-              <div data-ng-bind="address.addressLine3"></div>
-              <div>
-                {{address.city}}, {{address.state}} {{address.postalCode | zip}}
+          </div>
+
+          <div class="col-xs-6">
+            <!-- Phone Numbers -->
+            <div data-ng-show="membership.primaryMember.phoneNumbers.length > 0">
+              <h4 class="divider-bottom">Phone Numbers</h4>
+
+              <div data-ng-repeat="phone in membership.primaryMember.phoneNumbers" class="row">
+                <div class="col-xs-3">
+                  <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+                </div>
+                <div class="col-xs-9">
+                  <span>{{phone.phoneNumber | tel}}</span>
+                  <span data-ng-show="phone.phoneExtension">Ext. {{phone.phoneExtension}}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Addresses -->
+            <div data-ng-show="membership.primaryMember.emailAddresses.length > 0">
+              <h4 class="divider-bottom">Email Addresses</h4>
+
+              <div data-ng-repeat="email in membership.primaryMember.emailAddresses" class="row">
+                <div class="col-xs-3">
+                  <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
+                </div>
+                <div class="col-xs=9">
+                  <span data-ng-bind="email.emailAddress"></span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Phone Numbers -->
-        <div data-ng-show="membership.primaryMember.phoneNumbers.length > 0">
-          <h4 class="divider-bottom">Phone Numbers</h4>
+      </div>
+    </div>
 
-          <div data-ng-repeat="phone in membership.primaryMember.phoneNumbers" class="row">
-            <div class="col-xs-1">
-              <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+    <!-- Additional Members -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="panel-title" th:text="#{member.family.heading}">
+          zzz Family Members
+        </span>
+      </div>
+
+      <div class="panel-body">
+        <div class="list-group constrain-view">
+          <div class="list-group-item alt-list-group-item" data-ng-repeat="member in membership.members"
+               data-ng-show="!member.memberType.primary && member.memberType.memberTypeMeaning !== 'SPOUSE'">
+            <div>
+              <span data-ng-bind="member.memberName" class="lead lead-in">zzz Member Name</span>
+              <small>(<span data-ng-bind="member.ownerIdent">zzz Owner Id</span>)</small>
+              <span th:text="#{member.family.member.since}"
+                    data-ng-if="member.joinDate != null" class="pull-right">
+                zzz Member Since
+              </span>
             </div>
-            <div class="col-xs=4">
-          <span>
-            {{phone.phoneNumber | tel}}
-          </span>
-              <span data-ng-show="phone.phoneExtension">
-            Ext. {{phone.phoneExtension}}
-          </span>
+
+            <div class="row">
+              <div class="col-xs-6">
+                <!-- Addresses -->
+                <div data-ng-show="member.addresses.length > 0">
+                  <h4 class="divider-bottom">Addresses</h4>
+
+                  <div data-ng-repeat="address in member.addresses" class="row">
+                    <div class="col-xs-3">
+                      <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+                    </div>
+                    <div class="col-xs-9">
+                      <div data-ng-bind="address.addressLine1"></div>
+                      <div data-ng-bind="address.addressLine2"></div>
+                      <div data-ng-bind="address.addressLine3"></div>
+                      <div>
+                        {{address.city}}, {{address.state}} {{address.postalCode | zip}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xs-6">
+                <!-- Phone Numbers -->
+                <div data-ng-show="member.phoneNumbers.length > 0">
+                  <h4 class="divider-bottom">Phone Numbers</h4>
+
+                  <div data-ng-repeat="phone in member.phoneNumbers" class="row">
+                    <div class="col-xs-3">
+                      <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+                    </div>
+                    <div class="col-xs-9">
+                      <span>{{phone.phoneNumber | tel}}</span>
+                      <span data-ng-show="phone.phoneExtension">Ext. {{phone.phoneExtension}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Email Addresses -->
+                <div data-ng-show="member.emailAddresses.length > 0">
+                  <h4 class="divider-bottom">Email Addresses</h4>
+
+                  <div data-ng-repeat="email in member.emailAddresses" class="row">
+                    <div class="col-xs-3">
+                      <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
+                    </div>
+                    <div class="col-xs=9">
+                      <span data-ng-bind="email.emailAddress"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
-
-        <!-- Email Addresses -->
-        <div data-ng-show="membership.primaryMember.emailAddresses.length > 0">
-          <h4 class="divider-bottom">Email Addresses</h4>
-
-          <div data-ng-repeat="email in membership.primaryMember.emailAddresses" class="row">
-            <div class="col-xs-1">
-              <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
-            </div>
-            <div class="col-xs=4">
-              <span data-ng-bind="email.emailAddress"></span>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
