@@ -225,6 +225,14 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- StageMonitor Framework
+    <dependency>
+      <groupId>org.stagemonitor</groupId>
+      <artifactId>stagemonitor-web</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    -->
+
     <!--                      -->
     <!-- Testing Dependencies -->
     <!--                      -->

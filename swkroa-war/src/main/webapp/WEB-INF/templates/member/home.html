@@ -85,9 +85,7 @@
                   <div data-ng-bind="address.addressLine1"></div>
                   <div data-ng-bind="address.addressLine2"></div>
                   <div data-ng-bind="address.addressLine3"></div>
-                  <div>
-                    {{address.city}}, {{address.state}} {{address.postalCode | zip}}
-                  </div>
+                  <div data-ng-bind-template="{{address.city}}, {{address.state}} {{address.postalCode | zip}}"></div>
                 </div>
               </div>
             </div>
@@ -103,8 +101,8 @@
                   <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
                 </div>
                 <div class="col-xs-9">
-                  <span>{{phone.phoneNumber | tel}}</span>
-                  <span data-ng-show="phone.phoneExtension">Ext. {{phone.phoneExtension}}</span>
+                  <span data-ng-bind-template="{{phone.phoneNumber | tel}}"></span>
+                  <span data-ng-show="phone.phoneExtension" data-ng-bind-template="Ext. {{phone.phoneExtension}}"></span>
                 </div>
               </div>
             </div>

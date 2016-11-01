@@ -7,32 +7,16 @@
 
   <Resource name="jdbc/SWKROADataSource"
             auth="Container"
+            factory="com.zaxxer.hikari.HikariJNDIFactory"
             type="javax.sql.DataSource"
 
-            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-            testWhileIdle="true"
-            testOnBorrow="true"
-            testOnReturn="false"
-            validationQuery="SELECT 1"
-            validationInterval="30000"
-            timesBetweenEvictionRunsMillis="30000"
-            maxWait="10000"
-            initialSize="10"
-            removeAbandonedTimeout="60"
-            removeAbandoned="true"
-            logAbandoned="true"
-            minEvictableIdelTimeMillis="60000"
-            timeBetweenEvictionRunsMillis="5000"
-            jmxEnabled="true"
-            jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState
-                             ;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer
-                             ;org.apache.tomcat.jdbc.pool.interceptor.ResetAbandonedTimer"
+            minimumIdle="5"
+            maximumPoolSize="10"
 
-            username="swkroaadmin"
-            password="cagst23824"
-            driverClassName="com.mysql.jdbc.Driver"
-            url="jdbc:mysql://localhost:3306/swkroadb"
-            maxActive="100"
-            maxIdle="10"
+            dataSourceClassName="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+            dataSource.user="swkroaadmin"
+            dataSource.password="cagst23824"
+            dataSource.url="jdbc:mysql://localhost:3306/swkroadb"
   />
+
 </Context>
