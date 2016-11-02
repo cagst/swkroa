@@ -6,7 +6,7 @@
 <div th:fragment="spouse" class="spacer-top">
   <div class="row spacer-top">
     <div class="divider-inner">
-      <span th:text="#{com.cagst.swkroa.membership.member.spouse.divider}">zzz SPOUSE</span>
+      <span th:text="#{com.cagst.swkroa.membership.member.spouse.divider}">zzz Spouse</span>
       <span class="pull-right">
         <button type="button" class="btn btn-danger btn-xs hover-reveal"
                 data-ng-show="membership.spouse && membership.spouse.active"
@@ -51,37 +51,10 @@
                data-ng-required="membership.spouse"
                data-ng-blur="generateOwnerId(membership.spouse)" />
       </div>
-      <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseOwnerIdent.$invalid}">
-        <label class="control-label label-required"
-               th:text="#{com.cagst.swkroa.membership.member.ownerid.label}">
-          zzz Owner ID
-        </label>
-        <input type="text" class="form-control" name="spouseOwnerIdent" maxlength="15"
-               th:placeholder="#{com.cagst.swkroa.membership.member.ownerid.prompt}"
-               data-ng-model="membership.spouse.ownerIdent"
-               data-ng-required="membership.spouse" />
-      </div>
     </div>
   </div>
 
   <div class="row spacer-top">
-    <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
-
-      <div class="input-group">
-        <input type="text" class="form-control" id="spouseJoinDate" name="spouseJoinDate"
-               data-uib-datepicker-popup="MM/dd/yyyy"
-               data-is-open="openedSpouseJoinDate"
-               data-show-button-bar="false"
-               data-show-weeks="false"
-               data-ng-model="membership.spouse.joinDate" />
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" data-ng-click="openSpouseJoinDate($event)">
-            <i class="fa fa-calendar"></i>
-          </button>
-        </span>
-      </div>
-    </div>
     <div class="col-xs-2">
       <label th:text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
       <input type="text" class="form-control" maxlength="25"

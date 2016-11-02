@@ -8,11 +8,11 @@
     <div class="panel-heading">
       <div class="row">
         <div class="col-xs-2">
-          <select class="form-control"
-                  data-ng-model="membership.primaryMember.memberType"
-                  data-ng-options="type.memberTypeDisplay for type in memberTypes | filter:{primary:!false}">
-          </select>
+          <span class="panel-title" th:text="#{member.primary.heading}">
+            zzz Primary Member
+          </span>
         </div>
+
         <div class="col-xs-10">
           <span class="pull-right"
                 data-ng-show="membership.primaryMember.memberType.allowSpouse">
@@ -28,10 +28,10 @@
     </div>
 
     <div class="panel-body">
-      <div th:include="membership/modify/section_primary_member"></div>
-      <div th:include="membership/modify/section_primary_spouse"
+      <div th:include="member/modify/section_primary_member"></div>
+      <div th:include="member/modify/section_primary_spouse"
            data-ng-show="membership.spouse && membership.spouse.active"></div>
-      <div th:include="membership/modify/section_primary_contact"></div>
+      <div th:include="member/modify/section_primary_contact"></div>
     </div>
   </div>
 </div>
