@@ -7,7 +7,7 @@
   <div class="row spacer-top">
     <div class="divider-inner">
       <span th:text="#{com.cagst.swkroa.membership.member.spouse.divider}">zzz Spouse</span>
-      <span class="pull-right">
+      <span class="pull-right" data-ng-show="isPrimaryMember">
         <button type="button" class="btn btn-danger btn-xs hover-reveal"
                 data-ng-show="membership.spouse && membership.spouse.active"
                 data-ng-click="removeSpouse()">

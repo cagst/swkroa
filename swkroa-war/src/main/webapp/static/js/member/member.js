@@ -34,6 +34,7 @@ swkroaApp.controller('memberController',
 
     $scope.view = "view";
     $scope.fullyLoaded = false;
+    $scope.isPrimaryMember = ('true' === $('#isPrimaryMember').val());
 
     membershipService.getMembership(membershipId, including).then(function(response) {
       if (responseSuccessful(response)) {
@@ -50,10 +51,6 @@ swkroaApp.controller('memberController',
 
       $scope.original = angular.copy($scope.membership);
       $scope.view     = "edit";
-    };
-
-    $scope.cancelChanges = function() {
-      $scope.view = "view";
     };
 
     $scope.addSpouse = function() {
@@ -77,6 +74,82 @@ swkroaApp.controller('memberController',
       } else {
         $scope.membership.spouse = null;
       }
+    };
+
+    $scope.addCounty = function() {
+      $scope.membership.membershipCounties.push({
+        netMineralAcres: 0,
+        surfaceAcres: 0,
+        active: true
+      });
+    };
+
+    $scope.removeCounty = function(county) {
+      if (county.membershipCountyUID > 0) {
+        county.active = false;
+      } else {
+        var idx = $scope.membership.membershipCounties.indexOf(county);
+        $scope.membership.membershipCounties.splice(idx, 1);
+      }
+    };
+
+    $scope.validateVotingCounty = function(membership, membershipCounty) {
+      if (membershipCounty.votingCounty) {
+        angular.forEach(membership.membershipCounties, function(cnty) {
+          cnty.votingCounty = false;
+        });
+
+        membershipCounty.votingCounty = true;
+      } else {
+        membershipCounty.votingCounty = false;
+      }
+    };
+
+    $scope.addMember = function() {
+      var familyMember = null;
+      for (idx = 0; idx < $scope.memberTypes.length; idx++) {
+        if ($scope.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
+          familyMember = $scope.memberTypes[idx];
+          break;
+        }
+      }
+
+      $scope.membership.members.push({
+        active: true,
+        memberType: familyMember
+      });
+    };
+
+    $scope.removeMember = function(member) {
+      if (member.memberUID > 0) {
+        member.active = false;
+      } else {
+        var idx = $scope.membership.members.indexOf(member);
+        $scope.membership.members.splice(idx, 1);
+      }
+    };
+
+    $scope.generateOwnerId = function(member) {
+      var firstName  = member.person.firstName;
+      var lastName   = member.person.lastName;
+      var ownerIdent = member.ownerIdent;
+
+      if (firstName  && firstName.length > 2 &&
+        lastName   && lastName.length > 2 &
+        (!ownerIdent || ownerIdent.length == 0)) {
+
+        membershipService.generateOwnerId(firstName, lastName).then(function(data) {
+          member.ownerIdent = data;
+        });
+      }
+    };
+
+    $scope.hasChanges = function(membership) {
+      return angular.equals(membership, $scope.original);
+    };
+
+    $scope.cancelChanges = function() {
+      $scope.view = "view";
     };
 
   }]);

@@ -17,7 +17,7 @@
           <span class="pull-right"
                 data-ng-show="membership.primaryMember.memberType.allowSpouse">
             <button type="button" class="btn btn-success btn-xs hover-reveal"
-                    data-ng-show="!membership.spouse || !membership.spouse.active"
+                    data-ng-show="isPrimaryMember && (!membership.spouse || !membership.spouse.active)"
                     data-ng-click="addSpouse()">
               <i class="fa fa-plus"></i>
               <span th:text="#{com.cagst.swkroa.membership.member.spouse.add}">zzz Add Spouse</span>

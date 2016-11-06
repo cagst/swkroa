@@ -389,7 +389,7 @@ swkroaApp.controller('membershipController',
       membershipService.generateOwnerId(firstName, lastName).then(function(data) {
         member.ownerIdent = data;
       });
-    };
+    }
   };
 
   $scope.hasChanges = function(membership) {
