@@ -33,6 +33,10 @@ INSERT INTO codeset (codeset_id, codeset_display, codeset_meaning, create_id, cr
 INSERT INTO codevalue (codeset_id, codevalue_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (6, 11, 'Newsletter', 'NEWSLETTER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO codevalue (codeset_id, codevalue_id, codevalue_display, codevalue_meaning, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (6, 12, 'Renewal Notice', 'RENEWAL', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 
+INSERT INTO role (role_id, role_name, role_key, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'Staff', 'STAFF', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO role (role_id, role_name, role_key, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (2, 'Member', 'MEMBER', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO role (role_id, role_name, role_key, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (3, 'Accountant', 'ACCOUNTANT', 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+
 INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (1, 1, 'Regular Member', 'REGULAR', 60, '2000-01-01', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt, end_eff_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (2, 2, 'Family Head', 'FAMILY_HEAD', 70, '2000-01-01', '2012-12-31', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO member_type (member_type_id, prev_member_type_id, member_type_display, member_type_meaning, dues_amount, beg_eff_dt, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (3, 2, 'Family Head', 'FAMILY_HEAD', 85, '2013-01-01', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
@@ -57,6 +61,8 @@ INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, acc
 INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, account_locked_dt_tm, signin_attempts, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (15, 5, 'newlylocked', 'password1', 1, CURRENT_TIMESTAMP, 5, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (16, 6, 'enabled', 'password1', 0, 1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO user (user_id, person_id, username, password, temporary_pwd_ind, active_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (17, 7, 'disabled', 'password1', 0, 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+
+INSERT INTO user_role (user_id, role_id, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (12, 1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP)
 
 INSERT INTO address (parent_entity_id, parent_entity_name, address_type_cd, address1, city, state_code, postal_code, country_code, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'MEMBER', 1, '23824 W 124th Court', 'Olathe', 'KS', '66061', 'US', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO address (parent_entity_id, parent_entity_name, address_type_cd, address1, address2, city, state_code, postal_code, country_code, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES (1, 'MEMBER', 2, '33017 Hwy 160', 'Cabin 3', 'South Fork', 'CO', '12345', 'US', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);

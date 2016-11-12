@@ -1,5 +1,8 @@
 package com.cagst.swkroa.integration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.cagst.swkroa.security.SecurityPolicy;
 import com.cagst.swkroa.security.SecurityService;
 import com.cagst.swkroa.security.SecurityServiceImpl;
@@ -8,9 +11,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Test class for the {@link SecurityServiceImpl} class.

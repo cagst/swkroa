@@ -1,5 +1,14 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.common.util.CGTStringUtils;
@@ -20,15 +29,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * JDBC Template implementation of the {@link MembershipRepository} interface.
  *
@@ -39,6 +39,7 @@ import java.util.Set;
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
   private static final String GET_MEMBERSHIP_BY_UID         = "GET_MEMBERSHIP_BY_UID";
+  private static final String GET_MEMBERSHIP_BY_PERSON_ID   = "GET_MEMBERSHIP_BY_PERSON_ID";
   private static final String GET_MEMBERSHIPS               = "GET_MEMBERSHIPS";
   private static final String GET_MEMBERSHIPS_BY_NAME       = "GET_MEMBERSHIPS_BY_NAME";
   private static final String GET_MEMBERSHIPS_DUE_IN_X_DAYS = "GET_MEMBERSHIPS_DUE_IN_X_DAYS";
@@ -50,6 +51,7 @@ import java.util.Set;
 
   private final MemberRepository memberRepo;
   private final CodeValueRepository codeValueRepo;
+  private final MemberTypeRepository memberTypeRepo;
 
   /**
    * Primary Constructor used to create an instance of <i>PersonRepositoryJdbc</i>.
@@ -60,20 +62,24 @@ import java.util.Set;
    *     The {@link MemberRepository} to use to retrieve member information.
    * @param codeValueRepo
    *     The {@link CodeValueRepository} to use to retrieve codified information.
+   * @param memberTypeRepo
+   *     The {@link MemberTypeRepository} to use to retrieve member type information.
    */
   @Inject
-  /* package */ MembershipRepositoryJdbc(final DataSource dataSource,
-                                         final MemberRepository memberRepo,
-                                         final CodeValueRepository codeValueRepo) {
+  /* package */ MembershipRepositoryJdbc(DataSource dataSource,
+                                         MemberRepository memberRepo,
+                                         CodeValueRepository codeValueRepo,
+                                         MemberTypeRepository memberTypeRepo) {
     super(dataSource);
 
     this.memberRepo = memberRepo;
     this.codeValueRepo = codeValueRepo;
+    this.memberTypeRepo = memberTypeRepo;
   }
 
   @Override
 //  @Cacheable(value = "memberships")
-  public Membership getMembershipByUID(final long uid)
+  public Membership getMembershipByUID(long uid)
       throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMembershipByUID for [{}].", uid);
@@ -86,7 +92,7 @@ import java.util.Set;
     List<Membership> memberships = getJdbcTemplate().query(
         stmtLoader.load(GET_MEMBERSHIP_BY_UID),
         params,
-        new MembershipMapper(codeValueRepo)
+        new MembershipMapper(codeValueRepo, memberTypeRepo)
     );
 
     if (memberships.size() == 1) {
@@ -101,7 +107,7 @@ import java.util.Set;
   }
 
   @Override
-  public List<Membership> getMemberships(final Status status, final MembershipBalance balance) {
+  public List<Membership> getMemberships(Status status, MembershipBalance balance) {
     LOGGER.info("Calling getMemberships with status [{}] and balance [{}]", status, balance);
 
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
@@ -112,11 +118,11 @@ import java.util.Set;
     params.put("status", status.toString());
     params.put("balance", balance.toString());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS), params, new MembershipMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
 
   @Override
-  public List<Membership> getMembershipsByName(final String name, final Status status, final MembershipBalance balance) {
+  public List<Membership> getMembershipsByName(String name, Status status, MembershipBalance balance) {
     LOGGER.info("Calling getMembershipsByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
@@ -129,11 +135,11 @@ import java.util.Set;
     params.put("status", status.toString());
     params.put("balance", balance.toString());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
 
   @Override
-  public List<Membership> getMembershipsDueInXDays(final int days) {
+  public List<Membership> getMembershipsDueInXDays(int days) {
     LOGGER.info("Calling getMembershipsDueInXDays for [{}]", days);
 
     Assert.isTrue(days >= 0, "[Assertion Failure] - argument [days] must be greater than or equal to zero");
@@ -142,13 +148,13 @@ import java.util.Set;
     Map<String, Date> params = new HashMap<>(1);
     params.put("nextDueDate", DateTime.now().plusDays(days).toDate());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS), params, new MembershipMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
 
   @Override
   @Transactional
 //  @CacheEvict(value = "memberships", key = "#membership.getMembershipUID()")
-  public Membership saveMembership(final Membership membership, final User user)
+  public Membership saveMembership(Membership membership, User user)
       throws DataAccessException {
 
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
@@ -178,7 +184,7 @@ import java.util.Set;
   @Override
   @Transactional
 //  @CacheEvict(value = "memberships", allEntries = true)
-  public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
+  public int closeMemberships(Set<Long> membershipIds, CodeValue closeReason, String closeText, User user)
       throws DataAccessException {
 
     Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
@@ -200,7 +206,7 @@ import java.util.Set;
   @Override
   @Transactional
 //  @CacheEvict(value = "memberships", allEntries = true)
-  public int updateNextDueDate(final long membershipId, final User user) throws DataAccessException {
+  public int updateNextDueDate(long membershipId, User user) throws DataAccessException {
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
     LOGGER.info("Billing Memberships");
@@ -213,7 +219,7 @@ import java.util.Set;
     return getJdbcTemplate().update(stmtLoader.load(UPDATE_NEXT_DUE_DATE), params);
   }
 
-  private Membership insertMembership(final Membership membership, final User user)
+  private Membership insertMembership(Membership membership, User user)
       throws DataAccessException {
 
     LOGGER.info("Inserting new Membership [{}]", membership.getMembershipUID());
@@ -232,7 +238,7 @@ import java.util.Set;
     return membership;
   }
 
-  private Membership updateMembership(final Membership membership, final User user)
+  private Membership updateMembership(Membership membership, User user)
       throws DataAccessException {
 
     LOGGER.info("Updating Membership [{}]", membership.getMembershipUID());

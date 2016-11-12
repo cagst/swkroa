@@ -42,10 +42,6 @@ public final class WebAppUtils {
     Authentication auth = securityContext.getAuthentication();
     if (auth == null) {
       LOGGER.warn("The SecurityContextHolder Authentication is null.");
-    }
-
-    if (auth == null) {
-      LOGGER.warn("The Authentication object is null.");
       return null;
     }
 
@@ -67,7 +63,7 @@ public final class WebAppUtils {
    * @param user
    *     The {@link User} to set into the spring security context.
    */
-  public static void setUser(final User user) {
+  public static void setUser(User user) {
     Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
     SecurityContextHolder.getContext().setAuthentication(auth);
@@ -77,7 +73,7 @@ public final class WebAppUtils {
    * Will perform a redirect to the specified url.
    *
    * @param request
-   *     The current {@link HttpServetRequest}.
+   *     The current {@link HttpServletRequest}.
    * @param response
    *     The current {@link HttpServletResponse}.
    * @param url
@@ -85,8 +81,8 @@ public final class WebAppUtils {
    *
    * @throws IOException
    */
-  public static void redirectToUrl(final HttpServletRequest request, final HttpServletResponse response,
-                                   final String url) throws IOException {
+  public static void redirectToUrl(HttpServletRequest request, HttpServletResponse response,
+                                   String url) throws IOException {
 
     String redirectTo = url;
 

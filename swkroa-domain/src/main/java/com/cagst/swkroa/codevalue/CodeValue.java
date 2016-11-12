@@ -1,154 +1,66 @@
 package com.cagst.swkroa.codevalue;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
 import com.cagst.common.util.CGTCollatorBuilder;
-import com.cagst.common.util.CGTStringUtils;
+import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Represents a CodeValue within the system.
  *
  * @author Craig Gaskill
  */
-public final class CodeValue implements Serializable, Comparable<CodeValue> {
-  private static final long serialVersionUID = 571293295760168134L;
+@AutoValue
+@JsonPropertyOrder({
+    "codeSetUID",
+    "codeValueUID",
+    "display",
+    "meaning",
+    "active",
+    "codeValueUpdateCount"
+})
+@JsonDeserialize(builder = AutoValue_CodeValue.Builder.class)
+public abstract class CodeValue implements Serializable, Comparable<CodeValue> {
+  private static final long serialVersionUID = 5527727350150906492L;
 
   // CodeValue meanings
   public static final String DOCUMENT_NEWSLETTER = "DOCUMENT_NEWSLETTER";
   public static final String DOCUMENT_RENEWAL    = "DOCUMENT_RENEWAL";
 
-  private long codeset_id;
-  private long codevalue_id;
-  private String codevalue_display;
-  private String codevalue_meaning;
+  @JsonProperty(value = "codeSetUID", required = true)
+  public abstract long getCodeSetUID();
 
-  // meta-data
-  private boolean active_ind = true;
-  private long updt_cnt;
+  @JsonProperty(value = "codeValueUID", required = true)
+  public abstract long getCodeValueUID();
 
-  /**
-   * Gets the unique identifier for the {@link CodeSet} this CodeValue is associated with.
-   *
-   * @return A {@link long} that uniquely identifies the {@link CodeSet} this CodeValue is associated with.
-   */
-  public long getCodeSetUID() {
-    return codeset_id;
-  }
+  @JsonProperty(value = "display", required = true)
+  public abstract String getDisplay();
 
-  /**
-   * Sets the unique identifier for the {@link CodeSet} this CodeValue should be associated with.
-   *
-   * @param codeSetId
-   *     A {@link long} that uniquely identifies the {@link CodeSet} this CodeValue should be associated with.
-   */
-  /* package */void setCodeSetUID(final long codeSetId) {
-    this.codeset_id = codeSetId;
-  }
+  @Nullable
+  @JsonProperty(value = "meaning")
+  public abstract String getMeaning();
 
-  /**
-   * Gets the unique identifier for the CodeValue.
-   *
-   * @return A {@link long} that uniquely identifies the CodeValue.
-   */
-  public long getCodeValueUID() {
-    return codevalue_id;
-  }
+  @JsonProperty(value = "active")
+  public abstract boolean isActive();
 
-  /**
-   * Sets the unique identifier for the CodeValue.
-   *
-   * @param codeValueUID
-   *     A {@link long} that uniquely identifies the CodeValue.
-   */
-  public void setCodeValueUID(final long codeValueUID) {
-    this.codevalue_id = codeValueUID;
-  }
-
-  /**
-   * @return The display / name of the CodeValue.
-   */
-  public String getDisplay() {
-    return codevalue_display;
-  }
-
-  /**
-   * Sets the display / name of the CodeValue.
-   *
-   * @param display
-   *     The {@link String} display / name for the CodeValue.
-   */
-  public void setDisplay(final String display) {
-    this.codevalue_display = display;
-  }
-
-  /**
-   * Gets the meaning of the CodeValue.
-   *
-   * @return A {@link String} that represents the meaning of the CodeValue.
-   */
-  public String getMeaning() {
-    return codevalue_meaning;
-  }
-
-  /**
-   * Sets the meaning of the CodeValue.
-   *
-   * @param meaning
-   *     A {@link String} that represents the meaning of the CodeValue.
-   */
-  public void setMeaning(final String meaning) {
-    this.codevalue_meaning = CGTStringUtils.normalizeToKey(meaning);
-  }
-
-  /**
-   * Gets the active status of the CodeValue.
-   *
-   * @return {@link boolean} <code>true</code> if the CodeValue is active, <code>false</code> otherwise.
-   */
-  public boolean isActive() {
-    return active_ind;
-  }
-
-  /**
-   * Sets the active status of the CodeValue.
-   *
-   * @param active
-   *     {@link boolean} <code>true</code> to make the CodeValue active, <code>false</code> to make the object
-   *     inactive.
-   */
-  public void setActive(final boolean active) {
-    this.active_ind = active;
-  }
-
-  /**
-   * Gets the number of times this object has been updated.
-   *
-   * @return {@link long} number of times the object has been updated.
-   */
-  public long getCodeValueUpdateCount() {
-    return updt_cnt;
-  }
-
-  /**
-   * Sets the number of times this object has been updated.
-   *
-   * @param updateCount
-   *     {@link long} the number of times the object has been updated.
-   */
-	/* package */void setCodeValueUpdateCount(final long updateCount) {
-    this.updt_cnt = updateCount;
-  }
+  @JsonProperty(value = "codeValueUpdateCount")
+  public abstract long getCodeValueUpdateCount();
 
   @Override
   public int hashCode() {
-    return Objects.hash(codeset_id, codevalue_display);
+    return Objects.hash(getCodeSetUID(), getDisplay());
   }
 
   @Override
-  public boolean equals(final Object obj) {
+  public boolean equals(Object obj) {
     if (obj == null) {
       return false;
     }
@@ -161,13 +73,13 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
 
     CodeValue rhs = (CodeValue) obj;
 
-    return Objects.equals(codeset_id, rhs.getCodeSetUID()) &&
-        Objects.equals(codevalue_display, rhs.getDisplay());
+    return Objects.equals(getCodeSetUID(), rhs.getCodeSetUID()) &&
+        Objects.equals(getDisplay(), rhs.getDisplay());
   }
 
   @Override
   public String toString() {
-    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    ToStringBuilder builder = new ToStringBuilder(this, SwkroaToStringStyle.SWKROA_PREFIX_STYLE);
     builder.append("display", getDisplay());
     builder.append("meaning", getMeaning());
 
@@ -175,9 +87,63 @@ public final class CodeValue implements Serializable, Comparable<CodeValue> {
   }
 
   @Override
-  public int compareTo(final CodeValue rhs) {
+  public int compareTo(CodeValue rhs) {
     CGTCollatorBuilder builder = new CGTCollatorBuilder();
     builder.append(getDisplay(), rhs.getDisplay());
     return builder.build();
+  }
+
+  /**
+   * Returns a new {@link Builder} with default values.
+   *
+   * @return A new {@link Builder}.
+   */
+  public static Builder builder() {
+    return new AutoValue_CodeValue.Builder()
+        .setCodeSetUID(0L)
+        .setCodeValueUID(0L)
+        .setActive(true)
+        .setCodeValueUpdateCount(0L);
+  }
+
+  /**
+   * Returns a new {@link Builder} based upon the values from the specified {@link CodeValue}.
+   *
+   * @param codeValue
+   *    The {@link CodeValue} to base this builder off of.
+   *
+   * @return A new {@link Builder}.
+   */
+  public static Builder builder(CodeValue codeValue) {
+    return new AutoValue_CodeValue.Builder()
+        .setCodeSetUID(codeValue.getCodeSetUID())
+        .setCodeValueUID(codeValue.getCodeValueUID())
+        .setDisplay(codeValue.getDisplay())
+        .setMeaning(codeValue.getMeaning())
+        .setActive(codeValue.isActive())
+        .setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount());
+  }
+
+  @AutoValue.Builder
+  public interface Builder {
+    @JsonProperty(value = "codeSetUID", required = true)
+    Builder setCodeSetUID(long codeSetId);
+
+    @JsonProperty(value = "codeValueUID", required = true)
+    Builder setCodeValueUID(long codeValueUID);
+
+    @JsonProperty(value = "display", required = true)
+    Builder setDisplay(String display);
+
+    @JsonProperty(value = "meaning")
+    Builder setMeaning(String meaning);
+
+    @JsonProperty(value = "active")
+    Builder setActive(boolean active);
+
+    @JsonProperty(value = "codeValueUpdateCount")
+    Builder setCodeValueUpdateCount(long updateCount);
+
+    CodeValue build();
   }
 }

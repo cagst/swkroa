@@ -1,35 +1,29 @@
 package com.cagst.swkroa.person;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.List;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
-import com.cagst.swkroa.contact.Address;
-import com.cagst.swkroa.contact.ContactRepository;
-import com.cagst.swkroa.contact.EmailAddress;
-import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A JDBC Template implementation of the {@link PersonRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
-@Named("personRepository")
+@Named("personRepo")
 public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(PersonRepositoryJdbc.class);
 
@@ -37,34 +31,24 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
   private static final String INSERT_PERSON = "INSERT_PERSON";
   private static final String UPDATE_PERSON = "UPDATE_PERSON";
 
-  private final ContactRepository contactRepo;
-
   /**
    * Primary Constructor used to create an instance of <i>PersonRepositoryJdbc</i>.
    *
    * @param dataSource
    *     The {@link DataSource} used to retrieve / persist data objects.
-   * @param contactRepo
-   *     The {@link ContactRepository} to use to populate contact objects.
    */
   @Inject
-  public PersonRepositoryJdbc(final DataSource dataSource, final ContactRepository contactRepo) {
+  public PersonRepositoryJdbc(DataSource dataSource) {
     super(dataSource);
-
-    this.contactRepo = contactRepo;
-  }
-
-  protected ContactRepository getContactRepository() {
-    return contactRepo;
   }
 
   @Override
-  public Person getPersonByUID(final long uid) {
+  public Person getPersonByUID(long uid) {
     LOGGER.info("Calling getPersonByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>();
-    params.put("person_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("person_id", uid);
 
     List<Person> persons = getJdbcTemplate().query(stmtLoader.load(GET_PERSON_BY_UID), params, new PersonMapper());
     if (persons.size() == 1) {
@@ -79,7 +63,7 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
   }
 
   @Override
-  public Person savePerson(final Person person, final User user) {
+  public Person savePerson(Person person, User user) {
     Assert.notNull(person, "Assertion Failure - argument [person] cannot be null");
     Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
 
@@ -92,28 +76,10 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
       savedPerson = update(person, user);
     }
 
-    for (Address address : person.getAddresses()) {
-      address.setParentEntityUID(savedPerson.getPersonUID());
-      address.setParentEntityName(ContactRepository.ENTITY_PERSON);
-      contactRepo.saveAddress(address, user);
-    }
-
-    for (PhoneNumber phone : person.getPhoneNumbers()) {
-      phone.setParentEntityUID(savedPerson.getPersonUID());
-      phone.setParentEntityName(ContactRepository.ENTITY_PERSON);
-      contactRepo.savePhoneNumber(phone, user);
-    }
-
-    for (EmailAddress email : person.getEmailAddresses()) {
-      email.setParentEntityUID(savedPerson.getPersonUID());
-      email.setParentEntityName(ContactRepository.ENTITY_PERSON);
-      contactRepo.saveEmailAddress(email, user);
-    }
-
     return savedPerson;
   }
 
-  private Person insert(final Person person, final User user) {
+  private Person insert(Person person, User user) {
     LOGGER.info("Inserting person [{}, {}].", person.getLastName(), person.getFirstName());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -131,7 +97,7 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
     return person;
   }
 
-  private Person update(final Person person, final User user) {
+  private Person update(Person person, User user) {
     LOGGER.info("Updating person [{}, {}].", person.getLastName(), person.getFirstName());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());

@@ -1,5 +1,13 @@
 package com.cagst.swkroa.codevalue;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
@@ -8,16 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for CodeValueRepositoryJdbc class.
@@ -134,16 +133,8 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = EmptyResultDataAccessException.class)
   public void testGetCodeValueByMeaning_NoneFound() {
-    CodeValue codevalue = repo.getCodeValueByMeaning("IPHONE");
+    CodeValue codevalue = repo.getCodeValueByMeaning(CodeSetType.PHONE_TYPE, "IPHONE");
     assertNull("Ensure a codevalue was not found.", codevalue);
-  }
-
-  /**
-   * Test the getCodeValueByMeaning and finding too many.
-   */
-  @Test(expected = IncorrectResultSizeDataAccessException.class)
-  public void testGetCodeValueByMeaning_TooManyFound() {
-    repo.getCodeValueByMeaning("HOME");
   }
 
   /**
@@ -151,7 +142,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetCodeValueByMeaning_OneFound() {
-    CodeValue codevalue = repo.getCodeValueByMeaning("FAX");
+    CodeValue codevalue = repo.getCodeValueByMeaning(CodeSetType.PHONE_TYPE, "FAX");
     assertNotNull("Ensure a codevalue was found.", codevalue);
     assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue.getMeaning());
   }
@@ -168,11 +159,11 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
     assertFalse(codevalues1.isEmpty());
     assertEquals(3, codevalues1.size());
 
-    CodeValue builder = new CodeValue();
-    builder.setCodeSetUID(2L);
-    builder.setDisplay("TEST_DISPLAY");
-    builder.setMeaning("TEST_MEANING");
-    builder.setActive(true);
+    CodeValue builder = CodeValue.builder()
+        .setCodeSetUID(2L)
+        .setDisplay("TEST_DISPLAY")
+        .setMeaning("TEST_MEANING")
+        .build();
 
     CodeValue cv = repo.saveCodeValueForCodeSet(builder, user);
     assertNotNull("Ensure the codevalue is not null.", cv);
@@ -190,14 +181,16 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testSaveCodeValue_Update() {
-    CodeValue codevalue1 = repo.getCodeValueByMeaning("FAX");
-    assertNotNull("Ensure a codevalue was found.", codevalue1);
-    assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue1.getMeaning());
+    CodeValue codevalue = repo.getCodeValueByMeaning(CodeSetType.PHONE_TYPE, "FAX");
+    assertNotNull("Ensure a codevalue was found.", codevalue);
+    assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue.getMeaning());
 
-    String newDisplay = codevalue1.getDisplay() + "-EDITED";
-    codevalue1.setDisplay(newDisplay);
+    String newDisplay = codevalue.getDisplay() + "-EDITED";
+    CodeValue editedCodeValue = CodeValue.builder(codevalue)
+        .setDisplay(newDisplay)
+        .build();
 
-    CodeValue cv = repo.saveCodeValueForCodeSet(codevalue1, user);
+    CodeValue cv = repo.saveCodeValueForCodeSet(editedCodeValue, user);
     assertNotNull("Ensure the codevalue is not null.", cv);
     assertEquals("Ensure it has been edited.", newDisplay, cv.getDisplay());
     assertTrue("Ensure it has a valid UID.", cv.getCodeValueUpdateCount() > 0L);
@@ -209,15 +202,17 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = OptimisticLockingFailureException.class)
   public void testSaveCodeValue_Update_Failed() {
-    CodeValue cv = repo.getCodeValueByMeaning("FAX");
+    CodeValue cv = repo.getCodeValueByMeaning(CodeSetType.PHONE_TYPE, "FAX");
     assertNotNull("Ensure a codevalue was found.", cv);
     assertEquals("Ensure it was the correct codevalue.", "FAX", cv.getMeaning());
 
     String newDisplay = cv.getDisplay() + "-EDITED";
 
-    cv.setDisplay(newDisplay);
-    cv.setCodeValueUpdateCount(cv.getCodeValueUpdateCount() + 1);
+    CodeValue editedCodeVale = CodeValue.builder(cv)
+        .setDisplay(newDisplay)
+        .setCodeValueUpdateCount(cv.getCodeValueUpdateCount() + 1)
+        .build();
 
-    repo.saveCodeValueForCodeSet(cv, user);
+    repo.saveCodeValueForCodeSet(editedCodeVale, user);
   }
 }

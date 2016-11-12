@@ -39,9 +39,9 @@ public final class Member implements Serializable, Comparable<Member> {
   private String close_reason_txt;
   private DateTime close_dt_tm;
 
-  private List<Address> addresses = new ArrayList<Address>();
-  private List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
-  private List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+  private List<Address> addresses = new ArrayList<>();
+  private List<EmailAddress> emailAddresses = new ArrayList<>();
+  private List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
   // meta-data
   private boolean active_ind = true;

@@ -1,8 +1,8 @@
 package com.cagst.swkroa.utils;
 
-import org.springframework.util.Assert;
-
 import java.util.Random;
+
+import org.springframework.util.Assert;
 
 /**
  * This class can be used to generate a random password of a specified size.

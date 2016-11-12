@@ -6,8 +6,14 @@
 <div th:fragment="spouse" class="spacer-top">
   <div class="row spacer-top">
     <div class="divider-inner">
-      <span>
-        <label th:text="#{com.cagst.swkroa.membership.member.spouse.divider}">zzz SPOUSE</label>
+      <span th:text="#{com.cagst.swkroa.membership.member.spouse.divider}">zzz SPOUSE</span>
+      <span class="pull-right">
+        <button type="button" class="btn btn-danger btn-xs hover-reveal"
+                data-ng-show="membership.spouse && membership.spouse.active"
+                data-ng-click="removeSpouse()">
+          <i class="fa fa-trash-o"></i>
+          <span th:text="#{com.cagst.swkroa.membership.member.spouse.remove}">zzz Remove Spouse</span>
+        </button>
       </span>
     </div>
     <div>

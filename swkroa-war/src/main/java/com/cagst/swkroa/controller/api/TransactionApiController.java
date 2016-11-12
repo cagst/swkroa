@@ -1,7 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
 import javax.inject.Inject;
-
 import java.util.List;
 
 import com.cagst.swkroa.model.ListModel;

@@ -5,12 +5,16 @@
                            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean name="personRepo" class="com.cagst.swkroa.person.PersonRepositoryJdbc">
-    <constructor-arg ref="datasource"/>
-    <constructor-arg ref="contactRepository"/>
+    <constructor-arg ref="datasource" />
+  </bean>
+
+  <bean name="contactRepo" class="com.cagst.swkroa.contact.ContactRepositoryJdbc">
+    <constructor-arg ref="datasource" />
   </bean>
 
   <bean name="userRepo" class="com.cagst.swkroa.user.UserRepositoryJdbc">
-    <constructor-arg ref="datasource"/>
-    <constructor-arg ref="contactRepository"/>
+    <constructor-arg ref="datasource" />
+    <constructor-arg ref="personRepo" />
+    <constructor-arg ref="contactRepo" />
   </bean>
 </beans>

@@ -1,5 +1,7 @@
 package com.cagst.swkroa.transaction;
 
+import java.util.List;
+
 import com.cagst.swkroa.deposit.Deposit;
 import com.cagst.swkroa.deposit.DepositTransaction;
 import com.cagst.swkroa.member.Membership;
@@ -8,8 +10,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import java.util.List;
 
 /**
  * Definition of a repository that retrieves and persists {@link Transaction} objects.

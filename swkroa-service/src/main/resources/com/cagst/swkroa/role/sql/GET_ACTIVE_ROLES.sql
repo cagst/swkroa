@@ -1,6 +1,6 @@
 SELECT r.role_id
-      ,r.role_key
       ,r.role_name
+      ,r.role_key
       ,r.updt_cnt AS role_updt_cnt
       ,r.active_ind
   FROM role r

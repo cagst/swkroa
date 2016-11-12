@@ -1,11 +1,11 @@
 package com.cagst.swkroa.job;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link JobDetail} objects. Used to marshal / unmarshal a {@link JobDetail}

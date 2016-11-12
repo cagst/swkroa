@@ -1,5 +1,13 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import com.cagst.swkroa.LoadingPolicy;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.comment.CommentRepository;
@@ -24,13 +32,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 /**
  * Implementation of the {@link MembershipService} interface.
  *
@@ -45,7 +46,7 @@ public final class MembershipServiceImpl implements MembershipService {
   private final ContactRepository contactRepo;
   private final CommentRepository commentRepo;
   private final TransactionRepository transactionRepo;
-  private final DocumentRepository documentRepo;
+  private final DocumentRepository documentRepository;
   private final JobRepository jobRepo;
   private final JobService jobService;
 
@@ -65,77 +66,88 @@ public final class MembershipServiceImpl implements MembershipService {
    * @param transactionRepo
    *    The {@link TransactionRepository} used to retrieve / persist {@link Transaction} objects related to a
    *    {@link Membership}.
-   * @param documentRepo
-   *    The {@link DocumentRepository} used to retrieve / persist {@link Document} objects related to a
-   *    {@link Membership}
+   * @param documentRepository
+   *    The {@link DocumentRepository} used to retrieve / persist {@link Document} objects related to a {@link Membership}.
    */
   @Inject
-  public MembershipServiceImpl(final MembershipRepository membershipRepo,
-                               final MemberRepository memberRepo,
-                               final ContactRepository contactRepo,
-                               final CommentRepository commentRepo,
-                               final TransactionRepository transactionRepo,
-                               final DocumentRepository documentRepo,
-                               final JobRepository jobRepo,
-                               final JobService jobService) {
+  public MembershipServiceImpl(MembershipRepository membershipRepo,
+                               MemberRepository memberRepo,
+                               ContactRepository contactRepo,
+                               CommentRepository commentRepo,
+                               TransactionRepository transactionRepo,
+                               DocumentRepository documentRepository,
+                               JobRepository jobRepo,
+                               JobService jobService) {
     this.membershipRepo = membershipRepo;
     this.memberRepo = memberRepo;
     this.contactRepo = contactRepo;
     this.commentRepo = commentRepo;
     this.transactionRepo = transactionRepo;
-    this.documentRepo = documentRepo;
+    this.documentRepository = documentRepository;
     this.jobRepo = jobRepo;
     this.jobService = jobService;
   }
 
   @Override
-  public Membership getMembershipByUID(final long uid) {
+  public Membership getMembershipByUID(long uid, LoadingPolicy loadingPolicy) {
     LOGGER.info("Calling getMembershipByUID for [{}]", uid);
 
     Membership membership = membershipRepo.getMembershipByUID(uid);
 
-    List<Member> members = memberRepo.getMembersForMembership(membership);
-    membership.setMembers(members);
+    if (loadingPolicy.containsAttribute(LOAD_MEMBERS)) {
+      List<Member> members = memberRepo.getMembersForMembership(membership);
+      membership.setMembers(members);
 
-    for (Member member : membership.getMembers()) {
-      member.setAddresses(contactRepo.getAddressesForMember(member));
-      member.setPhoneNumbers(contactRepo.getPhoneNumbersForMember(member));
-      member.setEmailAddresses(contactRepo.getEmailAddressesForMember(member));
+      if (loadingPolicy.containsAttribute(LOAD_CONTACTS)) {
+        for (Member member : membership.getMembers()) {
+          member.setAddresses(contactRepo.getAddressesForMember(member));
+          member.setPhoneNumbers(contactRepo.getPhoneNumbersForMember(member));
+          member.setEmailAddresses(contactRepo.getEmailAddressesForMember(member));
+        }
+      }
     }
 
-    List<MembershipCounty> counties = memberRepo.getMembershipCountiesForMembership(membership);
-    membership.setMembershipCounties(counties);
+    if (loadingPolicy.containsAttribute(LOAD_COUNTIES)) {
+      List<MembershipCounty> counties = memberRepo.getMembershipCountiesForMembership(membership);
+      membership.setMembershipCounties(counties);
+    }
 
-    List<Comment> comments = commentRepo.getCommentsForMembership(membership);
-    Collections.sort(comments);
-    membership.setComments(comments);
+    if (loadingPolicy.containsAttribute(LOAD_COMMENTS)) {
+      List<Comment> comments = commentRepo.getCommentsForMembership(membership);
+      Collections.sort(comments);
+      membership.setComments(comments);
+    }
 
-    List<Transaction> transactions = transactionRepo.getTransactionsForMembership(membership);
-    Collections.sort(transactions);
-    membership.setTransactions(transactions);
+    if (loadingPolicy.containsAttribute(LOAD_TRANSACTIONS)) {
+      List<Transaction> transactions = transactionRepo.getTransactionsForMembership(membership);
+      Collections.sort(transactions);
+      membership.setTransactions(transactions);
+    }
 
-//    List<Document> documents = documentRepo.getDocumentsForMembership(membership);
-//    membership.setDocuments(documents);
+    if (loadingPolicy.containsAttribute(LOAD_DOCUMENTS)) {
+      List<Document> documents = documentRepository.getDocumentsForMembership(membership);
+      membership.setDocuments(documents);
+    }
 
     return membership;
   }
 
   @Override
-  public List<Membership> getMemberships(final Status status, final MembershipBalance balance) {
+  public List<Membership> getMemberships(Status status, MembershipBalance balance) {
     LOGGER.info("Calling getActiveMemberships");
 
     return membershipRepo.getMemberships(status, balance);
   }
 
   @Override
-  public List<Membership> getMembershipsForName(final String name, final Status status, final MembershipBalance balance) {
+  public List<Membership> getMembershipsForName(String name, Status status, MembershipBalance balance) {
     LOGGER.info("Calling getMembershipsByName for [{}]", name);
 
     return membershipRepo.getMembershipsByName(name, status, balance);
   }
 
   @Override
-  public List<Membership> getMembershipsDueInXDays(final int days) {
+  public List<Membership> getMembershipsDueInXDays(int days) {
     LOGGER.info("Calling getMembershipsDueInXDays for [{}]", days);
 
     return membershipRepo.getMembershipsDueInXDays(days);
@@ -143,7 +155,7 @@ public final class MembershipServiceImpl implements MembershipService {
 
   @Override
   @Transactional
-  public Membership saveMembership(final Membership membership, final User user) {
+  public Membership saveMembership(Membership membership, User user) {
     LOGGER.info("Calling saveMembership for [{}]", membership.getMembershipUID());
 
     Membership savedMembership = membershipRepo.saveMembership(membership, user);
@@ -168,7 +180,7 @@ public final class MembershipServiceImpl implements MembershipService {
 
   @Override
   @Transactional
-  public int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user) {
+  public int closeMemberships(Set<Long> membershipIds, CodeValue closeReason, String closeText, User user) {
     LOGGER.info("Calling closeMemberships for [{}]", closeReason.getDisplay());
 
     return membershipRepo.closeMemberships(membershipIds, closeReason, closeText, user);
@@ -176,11 +188,11 @@ public final class MembershipServiceImpl implements MembershipService {
 
   @Override
   @Async
-  public void renewMemberships(final DateTime transactionDate,
-                               final String transactionDescription,
-                               final String transactionMemo,
-                               final Job job,
-                               final User user)
+  public void renewMemberships(DateTime transactionDate,
+                               String transactionDescription,
+                               String transactionMemo,
+                               Job job,
+                               User user)
       throws DataAccessException {
 
     LOGGER.info("Calling createBillingInvoicesForMemberships [{}]", transactionDescription);

@@ -1,13 +1,13 @@
 package com.cagst.swkroa.transaction;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link Transaction} object. Used to marshal / unmarshal a {@link Transaction} to /

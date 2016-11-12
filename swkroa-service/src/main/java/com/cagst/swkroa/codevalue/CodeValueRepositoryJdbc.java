@@ -1,5 +1,10 @@
 package com.cagst.swkroa.codevalue;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.List;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.user.User;
@@ -11,16 +16,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * JDBC Template implementation of the {@link CodeValueRepository} interface.
@@ -57,8 +56,8 @@ import java.util.Map;
     LOGGER.info("Calling CodeSetByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("codeset_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("codeset_id", uid);
 
     List<CodeSet> codesets = getJdbcTemplate().query(stmtLoader.load(GET_CODESET_BY_UID), params, new CodeSetMapper());
     if (codesets.size() == 1) {
@@ -89,8 +88,8 @@ import java.util.Map;
     LOGGER.info("Calling CodeValuesForCodeSet for [{}].", codeset.getDisplay());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("codeset_id", codeset.getCodeSetUID());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("codeset_id", codeset.getCodeSetUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUES_FOR_CODESET), params, new CodeValueMapper());
   }
@@ -103,8 +102,8 @@ import java.util.Map;
     LOGGER.info("Calling getCodeValuesForCodeSetByType for [{}].", codeSetType);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(1);
-    params.put("codeset_meaning", codeSetType.name());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("codeset_meaning", codeSetType.name());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUES_FOR_CODESET_BY_MEANING), params,
         new CodeValueMapper());
@@ -120,8 +119,8 @@ import java.util.Map;
     LOGGER.info("Calling getCodeValueByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("codevalue_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("codevalue_id", uid);
 
     List<CodeValue> codevalues = getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUE_BY_UID), params,
         new CodeValueMapper());
@@ -139,14 +138,16 @@ import java.util.Map;
 
   @Override
   @Cacheable(value = "codeValues")
-  public CodeValue getCodeValueByMeaning(String meaning) {
+  public CodeValue getCodeValueByMeaning(CodeSetType codeSetType, String meaning) {
+    Assert.notNull(codeSetType, "Assertion Failed - argument [codeSetType] cannot be null");
     Assert.hasText(meaning, "Assertion Failed - argument [meaning] cannot be null or empty.");
 
     LOGGER.info("Calling getCodeValueByMeaning for [{}].", meaning);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(1);
-    params.put("meaning", meaning);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("codeset_meaning", codeSetType.name());
+    params.addValue("meaning", meaning);
 
     List<CodeValue> codevalues = getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUE_BY_MEANING), params,
         new CodeValueMapper());
@@ -187,15 +188,16 @@ import java.util.Map;
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
-    int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_CODEVALUE),
-        CodeValueMapper.mapInsertStatement(codeValue, user), keyHolder);
-    if (cnt == 1) {
-      codeValue.setCodeValueUID(keyHolder.getKey().longValue());
-    } else {
+    int cnt = getJdbcTemplate().update(
+        stmtLoader.load(INSERT_CODEVALUE),
+        CodeValueMapper.mapInsertStatement(codeValue, user),
+        keyHolder);
+
+    if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return codeValue;
+    return CodeValue.builder(codeValue).setCodeValueUID(keyHolder.getKey().longValue()).build();
   }
 
   private CodeValue updateCodeValueForCodeSet(CodeValue codeValue, User user)
@@ -205,17 +207,17 @@ import java.util.Map;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    int cnt = getJdbcTemplate().update(stmtLoader.load(UPDATE_CODEVALUE),
+    int cnt = getJdbcTemplate().update(
+        stmtLoader.load(UPDATE_CODEVALUE),
         CodeValueMapper.mapUpdateStatement(codeValue, user));
+
     if (cnt == 1) {
-      codeValue.setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount() + 1);
+      return CodeValue.builder(codeValue).setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount() + 1).build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");
     } else {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
-
-    return codeValue;
   }
 }

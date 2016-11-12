@@ -1,5 +1,12 @@
 package com.cagst.swkroa.document;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
 import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
@@ -9,13 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.support.SqlLobValue;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
 
 /**
  * Maps a row in the resultset into a {@link Document} object. Used to marshal / unmarshal a {@link Document} to / from

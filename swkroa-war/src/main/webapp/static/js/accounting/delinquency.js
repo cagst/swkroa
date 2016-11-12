@@ -34,7 +34,7 @@ swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'memb
       if ($scope.delinquencies[idx].selected) {
         membershipsSelected = true;
       }
-    };
+    }
 
     return membershipsSelected;
   };

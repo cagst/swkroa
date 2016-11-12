@@ -1,14 +1,25 @@
 package com.cagst.swkroa.user;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
 import com.cagst.swkroa.contact.ContactRepository;
+import com.cagst.swkroa.member.Member;
+import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.role.Role;
 import com.cagst.swkroa.role.RoleRepository;
+import com.cagst.swkroa.role.RoleType;
 import com.cagst.swkroa.security.SecurityPolicy;
 import com.cagst.swkroa.security.SecurityService;
 import com.cagst.swkroa.utils.RandomPasswordGenerator;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -27,11 +38,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * User Service that provides authentication for SWKROA.
@@ -59,6 +65,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   private final SecurityService securityService;
   private final ContactRepository contactRepo;
   private final PasswordEncoder passwordEncoder;
+  private final MemberRepository memberRepository;
 
   private MessageSourceAccessor messages;
 
@@ -77,17 +84,19 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
    *     The {@link PasswordEncoder} to use to check / encode user passwords.
    */
   @Inject
-  public UserServiceImpl(final UserRepository userRepo,
-                         final RoleRepository roleRepo,
-                         final SecurityService securityService,
-                         final ContactRepository contactRepo,
-                         final PasswordEncoder passwordEncoder) {
-
+  public UserServiceImpl(UserRepository userRepo,
+                         RoleRepository roleRepo,
+                         SecurityService securityService,
+                         ContactRepository contactRepo,
+                         PasswordEncoder passwordEncoder,
+                         MemberRepository memberRepository
+  ) {
     this.userRepo = userRepo;
     this.roleRepo = roleRepo;
     this.securityService = securityService;
     this.contactRepo = contactRepo;
     this.passwordEncoder = passwordEncoder;
+    this.memberRepository = memberRepository;
   }
 
   @Override
@@ -145,18 +154,19 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   @Transactional
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_SIGNIN_SUCCESSFUL)
   public User signinSuccessful(final @AuditInstigator User user, final String ipAddress) {
-    User newUser = userRepo.signinSuccessful(user, ipAddress);
+    User signedInUser = userRepo.signinSuccessful(user, ipAddress);
 
-    // Collection<Privilege> privs = roleRepo.getPrivilegesForUser(newUser);
-    // if (CollectionUtils.isEmpty(privs)) {
-    // LOGGER.warn("No privileges found for user [{}].", newUser.getUsername());
-    // }
-    //
-    // for (Privilege priv : privs) {
-    // user.addGrantedAuthority(priv.getPrivilegeKey());
-    // }
+    List<Role> roles = roleRepo.getRolesForUser(signedInUser);
+    if (CollectionUtils.isEmpty(roles)) {
+      LOGGER.warn("No roles found for user [{}].", signedInUser.getUsername());
+    } else {
+      for (Role role : roles) {
+        user.addRole(role);
+        user.addGrantedAuthority(role.getRoleKey());
+      }
+    }
 
-    return newUser;
+    return signedInUser;
   }
 
   @Override
@@ -312,7 +322,27 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
 
     if (saveUser.getUserUID() == 0) {
+      // encode the password
       saveUser.setPassword(passwordEncoder.encode(saveUser.getPassword()));
+    }
+
+    if (CollectionUtils.isNotEmpty(saveUser.getUserQuestions())) {
+      List<UserQuestion> questions = new ArrayList<>(saveUser.getUserQuestions().size());
+
+      // encode the answers
+      for (UserQuestion question : saveUser.getUserQuestions()) {
+        questions.add(UserQuestion.builder()
+            .setUserQuestionUID(question.getUserQuestionUID())
+            .setQuestionCD(question.getQuestionCD())
+            .setAnswer(passwordEncoder.encode(question.getAnswer()))
+            .setActive(question.isActive())
+            .setUserQuestionUpdateCount(question.getUserQuestionUpdateCount())
+            .build()
+        );
+      }
+
+      saveUser.clearQuestions();
+      saveUser.getUserQuestions().addAll(questions);
     }
 
     return userRepo.saveUser(saveUser, user);
@@ -325,8 +355,36 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     Assert.notNull(registerUser, "[Assertion Failed] - argument [registerUser] cannot be null");
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null");
 
+    Optional<Role> checkMemberRole = roleRepo.getRoleByKey(RoleType.ROLE_MEMBER.name());
+    if (!checkMemberRole.isPresent()) {
+      LOGGER.warn("Unable to find the role [{}]", RoleType.ROLE_MEMBER);
+    }
+    else {
+      registerUser.addRole(checkMemberRole.get());
+    }
+
     if (registerUser.getUserUID() == 0) {
+      // encode the password
       registerUser.setPassword(passwordEncoder.encode(registerUser.getPassword()));
+    }
+
+    if (CollectionUtils.isNotEmpty(registerUser.getUserQuestions())) {
+      List<UserQuestion> questions = new ArrayList<>(registerUser.getUserQuestions().size());
+
+      // encode the answers
+      for (UserQuestion question : registerUser.getUserQuestions()) {
+        questions.add(UserQuestion.builder()
+            .setUserQuestionUID(question.getUserQuestionUID())
+            .setQuestionCD(question.getQuestionCD())
+            .setAnswer(passwordEncoder.encode(question.getAnswer().toLowerCase()))
+            .setActive(question.isActive())
+            .setUserQuestionUpdateCount(question.getUserQuestionUpdateCount())
+            .build()
+        );
+      }
+
+      registerUser.clearQuestions();
+      registerUser.getUserQuestions().addAll(questions);
     }
 
     return userRepo.registerUser(registerUser, user);
@@ -347,9 +405,18 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
     user.setSecurityPolicy(securityPolicy);
 
-    user.setAddresses(contactRepo.getAddressesForPerson(user));
-    user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
-    user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
+    Optional<Member> checkMember = memberRepository.getMemberByPersonUID(user.getPersonUID());
+    if (checkMember.isPresent()) {
+      Member member = checkMember.get();
+
+      user.setAddresses(contactRepo.getAddressesForMember(member));
+      user.setPhoneNumbers(contactRepo.getPhoneNumbersForMember(member));
+      user.setEmailAddresses(contactRepo.getEmailAddressesForMember(member));
+    } else {
+      user.setAddresses(contactRepo.getAddressesForPerson(user));
+      user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
+      user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
+    }
 
     return user;
   }
@@ -367,19 +434,5 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
     }
 
     return checkUser;
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public User getProfileUser(final User user) {
-    // retrieve SecurityPolicy for user
-    SecurityPolicy securityPolicy = securityService.getSecurityPolicy(user);
-    user.setSecurityPolicy(securityPolicy);
-
-    user.setAddresses(contactRepo.getAddressesForPerson(user));
-    user.setPhoneNumbers(contactRepo.getPhoneNumbersForPerson(user));
-    user.setEmailAddresses(contactRepo.getEmailAddressesForPerson(user));
-
-    return user;
   }
 }

@@ -1,37 +1,33 @@
 package com.cagst.swkroa.role;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.util.Assert;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * JDBC Template implementation of the {@link RoleRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("roleRepository")
 /* package */ final class RoleRepositoryJdbc extends BaseRepositoryJdbc implements RoleRepository {
-  private static final Logger logger = LoggerFactory.getLogger(RoleRepositoryJdbc.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RoleRepositoryJdbc.class);
 
   private static final String GET_ROLES_FOR_USER = "GET_ROLES_FOR_USER";
-  private static final String GET_ACTIVE_ROLES = "GET_ACTIVE_ROLES";
-  private static final String GET_ACTIVE_PRIVILEGES = "GET_ACTIVE_PRIVILEGES";
-  private static final String GET_PRIVILEGES_FOR_ROLE = "GET_PRIVILEGES_FOR_ROLE";
-  private static final String GET_PRIVILEGES_FOR_USER = "GET_PRIVILEGES_FOR_USER";
+  private static final String GET_ACTIVE_ROLES   = "GET_ACTIVE_ROLES";
+  private static final String GET_ROLE_BY_KEY    = "GET_ROLE_BY_KEY";
 
   /**
    * Primary Constructor used to create an instance of <i>RoleRepositoryJdbc</i>.
@@ -45,79 +41,41 @@ import java.util.Set;
   }
 
   @Override
-  public Collection<Role> getRolesForUser(final User user) {
+  public List<Role> getRolesForUser(final User user) {
     Assert.notNull(user, "Assertion Failure - argument [user} cannot be null.");
 
-    logger.info("Calling getRolesForUser [{}].", user.getUsername());
+    LOGGER.info("Calling getRolesForUser [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("user_id", user.getUserUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_ROLES_FOR_USER), params, new RoleMapper());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.role.RoleRepository#getActiveRoles()
-   */
   @Override
   public List<Role> getActiveRoles() {
-    logger.info("Calling getActiveRoles.");
+    LOGGER.info("Calling getActiveRoles.");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ACTIVE_ROLES), new RoleMapper());
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.role.RoleRepository#getActivePrivileges()
-   */
-  @Override
-  public List<Privilege> getActivePrivileges() {
-    logger.info("Calling getActivePrivilges.");
-
-    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ACTIVE_PRIVILEGES), new PrivilegeMapper());
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.cagst.swkroa.role.RoleRepository#getPrivilegesForRole(com.cagst.swkroa.role.Role)
-   */
-  @Override
-  public List<Privilege> getPrivilegesForRole(final Role role) {
-    Assert.notNull(role, "Assertion Failure - argument [role] cannot be null.");
-
-    logger.info("Calling getPrivilegesForRole [{}].", role.getRoleName());
-
-    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
-    params.put("role_id", role.getRoleUID());
-
-    return getJdbcTemplate().query(stmtLoader.load(GET_PRIVILEGES_FOR_ROLE), params, new PrivilegeMapper());
+    return getJdbcTemplate().query(stmtLoader.load(GET_ACTIVE_ROLES), new RoleMapper());
   }
 
   @Override
-  public Set<Privilege> getPrivilegesForUser(final User user) {
-    Assert.notNull(user, "Assertion Failure - argument [user] cannot be null.");
-
-    logger.info("Calling getPrivilegesForUser [{}].", user.getUsername());
+  public Optional<Role> getRoleByKey(String key) throws IncorrectResultSizeDataAccessException {
+    LOGGER.info("Calling getRoleByKey [{}]", key);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
-    params.put("user_id", user.getUserUID());
+    Map<String, String> params = new HashMap<>();
+    params.put("role_key", key);
 
-    List<Privilege> privs = null;
-    if (user.getUserUID() < 10) {
-      privs = getActivePrivileges();
+    List<Role> roles = getJdbcTemplate().query(stmtLoader.load(GET_ROLE_BY_KEY), params, new RoleMapper());
+    if (roles.size() == 1) {
+      return Optional.of(roles.get(0));
+    } else if (roles.size() == 0) {
+      return Optional.empty();
     } else {
-      privs = getJdbcTemplate().query(stmtLoader.load(GET_PRIVILEGES_FOR_USER), params, new PrivilegeMapper());
+      throw new IncorrectResultSizeDataAccessException(1, roles.size());
     }
-
-    return new HashSet<Privilege>(privs);
   }
 }

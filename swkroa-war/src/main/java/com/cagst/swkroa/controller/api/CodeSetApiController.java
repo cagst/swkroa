@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -28,17 +29,16 @@ import org.springframework.web.util.UriComponents;
  * template.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RestController
 @RequestMapping(value = "/api/codesets")
-public final class CodeSetApiController {
+public class CodeSetApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(CodeSetApiController.class);
 
   private final CodeValueRepository codeValueRepo;
 
   @Inject
-  public CodeSetApiController(final CodeValueRepository codeValueRepo) {
+  public CodeSetApiController(CodeValueRepository codeValueRepo) {
     this.codeValueRepo = codeValueRepo;
   }
 
@@ -66,7 +66,7 @@ public final class CodeSetApiController {
    * @return A JSON representation of the CodeValues associated to the specified CodeSet.
    */
   @RequestMapping(value = "/{codeSetType}", method = RequestMethod.GET)
-  public List<CodeValue> getCodeValuesForCodeSet(final @PathVariable CodeSetType codeSetType) {
+  public List<CodeValue> getCodeValuesForCodeSet(@PathVariable CodeSetType codeSetType) {
     LOGGER.info("Received request to retrieve codevalues for codeset [{}].", codeSetType);
 
     List<CodeValue> codeValues = codeValueRepo.getCodeValuesForCodeSetByType(codeSetType);
@@ -87,10 +87,11 @@ public final class CodeSetApiController {
    *
    * @return The {@link CodeValue} after it has been persisted.
    */
+  @RolesAllowed("ROLE_ADMIN")
   @RequestMapping(value = "/{codeSetMeaning}", method = RequestMethod.POST)
-  public ResponseEntity<CodeValue> saveCodeValue(final @PathVariable String codeSetMeaning,
-                                                 final @RequestBody CodeValue codeValue,
-                                                 final HttpServletRequest request) {
+  public ResponseEntity<CodeValue> saveCodeValue(@PathVariable String codeSetMeaning,
+                                                 @RequestBody CodeValue codeValue,
+                                                 HttpServletRequest request) {
 
     LOGGER.info("Received request to save codevalue [{}]", codeValue.getDisplay());
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <th:block th:replace="fragments/common :: head" />
+</head>
+
+<body>
+<div th:replace="fragments/main :: header"></div>
+<div th:replace="fragments/main :: navigation"></div>
+
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="transactionController" data-ng-cloak>
+  <input id="membershipUID" type="hidden" th:value="${membershipUID}"/>
+
+  <h1 th:text="#{member.transaction.page}">zzz Transactions</h1>
+
+  <div class="panel-body clear-padding">
+    <table class="table table-hover table-bordered">
+      <thead>
+      <tr>
+        <th th:text="#{common.date}" style="width:100px">zzz Date</th>
+        <th th:text="#{common.type}">zzz Type</th>
+        <th th:text="#{common.desc}">zzz Desc</th>
+        <th th:text="#{member.transaction.amount}" style="width:100px; text-align:right">zzz Amount</th>
+      </tr>
+      </thead>
+      <tbody data-ng-repeat="transaction in transactions | orderBy: 'transactionDate': true"
+             data-ng-show="transaction.active">
+      <tr>
+        <td style="width:125px">
+          <div>
+            <a href="#" onclick="toggleTransactionDetails(this)">
+              <i class="fa fa-caret-right"></i>
+            </a>
+            {{transaction.transactionDate | date:'mediumDate'}}
+          </div>
+        </td>
+        <td>
+          <span data-ng-show="transaction.transactionType == 'INVOICE'"
+                th:text="#{com.cagst.swkroa.membership.transaction.invoice}">
+          </span>
+          <span data-ng-show="transaction.transactionType == 'PAYMENT'"
+                th:text="#{com.cagst.swkroa.membership.transaction.payment}">
+          </span>
+          <div class="pull-right">
+            <a class="btn btn-default btn-xs"
+               target="_blank"
+               data-ng-show="{{transaction.documentUID > 0}}"
+               data-ng-href="documents/{{transaction.documentUID}}">
+              <i class="fa fa-binoculars"></i>
+              <span th:text="#{maintain.documents.action.view}">zzz View</span>
+            </a>
+          </div>
+        </td>
+        <td>{{transaction.transactionDescription}}</td>
+        <td style="width:100px">
+          <div class="pull-right">
+            {{transaction.transactionAmount | currency}}
+          </div>
+        </td>
+      </tr>
+      <tr class="details hide" data-ng-repeat="entry in transaction.transactionEntries">
+        <td></td>
+        <td colspan="2">{{entry.transactionEntryType.display}}</td>
+        <td style="width:100px">
+          <div class="pull-right">
+            {{entry.transactionEntryAmount | currency}}
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script type="text/javascript" th:src="@{/static/js/member/transactions.js}"></script>
+</body>
+</html>

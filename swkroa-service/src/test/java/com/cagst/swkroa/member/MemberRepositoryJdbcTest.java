@@ -1,5 +1,17 @@
 package com.cagst.swkroa.member;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.county.County;
@@ -17,15 +29,6 @@ import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 /**
  * Test class for the MemberRepositoryJdbc class.
  *
@@ -35,6 +38,7 @@ import static org.junit.Assert.fail;
 public class MemberRepositoryJdbcTest extends BaseTestRepository {
   private MemberRepositoryJdbc repo;
 
+  private PersonRepository personRepo;
   private MemberTypeRepository memberTypeRepo;
 
   private User user;
@@ -46,11 +50,12 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     user = new User();
     user.setUserUID(1L);
 
-    PersonRepository personRepo = Mockito.mock(PersonRepository.class);
-    CountyRepository countyRepo = Mockito.mock(CountyRepository.class);
-    ContactRepository contactRepo = Mockito.mock(ContactRepository.class);
+    personRepo = mock(PersonRepository.class);
 
-    memberTypeRepo = Mockito.mock(MemberTypeRepository.class);
+    CountyRepository countyRepo = mock(CountyRepository.class);
+    ContactRepository contactRepo = mock(ContactRepository.class);
+
+    memberTypeRepo = mock(MemberTypeRepository.class);
 
     MemberType regularMember = new MemberType();
     regularMember.setMemberTypeUID(1L);
@@ -62,11 +67,11 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     familyHead.setMemberTypeMeaning(MemberType.FAMILY_HEAD);
     familyHead.setMemberTypeDisplay("Family Head");
 
-    Mockito.when(memberTypeRepo.getMemberTypeByUID(1L)).thenReturn(regularMember);
-    Mockito.when(memberTypeRepo.getMemberTypeByUID(2L)).thenReturn(familyHead);
+    when(memberTypeRepo.getMemberTypeByUID(1L)).thenReturn(regularMember);
+    when(memberTypeRepo.getMemberTypeByUID(2L)).thenReturn(familyHead);
 
-    Mockito.when(memberTypeRepo.getMemberTypeByMeaning(MemberType.REGULAR)).thenReturn(regularMember);
-    Mockito.when(memberTypeRepo.getMemberTypeByMeaning(MemberType.FAMILY_HEAD)).thenReturn(familyHead);
+    when(memberTypeRepo.getMemberTypeByMeaning(MemberType.REGULAR)).thenReturn(regularMember);
+    when(memberTypeRepo.getMemberTypeByMeaning(MemberType.FAMILY_HEAD)).thenReturn(familyHead);
 
     svCounty = new County();
     svCounty.setCountyUID(1L);
@@ -74,7 +79,7 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     svCounty.setCountyCode("SV");
     svCounty.setCountyName("Stevens");
 
-    Mockito.when(countyRepo.getCountyByUID(1L)).thenReturn(svCounty);
+    when(countyRepo.getCountyByUID(1L)).thenReturn(svCounty);
 
     repo = new MemberRepositoryJdbc(createTestDataSource(), personRepo, memberTypeRepo, countyRepo, contactRepo);
 
@@ -153,6 +158,31 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     Member member = repo.getMemberByUID(2L);
 
     assertNotNull("Ensure the member is not NULL!", member);
+    assertEquals("Ensure we found the correct member!", 2, member.getMemberUID());
+    assertNotNull("Ensure we have a valid MemberType.", member.getMemberType());
+    assertEquals("Ensure it is the correct MemberType.", MemberType.REGULAR, member.getMemberType()
+        .getMemberTypeMeaning());
+  }
+
+  /**
+   * Test the getMemberByPersonUID method and not finding the member.
+   */
+  @Test
+  public void testGetMemberByPersonUID_NotFound() {
+    Optional<Member> check = repo.getMemberByPersonUID(999L);
+    assertFalse("Ensure the Member was not found.", check.isPresent());
+  }
+
+  /**
+   * Test the getMemberByUID method and finding the member.
+   */
+  @Test
+  public void testGetMemberByPersonUID_Found() {
+    Optional<Member> check = repo.getMemberByPersonUID(11L);
+
+    assertTrue("Ensure the member was found.", check.isPresent());
+
+    Member member = check.get();
     assertEquals("Ensure we found the correct member!", 2, member.getMemberUID());
     assertNotNull("Ensure we have a valid MemberType.", member.getMemberType());
     assertEquals("Ensure it is the correct MemberType.", MemberType.REGULAR, member.getMemberType()
@@ -313,6 +343,11 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testSaveMember_Insert_Company() {
+    Person person = new Person();
+    person.setPersonUID(1L);
+
+    when(personRepo.savePerson(any(), any())).thenReturn(person);
+
     Membership membership = new Membership();
     membership.setMembershipUID(2L);
 
@@ -327,6 +362,7 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     builder.setOwnerIdent("LNAFNA1");
     builder.setJoinDate(new DateTime());
     builder.setMemberType(type);
+    builder.setPerson(person);
 
     Member member = repo.saveMember(builder, membership, user);
     assertNotNull("Ensure we have a member.", member);
@@ -343,6 +379,11 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testSaveMember_Update() {
+    Person person = new Person();
+    person.setPersonUID(1L);
+
+    when(personRepo.savePerson(any(), any())).thenReturn(person);
+
     Membership membership = new Membership();
     membership.setMembershipUID(2L);
 
@@ -358,6 +399,7 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
 
     member1.setEmailNewsletter(true);
     member1.setOwnerIdent(ownerId);
+    member1.setPerson(person);
 
     Member member2 = repo.saveMember(member1, membership, user);
     assertNotNull("Ensure the member is not null.", member2);

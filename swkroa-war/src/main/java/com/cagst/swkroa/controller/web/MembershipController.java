@@ -1,5 +1,7 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author Craig Gaskill
  */
 @Controller
-public final class MembershipController {
+@RolesAllowed({"ROLE_STAFF", "ROLE_ADMIN"})
+public class MembershipController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipController.class);
 
   /**

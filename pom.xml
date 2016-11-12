@@ -90,11 +90,32 @@
     <!-- Google JSR-305 Annotations -->
     <jsr305.version>3.0.1</jsr305.version>
 
+    <!-- JSR-330 CDI Dependency Injection Annotations  -->
+    <jsr330.version>1</jsr330.version>
+
+    <!-- JSR-250 Annotations (RolesAllowed) -->
+    <jsr250.version>1.0</jsr250.version>
+
+    <!-- HikariCp JDBC Framework -->
+    <hikari-version>2.4.6</hikari-version>
+
     <!-- MySQL -->
     <mysql-version>5.1.30</mysql-version>
 
-    <!-- Flyway DB Migration Framework -->
-    <flyway-version>3.2</flyway-version>
+    <!-- Jasper Reporting Engine -->
+    <jasper-version>6.1.1</jasper-version>
+
+    <!-- Miscellaneous -->
+    <servlet-api-version>3.0.1</servlet-api-version>
+    <jstl-version>1.2</jstl-version>
+    <servlet-jsp-version>2.2.1</servlet-jsp-version>
+
+    <!-- StageMonitor Framework -->
+    <stagemonitor-version>0.28.0</stagemonitor-version>
+
+    <!--                      -->
+    <!-- Testing Dependencies -->
+    <!--                      -->
 
     <!-- JUnit/Mockito/PowerMock Testing Framework -->
     <junit-version>4.11</junit-version>
@@ -104,13 +125,6 @@
     <!-- HSQLDB In-Memory Database -->
     <hsqldb-version>2.3.2</hsqldb-version>
 
-    <!-- Jasper Reporting Engine -->
-    <jasper-version>6.1.1</jasper-version>
-
-    <!-- Miscellaneous -->
-    <servlet-api-version>3.0.1</servlet-api-version>
-    <jstl-version>1.2</jstl-version>
-    <servlet-jsp-version>2.2.1</servlet-jsp-version>
   </properties>
 
   <dependencyManagement>
@@ -336,11 +350,25 @@
         <version>${jstl-version}</version>
       </dependency>
 
-      <!-- JSR-330 Dependencies -->
+      <!-- JSR-330 Annotations -->
       <dependency>
         <groupId>javax.inject</groupId>
         <artifactId>javax.inject</artifactId>
-        <version>1</version>
+        <version>${jsr330.version}</version>
+      </dependency>
+
+      <!-- JSR-250 Annotations -->
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>jsr250-api</artifactId>
+        <version>${jsr250.version}</version>
+      </dependency>
+
+      <!-- HikariCp JDBC Framework -->
+      <dependency>
+        <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP</artifactId>
+        <version>${hikari-version}</version>
       </dependency>
 
       <!-- MySQL Dependencies -->
@@ -408,14 +436,18 @@
         <version>${jsr305.version}</version>
       </dependency>
 
-      <!-- Flyway DB Migration Framework -->
+      <!-- StageMonitor Framework -->
       <dependency>
-        <groupId>org.flywaydb</groupId>
-        <artifactId>flyway-core</artifactId>
-        <version>${flyway-version}</version>
+        <groupId>org.stagemonitor</groupId>
+        <artifactId>stagemonitor-web</artifactId>
+        <version>${stagemonitor-version}</version>
+        <scope>runtime</scope>
       </dependency>
 
+
+      <!--                      -->
       <!-- Testing Dependencies -->
+      <!--                      -->
 
       <!-- JUnit Dependencies -->
       <dependency>

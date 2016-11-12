@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * An exception to be thrown when the request was invalid.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RuntimeException {

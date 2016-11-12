@@ -468,6 +468,13 @@ div.list-group-item.active:hover {
   margin-bottom: 0;
 }
 
+.constrain-view-sm {
+  min-height: 250px;
+  max-height: 250px;
+  overflow: auto;
+  margin-bottom: 0;
+}
+
 .add-btn:hover, .add-btn:hover > a {
   background-color: #3276b1;
   border-color: #357ebd;

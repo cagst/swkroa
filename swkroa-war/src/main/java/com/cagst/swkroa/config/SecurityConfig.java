@@ -1,7 +1,11 @@
 package com.cagst.swkroa.config;
 
+import javax.inject.Inject;
+import javax.servlet.Filter;
+
 import com.cagst.swkroa.security.ForceChangePasswordFilter;
 import com.cagst.swkroa.security.SigninSuccessHandler;
+import com.cagst.swkroa.security.SignoutHandler;
 import com.cagst.swkroa.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.inject.Inject;
-import javax.servlet.Filter;
-
 /**
  * Configuration class for the system's Security framework.
  *
@@ -25,11 +26,12 @@ import javax.servlet.Filter;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private static final int STRENGTH = 12;
 
   private SigninSuccessHandler signinSuccessHandler;
+  private SignoutHandler signoutHandler;
 
   @Bean
   public PasswordEncoder getPasswordEncoder() {
@@ -41,12 +43,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     auth.userDetailsService(userService).passwordEncoder(getPasswordEncoder());
 
     signinSuccessHandler = new SigninSuccessHandler(userService);
+    signoutHandler = new SignoutHandler();
   }
 
   @Override
   public void configure(WebSecurity web) throws Exception {
-    web.ignoring()
-        .antMatchers("/static/**");
+    web.ignoring().antMatchers("/static/**");
   }
 
   @Override
@@ -58,7 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .antMatchers("/public/**").permitAll()
           .antMatchers("/auth/**").permitAll()
           .antMatchers("/api/register/**").permitAll()
-          .antMatchers("/**").authenticated()
+          .antMatchers("/api/codesets/**").permitAll()
+          .anyRequest().authenticated()
         .and().formLogin()
           .loginPage("/auth/signin")
           .loginProcessingUrl("/login")
@@ -71,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .invalidateHttpSession(true)
           .deleteCookies("JSESSIONID")
           .logoutSuccessUrl("/auth/signedout")
+          .logoutSuccessHandler(signoutHandler)
         .and().addFilterAfter(getChangePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 

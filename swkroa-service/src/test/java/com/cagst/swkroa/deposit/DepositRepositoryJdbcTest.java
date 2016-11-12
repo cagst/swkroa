@@ -1,5 +1,16 @@
 package com.cagst.swkroa.deposit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
@@ -12,18 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
-
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 /**
  * Test class for the {@link DepositRepositoryJdbc} class.
@@ -37,9 +37,23 @@ public class DepositRepositoryJdbcTest extends BaseTestRepository {
 
   private User user;
 
-  private CodeValue typeDues = new CodeValue();
-  private CodeValue typePayment = new CodeValue();
-  private CodeValue typeSpecial = new CodeValue();
+  private CodeValue typeDues = CodeValue.builder()
+      .setCodeValueUID(1L)
+      .setDisplay("Annual Dues")
+      .setMeaning("ANNUAL DUES")
+      .build();
+
+  private CodeValue typePayment = CodeValue.builder()
+      .setCodeValueUID(2L)
+      .setDisplay("Payment")
+      .setMeaning("PAYMENT")
+      .build();
+
+  private CodeValue typeSpecial = CodeValue.builder()
+      .setCodeValueUID(3L)
+      .setDisplay("Special Funds")
+      .setMeaning("SPECIAL FUNDS")
+      .build();
 
   @Before
   public void setUp() {
@@ -47,21 +61,9 @@ public class DepositRepositoryJdbcTest extends BaseTestRepository {
 
     CodeValueRepository codeValueRepo = mock(CodeValueRepository.class);
 
-    typeDues.setCodeValueUID(1L);
-    typeDues.setDisplay("Annual Dues");
-    typeDues.setMeaning("ANNUAL DUES");
-
-    typePayment.setCodeValueUID(2L);
-    typePayment.setDisplay("Payment");
-    typePayment.setMeaning("PAYMENT");
-
-    typeSpecial.setCodeValueUID(3L);
-    typeSpecial.setDisplay("Special Funds");
-    typeSpecial.setMeaning("SPECIAL FUNDS");
-
-    Mockito.when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(typeDues);
-    Mockito.when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(typePayment);
-    Mockito.when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(typeSpecial);
+    when(codeValueRepo.getCodeValueByUID(1L)).thenReturn(typeDues);
+    when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(typePayment);
+    when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(typeSpecial);
 
     transactionRepo = new TransactionRepositoryJdbc(dataSource, codeValueRepo);
     repo = new DepositRepositoryJdbc(dataSource, transactionRepo);

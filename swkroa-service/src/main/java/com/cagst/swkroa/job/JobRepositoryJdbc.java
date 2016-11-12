@@ -1,5 +1,12 @@
 package com.cagst.swkroa.job;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.user.User;
@@ -14,13 +21,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A JDBC implementation of the {@link JobRepository} interface.

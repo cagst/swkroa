@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="sectionMembership">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-2">
+          <span class="panel-title" th:text="#{member.primary.heading}">
+            zzz Primary Member
+          </span>
+        </div>
+
+        <div class="col-xs-10">
+          <span class="pull-right"
+                data-ng-show="membership.primaryMember.memberType.allowSpouse">
+            <button type="button" class="btn btn-success btn-xs hover-reveal"
+                    data-ng-show="isPrimaryMember && (!membership.spouse || !membership.spouse.active)"
+                    data-ng-click="addSpouse()">
+              <i class="fa fa-plus"></i>
+              <span th:text="#{com.cagst.swkroa.membership.member.spouse.add}">zzz Add Spouse</span>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <div th:include="member/modify/section_primary_member"></div>
+      <div th:include="member/modify/section_primary_spouse"
+           data-ng-show="membership.spouse && membership.spouse.active"></div>
+      <div th:include="member/modify/section_primary_contact"></div>
+    </div>
+  </div>
+</div>
+
+</html>

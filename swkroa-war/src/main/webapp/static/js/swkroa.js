@@ -15,8 +15,7 @@ var swkroaApp = angular.module('swkroaApp',
     ['ui.bootstrap',
      'ui.utils',
      'ui.router',
-     'xeditable',
-     'mgo-angular-wizard']
+     'xeditable']
 );
 
 angular.module('swkroaApp').filter('tel', function () {
@@ -405,8 +404,14 @@ swkroaApp.service('contactService', [function() {
 swkroaApp.service('membershipService', ['$http', function($http) {
   var rootUrl = "/api/memberships";
 
-  this.getMembership = function(membershipUID) {
-    var promise = $http.get(rootUrl + '/' + membershipUID);
+  this.getMembership = function(membershipUID, including) {
+    var url = rootUrl + '/' + membershipUID;
+
+    if (Object.prototype.toString.call(including) === '[object Array]') {
+      url = url + "?including=" + including.toString();
+    }
+
+    var promise = $http.get(url);
 
     promise.success = function(fn) {
       promise.then(function(response) {

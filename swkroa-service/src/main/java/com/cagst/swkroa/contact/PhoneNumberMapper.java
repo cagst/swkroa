@@ -1,12 +1,12 @@
 package com.cagst.swkroa.contact;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.cagst.swkroa.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Maps a row in the resultset into a {@link PhoneNumber} object. Used to marsahl / unmarshal a

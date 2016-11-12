@@ -1,14 +1,14 @@
 package com.cagst.swkroa.member;
 
+import java.util.List;
+import java.util.Set;
+
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.user.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * Definition of a repository that retrieves and persists {@link Membership} objects.
@@ -29,7 +29,7 @@ public interface MembershipRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 Membership was found.
    */
-   Membership getMembershipByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+  Membership getMembershipByUID(final long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves the active {@link Membership Memberships} in the system.
@@ -41,7 +41,7 @@ public interface MembershipRepository {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system.
    */
-   List<Membership> getMemberships(final Status status, final MembershipBalance balance);
+  List<Membership> getMemberships(final Status status, final MembershipBalance balance);
 
   /**
    * Retrieves all active {@link Membership Memberships} in the system that has the name in one of the following fields:
@@ -61,7 +61,7 @@ public interface MembershipRepository {
    *
    * @return A {@link List} of {@link Membership Memberships} in the system that starts with the specified name.
    */
-   List<Membership> getMembershipsByName(final String name, final Status status, final MembershipBalance balance);
+  List<Membership> getMembershipsByName(final String name, final Status status, final MembershipBalance balance);
 
   /**
    * Retrieves all {@link Membership Memberships} that will be due in the following days.
@@ -71,7 +71,7 @@ public interface MembershipRepository {
    *
    * @return A {@link List} of {@link Membership Memberships} that will be due in the following days.
    */
-   List<Membership> getMembershipsDueInXDays(final int days);
+  List<Membership> getMembershipsDueInXDays(final int days);
 
   /**
    * Commits the specified {@link Membership Membership} to persistent storage.
@@ -90,7 +90,7 @@ public interface MembershipRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-   Membership saveMembership(final Membership membership, final User user) throws DataAccessException;
+  Membership saveMembership(final Membership membership, final User user) throws DataAccessException;
 
   /**
    * Closes the memberships identified by their unique identifier for the specified reason.
@@ -108,7 +108,7 @@ public interface MembershipRepository {
    *
    * @throws DataAccessException if the query fails
    */
-   int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
+  int closeMemberships(final Set<Long> membershipIds, final CodeValue closeReason, final String closeText, final User user)
       throws DataAccessException;
 
   /**
@@ -123,5 +123,5 @@ public interface MembershipRepository {
    *
    * @throws DataAccessException if the query fails
    */
-   int updateNextDueDate(final long membershipId, final User user) throws DataAccessException;
+  int updateNextDueDate(final long membershipId, final User user) throws DataAccessException;
 }

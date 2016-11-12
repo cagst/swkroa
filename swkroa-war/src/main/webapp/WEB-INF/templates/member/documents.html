@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <th:block th:replace="fragments/common :: head" />
+</head>
+
+<body>
+<div th:replace="fragments/main :: header"></div>
+<div th:replace="fragments/main :: navigation"></div>
+
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="documentController" data-ng-cloak>
+  <input id="membershipUID" type="hidden" th:value="${membershipUID}"/>
+
+  <h1 th:text="#{member.documents.page}">zzz Documents</h1>
+
+  <table class="table table-hover table-bordered">
+    <thead>
+    <tr>
+      <th th:text="#{common.date}" style="width:100px">zzz Date</th>
+      <th th:text="#{common.type}">zzz Type</th>
+      <th th:text="#{common.desc}">zzz Desc</th>
+      <th style="width:75px"></th>
+    </tr>
+    </thead>
+    <tbody data-ng-repeat="doc in documents | orderBy: 'beginEffectiveDate': true"
+           data-ng-show="doc.active">
+    <tr>
+      <td style="width:125px">
+        <div>{{doc.beginEffectiveDate | date:'mediumDate'}}</div>
+      </td>
+      <td>{{doc.documentType.display}}</td>
+      <td>{{doc.documentDescription}}</td>
+      <td style="width:75px">
+        <div class="pull-right">
+          <a class="btn btn-default btn-xs"
+             target="_blank"
+             data-ng-href="documents/{{doc.documentUID}}">
+            <i class="fa fa-binoculars"></i>
+            <span th:text="#{member.documents.view}">zzz View</span>
+          </a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<script type="text/javascript" th:src="@{/static/js/member/documents.js}"></script>
+</body>
+</html>

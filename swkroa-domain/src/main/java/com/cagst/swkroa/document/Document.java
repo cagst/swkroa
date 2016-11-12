@@ -1,9 +1,9 @@
 package com.cagst.swkroa.document;
 
+import java.io.Serializable;
+
 import com.cagst.swkroa.codevalue.CodeValue;
 import org.joda.time.DateTime;
-
-import java.io.Serializable;
 
 /**
  * Represents a Document stored in the system.

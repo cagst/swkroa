@@ -1,5 +1,11 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import com.cagst.swkroa.exception.BadRequestException;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.user.User;
@@ -23,12 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Handles and retrieves {@link User} objects depending upon the URI template.
  *
@@ -47,7 +47,7 @@ public final class UserApiController {
   private final UserService userService;
 
   @Inject
-  public UserApiController(final UserService userService) {
+  public UserApiController(UserService userService) {
     this.userService = userService;
   }
   /**
@@ -93,7 +93,7 @@ public final class UserApiController {
   }
 
   @RequestMapping(value = "/api/users/{userUID}", method = RequestMethod.PUT)
-  public User updateUser(final @PathVariable("userUID") long userUID, final @RequestParam String action) {
+  public User updateUser(@PathVariable("userUID") long userUID, @RequestParam String action) {
     LOGGER.info("Received request to update the user [{}] for [{}]", userUID, action);
 
     if (StringUtils.isBlank(action)) {
@@ -135,7 +135,7 @@ public final class UserApiController {
    * @return The {@link User} after it has been persisted.
    */
   @RequestMapping(value = "/api/users", method = RequestMethod.POST)
-  public ResponseEntity<User> saveUser(final @RequestBody User user, final HttpServletRequest request) {
+  public ResponseEntity<User> saveUser(@RequestBody User user, HttpServletRequest request) {
     LOGGER.info("Received request to save membership [{}]", user.getUserUID());
 
     try {
@@ -171,7 +171,7 @@ public final class UserApiController {
    * @return {@code true} if the username is being used, {@code false} otherwise.
    */
   @RequestMapping(value = "/api/users/{username}/exists", method = RequestMethod.GET)
-  public boolean usernameExists(final @PathVariable("username") String username) {
+  public boolean usernameExists(@PathVariable("username") String username) {
     LOGGER.info("Received request to check if username [{}] already exists", username);
 
     return userService.doesUsernameExist(username);
@@ -186,7 +186,7 @@ public final class UserApiController {
   public User getProfileUser() {
     LOGGER.info("Received request to retrieve the profile user.");
 
-    return userService.getProfileUser(WebAppUtils.getUser());
+    return userService.getUserByUID(WebAppUtils.getUser().getUserUID());
   }
 
   /**
@@ -208,7 +208,7 @@ public final class UserApiController {
     User user = WebAppUtils.getUser();
     if (user == null) {
       LOGGER.error("Unable to determine current user.");
-      return new ResponseEntity<>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     LOGGER.info("Changing password for user [{}]", user.getUsername());

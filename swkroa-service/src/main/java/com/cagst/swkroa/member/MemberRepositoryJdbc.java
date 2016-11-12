@@ -1,5 +1,13 @@
 package com.cagst.swkroa.member;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.codevalue.CodeValue;
@@ -9,8 +17,8 @@ import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.county.CountyRepository;
 import com.cagst.swkroa.person.PersonRepository;
-import com.cagst.swkroa.person.PersonRepositoryJdbc;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -26,28 +34,20 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 /**
  * JDBC Template implementation of the {@link MemberRepository} interface.
  *
  * @author Craig Gaskill
  */
 @Named("memberRepo")
-/* package */ final class MemberRepositoryJdbc extends PersonRepositoryJdbc implements MemberRepository {
+/* package */ final class MemberRepositoryJdbc extends BaseRepositoryJdbc implements MemberRepository {
   private static final Logger LOGGER = LoggerFactory.getLogger(MemberRepositoryJdbc.class);
 
   private static final String GET_MEMBERS_FOR_MEMBERSHIP = "GET_MEMBERS_FOR_MEMBERSHIP";
   private static final String GET_MEMBERS_BY_NAME        = "GET_MEMBERS_BY_NAME";
   private static final String GET_MEMBERS_BY_NAME_COUNT  = "GET_MEMBERS_BY_NAME_COUNT";
   private static final String GET_MEMBER_BY_UID          = "GET_MEMBER_BY_UID";
+  private static final String GET_MEMBER_BY_PERSON_UID   = "GET_MEMBER_BY_PERSON_UID";
   private static final String GET_MEMBER_BY_OWNER_ID     = "GET_MEMBER_BY_OWNER_ID";
 
   private static final String GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP = "GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP";
@@ -65,6 +65,7 @@ import java.util.Optional;
   private final PersonRepository personRepo;
   private final MemberTypeRepository memberTypeRepo;
   private final CountyRepository countyRepo;
+  private final ContactRepository contactRepo;
 
   /**
    * Primary constructor used to create an instance of the MemberRepositoryJdbc.
@@ -81,71 +82,73 @@ import java.util.Optional;
    *     The {@link ContactRepository} to use to populate contact objects.
    */
   @Inject
-  public MemberRepositoryJdbc(final DataSource dataSource, final PersonRepository personRepo,
-                              final MemberTypeRepository memberTypeRepo,
-                              final CountyRepository countyRepo, final ContactRepository contactRepo) {
+  public MemberRepositoryJdbc(DataSource dataSource,
+                              PersonRepository personRepo,
+                              MemberTypeRepository memberTypeRepo,
+                              CountyRepository countyRepo,
+                              ContactRepository contactRepo) {
 
-    super(dataSource, contactRepo);
+    super(dataSource);
 
     this.personRepo = personRepo;
     this.memberTypeRepo = memberTypeRepo;
     this.countyRepo = countyRepo;
+    this.contactRepo = contactRepo;
   }
 
   @Override
 //  @Cacheable(value = "membersList", key = "#membership.getMembershipUID()")
-  public List<Member> getMembersForMembership(final Membership membership) {
+  public List<Member> getMembersForMembership(Membership membership) {
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
 
     LOGGER.info("Calling getMembersForMembership for [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("membership_id", membership.getMembershipUID());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("membership_id", membership.getMembershipUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_FOR_MEMBERSHIP), params, new MemberMapper(personRepo, memberTypeRepo));
   }
 
   @Override
-  public List<Member> getMembersByName(final String name, final Status status, final int start, final int limit) {
+  public List<Member> getMembersByName(String name, Status status, int start, int limit) {
     LOGGER.info("Calling getMembersByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(4);
-    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
-    params.put("status", status.toString());
-    params.put("start", start);
-    params.put("limit", limit);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.addValue("status", status.toString());
+    params.addValue("start", start);
+    params.addValue("limit", limit);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_BY_NAME), params, new MemberMapper(personRepo, memberTypeRepo));
   }
 
   @Override
-  public long getMembersByNameCount(final String name, final Status status) {
+  public long getMembersByNameCount(String name, Status status) {
     LOGGER.info("Calling getMembersByName for [{}].", name);
 
     Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Object> params = new HashMap<String, Object>(2);
-    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
-    params.put("status", status.toString());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.addValue("status", status.toString());
 
     return getJdbcTemplate().queryForObject(stmtLoader.load(GET_MEMBERS_BY_NAME_COUNT), params, Long.class);
   }
 
   @Override
-  public Member getMemberByUID(final long uid) throws IncorrectResultSizeDataAccessException {
+  public Member getMemberByUID(long uid) throws IncorrectResultSizeDataAccessException {
     LOGGER.info("Calling getMemberByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("member_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("member_id", uid);
 
     List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_UID), params,
         new MemberMapper(personRepo, memberTypeRepo));
@@ -162,14 +165,36 @@ import java.util.Optional;
   }
 
   @Override
-  public Optional<Member> getMemberByOwnerId(final String ownerId) throws IncorrectResultSizeDataAccessException {
+  public Optional<Member> getMemberByPersonUID(long uid) throws IncorrectResultSizeDataAccessException {
+    LOGGER.info("Calling getMemberByPersonUID for [{}]", uid);
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("person_id", uid);
+
+    List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_PERSON_UID),
+        params,
+        new MemberMapper(personRepo, memberTypeRepo));
+
+    if (members.size() == 1) {
+      return Optional.of(members.get(0));
+    } else if (members.size() == 0) {
+      return Optional.empty();
+    } else {
+      LOGGER.error("More than one Member with Person ID of [{}] was found.", uid);
+      throw new IncorrectResultSizeDataAccessException(1, members.size());
+    }
+  }
+
+  @Override
+  public Optional<Member> getMemberByOwnerId(String ownerId) throws IncorrectResultSizeDataAccessException {
     Objects.requireNonNull(ownerId, "Assertion Failure: argument [ownerId] cannot be null");
 
     LOGGER.info("Calling getMemberByOwnerId for [{}]", ownerId);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(1);
-    params.put("owner_ident", ownerId);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("owner_ident", ownerId);
 
     List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_OWNER_ID), params,
         new MemberMapper(personRepo, memberTypeRepo));
@@ -187,28 +212,27 @@ import java.util.Optional;
 
   @Override
 //  @Cacheable(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
-  public List<MembershipCounty> getMembershipCountiesForMembership(final Membership membership) {
+  public List<MembershipCounty> getMembershipCountiesForMembership(Membership membership) {
     Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
 
     LOGGER.info("Calling getMembershipCountiesForMembership for [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-
-    Map<String, Long> params = new HashMap<String, Long>(1);
-    params.put("membership_id", membership.getMembershipUID());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("membership_id", membership.getMembershipUID());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP), params,
         new MembershipCountyMapper(countyRepo));
   }
 
   @Override
-  public MembershipCounty getMembershipCountyByUID(final long uid) throws IncorrectResultSizeDataAccessException {
+  public MembershipCounty getMembershipCountyByUID(long uid) throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getMembershipCountyByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<String, Long>(1);
-    params.put("membership_county_id", uid);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("membership_county_id", uid);
 
     List<MembershipCounty> counties = getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_COUNTY_BY_UID), params,
         new MembershipCountyMapper(countyRepo));
@@ -225,7 +249,7 @@ import java.util.Optional;
   }
 
   @Override
-  public String generateOwnerId(final String firstName, final String lastName) {
+  public String generateOwnerId(String firstName, String lastName) {
     Assert.hasText(firstName, "Assertion Failure - argument [firstName] cannot be null or empty.");
     Assert.isTrue(firstName.length() > 2, "Assertion Failure - argument [firstName] must have at least 3 characters.");
     Assert.hasText(lastName, "Assertion Failure - argument [lastName] cannot be null or empty.");
@@ -236,8 +260,8 @@ import java.util.Optional;
     String partial = StringUtils.left(lastName, 3).toUpperCase() + StringUtils.left(firstName, 3).toUpperCase();
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<String, String>();
-    params.put("ownerIdent", partial + '%');
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("ownerIdent", partial + '%');
 
     int cnt = getJdbcTemplate().queryForObject(stmtLoader.load(GET_PARTIAL_OWNERID_COUNT), params, Integer.class);
     return (partial + cnt);
@@ -246,7 +270,7 @@ import java.util.Optional;
   @Override
   @Transactional
 //  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
-  public Member saveMember(final Member member, final Membership membership, final User user)
+  public Member saveMember(Member member, Membership membership, User user)
       throws DataAccessException {
 
     Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
@@ -267,22 +291,24 @@ import java.util.Optional;
       savedMember = updateMember(member, membership, user);
     }
 
-    for (Address address : member.getAddresses()) {
-      address.setParentEntityUID(savedMember.getMemberUID());
-      address.setParentEntityName(ContactRepository.ENTITY_MEMBER);
-      getContactRepository().saveAddress(address, user);
+    for (Address address : member.getPerson().getAddresses()) {
+      address.setParentEntityUID(member.getMemberUID());
+      address.setParentEntityName(UserType.MEMBER.name());
+
+      contactRepo.saveAddress(address, user);
     }
 
-    for (PhoneNumber phone : member.getPhoneNumbers()) {
-      phone.setParentEntityUID(savedMember.getMemberUID());
-      phone.setParentEntityName(ContactRepository.ENTITY_MEMBER);
-      getContactRepository().savePhoneNumber(phone, user);
+    for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
+      phone.setParentEntityUID(member.getMemberUID());
+      phone.setParentEntityName(UserType.MEMBER.name());
+
+      contactRepo.savePhoneNumber(phone, user);
     }
 
-    for (EmailAddress email : member.getEmailAddresses()) {
-      email.setParentEntityUID(savedMember.getMemberUID());
-      email.setParentEntityName(ContactRepository.ENTITY_MEMBER);
-      getContactRepository().saveEmailAddress(email, user);
+    for (EmailAddress email : member.getPerson().getEmailAddresses()) {
+      email.setParentEntityUID(member.getMemberUID());
+      email.setParentEntityName(UserType.MEMBER.name());
+      contactRepo.saveEmailAddress(email, user);
     }
 
     return savedMember;
@@ -291,9 +317,9 @@ import java.util.Optional;
   @Override
   @Transactional
 //  @CacheEvict(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
-  public MembershipCounty saveMembershipCounty(final MembershipCounty county,
-                                               final Membership membership,
-                                               final User user)
+  public MembershipCounty saveMembershipCounty(MembershipCounty county,
+                                               Membership membership,
+                                               User user)
       throws DataAccessException {
 
     Assert.notNull(county, "Assertion Failed - argument [builder] cannot be null");
@@ -311,7 +337,7 @@ import java.util.Optional;
   @Override
   @Transactional
 //  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
-  public Member closeMember(final Member member, final CodeValue closeReason, final String closeText, final User user)
+  public Member closeMember(Member member, CodeValue closeReason, String closeText, User user)
       throws IncorrectResultSizeDataAccessException {
 
     Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
@@ -340,7 +366,7 @@ import java.util.Optional;
     }
   }
 
-  private Member insertMember(final Member member, final Membership membership, final User user)
+  private Member insertMember(Member member, Membership membership, User user)
       throws DataAccessException {
 
     LOGGER.info("Inserting new Member [{}]", member.getMembershipUID());
@@ -360,7 +386,7 @@ import java.util.Optional;
     return member;
   }
 
-  private Member updateMember(final Member member, final Membership membership, final User user)
+  private Member updateMember(Member member, Membership membership, User user)
       throws DataAccessException {
 
     LOGGER.info("Updating Member [{}]", member.getMembershipUID());
@@ -382,9 +408,9 @@ import java.util.Optional;
     return member;
   }
 
-  private MembershipCounty insertMembershipCounty(final MembershipCounty county,
-                                                  final Membership membership,
-                                                  final User user)
+  private MembershipCounty insertMembershipCounty(MembershipCounty county,
+                                                  Membership membership,
+                                                  User user)
       throws DataAccessException {
 
     LOGGER.info("Inserting new MembershipCounty [{}]", county.getCounty().getCountyName());
@@ -404,9 +430,9 @@ import java.util.Optional;
     return county;
   }
 
-  private MembershipCounty updateMembershipCounty(final MembershipCounty county,
-                                                  final Membership membership,
-                                                  final User user)
+  private MembershipCounty updateMembershipCounty(MembershipCounty county,
+                                                  Membership membership,
+                                                  User user)
       throws DataAccessException {
 
     LOGGER.info("Updating MembershipCounty [{}]", county.getCounty().getCountyName());

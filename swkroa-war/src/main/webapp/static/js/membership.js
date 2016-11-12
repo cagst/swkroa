@@ -389,7 +389,7 @@ swkroaApp.controller('membershipController',
       membershipService.generateOwnerId(firstName, lastName).then(function(data) {
         member.ownerIdent = data;
       });
-    };
+    }
   };
 
   $scope.hasChanges = function(membership) {
@@ -512,7 +512,7 @@ var syncTransactionEntryType = function(scope) {
       }
     }
   }
-}
+};
 
 var syncMember = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
@@ -525,7 +525,7 @@ var syncMember = function(scope) {
       }
     }
   }
-}
+};
 
 var syncRelatedTransactions = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
@@ -538,7 +538,7 @@ var syncRelatedTransactions = function(scope) {
       }
     }
   }
-}
+};
 
 var toggleTransactionDetails = function(transaction) {
   var img       = $(transaction).children()[0];

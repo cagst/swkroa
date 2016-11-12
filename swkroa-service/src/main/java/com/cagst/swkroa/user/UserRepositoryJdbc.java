@@ -1,12 +1,29 @@
 package com.cagst.swkroa.user;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import com.cagst.common.db.BaseRepositoryJdbc;
 import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.AuditInstigator;
 import com.cagst.swkroa.audit.annotation.AuditMessage;
 import com.cagst.swkroa.audit.annotation.Auditable;
+import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
-import com.cagst.swkroa.person.PersonRepositoryJdbc;
+import com.cagst.swkroa.contact.EmailAddress;
+import com.cagst.swkroa.contact.PhoneNumber;
+import com.cagst.swkroa.member.Member;
+import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.person.Person;
+import com.cagst.swkroa.person.PersonRepository;
+import com.cagst.swkroa.role.Role;
+import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
@@ -23,18 +40,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 /**
  * JDBC Template implementation of the {@link UserRepository} interface.
  *
  * @author Craig Gaskill
  */
-/* package */ final class UserRepositoryJdbc extends PersonRepositoryJdbc implements UserRepository, MessageSourceAware {
+@Named(value = "userRepo")
+/* package */ final class UserRepositoryJdbc extends BaseRepositoryJdbc implements UserRepository, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryJdbc.class);
 
   private static final String MSG_USERNAME_EXISTS = "com.cagst.swkroa.username.exists";
@@ -55,21 +67,40 @@ import java.util.Optional;
 
   private static final String GET_ALL_USERS = "GET_ALL_USERS";
 
-  private static final String INSERT_USER = "INSERT_USER";
-  private static final String UPDATE_USER = "UPDATE_USER";
+  private static final String INSERT_USER     = "INSERT_USER";
+  private static final String UPDATE_USER     = "UPDATE_USER";
+  private static final String MERGE_USER_ROLE = "MERGE_USER_ROLE";
 
+  private static final String INSERT_USER_QUESTION = "INSERT_USER_QUESTION";
+  private static final String UPDATE_USER_QUESTION = "UPDATE_USER_QUESTION";
+
+  private PersonRepository personRepo;
+  private ContactRepository contactRepo;
+  private MemberRepository memberRepo;
   private MessageSourceAccessor messages;
 
   /**
    * Primary constructor used to create an instance of <i>UserRepositoryJdbc</i>.
    *
    * @param dataSource
-   *     The {@link DataSource} used to retrieve / persist data objects.
+   *    The {@link DataSource} used to retrieve / persist data objects.
+   * @param personRepo
+   *    The {@link PersonRepository} to use to retrieve / persist Person objects.
    * @param contactRepo
-   *     The {@link ContactRepository} to use to populate contact objects.
+   *    The {@link ContactRepository} to use to populate contact objects.
+   * @param memberRepo
+   *    The {@link MemberRepository} to use to retrieve Member objects.
    */
-  public UserRepositoryJdbc(DataSource dataSource, ContactRepository contactRepo) {
-    super(dataSource, contactRepo);
+  @Inject
+  public UserRepositoryJdbc(DataSource dataSource,
+                            PersonRepository personRepo,
+                            MemberRepository memberRepo,
+                            ContactRepository contactRepo) {
+    super(dataSource);
+
+    this.personRepo = personRepo;
+    this.contactRepo = contactRepo;
+    this.memberRepo = memberRepo;
   }
 
   @Override
@@ -372,39 +403,117 @@ import java.util.Optional;
   }
 
   @Override
-  @CacheEvict(value = "users", key = "#builder.getUserUID()")
-  public User saveUser(User newUser, User user)
+  @CacheEvict(value = "users", key = "#saveUser.getUserUID()")
+  public User saveUser(User saveUser, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(newUser, "Assertion Failed - argument [newUser] cannot be null");
+    Assert.notNull(saveUser, "Assertion Failed - argument [saveUser] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling saveUser for [{}]", newUser.getUsername());
+    LOGGER.info("Calling saveUser for [{}]", saveUser.getUsername());
+
+    Optional<Member> member = memberRepo.getMemberByPersonUID(saveUser.getPersonUID());
 
     // save the Person portion of the User
-    savePerson(newUser, user);
+    Person savedPerson = personRepo.savePerson(saveUser, user);
+    saveUser.setPersonUID(savedPerson.getPersonUID());
 
-    if (newUser.getUserUID() == 0L) {
-      return insertUser(newUser, user);
+    User savedUser;
+    if (saveUser.getUserUID() == 0L) {
+      savedUser = insertUser(saveUser, user);
     } else {
-      return updateUser(newUser, user);
+      savedUser = updateUser(saveUser, user);
     }
+
+    if (CollectionUtils.isNotEmpty(savedUser.getRoles())) {
+      for (Role role : savedUser.getRoles()) {
+        mergeUserRole(savedUser.getUserUID(), role.getRoleUID(), user);
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(savedUser.getUserQuestions())) {
+      for (UserQuestion userQuestion : savedUser.getUserQuestions()) {
+        if (userQuestion.getUserQuestionUID() > 0) {
+          updateUserQuestion(savedUser.getUserUID(), userQuestion, user);
+        } else {
+          insertUserQuestion(savedUser.getUserUID(), userQuestion, user);
+        }
+      }
+    }
+
+    for (Address address : savedUser.getAddresses()) {
+      if (member.isPresent()) {
+        address.setParentEntityUID(member.get().getMemberUID());
+        address.setParentEntityName(UserType.MEMBER.name());
+      } else {
+        address.setParentEntityUID(savedUser.getUserUID());
+        address.setParentEntityName(UserType.STAFF.name());
+      }
+
+      contactRepo.saveAddress(address, user);
+    }
+
+    for (PhoneNumber phone : savedUser.getPhoneNumbers()) {
+      if (member.isPresent()) {
+        phone.setParentEntityUID(member.get().getMemberUID());
+        phone.setParentEntityName(UserType.MEMBER.name());
+      } else {
+        phone.setParentEntityUID(savedUser.getUserUID());
+        phone.setParentEntityName(UserType.STAFF.name());
+      }
+
+      contactRepo.savePhoneNumber(phone, user);
+    }
+
+    for (EmailAddress email : savedUser.getEmailAddresses()) {
+      if (member.isPresent()) {
+        email.setParentEntityUID(member.get().getMemberUID());
+        email.setParentEntityName(UserType.MEMBER.name());
+      } else {
+        email.setParentEntityUID(savedUser.getUserUID());
+        email.setParentEntityName(UserType.STAFF.name());
+      }
+
+      contactRepo.saveEmailAddress(email, user);
+    }
+
+
+    return savedUser;
   }
 
   @Override
-  public User registerUser(User newUser, User user)
+  public User registerUser(User registerUser, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(newUser, "Assertion Failed - argument [newUser] cannot be null");
+    Assert.notNull(registerUser, "Assertion Failed - argument [registerUser] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 
-    LOGGER.info("Calling saveUser for [{}]", newUser.getUsername());
+    LOGGER.info("Calling saveUser for [{}]", registerUser.getUsername());
 
-    if (newUser.getUserUID() == 0L) {
-      return insertUser(newUser, user);
+    User registeredUser;
+    if (registerUser.getUserUID() == 0L) {
+      registeredUser = insertUser(registerUser, user);
     } else {
-      return updateUser(newUser, user);
+      registeredUser = updateUser(registerUser, user);
     }
+
+    if (CollectionUtils.isNotEmpty(registeredUser.getRoles())) {
+      for (Role role : registeredUser.getRoles()) {
+        mergeUserRole(registeredUser.getUserUID(), role.getRoleUID(), user);
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(registeredUser.getUserQuestions())) {
+      for (UserQuestion userQuestion : registeredUser.getUserQuestions()) {
+        if (userQuestion.getUserQuestionUID() > 0) {
+          updateUserQuestion(registeredUser.getUserUID(), userQuestion, user);
+        } else {
+          insertUserQuestion(registeredUser.getUserUID(), userQuestion, user);
+        }
+      }
+    }
+
+    return registeredUser;
   }
 
   @Override
@@ -416,8 +525,13 @@ import java.util.Optional;
     return getJdbcTemplate().getJdbcOperations().query(stmtLoader.load(GET_ALL_USERS), new UserMapper());
   }
 
+  @Override
+  public List<UserQuestion> getSecurityQuestionsForUser(User user) {
+    return null;
+  }
+
   /**
-   * Place helper methods below this line. *
+   * Place helper methods below this line.
    */
 
   private User insertUser(User newUser, User user)
@@ -468,4 +582,62 @@ import java.util.Optional;
 
     return updateUser;
   }
+
+  private void mergeUserRole(long userId, long roleId, User user) {
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    Map<String, Long> params = new HashMap<>();
+    params.put("user_id", userId);
+    params.put("role_id", roleId);
+    params.put("active_ind", 1L);
+    params.put("create_id", user.getUserUID());
+    params.put("updt_id", user.getUserUID());
+
+    getJdbcTemplate().update(stmtLoader.load(MERGE_USER_ROLE), params);
+  }
+
+  private UserQuestion insertUserQuestion(long userId, UserQuestion userQuestion, User user) {
+    LOGGER.info("Calling insertUserQuestion for User [{}] with Question [{}]", userId, userQuestion.getQuestionCD());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_USER_QUESTION),
+        UserQuestionMaper.mapInsertStatement(userId, userQuestion, user),
+        keyHolder);
+
+    if (cnt == 1) {
+      return UserQuestion.builder()
+          .setUserQuestionUID(keyHolder.getKey().longValue())
+          .setQuestionCD(userQuestion.getQuestionCD())
+          .setAnswer(userQuestion.getAnswer())
+          .setActive(userQuestion.isActive())
+          .setUserQuestionUpdateCount(userQuestion.getUserQuestionUpdateCount())
+          .build();
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+  }
+
+  private UserQuestion updateUserQuestion(long userId, UserQuestion userQuestion, User user) {
+    LOGGER.info("Calling updateUserQuestion for User [{}] with Question [{}]", userId, userQuestion.getQuestionCD());
+
+    StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    int cnt = getJdbcTemplate().update(stmtLoader.load(UPDATE_USER_QUESTION),
+        UserQuestionMaper.mapUpdateStatement(userQuestion, user));
+
+    if (cnt == 1) {
+      return UserQuestion.builder()
+          .setUserQuestionUID(userQuestion.getUserQuestionUID())
+          .setQuestionCD(userQuestion.getQuestionCD())
+          .setAnswer(userQuestion.getAnswer())
+          .setActive(userQuestion.isActive())
+          .setUserQuestionUpdateCount(userQuestion.getUserQuestionUpdateCount() + 1)
+          .build();
+    } else {
+      throw new IncorrectResultSizeDataAccessException(1, cnt);
+    }
+  }
+
 }

@@ -1,14 +1,13 @@
 package com.cagst.swkroa.config;
 
-import org.flywaydb.core.Flyway;
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.sql.DataSource;
 
 /**
  * Configuration class for the system's Datasource.
@@ -32,15 +31,5 @@ public class DatasourceConfig {
     transactionManager.setDataSource(getDatasource());
 
     return transactionManager;
-  }
-
-  @Bean(name = "flyway", initMethod = "migrate")
-  public Flyway getFlyway() {
-    Flyway flyway = new Flyway();
-    flyway.setBaselineOnMigrate(true);
-    flyway.setDataSource(getDatasource());
-    flyway.setValidateOnMigrate(false);
-
-    return flyway;
   }
 }

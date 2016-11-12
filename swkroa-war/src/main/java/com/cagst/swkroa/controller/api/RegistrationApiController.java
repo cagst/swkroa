@@ -1,5 +1,15 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.inject.Inject;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+import com.cagst.swkroa.codevalue.CodeSetType;
+import com.cagst.swkroa.codevalue.CodeValue;
+import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
@@ -7,26 +17,22 @@ import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserQuestion;
 import com.cagst.swkroa.user.UserRepository;
 import com.cagst.swkroa.user.UserService;
+import com.cagst.swkroa.user.UserType;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.inject.Inject;
-import java.text.MessageFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
 
 /**
  * Handles and retrieves requests for Registration.
@@ -35,15 +41,16 @@ import java.util.ResourceBundle;
  */
 @RestController
 @RequestMapping(value = "/api/register")
-public final class RegistrationApiController {
+public class RegistrationApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationApiController.class);
 
   private final ResourceBundle resourceBundle;
 
-  private MemberRepository memberRepository;
+  private MemberRepository memberRepo;
   private ContactRepository contactRepo;
   private UserRepository userRepo;
   private UserService userService;
+  private CodeValueRepository codeValueRepository;
 
   /**
    * Default Constructor
@@ -53,8 +60,8 @@ public final class RegistrationApiController {
   }
 
   @Inject
-  public void setMemberRepository(MemberRepository memberRepository) {
-    this.memberRepository = memberRepository;
+  public void setMemberRepository(MemberRepository memberRepo) {
+    this.memberRepo = memberRepo;
   }
 
   @Inject
@@ -72,11 +79,16 @@ public final class RegistrationApiController {
     this.userService = userService;
   }
 
+  @Inject
+  public void setCodeValueRepository(CodeValueRepository codeValueRepository) {
+    this.codeValueRepository = codeValueRepository;
+  }
+
   @RequestMapping(value = "/identification/{ownerId}", method = RequestMethod.GET)
   public ResponseEntity<String> registerIdentification(@PathVariable(value = "ownerId") String ownerId) {
     LOGGER.info("Received request to identify membership for Owner ID [{}]", ownerId);
 
-    Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
+    Optional<Member> checkMember = memberRepo.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
       String msg = resourceBundle.getString("signin.register.identify.notfound");
       return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
@@ -109,7 +121,7 @@ public final class RegistrationApiController {
 
     // performing the same operations as the registerIdentify method
     // in case this API was called maliciously or out of order
-    Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
+    Optional<Member> checkMember = memberRepo.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
       String msg = resourceBundle.getString("signin.register.identify.notfound");
       return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
@@ -150,6 +162,7 @@ public final class RegistrationApiController {
   }
 
   @RequestMapping(value = "/completion/{ownerId}", method = RequestMethod.POST)
+  @Transactional
   public ResponseEntity<String> registerComplete(
       @PathVariable(value = "ownerId") String ownerId,
       @RequestParam(value = "firstName", required = false) String firstName,
@@ -159,14 +172,20 @@ public final class RegistrationApiController {
       @RequestParam(value = "emailAddress") String emailAddress,
       @RequestParam(value = "username") String username,
       @RequestParam(value = "password") String password,
-      @RequestParam(value = "confirm") String confirm
+      @RequestParam(value = "confirm") String confirm,
+      @RequestParam(value = "question1") long question1,
+      @RequestParam(value = "answer1") String answer1,
+      @RequestParam(value = "question2") long question2,
+      @RequestParam(value = "answer2") String answer2,
+      @RequestParam(value = "question3") long question3,
+      @RequestParam(value = "answer3") String answer3
   ) {
     LOGGER.info("Received request to verify membership for Owner ID [{}]", ownerId);
 
     // performing the same operations as the registerIdentify method
     // and performing the same operations as the registerVerify method
     // in case this API was called maliciously or out of order
-    Optional<Member> checkMember = memberRepository.getMemberByOwnerId(ownerId.toUpperCase());
+    Optional<Member> checkMember = memberRepo.getMemberByOwnerId(ownerId.toUpperCase());
     if (!checkMember.isPresent()) {
       String msg = resourceBundle.getString("signin.register.identify.notfound");
       return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
@@ -217,9 +236,55 @@ public final class RegistrationApiController {
     user.setPassword(password);
     user.setPasswordTemporary(false);
     user.setPasswordChangedDate(new DateTime());
+    user.setUserType(UserType.MEMBER);
     user.setActive(true);
 
+    user.addQuestion(UserQuestion.builder()
+        .setQuestionCD(question1)
+        .setAnswer(answer1)
+        .build());
+
+    user.addQuestion(UserQuestion.builder()
+        .setQuestionCD(question2)
+        .setAnswer(answer2)
+        .build());
+
+    user.addQuestion(UserQuestion.builder()
+        .setQuestionCD(question3)
+        .setAnswer(answer3)
+        .build());
+
     userService.registerUser(user, systemUser);
+
+    List<EmailAddress> emailAddresses = contactRepo.getEmailAddressesForMember(member);
+    EmailAddress primaryEmailAddress = null;
+    for (EmailAddress email : emailAddresses) {
+      if (email.isPrimary()) {
+        primaryEmailAddress = email;
+        break;
+      } else if (primaryEmailAddress == null) {
+        primaryEmailAddress = email;
+      }
+    }
+
+    if (primaryEmailAddress != null) {
+      if (!StringUtils.equals(primaryEmailAddress.getEmailAddress(), emailAddress)) {
+        contactRepo.saveEmailAddress(primaryEmailAddress, systemUser);
+      }
+    } else {
+      CodeValue codeValue = codeValueRepository.getCodeValueByMeaning(CodeSetType.EMAIL_TYPE, "EMAIL_HOME");
+      if (codeValue != null) {
+        primaryEmailAddress = new EmailAddress();
+        primaryEmailAddress.setEmailAddress(emailAddress);
+        primaryEmailAddress.setPrimary(true);
+        primaryEmailAddress.setActive(true);
+        primaryEmailAddress.setEmailTypeCD(codeValue.getCodeValueUID());
+        primaryEmailAddress.setParentEntityUID(member.getMemberUID());
+        primaryEmailAddress.setParentEntityName(UserType.MEMBER.name());
+
+        contactRepo.saveEmailAddress(primaryEmailAddress, systemUser);
+      }
+    }
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

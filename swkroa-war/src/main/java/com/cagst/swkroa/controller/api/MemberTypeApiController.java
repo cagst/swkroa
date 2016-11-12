@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Handles and retrieves {@link MemberType} objects depending on the URI template.
