@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -66,6 +67,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     user.setUserUID(1L);
 
     MemberRepository memberRepo = mock(MemberRepository.class);
+    MemberTypeRepository memberTypeRepo = mock(MemberTypeRepository.class);
 
     codeValueRepo = mock(CodeValueRepository.class);
 
@@ -73,7 +75,9 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     when(codeValueRepo.getCodeValueByUID(2L)).thenReturn(regular);
     when(codeValueRepo.getCodeValueByUID(3L)).thenReturn(family);
 
-    repo = new MembershipRepositoryJdbc(createTestDataSource(), memberRepo, codeValueRepo);
+    when(memberTypeRepo.getMemberTypeByUID(anyLong())).thenReturn(new MemberType());
+
+    repo = new MembershipRepositoryJdbc(createTestDataSource(), memberRepo, codeValueRepo, memberTypeRepo);
     repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
   }
 

@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String MEMBERSHIP_NAME         = "membership_name";
   private static final String MEMBER_ID               = "member_id";
   private static final String ENTITY_TYPE_CD          = "entity_type_cd";
+  private static final String MEMBER_TYPE_ID          = "member_type_id";
   private static final String NEXT_DUE_DT             = "next_due_dt";
   private static final String COMPANY_NAME            = "company_name";
   private static final String OWNER_IDENT             = "owner_ident";
@@ -43,15 +44,19 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String MEMBERSHIP_UPDT_CNT = "membership_updt_cnt";
 
   private final CodeValueRepository codeValueRepo;
+  private final MemberTypeRepository memberTypeRepo;
 
   /**
    * Primary Constructor used to create an instance of <i>MembershipMapper</i>.
    *
    * @param codeValueRepo
-   *     The {@link CodeValueRepository} to use to retrieve additional membership values.
+   *    The {@link CodeValueRepository} to use to retrieve additional membership values.
+   * @param memberTypeRepo
+   *    The {@link MemberTypeRepository} to use to retrieve member type information.
    */
-  public MembershipMapper(final CodeValueRepository codeValueRepo) {
+  public MembershipMapper(CodeValueRepository codeValueRepo, MemberTypeRepository memberTypeRepo) {
     this.codeValueRepo = codeValueRepo;
+    this.memberTypeRepo = memberTypeRepo;
   }
 
   @Override
@@ -62,6 +67,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     membership.setMembershipName(rs.getString(MEMBERSHIP_NAME));
     membership.setMemberUID(rs.getLong(MEMBER_ID));
     membership.setEntityType(codeValueRepo.getCodeValueByUID(rs.getLong(ENTITY_TYPE_CD)));
+    membership.setMemberType(memberTypeRepo.getMemberTypeByUID(rs.getLong(MEMBER_TYPE_ID)));
     membership.setNextDueDate(CGTDateTimeUtils.getDateTime(rs, NEXT_DUE_DT));
     membership.setCompanyName(rs.getString(COMPANY_NAME));
     membership.setOwnerId(rs.getString(OWNER_IDENT));

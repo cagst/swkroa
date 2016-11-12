@@ -376,7 +376,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
         questions.add(UserQuestion.builder()
             .setUserQuestionUID(question.getUserQuestionUID())
             .setQuestionCD(question.getQuestionCD())
-            .setAnswer(passwordEncoder.encode(question.getAnswer()))
+            .setAnswer(passwordEncoder.encode(question.getAnswer().toLowerCase()))
             .setActive(question.isActive())
             .setUserQuestionUpdateCount(question.getUserQuestionUpdateCount())
             .build()

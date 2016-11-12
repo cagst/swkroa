@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import com.cagst.common.db.BaseRepositoryJdbc;
@@ -52,6 +51,7 @@ import org.springframework.util.Assert;
 
   private final MemberRepository memberRepo;
   private final CodeValueRepository codeValueRepo;
+  private final MemberTypeRepository memberTypeRepo;
 
   /**
    * Primary Constructor used to create an instance of <i>PersonRepositoryJdbc</i>.
@@ -62,15 +62,19 @@ import org.springframework.util.Assert;
    *     The {@link MemberRepository} to use to retrieve member information.
    * @param codeValueRepo
    *     The {@link CodeValueRepository} to use to retrieve codified information.
+   * @param memberTypeRepo
+   *     The {@link MemberTypeRepository} to use to retrieve member type information.
    */
   @Inject
   /* package */ MembershipRepositoryJdbc(DataSource dataSource,
                                          MemberRepository memberRepo,
-                                         CodeValueRepository codeValueRepo) {
+                                         CodeValueRepository codeValueRepo,
+                                         MemberTypeRepository memberTypeRepo) {
     super(dataSource);
 
     this.memberRepo = memberRepo;
     this.codeValueRepo = codeValueRepo;
+    this.memberTypeRepo = memberTypeRepo;
   }
 
   @Override
@@ -88,7 +92,7 @@ import org.springframework.util.Assert;
     List<Membership> memberships = getJdbcTemplate().query(
         stmtLoader.load(GET_MEMBERSHIP_BY_UID),
         params,
-        new MembershipMapper(codeValueRepo)
+        new MembershipMapper(codeValueRepo, memberTypeRepo)
     );
 
     if (memberships.size() == 1) {
@@ -114,7 +118,7 @@ import org.springframework.util.Assert;
     params.put("status", status.toString());
     params.put("balance", balance.toString());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS), params, new MembershipMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
 
   @Override
@@ -131,7 +135,7 @@ import org.springframework.util.Assert;
     params.put("status", status.toString());
     params.put("balance", balance.toString());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
 
   @Override
@@ -144,7 +148,7 @@ import org.springframework.util.Assert;
     Map<String, Date> params = new HashMap<>(1);
     params.put("nextDueDate", DateTime.now().plusDays(days).toDate());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS), params, new MembershipMapper(codeValueRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
 
   @Override

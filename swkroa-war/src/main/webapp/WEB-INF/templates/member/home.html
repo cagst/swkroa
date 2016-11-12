@@ -10,7 +10,7 @@
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="memberController">
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="memberController" data-ng-cloak>
   <input id="membershipUID" type="hidden" th:value="${membershipUID}"/>
   <input id="isPrimaryMember" type="hidden" th:value="${isPrimaryMember}"/>
 
@@ -137,7 +137,7 @@
     </div>
 
     <!-- Additional Members -->
-    <div class="panel panel-default">
+    <div class="panel panel-default" data-ng-show="membership.memberType.allowMember || membership.members.length > 1">
       <div class="panel-heading">
         <span class="panel-title" th:text="#{member.family.heading}">
           zzz Family Members
@@ -239,8 +239,8 @@
       <div th:include="member/modify/section_membership"></div>
       <div th:include="member/modify/section_counties"></div>
       <div th:include="member/modify/section_members"
-           data-ng-show="membership.primaryMember.memberType.allowMember ||
-                         membership.members.length > 0"></div>
+           data-ng-show="membership.memberType.allowMember ||
+                         membership.members.length > 1"></div>
 
       <div class="spacer-top">
         <div class="divider-top">
