@@ -4,7 +4,7 @@
 
   <groupId>com.cagst.swkroa</groupId>
   <artifactId>swkroa-parent</artifactId>
-  <version>3.0</version>
+  <version>3.1-SNAPSHOT</version>
   <name>SWKROA</name>
   <packaging>pom</packaging>
 
@@ -36,7 +36,7 @@
   <scm>
     <connection>scm:git:https://github.com/cagst/swkroa</connection>
     <url>https://github.com/cagst/swkroa</url>
-    <tag>3.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <modules>
