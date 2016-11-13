@@ -6,7 +6,6 @@ import java.util.Collection;
  * Definition of a repository that retrieves and persists {@link AuditEvent} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface AuditEventRepository {
   /**
@@ -14,7 +13,7 @@ public interface AuditEventRepository {
    *
    * @return A {@link Collection} of {@link AuditEvent}s that exist within the system.
    */
-  public Collection<AuditEvent> getAllAuditEvents();
+  Collection<AuditEvent> getAllAuditEvents();
 
   /**
    * Persists the specified {@link AuditEvent} to persistent storage.
@@ -22,5 +21,5 @@ public interface AuditEventRepository {
    * @param auditEvent
    *     The {@link AuditEvent} to persist.
    */
-  public void save(final AuditEvent auditEvent);
+  void save(final AuditEvent auditEvent);
 }

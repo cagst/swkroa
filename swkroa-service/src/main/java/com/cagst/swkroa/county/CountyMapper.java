@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
  * {@link County} to / from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */final class CountyMapper implements RowMapper<County> {
   private static final String COUNTY_ID = "county_id";
@@ -21,11 +20,6 @@ import org.springframework.jdbc.core.RowMapper;
   private static final String ACTIVE_IND = "active_ind";
   private static final String UPDT_CNT = "county_updt_cnt";
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public County mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     County county = new County();

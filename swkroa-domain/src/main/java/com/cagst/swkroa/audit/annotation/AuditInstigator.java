@@ -13,7 +13,6 @@ import com.cagst.swkroa.audit.AuditEvent;
  * This class annotates a method parameter as the instigator of the {@link AuditEvent}.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

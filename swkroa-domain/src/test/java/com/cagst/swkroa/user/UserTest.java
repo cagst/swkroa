@@ -14,7 +14,6 @@ import org.junit.runners.JUnit4;
  * Test class for User class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class UserTest {
@@ -40,11 +39,11 @@ public class UserTest {
     assertTrue("Ensure the user account is not locked!", user1.isAccountNonLocked());
 
     User user2 = new User();
-    user2.setAccountedLockedDate(new DateTime(2010, 01, 15, 13, 30));
+    user2.setAccountedLockedDate(new DateTime(2010, 1, 15, 13, 30));
     assertFalse("Ensure the user account is locked!", user2.isAccountNonLocked());
 
     User user3 = new User();
-    user3.setAccountedLockedDate(new DateTime(2020, 02, 25, 14, 45));
+    user3.setAccountedLockedDate(new DateTime(2020, 2, 25, 14, 45));
     assertTrue("Ensure the user account is not locked due to a future locked date!", user3.isAccountNonLocked());
   }
 
@@ -58,11 +57,11 @@ public class UserTest {
     assertTrue("Ensure the user account has not expired!", user1.isAccountNonExpired());
 
     User user2 = new User();
-    user2.setAccountExpiredDate(new DateTime(2010, 01, 15, 13, 30));
+    user2.setAccountExpiredDate(new DateTime(2010, 1, 15, 13, 30));
     assertFalse("Ensure the user account has expired!", user2.isAccountNonExpired());
 
     User user3 = new User();
-    user3.setAccountExpiredDate(new DateTime(2020, 02, 25, 14, 45));
+    user3.setAccountExpiredDate(new DateTime(2020, 2, 25, 14, 45));
     assertTrue("Ensure the user account has not expired due to a future expiry date!", user3.isAccountNonExpired());
   }
 
@@ -79,13 +78,13 @@ public class UserTest {
     User user2 = new User();
     user2.setUserUID(20L);
     user2.setSecurityPolicy(securityPolicy30);
-    user2.setPasswordChangedDate(new DateTime(2013, 04, 15, 13, 30));
+    user2.setPasswordChangedDate(new DateTime(2013, 4, 15, 13, 30));
     assertTrue("Ensure the user credentials has expired!", user2.isPasswordExpired());
 
     User user3 = new User();
     user3.setUserUID(30L);
     user3.setSecurityPolicy(securityPolicy30);
-    user3.setPasswordChangedDate(new DateTime(2020, 02, 25, 14, 45));
+    user3.setPasswordChangedDate(new DateTime(2020, 2, 25, 14, 45));
     assertFalse("Ensure the user credentials has not expired due to a future changed password date!",
         user3.isPasswordExpired());
   }
@@ -101,11 +100,11 @@ public class UserTest {
     assertTrue("Ensure the user credentials has not expired!", user1.isCredentialsNonExpired());
 
     User user2 = new User();
-    user2.setPasswordChangedDate(new DateTime(2013, 04, 15, 13, 30));
+    user2.setPasswordChangedDate(new DateTime(2013, 4, 15, 13, 30));
     assertTrue("Ensure the user credentials has not expired!", user2.isCredentialsNonExpired());
 
     User user3 = new User();
-    user3.setPasswordChangedDate(new DateTime(2020, 02, 25, 14, 45));
+    user3.setPasswordChangedDate(new DateTime(2020, 2, 25, 14, 45));
     assertTrue("Ensure the user credentials has not expired due to a future changed password date!",
         user3.isCredentialsNonExpired());
   }

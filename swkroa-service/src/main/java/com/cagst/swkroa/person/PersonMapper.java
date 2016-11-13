@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.RowMapper;
  * Used to marshal/unmarshal a {@link Person} to/from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class PersonMapper extends BasePersonMapper implements RowMapper<Person> {
   @Override

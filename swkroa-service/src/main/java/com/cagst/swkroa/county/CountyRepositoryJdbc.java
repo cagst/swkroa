@@ -19,7 +19,6 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link CountyRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("countyRepository")
 /* package */ final class CountyRepositoryJdbc extends BaseRepositoryJdbc implements CountyRepository {
@@ -59,7 +58,7 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, String> params = new HashMap<String, String>(1);
+    Map<String, String> params = new HashMap<>(1);
     params.put("state_code", stateCode);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_COUNTIES_FOR_STATE), params, new CountyMapper());
@@ -74,7 +73,7 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, Long> params = new HashMap<String, Long>(1);
+    Map<String, Long> params = new HashMap<>(1);
     params.put("county_id", uid);
 
     List<County> counties = getJdbcTemplate().query(stmtLoader.load(GET_COUNTY_BY_UID), params, new CountyMapper());
@@ -99,7 +98,7 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, String> params = new HashMap<String, String>(2);
+    Map<String, String> params = new HashMap<>(2);
     params.put("state", state);
     params.put("county", code);
 

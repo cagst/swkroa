@@ -10,7 +10,6 @@ import org.springframework.core.io.Resource;
  * Base class for all repository test classes that creates the common test database that can be shared by all repositories.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public abstract class BaseTestRepository {
   /**

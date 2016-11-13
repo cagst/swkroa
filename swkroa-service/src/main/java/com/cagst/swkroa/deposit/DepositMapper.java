@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * Used to marshal/unmarshal a {@link Deposit} to/from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */ class DepositMapper implements RowMapper<Deposit> {
   private static final String DEPOSIT_ID     = "deposit_id";

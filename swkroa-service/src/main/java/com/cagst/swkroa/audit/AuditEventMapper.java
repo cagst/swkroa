@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * Used to marshal/unmarshal a {@link AuditEvent} to/from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */final class AuditEventMapper implements RowMapper<AuditEvent> {
   private static final String AUDIT_EVENT_TYPE = "audit_event_type";
@@ -22,11 +21,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String AUDIT_MESSAGE = "audit_message";
   private static final String CREATE_DT_TM = "create_dt_tm";
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public AuditEvent mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     AuditEventType eventType = AuditEventType.values()[rs.getInt(AUDIT_EVENT_TYPE)];

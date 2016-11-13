@@ -10,7 +10,6 @@ import com.cagst.swkroa.user.UserRepository;
  * This is a utility class that will perform actions for / on a {@link User}.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("userUtilities")
 public final class UserUtilitiesImpl implements UserUtilities {

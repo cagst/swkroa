@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * {@link Address} to / from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */final class AddressMapper implements RowMapper<Address> {
   private static final String ADDRESS_ID = "address_id";

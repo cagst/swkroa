@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * This is a utility class used to share logic across the web application.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class WebAppUtils {
   private static final Logger LOGGER = LoggerFactory.getLogger(WebAppUtils.class);
@@ -25,7 +24,7 @@ public final class WebAppUtils {
   /**
    * Will attempt to retrieve the {@link User} that is currently logged in from the spring security
    * context.
-   * <p/>
+   *
    * <b>NOTE: </b>This may fail and return a <code>null</code> user if the security context has
    * already been cleared by spring security.!
    *
@@ -55,7 +54,7 @@ public final class WebAppUtils {
 
   /**
    * Will attempt to set the {@link User} into the spring security context.
-   * <p/>
+   *
    * <b>NOTE: </b>This may fail if the spring security context has already been cleared by spring
    * security. Check the return value to determine if the User was set into the security context
    * appropriately.

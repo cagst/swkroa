@@ -10,7 +10,6 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
  * serialization/deserialization feature needed for domain objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class JacksonObjectMapper extends ObjectMapper {
   private static final long serialVersionUID = -2081244189288220564L;

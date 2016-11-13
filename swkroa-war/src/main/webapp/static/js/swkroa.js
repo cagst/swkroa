@@ -103,7 +103,7 @@ swkroaApp.factory('contextRootInterceptor', function() {
   return {
     'request': function(config) {
       if (config.url.startsWith("/")) {
-        config.url = "/swkroa-war" + config.url;
+        config.url = "/swkroa" + config.url;
       }
 
       return config;

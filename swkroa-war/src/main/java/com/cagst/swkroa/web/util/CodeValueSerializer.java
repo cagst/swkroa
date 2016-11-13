@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
  * Will serialize a {@link CodeValue} into its unique identifier when sending to a web browser.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public class CodeValueSerializer extends JsonSerializer<CodeValue> {
   @Override

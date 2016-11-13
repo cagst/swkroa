@@ -6,7 +6,6 @@ import com.cagst.swkroa.user.User;
  * Definition of a service that retrieves and persists {@link SecurityPolicy} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface SecurityService {
   /**

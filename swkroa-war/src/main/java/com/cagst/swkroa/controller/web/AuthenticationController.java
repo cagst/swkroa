@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Handles and retrieves the authentication page(s) depending on the URI template.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Controller
 @RequestMapping(value = "auth")

@@ -116,8 +116,7 @@ public interface UserRepository {
    *
    * @return The {@link User} that has been successfully unlocked and updated accordingly.
    *
-   * @throws IllegalArgumentException
-   *     if {@code user} is null
+   * @throws IllegalArgumentException if {@code user} is null
    */
   User unlockUserAccount(User user, String message, User instigator) throws IllegalArgumentException;
 
@@ -133,7 +132,7 @@ public interface UserRepository {
    *
    * @return The {@link User} that has been successfully enabled and updated accordingly.
    *
-   * @throws IllegalArgumentException
+   * @throws IllegalArgumentException if {@code user} is null
    */
   User enableUserAccount(User user, String message, User instigator) throws IllegalArgumentException;
 
@@ -149,13 +148,13 @@ public interface UserRepository {
    *
    * @return The {@link User} that has been successfully disabled and updated accordingly.
    *
-   * @throws IllegalArgumentException
+   * @throws IllegalArgumentException if {@code user} is null
    */
   User disableUserAccount(User user, String message, User instigator) throws IllegalArgumentException;
 
   /**
    * Changes the specified {@link User User} password.
-   * <p/>
+   *
    * <b>NOTE:</b> No checks are performed on the password to ensure they meet the security policy
    * for the user.
    *

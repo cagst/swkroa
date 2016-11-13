@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * Used to marshal/unmarshal a {@link Person} to/from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public abstract class BasePersonMapper {
   protected static final String PERSON_ID = "person_id";

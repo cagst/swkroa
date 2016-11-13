@@ -8,7 +8,6 @@ import org.springframework.security.authentication.event.AbstractAuthenticationF
  * Implements the {@link ApplicationListener} interface for authentication failure.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class AuthenticationFailureListener implements ApplicationListener<AbstractAuthenticationFailureEvent> {
   private final UserService userService;

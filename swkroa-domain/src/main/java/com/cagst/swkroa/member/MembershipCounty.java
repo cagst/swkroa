@@ -8,12 +8,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Representation of a Membership County within the system.
- * <p/>
+ *
  * A membership county is a county that the membership has mineral interests in. This is used to
  * calculate any additional charges to the membership above the base charge.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public final class MembershipCounty implements Serializable {
   private static final long serialVersionUID = 1014489262063740891L;

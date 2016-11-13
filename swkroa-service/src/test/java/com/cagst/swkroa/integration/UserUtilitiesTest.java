@@ -13,11 +13,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Test class for UserUtilities class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class UserUtilitiesTest {
-  public UserUtilities utils;
+  private UserUtilities utils;
 
   @Before
   public void setUp() {

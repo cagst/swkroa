@@ -3,10 +3,9 @@ package com.cagst.swkroa.county;
 import java.util.Collection;
 
 /**
- * Definition of a repository that retrieves and persists {@link Country} and {@link State} objects.
+ * Definition of a repository that retrieves and persists {@link County} and {@link State} objects.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public interface CountyRepository {
 

@@ -26,7 +26,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * The AOP {@link Aspect} for the {@link Auditable} annotation.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Aspect
 public final class AuditableAnnotationAspect {

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
  * Handles and retrieves {@link County} objects depending on the URI template.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RestController
 @RequestMapping(value = "/api/counties")

@@ -17,7 +17,6 @@ import org.junit.runners.JUnit4;
  * Test class for AuditEventRepositoryJdbc class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class AuditEventRepositoryJdbcTest extends BaseTestRepository {

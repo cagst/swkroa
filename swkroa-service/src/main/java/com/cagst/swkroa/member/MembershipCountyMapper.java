@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * Used to marshal/unmarshal a {@link MembershipCounty} to/from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */final class MembershipCountyMapper implements RowMapper<MembershipCounty> {
   private static final String MEMBERSHIP_COUNTY_ID = "membership_county_id";
@@ -42,11 +41,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     this.countyRepo = countyRepo;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-   */
   @Override
   public MembershipCounty mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     MembershipCounty county = new MembershipCounty();

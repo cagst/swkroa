@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * {@link PhoneNumber} to / from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
   private static final String PHONE_ID = "phone_id";

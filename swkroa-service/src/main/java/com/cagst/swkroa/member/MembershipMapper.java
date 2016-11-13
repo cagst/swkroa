@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * Used to marshal/unmarshal a {@link Membership} to/from the database.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 /* package */final class MembershipMapper implements RowMapper<Membership> {
   private static final String MEMBERSHIP_ID           = "membership_id";

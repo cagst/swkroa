@@ -16,7 +16,6 @@ import org.junit.runners.JUnit4;
  * Test class for DefaultMineralUtilities class.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @RunWith(JUnit4.class)
 public class DefaultMineralUtilitiesTest {
@@ -74,7 +73,7 @@ public class DefaultMineralUtilitiesTest {
     MembershipCounty county3 = new MembershipCounty();
     county3.setNetMineralAcres(800);
 
-    List<MembershipCounty> counties = new ArrayList<MembershipCounty>();
+    List<MembershipCounty> counties = new ArrayList<>();
     counties.add(county1);
     counties.add(county2);
     counties.add(county3);

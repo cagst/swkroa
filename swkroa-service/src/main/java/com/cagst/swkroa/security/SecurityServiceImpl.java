@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
  * An implementation of the {@link SecurityService} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("securityService")
 public final class SecurityServiceImpl implements SecurityService {

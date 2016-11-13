@@ -27,7 +27,6 @@ import org.springframework.util.Assert;
  * JDBC Template implementation of the {@link CommentRepository} interface.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 @Named("commentRepo")
 /* package */class CommentRepositoryJdbc extends BaseRepositoryJdbc implements CommentRepository {
@@ -83,9 +82,7 @@ import org.springframework.util.Assert;
 
   @Override
   @CacheEvict(value = "commentsList", key = "#comment.getParentEntityUID()")
-  public Comment saveComment(final Comment comment, final User user) throws OptimisticLockingFailureException,
-      IncorrectResultSizeDataAccessException, DataAccessException {
-
+  public Comment saveComment(final Comment comment, final User user) throws DataAccessException {
     Assert.notNull(comment, "Assertion Failed - argument [comment] cannot be null");
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
 

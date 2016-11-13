@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * a web browser.
  *
  * @author Craig Gaskill
- * @version 1.0.0
  */
 public class CodeValueDeserializer extends JsonDeserializer<CodeValue> {
   @Autowired
