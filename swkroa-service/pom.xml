@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.cagst.swkroa</groupId>
     <artifactId>swkroa-parent</artifactId>
-    <version>2.1-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>swkroa-service</artifactId>
@@ -114,6 +114,14 @@
       <type>jar</type>
       <scope>runtime</scope>
     </dependency>
+
+    <!--
+    <dependency>
+      <groupId>com.lowagie</groupId>
+      <artifactId>itext</artifactId>
+      <version>2.1.7.js3</version>
+    </dependency>
+    -->
 
     <!--                   -->
     <!-- Test Dependencies -->
