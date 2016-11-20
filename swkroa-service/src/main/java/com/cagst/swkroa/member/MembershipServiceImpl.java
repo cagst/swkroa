@@ -25,6 +25,7 @@ import com.cagst.swkroa.job.JobStatus;
 import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,6 +160,30 @@ public final class MembershipServiceImpl implements MembershipService {
     LOGGER.info("Calling saveMembership for [{}]", membership.getMembershipUID());
 
     Membership savedMembership = membershipRepo.saveMembership(membership, user);
+
+    // save the Contact information (Addresses, Phone Numbers, Email Addresses)
+    for (Member member : savedMembership.getMembers()) {
+      for (Address address : member.getAddresses()) {
+        address.setParentEntityUID(member.getMemberUID());
+        address.setParentEntityName(UserType.MEMBER.name());
+
+        contactRepo.saveAddress(address, user);
+      }
+
+      for (PhoneNumber phone : member.getPhoneNumbers()) {
+        phone.setParentEntityUID(member.getMemberUID());
+        phone.setParentEntityName(UserType.MEMBER.name());
+
+        contactRepo.savePhoneNumber(phone, user);
+      }
+
+      for (EmailAddress email : member.getEmailAddresses()) {
+        email.setParentEntityUID(member.getMemberUID());
+        email.setParentEntityName(UserType.MEMBER.name());
+
+        contactRepo.saveEmailAddress(email, user);
+      }
+    }
 
     // save Comments
     for (Comment comment : savedMembership.getComments()) {

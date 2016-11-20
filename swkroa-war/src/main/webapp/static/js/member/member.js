@@ -16,6 +16,8 @@ swkroaApp.controller('memberController',
     $scope.contactService = contactService;
     $scope.codesetService = codesetService;
 
+    $('#updatedMessage').hide();
+
     codesetService.getCodeValuesForCodeSet('ADDRESS_TYPE').success(function(data) {
       $scope.addressTypes = data;
     });
@@ -150,6 +152,20 @@ swkroaApp.controller('memberController',
 
     $scope.cancelChanges = function() {
       $scope.view = "view";
+    };
+
+    $scope.save = function() {
+      membershipService.saveMembership($scope.membership).then(function(response) {
+        membershipService.getMembership(membershipId, including).then(function(response) {
+          if (responseSuccessful(response)) {
+            $scope.membership = response.data;
+          }
+        });
+
+        $scope.view = "view";
+
+        $('#updatedMessage').show();
+      });
     };
 
   }]);

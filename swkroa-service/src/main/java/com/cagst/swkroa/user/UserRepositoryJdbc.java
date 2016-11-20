@@ -477,7 +477,6 @@ import org.springframework.util.Assert;
       contactRepo.saveEmailAddress(email, user);
     }
 
-
     return savedUser;
   }
 

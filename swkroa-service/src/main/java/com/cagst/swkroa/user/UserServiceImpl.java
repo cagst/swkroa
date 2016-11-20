@@ -48,17 +48,17 @@ import org.springframework.util.Assert;
 public class UserServiceImpl implements UserService, MessageSourceAware {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-  private static final String MSG_SIGNIN_ATTEMPTS_EXCEEDED    = "com.cagst.swkroa.signin.message.attempts.exceeded";
-  private static final String MSG_CHANGEPWD_OLD_PWD_INCORRECT = "com.cagst.swkroa.changepwd.password.err.wrongold";
-  private static final String MSG_CHANGEPWD_MISMATCH          = "com.cagst.swkroa.changepwd.password.err.mismatch";
-  private static final String MSG_CHANGEPWD_MATCHES_USERNAME  = "com.cagst.swkroa.changepwd.password.err.username";
-  private static final String MSG_CHANGEPWD_NOT_CHANGED       = "com.cagst.swkroa.changepwd.password.err.same";
-  private static final String MSG_CHANGEPWD_CHANGED           = "com.cagst.swkroa.audit.message.changepwd";
-  private static final String MSG_RESETPWD_RESET              = "com.cagst.swkroa.audit.message.resetpwd";
-  private static final String MSG_ACCOUNT_UNLOCK_AUTO         = "com.cagst.swkroa.audit.message.unlock.auto";
-  private static final String MSG_ACCOUNT_UNLOCK_MANUAL       = "com.cagst.swkroa.audit.message.unlock.manual";
-  private static final String MSG_ACCOUNT_ENABLED             = "com.cagst.swkroa.audit.message.enable";
-  private static final String MSG_ACCOUNT_DISABLED            = "com.cagst.swkroa.audit.message.disable";
+  private static final String MSG_SIGNIN_ATTEMPTS_EXCEEDED    = "signin.message.attempts.exceeded";
+  private static final String MSG_CHANGEPWD_OLD_PWD_INCORRECT = "changepwd.password.err.wrongold";
+  private static final String MSG_CHANGEPWD_MISMATCH          = "changepwd.password.err.mismatch";
+  private static final String MSG_CHANGEPWD_MATCHES_USERNAME  = "changepwd.password.err.username";
+  private static final String MSG_CHANGEPWD_NOT_CHANGED       = "changepwd.password.err.same";
+  private static final String MSG_CHANGEPWD_CHANGED           = "audit.message.changepwd";
+  private static final String MSG_RESETPWD_RESET              = "audit.message.resetpwd";
+  private static final String MSG_ACCOUNT_UNLOCK_AUTO         = "audit.message.unlock.auto";
+  private static final String MSG_ACCOUNT_UNLOCK_MANUAL       = "audit.message.unlock.manual";
+  private static final String MSG_ACCOUNT_ENABLED             = "audit.message.enable";
+  private static final String MSG_ACCOUNT_DISABLED            = "audit.message.disable";
 
   private final UserRepository userRepo;
   private final RoleRepository roleRepo;
