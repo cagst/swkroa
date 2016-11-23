@@ -7,9 +7,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -19,14 +24,15 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 /**
- * Configuration class for the Thymeleaf UI framework.
+ * Configuration class for the Spring MVC Framework.
  *
  * @author Craig Gaskill
  */
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.cagst.swkroa")
-public class ThymeleafConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+@PropertySource("classpath:environment.properties")
+public class WebMvcConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
   private ApplicationContext applicationContext;
 
   @Override
@@ -34,13 +40,12 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
     this.applicationContext = applicationContext;
   }
 
-  @Bean
-  public ViewResolver getViewResolver() {
-    ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-    viewResolver.setTemplateEngine(getTemplateEngine());
-    viewResolver.setCharacterEncoding("UTF-8");
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/static/**")
+        .addResourceLocations("/static/", "classpath:/static/");
 
-    return viewResolver;
+    //        .setCacheControl(CacheControl.maxAge(15, TimeUnit.DAYS).cachePublic());
   }
 
   @Bean(name = "messageSource")
@@ -62,6 +67,26 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
   }
 
   @Bean
+  public PropertySourcesPlaceholderConfigurer getPropertyConfiguration() {
+    return new PropertySourcesPlaceholderConfigurer();
+  }
+
+  @Bean(name = "multipartResolver")
+  public MultipartResolver getMultipartResolver() {
+    return new CommonsMultipartResolver();
+  }
+
+  @Bean
+  public ViewResolver getViewResolver() {
+    ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+    viewResolver.setTemplateEngine(getTemplateEngine());
+    viewResolver.setCharacterEncoding("UTF-8");
+    viewResolver.setCache(false);
+
+    return viewResolver;
+  }
+
+  @Bean
   public SpringTemplateEngine getTemplateEngine() {
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
     templateEngine.setTemplateResolver(getTemplateResolver());
@@ -70,16 +95,6 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 
     return templateEngine;
   }
-
-//  @Bean
-//  @Primary
-//  public ObjectMapper getObjectMapper() {
-//    ObjectMapper objectMapper = new ObjectMapper();
-//    objectMapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
-//    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//
-//    return objectMapper;
-//  }
 
   private ITemplateResolver getTemplateResolver() {
     SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();

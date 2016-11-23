@@ -158,7 +158,7 @@ import org.springframework.util.Assert;
       LOGGER.warn("No codevalues with meaning of [{}] were found!", meaning);
       throw new EmptyResultDataAccessException(1);
     } else {
-      LOGGER.warn("More and 1 codevalue with meaning of [{}] was found!", meaning);
+      LOGGER.warn("More than 1 codevalue with meaning of [{}] was found!", meaning);
       throw new IncorrectResultSizeDataAccessException(1, codevalues.size());
     }
   }
