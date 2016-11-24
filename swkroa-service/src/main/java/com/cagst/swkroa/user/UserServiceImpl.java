@@ -100,15 +100,13 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   }
 
   @Override
-  public void setMessageSource(final MessageSource messageSource) {
+  public void setMessageSource(MessageSource messageSource) {
     messages = new MessageSourceAccessor(messageSource);
   }
 
   @Override
   @Transactional
-  public UserDetails loadUserByUsername(final @AuditInstigator String userName) throws UsernameNotFoundException,
-      DataAccessException {
-
+  public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
     LOGGER.info("Calling loadUserByUsername for [{}].", userName);
 
     Optional<User> checkUser = userRepo.getUserByUsername(userName);
@@ -152,8 +150,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_SIGNIN_SUCCESSFUL)
-  public User signinSuccessful(final @AuditInstigator User user, final String ipAddress) {
+  public User signinSuccessful(@AuditInstigator User user, String ipAddress) {
     User signedInUser = userRepo.signinSuccessful(user, ipAddress);
 
     List<Role> roles = roleRepo.getRolesForUser(signedInUser);
@@ -171,13 +168,13 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_SIGNIN_FAILURE)
-  public void signinFailure(final @AuditInstigator String username, final @AuditMessage String message) {
+  public void signinFailure(@AuditInstigator String username, @AuditMessage String message) {
     // Currently we don't do anything for a sign-in failure other than the audit record.
   }
 
   @Override
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_SIGNED_OUT)
-  public void signedOut(final @AuditInstigator User user) {
+  public void signedOut(@AuditInstigator User user) {
     SecurityContext secCtx = SecurityContextHolder.getContext();
     if (secCtx != null) {
       secCtx.setAuthentication(null);
@@ -188,7 +185,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_TIMED_OUT)
-  public void timedOut(final @AuditInstigator User user) {
+  public void timedOut(@AuditInstigator User user) {
     SecurityContext secCtx = SecurityContextHolder.getContext();
     if (secCtx != null) {
       secCtx.setAuthentication(null);
@@ -199,8 +196,8 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User changePassword(final User user, final String oldPassword, final String newPassword,
-                             final String confirmPassword) throws BadCredentialsException {
+  public User changePassword(User user, String oldPassword, String newPassword, String confirmPassword)
+      throws BadCredentialsException {
 
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
     Assert.hasText(oldPassword, "[Assertion Failed] - argument [oldPassword] must not be null, empty, or blank.");
@@ -240,7 +237,8 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User resetPassword(final User user, final User instigator) {
+  @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_PASSWORD_RESET)
+  public User resetPassword(User user, @AuditInstigator User instigator) {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
 
     String msg = messages.getMessage(
@@ -258,7 +256,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User unlockAccount(final User user, final User instigator) {
+  public User unlockAccount(User user, User instigator) {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
     Assert.notNull(instigator, "[Assertion Failed] - argument [instigator] cannot be null.");
 
@@ -280,7 +278,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User enableAccount(final User user, final User instigator) {
+  public User enableAccount(User user, User instigator) {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
     Assert.notNull(instigator, "[Assertion Failed] - argument [instigator] cannot be null.");
 
@@ -294,7 +292,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User disableAccount(final User user, final User instigator) {
+  public User disableAccount(User user, User instigator) {
     Assert.notNull(user, "[Assertion Failed] - argument [user] cannot be null.");
     Assert.notNull(instigator, "[Assertion Failed] - argument [instigator] cannot be null.");
 
@@ -307,7 +305,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
   }
 
   @Override
-  public boolean doesUsernameExist(final String username) {
+  public boolean doesUsernameExist(String username) {
     Assert.hasText(username, "[Assertion Failed] - argument [username] cannot be null or empty.");
 
     return userRepo.doesUsernameExist(username);
@@ -315,7 +313,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional
-  public User saveUser(final User saveUser, final User user)
+  public User saveUser(User saveUser, User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
     Assert.notNull(saveUser, "[Assertion Failed] - argument [saveUser] cannot be null");
@@ -398,7 +396,7 @@ public class UserServiceImpl implements UserService, MessageSourceAware {
 
   @Override
   @Transactional(readOnly = true)
-  public User getUserByUID(final long uid) {
+  public User getUserByUID(long uid) {
     User user = userRepo.getUserByUID(uid);
 
     // retrieve SecurityPolicy for user

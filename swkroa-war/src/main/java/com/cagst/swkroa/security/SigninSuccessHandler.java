@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
  *
  * @author Craig Gaskill
  */
-public final class SigninSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+public class SigninSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
   private final UserService userService;
 
   /**
@@ -33,8 +33,10 @@ public final class SigninSuccessHandler extends SavedRequestAwareAuthenticationS
   }
 
   @Override
-  public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
-                                      final Authentication auth) throws IOException, ServletException {
+  public void onAuthenticationSuccess(HttpServletRequest request,
+                                      HttpServletResponse response,
+                                      Authentication auth)
+      throws IOException, ServletException {
 
     if (auth.getPrincipal() != null && auth.getPrincipal() instanceof User) {
       User user = (User) auth.getPrincipal();

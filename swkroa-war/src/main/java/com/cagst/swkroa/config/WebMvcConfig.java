@@ -7,8 +7,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -31,7 +29,6 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.cagst.swkroa")
-@PropertySource("classpath:environment.properties")
 public class WebMvcConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
   private ApplicationContext applicationContext;
 
@@ -64,11 +61,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Application
     messageSource.setDefaultEncoding("UTF-8");
 
     return messageSource;
-  }
-
-  @Bean
-  public PropertySourcesPlaceholderConfigurer getPropertyConfiguration() {
-    return new PropertySourcesPlaceholderConfigurer();
   }
 
   @Bean(name = "multipartResolver")

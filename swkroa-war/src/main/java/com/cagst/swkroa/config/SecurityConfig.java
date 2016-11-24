@@ -9,6 +9,8 @@ import com.cagst.swkroa.security.SignoutHandler;
 import com.cagst.swkroa.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Inject
   public void configureGlobal(AuthenticationManagerBuilder auth, UserService userService) throws Exception {
     auth.userDetailsService(userService).passwordEncoder(getPasswordEncoder());
+    auth.authenticationEventPublisher(getAuthenticationEventPublisher());
 
     signinSuccessHandler = new SigninSuccessHandler(userService);
     signoutHandler = new SignoutHandler();
@@ -74,8 +77,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .invalidateHttpSession(true)
           .deleteCookies("JSESSIONID")
           .logoutSuccessUrl("/auth/signedout")
-          .logoutSuccessHandler(signoutHandler)
+//          .logoutSuccessHandler(signoutHandler)
         .and().addFilterAfter(getChangePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
+  }
+
+  @Bean
+  public AuthenticationEventPublisher getAuthenticationEventPublisher() {
+    return new DefaultAuthenticationEventPublisher();
   }
 
   private Filter getChangePasswordFilter() {

@@ -22,11 +22,13 @@ public class UserTest {
 
   @Before
   public void setUp() {
-    securityPolicy30 = new SecurityPolicy();
-    securityPolicy30.setPasswordExpiryInDays(30);
+    securityPolicy30 = SecurityPolicy.builder()
+        .setPasswordExpiryInDays(30)
+        .build();
 
-    securityPolicy0 = new SecurityPolicy();
-    securityPolicy0.setPasswordExpiryInDays(0);
+    securityPolicy0 = SecurityPolicy.builder()
+        .setPasswordExpiryInDays(0)
+        .build();
   }
 
   /**

@@ -62,15 +62,13 @@ public final class SecurityServiceImpl implements SecurityService {
 
   private SecurityPolicy getDefaultSecurityPolicy() {
     if (null == defaultSecurityPolicy) {
-      SecurityPolicy policy = new SecurityPolicy();
-
-      policy.setSecurityPolicyName("Default");
-      policy.setMaxSigninAttempts(getMaximumSigninAttempts());
-      policy.setTimeoutPeriodInMinutes(getTimeoutPeriodInMinutes());
-      policy.setPasswordExpiryInDays(getPasswordExpiryInDays());
-      policy.setAccountLockedDays(getAccountLockedDays());
-
-      defaultSecurityPolicy = policy;
+      defaultSecurityPolicy = SecurityPolicy.builder()
+          .setSecurityPolicyName("Default")
+          .setMaxSigninAttempts(getMaximumSigninAttempts())
+          .setTimeoutPeriodInMinutes(getTimeoutPeriodInMinutes())
+          .setPasswordExpiryInDays(getPasswordExpiryInDays())
+          .setAccountLockedDays(getAccountLockedDays())
+          .build();
     }
 
     return defaultSecurityPolicy;

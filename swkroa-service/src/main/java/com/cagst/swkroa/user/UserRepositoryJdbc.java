@@ -191,7 +191,8 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public User signinSuccessful(User user, final String ipAddress) throws IllegalArgumentException,
+  @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_SIGNIN_SUCCESSFUL)
+  public User signinSuccessful(User user, @AuditMessage String ipAddress) throws IllegalArgumentException,
       IncorrectResultSizeDataAccessException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
@@ -321,8 +322,8 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_PASSWORD_CHANGED)
-  public User changeUserPassword(@AuditInstigator User user, String newPassword,
-                                 @AuditMessage String message) throws IllegalArgumentException {
+  public User changeUserPassword(@AuditInstigator User user, String newPassword, @AuditMessage String message)
+      throws IllegalArgumentException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
     Assert.hasLength(newPassword, "Assertion Failed - argument [password] cannot be null or empty");
@@ -348,8 +349,10 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "users", key = "#user.getUserUID()")
   @Auditable(eventType = AuditEventType.SECURITY, action = Auditable.ACTION_PASSWORD_RESET)
-  public User resetUserPassword(User user, String tempPassword, @AuditMessage String message,
-                                @AuditInstigator User instigator) throws IllegalArgumentException {
+  public User resetUserPassword(User user, String tempPassword,
+                                @AuditMessage String message,
+                                @AuditInstigator User instigator)
+      throws IllegalArgumentException {
 
     Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
     Assert.hasLength(tempPassword, "Assertion Failed - argument [tempPassword] cannot be null or empty");
