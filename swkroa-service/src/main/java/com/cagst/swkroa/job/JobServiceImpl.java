@@ -191,10 +191,7 @@ public class JobServiceImpl implements JobService {
                                           final long membershipId,
                                           final String transactionDescription) {
 
-    Connection connection = null;
-    try {
-      connection = dataSource.getConnection();
-
+    try (Connection connection = dataSource.getConnection()) {
       List<Long> membershipIds = new ArrayList<>(1);
       membershipIds.add(membershipId);
 
@@ -206,14 +203,6 @@ public class JobServiceImpl implements JobService {
     } catch (JRException|SQLException ex) {
       LOGGER.error(ex.getMessage(), ex);
       return null;
-    } finally {
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException ex) {
-          // ignore, we are closing
-        }
-      }
     }
   }
 }
