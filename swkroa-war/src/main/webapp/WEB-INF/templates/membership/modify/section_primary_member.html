@@ -6,22 +6,22 @@
 <div th:fragment="primaryMember">
   <div class="row">
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.entityType.$invalid}">
-      <label class="control-label label-required" th:text="#{com.cagst.swkroa.membership.entity}">
+      <label for="entityType" class="control-label label-required" th:text="#{com.cagst.swkroa.membership.entity}">
         zzz Entity Type
       </label>
-      <select class="form-control" name="entityType"
+      <select id="entityType" name="entityType" class="form-control"
               data-ng-options="entityType.display for entityType in entityTypes"
               data-ng-model="membership.entityType"
               data-ng-required="true">
       </select>
     </div>
     <div class="col-xs-4" data-ng-class="{'has-error': membershipForm.companyName.$invalid}">
-      <label class="control-label"
+      <label for="companyName" class="control-label"
              data-ng-class="{'label-required': membership.entityType.meaning != 'ENTITY_INDIVIDUAL'}"
              th:text="#{com.cagst.swkroa.membership.name.label}">
         zzz Membership Name
       </label>
-      <input type="text" class="form-control" name="companyName" maxlength="250"
+      <input id="companyName" name="companyName" type="text" class="form-control" maxlength="250"
              th:placeholder="#{com.cagst.swkroa.membership.name.prompt}"
              data-ng-model="membership.primaryMember.companyName"
              data-ng-disabled="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
@@ -35,15 +35,14 @@
       </div>
     </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.dueDate.$invalid}">
-      <label class="control-label label-required" th:text="#{com.cagst.swkroa.membership.dueon}">
+      <label for="dueDate" class="control-label label-required" th:text="#{com.cagst.swkroa.membership.dueon}">
         zzz Due On
       </label>
       <p class="input-group">
-        <input type="text" class="form-control" id="dueDate" name="dueDate"
+        <input id="dueDate" name="dueDate" type="text" class="form-control"
+               data-is-open="isOpen.dueDate"
                data-uib-datepicker-popup="MM/dd/yyyy"
-               data-is-open="openedDueDate"
-               data-show-button-bar="false"
-               data-show-weeks="false"
+               data-ng-click="openDueDate($event)"
                data-ng-model="membership.nextDueDate"
                data-ng-required="true" />
         <span class="input-group-btn">
@@ -65,10 +64,11 @@
       </select>
     </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryFirstName.$invalid}">
-      <label class="control-label label-required" th:text="#{com.cagst.swkroa.membership.member.firstname.label}">
+      <label for="primaryFirstName" class="control-label label-required"
+             th:text="#{com.cagst.swkroa.membership.member.firstname.label}">
         zzz First Name
       </label>
-      <input type="text" class="form-control" name="primaryFirstName" maxlength="50"
+      <input id="primaryFirstName" name="primaryFirstName" type="text" class="form-control" maxlength="50"
              th:placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
              data-ng-model="membership.primaryMember.person.firstName"
              data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
@@ -81,20 +81,22 @@
              data-ng-model="membership.primaryMember.person.middleName" />
     </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryLastName.$invalid}">
-      <label class="control-label label-required" th:text="#{com.cagst.swkroa.membership.member.lastname.label}">
+      <label for="primaryLastName" class="control-label label-required"
+             th:text="#{com.cagst.swkroa.membership.member.lastname.label}">
         zzz Last Name
       </label>
-      <input type="text" class="form-control" name="primaryLastName" maxlength="50"
+      <input id="primaryLastName" name="primaryLastName" type="text" class="form-control" maxlength="50"
              th:placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
              data-ng-model="membership.primaryMember.person.lastName"
              data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
              data-ng-blur="generateOwnerId(membership.primaryMember)" />
     </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryOwnerIdent.$invalid}">
-      <label class="control-label label-required" th:text="#{com.cagst.swkroa.membership.member.ownerid.label}">
+      <label for="primaryOwnerIdent" class="control-label label-required"
+             th:text="#{com.cagst.swkroa.membership.member.ownerid.label}">
         zzz Owner ID
       </label>
-      <input type="text" class="form-control" name="primaryOwnerIdent" maxlength="15"
+      <input id="primaryOwnerIdent" name="primaryOwnerIdent" type="text" class="form-control" maxlength="15"
              th:placeholder="#{com.cagst.swkroa.membership.member.ownerid.prompt}"
              data-ng-model="membership.primaryMember.ownerIdent"
              data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL' || membership.primaryMember.person" />
@@ -103,13 +105,12 @@
 
   <div class="row spacer-top">
     <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
+      <label for="primaryJoinDate" th:text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
       <div class="input-group">
         <input type="text" class="form-control" id="primaryJoinDate" name="primaryJoinDate"
+               data-is-open="isOpen.primaryJoinDate"
+               data-ng-click="openPrimaryJoinDate($event)"
                data-uib-datepicker-popup="MM/dd/yyyy"
-               data-is-open="openedPrimaryJoinDate"
-               data-show-button-bar="false"
-               data-show-weeks="false"
                data-ng-model="membership.primaryMember.joinDate" />
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" data-ng-click="openPrimaryJoinDate($event)">

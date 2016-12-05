@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
   @Before
   public void setUp() {
     repo = new CodeValueRepositoryJdbc(createTestDataSource());
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
 
     user = new User();
     user.setUserUID(1L);

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import javax.sql.DataSource;
 import java.util.Collection;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
@@ -38,7 +38,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     DataSource dataSource = createTestDataSource();
 
     repo = new ContactRepositoryJdbc(dataSource);
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**

@@ -5,59 +5,19 @@
  *
  * Author:  Craig Gaskill
  */
-
-swkroaApp.config(function($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise("/home");
-
-  $stateProvider
-    .state('home', {
-      url: "/home",
-      views: {
-        '': {
-          templateUrl: "/partials/maintain/user/main.html"
-        },
-        'list@home': {
-          templateUrl: "/partials/maintain/user/list.html"
-        },
-        'detail@home': {
-          templateUrl: "/partials/maintain/user/detail.html"
-        }
-      }
-    })
-    .state('add', {
-      url: "/add",
-      views: {
-        '': {
-          templateUrl: "/partials/maintain/user/modify.html"
-        },
-        'contact@add': {
-          templateUrl: "/partials/maintain/user/contact.html"
-        }
-      }
-    })
-    .state('edit', {
-      url: "/edit",
-      views: {
-        '': {
-          templateUrl: "/partials/maintain/user/modify.html"
-        },
-        'contact@edit': {
-          templateUrl: "/partials/maintain/user/contact.html"
-        }
-      }
-    });
-});
-
 swkroaApp.controller('userController',
-  ['$scope', '$http', 'codesetService', 'contactService', '$state',
-  function($scope, $http, codesetService, contactService, $state) {
+  ['$scope', '$http', 'codesetService', 'contactService',
+  function($scope, $http, codesetService, contactService) {
 
   $scope.contactService = contactService;
   $scope.status = {
     opened: false
   };
 
-  $scope.openExpireDate = function() {
+  $scope.openExpireDate = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
     $scope.status.opened = true;
   };
 
@@ -142,13 +102,13 @@ swkroaApp.controller('userController',
       successMessage: null
     };
 
-    $state.go("add");
+    $scope.view = 'add';
   };
 }]);
 
 swkroaApp.controller('modifyUserController',
-    ['$scope', '$http', '$state', 'codesetService',
-    function($scope, $http, $state, codesetService) {
+    ['$scope', '$http', 'codesetService',
+    function($scope, $http, codesetService) {
   var original = angular.copy($scope.share.user);
 
   $("#errorMessage").hide();
@@ -200,7 +160,7 @@ swkroaApp.controller('modifyUserController',
           $scope.share.successMessage = "User " + data.fullName + " was updated successfully!";
         }
 
-        $state.go("home");
+        $scope.view = 'listing';
       }).
       error(function(data, status) {
         switch (status) {

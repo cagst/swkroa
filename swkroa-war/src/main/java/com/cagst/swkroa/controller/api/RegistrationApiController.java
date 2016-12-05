@@ -2,6 +2,7 @@ package com.cagst.swkroa.controller.api;
 
 import javax.inject.Inject;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -22,7 +23,6 @@ import com.cagst.swkroa.user.UserRepository;
 import com.cagst.swkroa.user.UserService;
 import com.cagst.swkroa.user.UserType;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -235,7 +235,7 @@ public class RegistrationApiController {
     user.setUsername(username);
     user.setPassword(password);
     user.setPasswordTemporary(false);
-    user.setPasswordChangedDate(new DateTime());
+    user.setPasswordChangedDate(LocalDateTime.now());
     user.setUserType(UserType.MEMBER);
     user.setActive(true);
 

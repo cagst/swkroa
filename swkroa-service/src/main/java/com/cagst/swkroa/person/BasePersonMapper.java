@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 
-import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.utils.SwkroaStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -100,9 +100,9 @@ public abstract class BasePersonMapper {
   private static void mapCommonProperties(final MapSqlParameterSource params, final Person person, final User user) {
     params.addValue(TITLE_CD, person.getTitleCD() > 0L ? person.getTitleCD() : null);
     params.addValue(NAME_LAST, person.getLastName());
-    params.addValue(NAME_LAST_KEY, CGTStringUtils.normalizeToKey(person.getLastName()));
+    params.addValue(NAME_LAST_KEY, SwkroaStringUtils.normalizeToKey(person.getLastName()));
     params.addValue(NAME_FIRST, person.getFirstName());
-    params.addValue(NAME_FIRST_KEY, CGTStringUtils.normalizeToKey(person.getFirstName()));
+    params.addValue(NAME_FIRST_KEY, SwkroaStringUtils.normalizeToKey(person.getFirstName()));
     params.addValue(NAME_MIDDLE, StringUtils.isNotBlank(person.getMiddleName()) ? person.getMiddleName() : null);
     params.addValue(LOCALE_LANGUAGE, person.getLocale() != null ? person.getLocale().getLanguage() : null);
     params.addValue(LOCALE_COUNTRY, person.getLocale() != null ? person.getLocale().getCountry() : null);

@@ -11,8 +11,210 @@
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="userController">
-  <div ui-view></div>
+<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="userController" data-ng-cloak="">
+  <div class="row row-inner">
+    <div class="page-header">
+      <h3 th:text="#{user.page.title}">z_Users</h3>
+
+      <div id="successMessage" class="alert alert-success alert-dismissible" role="alert" data-ng-show="share.successMessage">
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only" th:text="#{common.close}">z_Close</span>
+        </button>
+        <strong th:text="#{common.success}">z_Success</strong>
+
+        <div data-ng-bind="share.successMessage" th:text="#{user.created.message}">z_Created</div>
+      </div>
+    </div>
+
+    <div class="container-outline">
+      <div class="row row-inner">
+        <!-- List View -->
+        <div class="col-xs-5 stretch">
+          <div class="split-header">
+            <div class="split-header-content expand divider-bottom">
+              <div class="input-group">
+                <a class="input-group-addon add-btn"
+                   th:attr="data-uib-tooltip=#{user.add.tooltip}"
+                   data-tooltip-placement="right"
+                   data-ng-click="newUser()">
+                  <i class="fa fa-plus"></i>
+                </a>
+                <input type="text" class="form-control" data-ng-disabled="true" autofocus />
+                <a class="input-group-addon btn btn-primary" data-ng-disabled="true" th:text="#{common.search}">z_Search</a>
+              </div>
+            </div>
+          </div>
+          <div class="list-group constrain-view divider-right">
+            <div>
+              <div class="panel-body text-muted" data-ng-show="!users.length">
+                <em th:text="#{user.none.found}">z_None</em>
+              </div>
+              <div data-ng-show="users.length">
+                <div class="list-group-item alt-list-group-item sel-list-group-item"
+                     data-ng-repeat="usr in users"
+                     data-ng-class="{active: usr.userUID === share.user.userUID}"
+                     data-ng-click="getUser(usr)">
+                  <div>
+                    <span data-ng-bind-template="{{usr.lastName}}, {{usr.firstName}}"></span>
+                    <small class="text-muted">
+                      <span data-ng-bind-template="({{usr.username}})"></span>
+                    </small>
+                    <span class="pull-right" data-ng-show="usr.accountNonLocked == false">
+                      <i class="fa fa-lock"></i>
+                    </span>
+                    <span class="pull-right" data-ng-show="usr.enabled == false">
+                      <i class="fa fa-ban"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail View -->
+        <div class="col-xs-7 divider-left stretch pull-right">
+          <div data-ng-show="!share.user">
+            <div class="panel-body text-muted text-center">
+              <em th:text="#{user.select}">z_Select</em>
+            </div>
+          </div>
+          <div data-ng-show="share.user">
+            <div class="container-inner constrain-view">
+              <div class="pull-left">
+                <h3 class="clear-bottom">
+                  <span data-ng-bind-template="{{share.user.lastName}}, {{share.user.firstName}}"></span>
+                  <small class="text-muted" data-ng-bind-template="({{share.user.username}})"></small>
+                </h3>
+                <div th:attr="data-ng-bind-template=#{user.last.signed.in}"></div>
+
+                <div data-ng-show="share.user.addresses.length > 0">
+                  <h4 class="divider-bottom">Addresses</h4>
+
+                  <div data-ng-repeat="address in share.user.addresses" class="row">
+                    <div class="col-xs-4">
+                      <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+                    </div>
+                    <div class="col-xs-8">
+                      <div data-ng-bind="address.addressLine1"></div>
+                      <div data-ng-bind="address.addressLine2"></div>
+                      <div data-ng-bind="address.addressLine3"></div>
+                      <div>
+                        {{address.city}}, {{address.state}} {{address.postalCode | zip}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div data-ng-show="share.user.phoneNumbers.length > 0">
+                  <h4 class="divider-bottom">Phone Numbers</h4>
+
+                  <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
+                    <div class="col-xs-4">
+                      <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+                    </div>
+                    <div class="col-xs=8">
+            <span>
+              {{phone.phoneNumber | tel}}
+            </span>
+                      <span data-ng-show="phone.phoneExtension">
+              Ext. {{phone.phoneExtension}}
+            </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div data-ng-show="share.user.emailAddresses.length > 0">
+                  <h4 class="divider-bottom">Email Addresses</h4>
+
+                  <div data-ng-repeat="email in share.user.emailAddresses" class="row">
+                    <div class="col-xs-4">
+                      <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
+                    </div>
+                    <div class="col-xs=8">
+                      <span data-ng-bind="email.emailAddress"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="container-small container-outline container-inner pull-right">
+                <div class="text_bold">Account Status</div>
+                <div class="indent-left"
+                     data-ng-show="share.user.accountNonExpired == false">
+                  Expired
+                </div>
+                <div class="indent-left"
+                     data-ng-show="share.user.accountNonLocked == false">
+                  Locked
+                </div>
+                <div class="indent-left"
+                     data-ng-show="share.user.enabled == false">
+                  Disabled
+                </div>
+                <div class="indent-left"
+                     data-ng-show="share.user.enabled == true && share.user.accountNonExpired == true && share.user.accountNonLocked == true">
+                  Enabled
+                </div>
+              </div>
+            </div>
+
+            <div class="divider-top split-footer">
+              <div class="split-footer-content pull-left">
+                <button type="button" class="btn btn-warning btn-xs"
+                        data-ng-click="unlockUser()"
+                        data-ng-show="share.user.accountNonLocked == false">
+                  <i class="fa fa-unlock"></i>
+                  <span>Unlock User</span>
+                </button>
+                <button type="button" class="btn btn-warning btn-xs"
+                        data-ng-click="enableUser()"
+                        data-ng-show="share.user.enabled == false">
+                  <span>Enable User</span>
+                </button>
+                <button type="button" class="btn btn-warning btn-xs"
+                        data-ng-click="disableUser()"
+                        data-ng-show="share.user.enabled == true && share.user.accountNonLocked == true">
+                  <i class="fa fa-ban"></i>
+                  <span>Disable User</span>
+                </button>
+                <button type="button" class="btn btn-warning btn-xs"
+                        data-ng-click="resetUserPassword()">
+                  <span>Reset Password</span>
+                </button>
+              </div>
+              <div class="split-footer-content pull-right">
+                <a class="btn btn-primary btn-xs" data-ui-sref="edit">
+                  <i class="fa fa-edit"></i>
+                  <span>Edit User</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="modal fade" id="passwordReset" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">Password Was Reset</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>Temporary Password</p>
+                    <blockquote>
+                      <p class="comment-text">{{share.user.password}}</p>
+                    </blockquote>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>

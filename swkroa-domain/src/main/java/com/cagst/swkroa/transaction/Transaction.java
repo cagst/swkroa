@@ -2,15 +2,14 @@ package com.cagst.swkroa.transaction;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import com.cagst.common.util.CGTCollatorBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.joda.time.DateTime;
 
 /**
  * Representation of a Transaction within the system.
@@ -21,7 +20,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
   private long transaction_id;
   private long membership_id;
   private String membership_name;
-  private DateTime transaction_dt;
+  private LocalDate transaction_dt;
   private TransactionType transaction_type;
   private String transaction_desc;
   private String ref_num;
@@ -59,11 +58,11 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     this.membership_name = name;
   }
 
-  public DateTime getTransactionDate() {
+  public LocalDate getTransactionDate() {
     return transaction_dt;
   }
 
-  public void setTransactionDate(DateTime transactionDate) {
+  public void setTransactionDate(LocalDate transactionDate) {
     this.transaction_dt = transactionDate;
   }
 
@@ -204,9 +203,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
       return 0;
     }
 
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(transaction_dt, rhs.getTransactionDate());
-
-    return builder.build();
+    return transaction_dt.compareTo(rhs.getTransactionDate());
   }
 }

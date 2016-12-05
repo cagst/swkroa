@@ -3,14 +3,14 @@ package com.cagst.swkroa.member;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -19,6 +19,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
@@ -47,25 +48,20 @@ import org.springframework.util.Assert;
    *     The {@link DataSource} to use to retrieve / persist data objects.
    */
   @Inject
-  public MemberTypeRepositoryJdbc(final DataSource dataSource) {
+  public MemberTypeRepositoryJdbc(DataSource dataSource) {
     super(dataSource);
   }
 
   @Override
   @Cacheable(value = "memberTypes")
-  public MemberType getMemberTypeByUID(final long id)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
-
+  public MemberType getMemberTypeByUID(long id) throws IncorrectResultSizeDataAccessException {
     LOGGER.info("Calling getMemberTypeByID for [{}].", id);
-
-    Map<String, Object> params = new HashMap<>();
-    params.put("member_type_id", id);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
     List<MemberType> types = getJdbcTemplate().query(
         stmtLoader.load(GET_MEMBERTYPE_BY_UID),
-        params,
+        new MapSqlParameterSource("member_type_id", id),
         new MemberTypeMapper()
     );
 
@@ -82,27 +78,25 @@ import org.springframework.util.Assert;
 
   @Override
   @Cacheable(value = "memberTypes")
-  public MemberType getMemberTypeByMeaning(final String meaning)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
-
+  public MemberType getMemberTypeByMeaning(String meaning) throws IncorrectResultSizeDataAccessException {
     LOGGER.info("Calling getMemberTypeByMeaning for [{}].", meaning);
 
-    return getMemberTypeByMeaningAsOf(meaning, DateTime.now());
+    return getMemberTypeByMeaningAsOf(meaning, LocalDate.now(getClock()));
   }
 
   @Override
   @Cacheable(value = "memberTypes")
-  public MemberType getMemberTypeByMeaningAsOf(final String meaning, final DateTime effectiveDateTime)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException {
+  public MemberType getMemberTypeByMeaningAsOf(String meaning, LocalDate effectiveDate)
+      throws IncorrectResultSizeDataAccessException {
 
-    Assert.hasText(meaning, "Assertion Failed - argument [meaning] cannot be null or empty");
-    Assert.notNull(effectiveDateTime, "Assertion Failed - argument [effectiveDateTime] cannot be null");
+    Assert.hasText(meaning, "Argument [meaning] cannot be null or empty");
+    Assert.notNull(effectiveDate, "Argument [effectiveDate] cannot be null");
 
-    LOGGER.info("Calling getMemberTypeByMeaningAsOf for [{}] as of [{}]", meaning, effectiveDateTime);
+    LOGGER.info("Calling getMemberTypeByMeaningAsOf for [{}] as of [{}]", meaning, effectiveDate);
 
-    Map<String, Object> params = new HashMap<String, Object>(2);
-    params.put("member_type_meaning", meaning);
-    params.put("eff_dt", effectiveDateTime.toDate());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("member_type_meaning", meaning);
+    params.addValue("eff_dt", Date.from(effectiveDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
@@ -115,10 +109,10 @@ import org.springframework.util.Assert;
     if (types.size() == 1) {
       return types.get(0);
     } else if (types.size() == 0) {
-      LOGGER.warn("MemberType with Meaning of [{}] was not found for [{}].", meaning, effectiveDateTime);
+      LOGGER.warn("MemberType with Meaning of [{}] was not found for [{}].", meaning, effectiveDate);
       throw new EmptyResultDataAccessException(1);
     } else {
-      LOGGER.error("More than one MemberType with Meaning of [{}] was found for [{}].", meaning, effectiveDateTime);
+      LOGGER.error("More than one MemberType with Meaning of [{}] was found for [{}].", meaning, effectiveDate);
       throw new IncorrectResultSizeDataAccessException(1, types.size());
     }
   }
@@ -128,45 +122,43 @@ import org.springframework.util.Assert;
   public List<MemberType> getActiveMemberTypes() {
     LOGGER.info("Calling getActiveMemberTypes.");
 
-    return getActiveMemberTypesAsOf(DateTime.now());
+    return getActiveMemberTypesAsOf(LocalDate.now(getClock()));
   }
 
   @Override
   @Cacheable(value = "memberTypeList")
-  public List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime) {
-    Assert.notNull(effectiveDateTime, "Assertion Failed - argument [effectiveDateTime] cannot be null");
+  public List<MemberType> getActiveMemberTypesAsOf(LocalDate effectiveDate) {
+    Assert.notNull(effectiveDate, "Argument [effectiveDate] cannot be null");
 
-    LOGGER.info("Calling getActiveMemberTypesAsOf [{}]", effectiveDateTime);
-
-    Map<String, Object> params = new HashMap<String, Object>(1);
-    params.put("eff_dt", effectiveDateTime.toDate());
+    LOGGER.info("Calling getActiveMemberTypesAsOf [{}]", effectiveDate);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERTYPES_ACTIVE), params, new MemberTypeMapper());
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERTYPES_ACTIVE),
+        new MapSqlParameterSource("eff_dt", Date.from(effectiveDate.atStartOfDay(ZoneId.systemDefault()).toInstant())),
+        new MemberTypeMapper());
   }
 
   @Override
   @Cacheable(value = "memberTypeList")
-  public List<MemberType> getActiveMemberTypesForMemberType(final long memberTypeId) {
-    Assert.isTrue(memberTypeId > 0, "Assertion Failed - argument [memberTypeId] must be a positive value");
+  public List<MemberType> getActiveMemberTypesForMemberType(long memberTypeId) {
+    Assert.isTrue(memberTypeId > 0, "Argument [memberTypeId] must be a positive value");
 
     LOGGER.info("Calling getActiveMemberTypesForMemberType [{}]", memberTypeId);
 
-    Map<String, Object> params = new HashMap<String, Object>(1);
-    params.put("member_type_id", memberTypeId);
-
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERTYPES_FOR_MEMBERTYPES), params, new MemberTypeMapper());
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERTYPES_FOR_MEMBERTYPES),
+        new MapSqlParameterSource("member_type_id", memberTypeId),
+        new MemberTypeMapper());
   }
 
   @Override
   @CacheEvict(value = {"memberTypes", "memberTypeList"}, allEntries = true)
-  public MemberType saveMemberType(final MemberType memberType, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
-
-    Assert.notNull(memberType, "Assertion failed - argument memberType cannot be null.");
+  public MemberType saveMemberType(MemberType memberType, User user) throws DataAccessException {
+    Assert.notNull(memberType, "Argument [memberType] cannot be null.");
 
     LOGGER.info("Calling saveMemberType for [{}]", memberType.getMemberTypeMeaning());
 
@@ -177,9 +169,7 @@ import org.springframework.util.Assert;
     }
   }
 
-  private MemberType insertMemberType(final MemberType memberType, final User user)
-      throws IncorrectResultSizeDataAccessException, DataAccessException {
-
+  private MemberType insertMemberType(MemberType memberType, User user) throws IncorrectResultSizeDataAccessException {
     LOGGER.info("Inserting new MemberType [{}]", memberType.getMemberTypeMeaning());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -196,8 +186,8 @@ import org.springframework.util.Assert;
     return memberType;
   }
 
-  private MemberType updateMemberType(final MemberType memberType, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException {
+  private MemberType updateMemberType(MemberType memberType, User user)
+      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Updating MemberType [{}]", memberType.getMemberTypeMeaning());
 

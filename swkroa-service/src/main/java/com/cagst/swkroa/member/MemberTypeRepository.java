@@ -1,13 +1,12 @@
 package com.cagst.swkroa.member;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.cagst.swkroa.user.User;
-import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.dao.OptimisticLockingFailureException;
 
 /**
  * Definition of a repository that retrieves and persists {@link MemberType} objects.
@@ -29,8 +28,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByUID(final long id) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  MemberType getMemberTypeByUID(long id) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link MemberType} by its meaning that is in effect as of NOW.
@@ -46,8 +44,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByMeaning(final String meaning) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  MemberType getMemberTypeByMeaning(String meaning) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link MemberType} by its meaning that is in effect as of the specified effective
@@ -55,8 +52,8 @@ public interface MemberTypeRepository {
    *
    * @param meaning
    *     A {@link String} that identifies the member type to retrieve.
-   * @param effectiveDateTime
-   *     A {@link DateTime} that specifies the effective time to retrieve the member type for.
+   * @param effectiveDate
+   *     A {@link LocalDate} that specifies the effective date to retrieve the member type for.
    *
    * @return A {@link MemberType}, if one exists, that matches the specified meaning and is in
    * effect as of the time specified; otherwise, a {@code null} is returned.
@@ -66,8 +63,8 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByMeaningAsOf(final String meaning, final DateTime effectiveDateTime)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+  MemberType getMemberTypeByMeaningAsOf(String meaning, LocalDate effectiveDate)
+      throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves all active {@link MemberType MemberTypes} in the system that are currently in effect
@@ -82,13 +79,13 @@ public interface MemberTypeRepository {
    * Retrieves all active {@link MemberType MemberTypes} in the system that were in effect as of the
    * time specified
    *
-   * @param effectiveDateTime
-   *     The {@link DateTime} to retrieve member types for.
+   * @param effectiveDate
+   *     The {@link LocalDate} to retrieve member types for.
    *
    * @return A {@link List} of active {@link MemberType MemberTypes} in the system that were in
    * effect as of the time specified.
    */
-  List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime);
+  List<MemberType> getActiveMemberTypesAsOf(LocalDate effectiveDate);
 
   /**
    * Retrieves all active {@link MemberType MemberTypes} in the system that correspond to the specified MemberType.
@@ -100,6 +97,5 @@ public interface MemberTypeRepository {
    */
   List<MemberType> getActiveMemberTypesForMemberType(final long memberTypeId);
 
-  MemberType saveMemberType(final MemberType memberType, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+  MemberType saveMemberType(MemberType memberType, User user) throws DataAccessException;
 }

@@ -5,14 +5,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.List;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserRepository;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,7 @@ public class CommentRepositoryJdbcTest extends BaseTestRepository {
     Mockito.when(userRepo.getUserByUID(11L)).thenReturn(user);
 
     repo = new CommentRepositoryJdbc(createTestDataSource());
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**
@@ -106,7 +106,7 @@ public class CommentRepositoryJdbcTest extends BaseTestRepository {
     Comment comment = new Comment();
     comment.setParentEntityName("MEMBERSHIP");
     comment.setParentEntityUID(1L);
-    comment.setCommentDate(new DateTime());
+    comment.setCommentDate(LocalDate.now());
     comment.setCommentText(msg);
 
     Comment newComment = repo.saveComment(comment, user);

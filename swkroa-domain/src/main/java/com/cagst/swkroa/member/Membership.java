@@ -3,19 +3,18 @@ package com.cagst.swkroa.member;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.Collator;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.cagst.common.formatter.DefaultNameFormatter;
-import com.cagst.common.formatter.NameFormatter;
-import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.transaction.Transaction;
-import org.joda.time.DateTime;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -29,11 +28,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private long membership_id;
   private String membership_name;
   private CodeValue entity_type;
-  private DateTime next_due_dt;
+  private LocalDate next_due_dt;
   private long member_id;
   private String company_name;
   private String owner_ident;
-  private DateTime join_dt;
+  private LocalDate join_dt;
   private MemberType member_type;
   private String name_last;
   private String name_middle;
@@ -41,10 +40,10 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private BigDecimal calculated_dues;
   private BigDecimal incremental_dues;
   private BigDecimal balance;
-  private DateTime last_payment_dt_tm;
+  private LocalDateTime last_payment_dt_tm;
   private long close_reason_id;
   private String close_reason_txt;
-  private DateTime close_dt_tm;
+  private LocalDateTime close_dt_tm;
 
   // meta-data
   private boolean active_ind = true;
@@ -55,8 +54,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private List<Comment> comments = new ArrayList<>();
   private List<Transaction> transactions = new ArrayList<>();
   private List<Document> documents = new ArrayList<>();
-
-  private NameFormatter nameFormatter = new DefaultNameFormatter();
 
   public long getMembershipUID() {
     return membership_id;
@@ -82,11 +79,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.entity_type = entityType;
   }
 
-  public DateTime getNextDueDate() {
+  public LocalDate getNextDueDate() {
     return next_due_dt;
   }
 
-  public void setNextDueDate(final DateTime dueDate) {
+  public void setNextDueDate(final LocalDate dueDate) {
     this.next_due_dt = dueDate;
   }
 
@@ -114,11 +111,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.owner_ident = ownderId;
   }
 
-  public DateTime getJoinDate() {
+  public LocalDate getJoinDate() {
     return join_dt;
   }
 
-  public void setJoinDate(final DateTime joinDate) {
+  public void setJoinDate(final LocalDate joinDate) {
     this.join_dt = joinDate;
   }
 
@@ -154,14 +151,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.name_first = firstName;
   }
 
-  public String getFullName() {
-    if (nameFormatter == null) {
-      return null;
-    }
-
-    return nameFormatter.formatFullName(name_last, name_first, name_middle);
-  }
-
   public BigDecimal getCalculatedDuesAmount() {
     if (CollectionUtils.isEmpty(members)) {
       return (calculated_dues == null ? BigDecimal.ZERO : calculated_dues);
@@ -195,11 +184,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.balance = balance;
   }
 
-  public DateTime getLastPaymentDate() {
+  public LocalDateTime getLastPaymentDate() {
     return last_payment_dt_tm;
   }
 
-  public void setLastPaymentDate(final DateTime paymentDate) {
+  public void setLastPaymentDate(final LocalDateTime paymentDate) {
     this.last_payment_dt_tm = paymentDate;
   }
 
@@ -227,11 +216,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.close_reason_txt = closeReasonText;
   }
 
-  public DateTime getCloseDate() {
+  public LocalDateTime getCloseDate() {
     return close_dt_tm;
   }
 
-  public void setCloseDate(final DateTime closeDate) {
+  public void setCloseDate(final LocalDateTime closeDate) {
     this.close_dt_tm = closeDate;
   }
 
@@ -429,9 +418,9 @@ public final class Membership implements Serializable, Comparable<Membership> {
       return 0;
     }
 
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(getMembershipName(), rhs.getMembershipName());
+    Collator collator = Collator.getInstance();
+    collator.setStrength(Collator.PRIMARY);
 
-    return builder.build();
+    return collator.compare(getMembershipName(), rhs.getMembershipName());
   }
 }

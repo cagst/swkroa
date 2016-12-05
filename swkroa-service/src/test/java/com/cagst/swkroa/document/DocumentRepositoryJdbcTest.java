@@ -9,6 +9,7 @@ import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.cagst.swkroa.codevalue.CodeValue;
@@ -16,7 +17,6 @@ import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -109,7 +109,7 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
     document.setDocumentFormat("txt");
     document.setDocumentType(renewalCodeValue);
     document.setDocumentContents("Some test data to be places in the document.\nAnd more on another line".getBytes());
-    document.setBeginEffectiveDate(new DateTime());
+    document.setBeginEffectiveDate(LocalDate.now());
 
     Document savedDocument = repo.saveDocument(document, user);
     assertNotNull("Ensure the document object is valid", savedDocument);

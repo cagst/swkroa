@@ -3,8 +3,8 @@ package com.cagst.swkroa.transaction;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.utils.LocalDateConverter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -38,7 +38,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
     Transaction trans = new Transaction();
     trans.setTransactionUID(rs.getLong(TRANSACTION_ID));
     trans.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
-    trans.setTransactionDate(CGTDateTimeUtils.getDateTime(rs, TRANSACTION_DT));
+    trans.setTransactionDate(LocalDateConverter.convert(rs.getTimestamp(TRANSACTION_DT)));
     trans.setTransactionType(TransactionType.values()[rs.getInt(TRANSACTION_TYPE_FLAG)]);
     trans.setTransactionDescription(rs.getString(TRANSACTION_DESC));
     trans.setReferenceNumber(rs.getString(REF_NUM));
@@ -58,7 +58,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
     Transaction trans = new Transaction();
     trans.setTransactionUID(rs.getLong(TRANSACTION_ID));
     trans.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
-    trans.setTransactionDate(CGTDateTimeUtils.getDateTime(rs.getTimestamp(TRANSACTION_DT)));
+    trans.setTransactionDate(LocalDateConverter.convert(rs.getTimestamp(TRANSACTION_DT)));
     trans.setTransactionType(TransactionType.values()[rs.getInt(TRANSACTION_TYPE_FLAG)]);
     trans.setTransactionDescription(rs.getString(TRANSACTION_DESC));
     trans.setReferenceNumber(rs.getString(REF_NUM));
@@ -114,7 +114,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
                                           final User user) {
 
     params.addValue(MEMBERSHIP_ID, transaction.getMembershipUID());
-    params.addValue(TRANSACTION_DT, CGTDateTimeUtils.convertDateTimeToTimestamp(transaction.getTransactionDate()));
+    params.addValue(TRANSACTION_DT, LocalDateConverter.convert(transaction.getTransactionDate()));
     params.addValue(TRANSACTION_TYPE_FLAG, transaction.getTransactionType().ordinal());
     params.addValue(TRANSACTION_DESC, transaction.getTransactionDescription());
     params.addValue(REF_NUM, transaction.getReferenceNumber());

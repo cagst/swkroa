@@ -5,8 +5,8 @@ import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.List;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.user.User;
@@ -53,7 +53,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public List<Address> getAddressesForMember(Member member) {
-    Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
+    Assert.notNull(member, "Argument [member] cannot be null");
 
     LOGGER.info("Calling getAddressesForMember for [{}].", member.getMemberUID());
 
@@ -62,7 +62,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public List<Address> getAddressesForPerson(Person person) {
-    Assert.notNull(person, "Assertion Failed - argument [person] cannot be null");
+    Assert.notNull(person, "Argument [person] cannot be null");
 
     LOGGER.info("Calling getAddressesForPerson for [{}].", person.getPersonUID());
 
@@ -71,6 +71,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   private List<Address> getAddressesForEntity(long id, String name) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("parent_entity_id", id);
     params.addValue("parent_entity_name", name);
@@ -80,7 +81,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public List<PhoneNumber> getPhoneNumbersForMember(Member member) {
-    Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
+    Assert.notNull(member, "Argument [member] cannot be null");
 
     LOGGER.info("Calling getPhoneNumbersForMember for [{}].", member.getMemberUID());
 
@@ -89,7 +90,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public List<PhoneNumber> getPhoneNumbersForPerson(Person person) {
-    Assert.notNull(person, "Assertion Failed - argument [person] cannot be null");
+    Assert.notNull(person, "Argument [person] cannot be null");
 
     LOGGER.info("Calling getPhoneNumbersForPerson for [{}].", person.getPersonUID());
 
@@ -98,6 +99,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   private List<PhoneNumber> getPhoneNumbersForEntity(long id, String name) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("parent_entity_id", id);
     params.addValue("parent_entity_name", name);
@@ -107,7 +109,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public List<EmailAddress> getEmailAddressesForMember(Member member) {
-    Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
+    Assert.notNull(member, "Argument [member] cannot be null");
 
     LOGGER.info("Calling getEmailAddressesForMember for [{}].", member.getMemberUID());
 
@@ -116,7 +118,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public List<EmailAddress> getEmailAddressesForPerson(Person person) {
-    Assert.notNull(person, "Assertion Failed - argument [person] cannot be null");
+    Assert.notNull(person, "Argument [person] cannot be null");
 
     LOGGER.info("Calling getEmailAddressesForPerson for [{}].", person.getPersonUID());
 
@@ -125,6 +127,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   private List<EmailAddress> getEmailAddressesForEntity(long id, String name) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("parent_entity_id", id);
     params.addValue("parent_entity_name", name);
@@ -134,8 +137,8 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public Address saveAddress(Address address, User user) {
-    Assert.notNull(address, "Assertion Failure - argument [address] cannot be null");
-    Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
+    Assert.notNull(address, "Argument [address] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving address [{}].", address.toString());
 
@@ -184,8 +187,8 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public PhoneNumber savePhoneNumber(PhoneNumber phoneNumber, User user) {
-    Assert.notNull(phoneNumber, "Assertion Failure - argument [phoneNumber] cannot be null");
-    Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
+    Assert.notNull(phoneNumber, "Argument [phoneNumber] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving phone number [{}].", phoneNumber.getPhoneNumber());
 
@@ -236,8 +239,8 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
 
   @Override
   public EmailAddress saveEmailAddress(EmailAddress emailAddress, User user) {
-    Assert.notNull(emailAddress, "Assertion Failure - argument [emailAddress] cannot be null");
-    Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
+    Assert.notNull(emailAddress, "Argument [emailAddress] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving email address [{}].", emailAddress.getEmailAddress());
 

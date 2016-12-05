@@ -1,5 +1,6 @@
 package com.cagst.swkroa.member;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -7,7 +8,6 @@ import com.cagst.swkroa.LoadingPolicy;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.job.Job;
 import com.cagst.swkroa.user.User;
-import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -129,7 +129,7 @@ public interface MembershipService {
    * Generates invoices for the memberships associated to the specified Job.
    *
    * @param transactionDate
-   *    A {@link DateTime} that represents the date of the transaction.
+   *    A {@link LocalDate} that represents the date of the transaction.
    * @param transactionDescription
    *    A {@link String} that describes the transaction.
    * @param transactionMemo
@@ -139,7 +139,7 @@ public interface MembershipService {
    * @param user
    *    The {@link User} that performed the changes.
    */
-  void renewMemberships(DateTime transactionDate,
+  void renewMemberships(LocalDate transactionDate,
                         String transactionDescription,
                         String transactionMemo,
                         Job job,

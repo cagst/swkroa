@@ -3,12 +3,10 @@ package com.cagst.swkroa.job;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UsernameTakenException;
 import org.slf4j.Logger;
@@ -16,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,10 +59,12 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getJobByUID for [{}]", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("job_id", uid);
 
-    List<Job> jobs = getJdbcTemplate().query(stmtLoader.load(GET_JOB_BY_UID), params, new JobMapper());
+    List<Job> jobs = getJdbcTemplate().query(
+        stmtLoader.load(GET_JOB_BY_UID),
+        new MapSqlParameterSource("job_id", uid),
+        new JobMapper());
+
     if (jobs.size() == 1) {
       return jobs.get(0);
     } else if (jobs.size() == 0) {
@@ -80,10 +81,11 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getJobsForStatus for [{}]", jobStatus);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(1);
-    params.put("job_status", jobStatus.name());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_JOBS_FOR_STATUS), params, new JobMapper());
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_JOBS_FOR_STATUS),
+        new MapSqlParameterSource("job_status", jobStatus.name()),
+        new JobMapper());
   }
 
   @Override
@@ -91,10 +93,11 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getJobsForType for [{}]", jobType);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(1);
-    params.put("job_type", jobType.name());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_JOBS_FOR_TYPE), params, new JobMapper());
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_JOBS_FOR_TYPE),
+        new MapSqlParameterSource("job_type", jobType.name()),
+        new JobMapper());
   }
 
   @Override
@@ -102,9 +105,10 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getJobsForStatusAndType for Type [{}] and Status [{}]", jobType, jobStatus);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(2);
-    params.put("job_type", jobType.name());
-    params.put("job_status", jobStatus.name());
+
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("job_type", jobType.name());
+    params.addValue("job_status", jobStatus.name());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_JOBS_FOR_TYPE_AND_STATUS), params, new JobMapper());
   }
@@ -114,10 +118,11 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getPendingJobsForType for Type [{}]", jobType);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(1);
-    params.put("job_type", jobType.name());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_PENDING_JOBS_FOR_TYPE), params, new JobMapper());
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_PENDING_JOBS_FOR_TYPE),
+        new MapSqlParameterSource("job_type", jobType.name()),
+        new JobMapper());
   }
 
   @Override
@@ -125,10 +130,11 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getDetailsForJob for [{}]", jobId);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("job_id", jobId);
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_JOB_DETAILS_FOR_JOB), params, new JobDetailMapper());
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_JOB_DETAILS_FOR_JOB),
+        new MapSqlParameterSource("job_id", jobId),
+        new JobDetailMapper());
   }
 
   @Override
@@ -136,8 +142,8 @@ import org.springframework.util.Assert;
   public Job saveJob(final Job job, final User user)
       throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(job, "Assertion Failed - argument [job] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(job, "Argument [job] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Calling saveJob for [{}]", job.getJobName());
 
@@ -153,8 +159,8 @@ import org.springframework.util.Assert;
   public JobDetail saveJobDetail(final JobDetail jobDetail, final User user)
     throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, UsernameTakenException {
 
-    Assert.notNull(jobDetail, "Assertion Failed - argument [jobDetail] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(jobDetail, "Argument [jobDetail] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Calling saveJobDetail for [{}, {}]", jobDetail.getParentEntityUID(), jobDetail.getParentEntityName());
 

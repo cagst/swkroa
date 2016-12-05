@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import com.cagst.common.web.servlet.tags.StaticResourceTag;
 import com.cagst.swkroa.audit.AuditEventType;
 import com.cagst.swkroa.audit.annotation.Auditable;
 import com.cagst.swkroa.user.User;
@@ -155,7 +154,7 @@ public class AuthenticationController {
     if (StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword) || StringUtils.isBlank(confirmPassword)) {
       session.setAttribute(CHANGING_PWD_ERR, "Please complete all required fields!");
 
-      WebAppUtils.redirectToUrl(request, response, StaticResourceTag.staticResource("url.auth.changepwd"));
+      WebAppUtils.redirectToUrl(request, response, "/auth/changepwd");
       return;
     }
 
@@ -166,14 +165,14 @@ public class AuthenticationController {
       LOGGER.debug("Unable to change password due to [{}]", ex.getLocalizedMessage());
       session.setAttribute(CHANGING_PWD_ERR, ex.getLocalizedMessage());
 
-      WebAppUtils.redirectToUrl(request, response, StaticResourceTag.staticResource("url.auth.changepwd"));
+      WebAppUtils.redirectToUrl(request, response, "/auth/changepwd");
       return;
     }
 
     RequestCache requestCache = new HttpSessionRequestCache();
     SavedRequest savedRequest = requestCache.getRequest(request, response);
     if (savedRequest == null) {
-      WebAppUtils.redirectToUrl(request, response, StaticResourceTag.staticResource("url.home"));
+      WebAppUtils.redirectToUrl(request, response, "/");
     } else {
       WebAppUtils.redirectToUrl(request, response, savedRequest.getRedirectUrl());
     }

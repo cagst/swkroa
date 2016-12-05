@@ -3,17 +3,16 @@ package com.cagst.swkroa.role;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.util.Assert;
 
 /**
@@ -42,15 +41,16 @@ import org.springframework.util.Assert;
 
   @Override
   public List<Role> getRolesForUser(final User user) {
-    Assert.notNull(user, "Assertion Failure - argument [user} cannot be null.");
+    Assert.notNull(user, "Argument [user} cannot be null.");
 
     LOGGER.info("Calling getRolesForUser [{}].", user.getUsername());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("user_id", user.getUserUID());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_ROLES_FOR_USER), params, new RoleMapper());
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_ROLES_FOR_USER),
+        new MapSqlParameterSource("user_id", user.getUserUID()),
+        new RoleMapper());
   }
 
   @Override
@@ -66,10 +66,12 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getRoleByKey [{}]", key);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>();
-    params.put("role_key", key);
 
-    List<Role> roles = getJdbcTemplate().query(stmtLoader.load(GET_ROLE_BY_KEY), params, new RoleMapper());
+    List<Role> roles = getJdbcTemplate().query(
+        stmtLoader.load(GET_ROLE_BY_KEY),
+        new MapSqlParameterSource("role_key", key),
+        new RoleMapper());
+
     if (roles.size() == 1) {
       return Optional.of(roles.get(0));
     } else if (roles.size() == 0) {

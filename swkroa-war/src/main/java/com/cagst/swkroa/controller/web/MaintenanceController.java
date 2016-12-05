@@ -13,8 +13,8 @@ import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.document.DocumentRepository;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
+import com.cagst.swkroa.utils.LocalDateConverter;
 import com.cagst.swkroa.web.util.WebAppUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -156,8 +156,8 @@ public class MaintenanceController {
       uploadDocument.setDocumentName(uploadFile.getOriginalFilename());
       uploadDocument.setDocumentFormat(uploadFile.getContentType());
       uploadDocument.setDocumentContents(uploadFile.getBytes());
-      uploadDocument.setBeginEffectiveDate(new DateTime(beginDate));
-      uploadDocument.setEndEffectiveDate(endDate != null ? new DateTime(endDate) : null);
+      uploadDocument.setBeginEffectiveDate(LocalDateConverter.convert(beginDate));
+      uploadDocument.setEndEffectiveDate(LocalDateConverter.convert(endDate));
 
       documentRepository.saveDocument(uploadDocument, WebAppUtils.getUser());
     } catch (IOException ex) {
@@ -190,8 +190,8 @@ public class MaintenanceController {
 
     document.setDocumentDescription(documentDescription);
     document.setDocumentType(documentType);
-    document.setBeginEffectiveDate(new DateTime(beginDate));
-    document.setEndEffectiveDate(endDate != null ? new DateTime(endDate) : null);
+    document.setBeginEffectiveDate(LocalDateConverter.convert(beginDate));
+    document.setEndEffectiveDate(LocalDateConverter.convert(endDate));
 
     documentRepository.saveDocument(document, WebAppUtils.getUser());
 

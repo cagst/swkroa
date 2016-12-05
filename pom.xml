@@ -66,9 +66,6 @@
     <!-- Google AutoValue Library -->
     <google-autovalue-version>1.1</google-autovalue-version>
 
-    <!-- CAGST Framework -->
-    <cagst-version>1.2</cagst-version>
-
     <!-- Spring Frameworks -->
     <spring-version>4.2.5.RELEASE</spring-version>
     <spring-security-version>4.0.3.RELEASE</spring-security-version>
@@ -77,18 +74,16 @@
     <slf4j-version>1.7.19</slf4j-version>
     <logback-version>1.1.6</logback-version>
 
-    <!-- JodaTime Framework -->
-    <jodatime-version>2.9.2</jodatime-version>
-
     <!-- ECache Framework -->
     <cache-version>1.0.0</cache-version>
     <ehcache-version>3.0.0.rc1</ehcache-version>
 
     <!-- Thymeleaf Framework -->
-    <thymeleaf-version>3.0.0.BETA02</thymeleaf-version>
+    <thymeleaf-version>3.0.1.RELEASE</thymeleaf-version>
+    <thymeleaf-java8time-version>3.0.0.RELEASE</thymeleaf-java8time-version>
 
     <!-- Jackson JSON Framework -->
-    <fasterxml.jackson-version>2.7.3</fasterxml.jackson-version>
+    <fasterxml.jackson-version>2.8.5</fasterxml.jackson-version>
 
     <!-- Google JSR-305 Annotations -->
     <jsr305.version>3.0.1</jsr305.version>
@@ -163,34 +158,6 @@
         <version>${google-autovalue-version}</version>
       </dependency>
 
-      <!-- CAGST Dependencies -->
-      <dependency>
-        <groupId>com.cagst</groupId>
-        <artifactId>cagst-common-db</artifactId>
-        <version>${cagst-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.cagst</groupId>
-        <artifactId>cagst-common-util</artifactId>
-        <version>${cagst-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.cagst</groupId>
-        <artifactId>cagst-common-service</artifactId>
-        <version>${cagst-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.cagst</groupId>
-        <artifactId>cagst-common-web</artifactId>
-        <version>${cagst-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.cagst</groupId>
-        <artifactId>cagst-test</artifactId>
-        <version>${cagst-version}</version>
-        <scope>test</scope>
-      </dependency>
-
       <!-- SWKROA Dependencies -->
       <dependency>
         <groupId>com.cagst.swkroa</groupId>
@@ -206,13 +173,6 @@
         <groupId>com.cagst.swkroa</groupId>
         <artifactId>swkroa-war</artifactId>
         <version>${project.version}</version>
-      </dependency>
-
-      <!-- Joda Time Dependencies -->
-      <dependency>
-        <groupId>joda-time</groupId>
-        <artifactId>joda-time</artifactId>
-        <version>${jodatime-version}</version>
       </dependency>
 
       <!-- Spring Core Dependencies -->
@@ -397,6 +357,11 @@
         <artifactId>thymeleaf-extras-springsecurity4</artifactId>
         <version>${thymeleaf-version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.thymeleaf.extras</groupId>
+        <artifactId>thymeleaf-extras-java8time</artifactId>
+        <version>${thymeleaf-java8time-version}</version>
+      </dependency>
 
       <!-- Jackson JSON -->
       <dependency>
@@ -416,7 +381,12 @@
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-joda</artifactId>
+        <artifactId>jackson-datatype-jdk8</artifactId>
+        <version>${fasterxml.jackson-version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jsr310</artifactId>
         <version>${fasterxml.jackson-version}</version>
       </dependency>
 

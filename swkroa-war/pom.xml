@@ -15,16 +15,6 @@
   <packaging>war</packaging>
 
   <dependencies>
-    <!-- CAGST Dependencies -->
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-common-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-common-service</artifactId>
-    </dependency>
-
     <!-- SWKROA Dependencies -->
     <dependency>
       <groupId>com.cagst.swkroa</groupId>
@@ -156,7 +146,11 @@
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-joda</artifactId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
 
     <!-- EhCache Dependencies -->
@@ -182,6 +176,10 @@
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
       <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.thymeleaf.extras</groupId>
+      <artifactId>thymeleaf-extras-java8time</artifactId>
     </dependency>
 
     <!-- Needed for Spring AOP -->

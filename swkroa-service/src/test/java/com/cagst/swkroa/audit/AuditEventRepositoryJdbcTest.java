@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Collection;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class AuditEventRepositoryJdbcTest extends BaseTestRepository {
   @Before
   public void setUp() {
     repo = new AuditEventRepositoryJdbc(createTestDataSource());
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**

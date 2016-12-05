@@ -66,11 +66,11 @@
                  data-datepicker-options="datePickerConfig"
                  data-uib-datepicker-popup="MM/dd/yyyy"
                  data-is-open="status.opened"
-                 data-show-weeks="false"
+                 data-ng-click="openExpireDate($event)"
                  data-ng-model="share.user.accountExpiredDate"
                  data-ng-blur="doesUsernameExist()"/>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-default" data-ng-click="openExpireDate()">
+            <button type="button" class="btn btn-default" data-ng-click="openExpireDate($event)">
               <i class="fa fa-calendar"></i>
             </button>
           </span>

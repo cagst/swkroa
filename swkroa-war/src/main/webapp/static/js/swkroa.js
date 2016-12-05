@@ -95,7 +95,7 @@ swkroaApp.config(['uibDatepickerConfig', function(uibDatepickerConfig) {
 }]);
 
 swkroaApp.config(['uibDatepickerPopupConfig', function(uibDatepickerPopupConfig) {
-  uibDatepickerPopupConfig.showButtonBar = false;
+  uibDatepickerPopupConfig.showButtonBar = true;
 }]);
 
 // add an interceptor to our http service to inject the context root for our requests
@@ -547,9 +547,23 @@ swkroaApp.service('membershipService', ['$http', function($http) {
   };
 
   this.generateOwnerId = function(firstName, lastName) {
-    return $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName).then(function(response) {
-      return JSON.parse(response.data);
-    });
+    var promise = $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName);
+
+    promise.success = function (fn) {
+      promise.then(function (response) {
+        if (responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
+
+    promise.error = function (fn) {
+      promise.then(function (response) {
+        if (!responseSuccessful(response)) {
+          fn(response.data, response.status);
+        }
+      });
+    };
   };
 
   this.closeMemberships = function(membershipIdsArg, closeReasonArg, closeTextArg) {

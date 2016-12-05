@@ -3,8 +3,8 @@ package com.cagst.swkroa.transaction;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.deposit.DepositTransaction;
+import com.cagst.swkroa.utils.LocalDateConverter;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
@@ -41,7 +41,7 @@ import org.springframework.jdbc.core.RowMapper;
     trans.setTransactionUID(rs.getLong(TRANSACTION_ID));
     trans.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
     trans.setMembershipName(rs.getString(MEMBERSHIP_NAME));
-    trans.setTransactionDate(CGTDateTimeUtils.getDateTime(rs, TRANSACTION_DT));
+    trans.setTransactionDate(LocalDateConverter.convert(rs.getTimestamp(TRANSACTION_DT)));
     trans.setTransactionType(TransactionType.values()[rs.getInt(TRANSACTION_TYPE_FLAG)]);
     trans.setTransactionDescription(rs.getString(TRANSACTION_DESC));
     trans.setReferenceNumber(rs.getString(REF_NUM));

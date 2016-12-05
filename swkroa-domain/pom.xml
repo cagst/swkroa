@@ -15,22 +15,10 @@
   <packaging>jar</packaging>
 
   <dependencies>
-    <!-- CAGST Common Dependencies -->
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-common-util</artifactId>
-    </dependency>
-
     <!-- Apache Commons Dependencies -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-    </dependency>
-
-    <!-- Joda Time Dependencies -->
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
     </dependency>
 
     <!-- Spring Security Dependencies -->
@@ -55,10 +43,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-joda</artifactId>
     </dependency>
 
     <!-- Google JSR-305 Annotations -->

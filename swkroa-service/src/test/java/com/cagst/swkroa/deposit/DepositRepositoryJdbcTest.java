@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,6 @@ import com.cagst.swkroa.transaction.TransactionRepositoryJdbc;
 import com.cagst.swkroa.transaction.UnpaidInvoice;
 import com.cagst.swkroa.user.User;
 import jdk.nashorn.internal.ir.annotations.Ignore;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -112,7 +112,7 @@ public class DepositRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure the deposits is not null.", deposits1);
     assertEquals("Ensure we have the correct number of Deposits.", 2, deposits1.size());
 
-    DateTime depositDate = new DateTime(2016, 1, 23, 0, 0, 0);
+    LocalDate depositDate = LocalDate.of(2016, 1, 23);
 
     Deposit newDeposit = new Deposit();
     newDeposit.setDepositDate(depositDate);

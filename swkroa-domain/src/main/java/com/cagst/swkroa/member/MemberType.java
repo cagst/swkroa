@@ -3,10 +3,10 @@ package com.cagst.swkroa.member;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.Collator;
+import java.time.LocalDate;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.joda.time.DateTime;
 
 /**
  * Representation of a Member Type within the system.
@@ -31,8 +31,8 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
   private boolean primary;
   private boolean allowSpouse;
   private boolean allowMember;
-  private DateTime beg_eff_dt;
-  private DateTime end_eff_dt;
+  private LocalDate beg_eff_dt;
+  private LocalDate end_eff_dt;
   private boolean active_ind = true;
   private long updt_cnt;
 
@@ -100,19 +100,19 @@ public final class MemberType implements Serializable, Comparable<MemberType> {
     this.allowMember = allowMember;
   }
 
-  public DateTime getBeginEffectiveDate() {
+  public LocalDate getBeginEffectiveDate() {
     return beg_eff_dt;
   }
 
-  public void setBeginEffectiveDate(final DateTime effectiveDate) {
+  public void setBeginEffectiveDate(final LocalDate effectiveDate) {
     this.beg_eff_dt = effectiveDate;
   }
 
-  public DateTime getEndEffectiveDate() {
+  public LocalDate getEndEffectiveDate() {
     return end_eff_dt;
   }
 
-  public void setEndEffectiveDate(final DateTime effectiveDate) {
+  public void setEndEffectiveDate(final LocalDate effectiveDate) {
     this.end_eff_dt = effectiveDate;
   }
 

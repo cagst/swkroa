@@ -71,9 +71,8 @@
       <div class="input-group">
         <input type="text" class="form-control" id="spouseJoinDate" name="spouseJoinDate"
                data-uib-datepicker-popup="MM/dd/yyyy"
-               data-is-open="openedSpouseJoinDate"
-               data-show-button-bar="false"
-               data-show-weeks="false"
+               data-is-open="isOpen.spouseJoinDate"
+               data-ng-click="openSpouseJoinDate($event)"
                data-ng-model="membership.spouse.joinDate" />
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" data-ng-click="openSpouseJoinDate($event)">

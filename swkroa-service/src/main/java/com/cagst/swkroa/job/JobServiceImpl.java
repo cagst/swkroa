@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,6 @@ import com.google.common.net.MediaType;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -65,14 +65,14 @@ public class JobServiceImpl implements JobService {
    *    The {@link JobRepository} used to retrieve {@link Job} and {@link JobDetail} objects.
    */
   @Inject
-  public JobServiceImpl(final JobRepository jobRepo,
-                        final CodeValueRepository codeValueRepo,
-                        final MembershipRepository membershipRepo,
-                        final MemberRepository memberRepo,
-                        final MemberTypeRepository memberTypeRepo,
-                        final DocumentRepository documentRepo,
-                        final TransactionRepository transactionRepo,
-                        final DataSource dataSource) {
+  public JobServiceImpl(JobRepository jobRepo,
+                        CodeValueRepository codeValueRepo,
+                        MembershipRepository membershipRepo,
+                        MemberRepository memberRepo,
+                        MemberTypeRepository memberTypeRepo,
+                        DocumentRepository documentRepo,
+                        TransactionRepository transactionRepo,
+                        DataSource dataSource) {
     this.jobRepo = jobRepo;
     this.codeValueRepo = codeValueRepo;
     this.membershipRepo = membershipRepo;
@@ -86,11 +86,11 @@ public class JobServiceImpl implements JobService {
 
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void processRenewalJob(final JobDetail jobDetail,
-                                final String transactionDescription,
-                                final DateTime transactionDate,
-                                final String transactionMemo,
-                                final User user) {
+  public void processRenewalJob(JobDetail jobDetail,
+                                String transactionDescription,
+                                LocalDate transactionDate,
+                                String transactionMemo,
+                                User user) {
     // set JobDetail as started (In-Process)
     jobDetail.setJobStatus(JobStatus.INPROCESS);
     jobRepo.saveJobDetail(jobDetail, user);
@@ -126,7 +126,7 @@ public class JobServiceImpl implements JobService {
       document.setDocumentName(transactionDescription);
       document.setDocumentFormat(MediaType.PDF.toString());
       document.setDocumentContents(reportContent);
-      document.setBeginEffectiveDate(new DateTime());
+      document.setBeginEffectiveDate(LocalDate.now());
       document.setDocumentDescription(transactionDescription);
 
       // Save the Renewal Membership Letter document

@@ -2,11 +2,10 @@ package com.cagst.swkroa.codevalue;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.Objects;
 
-import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.swkroa.utils.SwkroaToStringStyle;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -88,9 +87,10 @@ public abstract class CodeValue implements Serializable, Comparable<CodeValue> {
 
   @Override
   public int compareTo(CodeValue rhs) {
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(getDisplay(), rhs.getDisplay());
-    return builder.build();
+    Collator collator = Collator.getInstance();
+    collator.setStrength(Collator.PRIMARY);
+
+    return collator.compare(getDisplay(), rhs.getDisplay());
   }
 
   /**

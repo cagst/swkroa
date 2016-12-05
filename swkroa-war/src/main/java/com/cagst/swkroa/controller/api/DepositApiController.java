@@ -2,13 +2,13 @@ package com.cagst.swkroa.controller.api;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.cagst.swkroa.deposit.Deposit;
 import com.cagst.swkroa.deposit.DepositService;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
 import com.cagst.swkroa.web.util.WebAppUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -57,7 +57,7 @@ public class DepositApiController {
 
     if (depositId == 0L) {
       Deposit deposit = new Deposit();
-      deposit.setDepositDate(new DateTime());
+      deposit.setDepositDate(LocalDate.now());
 
       return deposit;
     }

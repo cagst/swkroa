@@ -13,9 +13,7 @@ swkroaApp.controller('membershipController',
                       'contactService',
                       'membershipService',
                       'transactionService',
-                      '$filter',
-    function($scope, $http, codesetService, contactService, membershipService, transactionService, $filter, currencyFilter)
-  {
+    function($scope, $http, codesetService, contactService, membershipService, transactionService) {
 
   // Define functions
   $scope.queryKeydown = function($event) {
@@ -284,21 +282,28 @@ swkroaApp.controller('membershipController',
     $event.preventDefault();
     $event.stopPropagation();
 
-    $scope.openedDueDate = true;
+    $scope.isOpen.dueDate = true;
   };
 
   $scope.openPrimaryJoinDate = function($event) {
     $event.preventDefault();
     $event.stopPropagation();
 
-    $scope.openedPrimaryJoinDate = true;
+    $scope.isOpen.primaryJoinDate = true;
+  };
+
+  $scope.openMemberJoinDate = function($event, member) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    member.joinDateOpened = true;
   };
 
   $scope.openSpouseJoinDate = function($event) {
     $event.preventDefault();
     $event.stopPropagation();
 
-    $scope.openedSpouseJoinDate = true;
+    $scope.isOpen.spouseJoinDate = true;
   };
 
   $scope.addSpouse = function() {
@@ -383,11 +388,13 @@ swkroaApp.controller('membershipController',
     var ownerIdent = member.ownerIdent;
 
     if (firstName  && firstName.length > 2 &&
-        lastName   && lastName.length > 2 &
+        lastName   && lastName.length > 2 &&
         (!ownerIdent || ownerIdent.length == 0)) {
 
-      membershipService.generateOwnerId(firstName, lastName).then(function(data) {
-        member.ownerIdent = data;
+      membershipService.generateOwnerId(firstName, lastName).then(function(response) {
+        if (response.status == 200) {
+          member.ownerIdent = response.data;
+        }
       });
     }
   };
@@ -490,6 +497,12 @@ swkroaApp.controller('membershipController',
   $scope.fullyLoaded = false;
   $scope.original    = null;
   $scope.message     = null;
+
+  $scope.isOpen = {
+    dueDate: false,
+    primaryJoinDate: false,
+    spouseJoinDate: false
+  };
 
   $('#createdMessage').hide();
   $('#updatedMessage').hide();
@@ -619,6 +632,10 @@ var loadAll = function($scope, $http) {
 };
 
 var syncAllItems = function(scope) {
+  if (!scope.membership) {
+    return;
+  }
+
   // sync up our code lists
   if (scope.membership.entityType) {
     for (var idx = 0; idx < scope.entityTypes.length; idx++) {

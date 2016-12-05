@@ -86,12 +86,11 @@
           <div class="input-group">
             <input type="text" class="form-control"
                    data-uib-datepicker-popup="MM/dd/yyyy"
-                   data-is-open="opened"
-                   data-show-button-bar="false"
-                   data-show-weeks="false"
+                   data-is-open="member.joinDateOpened"
+                   data-ng-click="openMemberJoinDate($event, member)"
                    data-ng-model="member.joinDate" />
             <span class="input-group-btn">
-              <button type="button" class="btn btn-default" data-ng-click="open($event)">
+              <button type="button" class="btn btn-default" data-ng-click="openMemberJoinDate($event, member)">
                 <i class="fa fa-calendar"></i>
               </button>
             </span>

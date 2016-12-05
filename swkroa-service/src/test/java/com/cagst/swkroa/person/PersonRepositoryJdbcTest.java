@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import javax.sql.DataSource;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.junit.Before;
@@ -35,7 +35,7 @@ public class PersonRepositoryJdbcTest extends BaseTestRepository {
     DataSource dataSource = createTestDataSource();
 
     repo = new PersonRepositoryJdbc(dataSource);
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**

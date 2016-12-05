@@ -3,12 +3,10 @@ package com.cagst.swkroa.deposit;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionEntry;
 import com.cagst.swkroa.transaction.TransactionRepository;
@@ -73,12 +71,13 @@ import org.springframework.util.Assert;
   public Deposit getDeposit(final long uid) {
     LOGGER.info("Calling getDeposit for [{}]", uid);
 
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("deposit_id", uid);
-
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    List<Deposit> deposits = getJdbcTemplate().query(stmtLoader.load(GET_DEPOSIT), params, new DepositMapper());
+    List<Deposit> deposits = getJdbcTemplate().query(
+        stmtLoader.load(GET_DEPOSIT),
+        new MapSqlParameterSource("deposit_id", uid),
+        new DepositMapper());
+
     if (deposits.size() == 1) {
       return deposits.get(0);
     } else if (deposits.size() == 0) {
@@ -92,8 +91,8 @@ import org.springframework.util.Assert;
 
   @Override
   public Deposit saveDeposit(Deposit deposit, User user) throws DataAccessException {
-    Assert.notNull(deposit, "Assertion Failed - argument [deposit] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(deposit, "Argument [deposit] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving Deposit for [{}]", deposit.getDepositNumber());
 

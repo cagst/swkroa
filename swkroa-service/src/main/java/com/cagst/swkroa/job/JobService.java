@@ -1,7 +1,8 @@
 package com.cagst.swkroa.job;
 
+import java.time.LocalDate;
+
 import com.cagst.swkroa.user.User;
-import org.joda.time.DateTime;
 
 /**
  * Definitions of a service that retrieves and persists {@link Job} and {@link JobDetail} objects.
@@ -11,7 +12,7 @@ import org.joda.time.DateTime;
 public interface JobService {
   void processRenewalJob(final JobDetail jobDetail,
                          final String transactionDescription,
-                         final DateTime transactionDate,
+                         final LocalDate transactionDate,
                          final String transactionMemo,
                          final User user);
 }

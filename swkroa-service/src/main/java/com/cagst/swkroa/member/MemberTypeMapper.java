@@ -3,8 +3,8 @@ package com.cagst.swkroa.member;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.utils.LocalDateConverter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -47,8 +47,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     type.setPrimary(rs.getBoolean(PRIMARY_IND));
     type.setAllowSpouse(rs.getBoolean(ALLOW_SPOUSE_IND));
     type.setAllowMember(rs.getBoolean(ALLOW_MEMBER_IND));
-    type.setBeginEffectiveDate(CGTDateTimeUtils.getDateTime(rs, BEG_EFF_DT));
-    type.setEndEffectiveDate(CGTDateTimeUtils.getDateTime(rs, END_EFF_DT));
+    type.setBeginEffectiveDate(LocalDateConverter.convert(rs.getTimestamp(BEG_EFF_DT)));
+    type.setEndEffectiveDate(LocalDateConverter.convert(rs.getTimestamp(END_EFF_DT)));
     type.setActive(rs.getBoolean(ACTIVE_IND));
     type.setMemberTypeUpdateCount(rs.getLong(MEMBER_TYPE_UPDT_CNT));
 
@@ -65,8 +65,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     params.addValue(PRIMARY_IND, memberType.isPrimary());
     params.addValue(ALLOW_SPOUSE_IND, memberType.isAllowSpouse());
     params.addValue(ALLOW_MEMBER_IND, memberType.isAllowMember());
-    params.addValue(BEG_EFF_DT, memberType.getBeginEffectiveDate().toDate());
-    params.addValue(END_EFF_DT, memberType.getEndEffectiveDate() != null ? memberType.getEndEffectiveDate().toDate() : null);
+    params.addValue(BEG_EFF_DT, LocalDateConverter.convert(memberType.getBeginEffectiveDate()));
+    params.addValue(END_EFF_DT, LocalDateConverter.convert(memberType.getEndEffectiveDate()));
 
     params.addValue(ACTIVE_IND, memberType.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
@@ -84,8 +84,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     params.addValue(PRIMARY_IND, memberType.isPrimary());
     params.addValue(ALLOW_SPOUSE_IND, memberType.isAllowSpouse());
     params.addValue(ALLOW_MEMBER_IND, memberType.isAllowMember());
-    params.addValue(BEG_EFF_DT, memberType.getBeginEffectiveDate().toDate());
-    params.addValue(END_EFF_DT, memberType.getEndEffectiveDate() != null ? memberType.getEndEffectiveDate().toDate() : null);
+    params.addValue(BEG_EFF_DT, LocalDateConverter.convert(memberType.getBeginEffectiveDate()));
+    params.addValue(END_EFF_DT, LocalDateConverter.convert(memberType.getEndEffectiveDate()));
     params.addValue(ACTIVE_IND, memberType.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
 

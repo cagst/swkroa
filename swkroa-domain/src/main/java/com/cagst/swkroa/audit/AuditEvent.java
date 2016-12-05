@@ -1,11 +1,11 @@
 package com.cagst.swkroa.audit;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.joda.time.DateTime;
 
 /**
  * This class represents an auditable event within the system.
@@ -19,7 +19,7 @@ public class AuditEvent implements Serializable {
   private final String audit_action;
   private final String audit_instigator;
   private final String audit_message;
-  private final DateTime create_dt_tm;
+  private final LocalDateTime create_dt_tm;
 
   /**
    * Primary Constructor used to create an instance of a new <i>AuditEvent</i>.
@@ -57,10 +57,10 @@ public class AuditEvent implements Serializable {
    *     A {@link String} that identifies any additional information to associate with the
    *     audit event. triggered.
    * @param createDtTm
-   *     A {@link DateTime} that represents when the audit event was created.
+   *     A {@link LocalDateTime} that represents when the audit event was created.
    */
   /* package */AuditEvent(final AuditEventType eventType, final String action, final String instigator,
-                          final String message, final DateTime createDtTm) {
+                          final String message, final LocalDateTime createDtTm) {
 
     this.audit_event_type = eventType;
     this.audit_action = action;
@@ -85,25 +85,15 @@ public class AuditEvent implements Serializable {
     return audit_message;
   }
 
-  public DateTime getCreateDateTime() {
+  public LocalDateTime getCreateDateTime() {
     return create_dt_tm;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return Objects.hash(audit_event_type, audit_action, audit_instigator, audit_message);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -124,11 +114,6 @@ public class AuditEvent implements Serializable {
         Objects.equals(audit_message, rhs.getAuditMessage());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);

@@ -3,15 +3,13 @@ package com.cagst.swkroa.transaction;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.deposit.Deposit;
 import com.cagst.swkroa.deposit.DepositTransaction;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
@@ -20,6 +18,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
@@ -60,8 +59,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
    *     The {@link CodeValueRepository} to use to retrieve additional attributes.
    */
   @Inject
-  public TransactionRepositoryJdbc(final DataSource dataSource,
-                                   final CodeValueRepository codeValueRepo) {
+  public TransactionRepositoryJdbc(DataSource dataSource, CodeValueRepository codeValueRepo) {
     super(dataSource);
 
     this.codeValueRepo = codeValueRepo;
@@ -74,12 +72,10 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     LOGGER.info("Calling getTransactionByUID for [{}]", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("transaction_id", uid);
 
     List<Transaction> trans = getJdbcTemplate().query(
         stmtLoader.load(GET_TRANSACTION_BY_UID),
-        params,
+        new MapSqlParameterSource("transaction_id", uid),
         new TransactionListExtractor(codeValueRepo)
     );
 
@@ -96,19 +92,16 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
 
   @Override
   public List<Transaction> getTransactionsForMembership(final Membership membership) {
-    Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null.");
+    Assert.notNull(membership, "Argument [membership] cannot be null.");
 
     LOGGER.info("Calling getTransactionsForMembership [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("membership_id", membership.getMembershipUID());
 
-    return getJdbcTemplate().query
-        (stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP),
-            params,
-            new TransactionListExtractor(codeValueRepo)
-        );
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP),
+        new MapSqlParameterSource("membership_id", membership.getMembershipUID()),
+        new TransactionListExtractor(codeValueRepo));
   }
 
   @Override
@@ -116,12 +109,10 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     LOGGER.info("Calling getCountOfTransactionGroupsForInvoices");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Integer> params = new HashMap<>(1);
-    params.put("transaction_type", type.ordinal());
 
     return getJdbcTemplate().queryForObject(
         stmtLoader.load(GET_COUNT_OF_TRANSACTIONGROUPS_FOR_TYPE),
-        params,
+        new MapSqlParameterSource("transaction_type", type.ordinal()),
         Long.class
     );
   }
@@ -131,10 +122,11 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     LOGGER.info("Calling getTransactionListForInvoices");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Integer> params =  new HashMap<>(3);
-    params.put("transaction_type", type.ordinal());
-    params.put("start", start);
-    params.put("limit", limit);
+
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("transaction_type", type.ordinal());
+    params.addValue("start", start);
+    params.addValue("limit", limit);
 
     return getJdbcTemplate().query(
         stmtLoader.load(GET_TRANACTIONLGROUPS_FOR_TYPE),
@@ -150,12 +142,10 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     LOGGER.info("Calling getTransactionsForDeposit [{}].", deposit.getDepositNumber());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("deposit_id", deposit.getDepositUID());
 
     return getJdbcTemplate().query(
         stmtLoader.load(GET_TRANSACTIONS_FOR_DEPOSIT),
-        params,
+        new MapSqlParameterSource("deposit_id", deposit.getDepositUID()),
         new DepositTransactionListExtractor(codeValueRepo)
     );
   }
@@ -171,8 +161,8 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
 
   @Override
   public Transaction saveTransaction(final Transaction transaction, final User user) throws DataAccessException {
-    Assert.notNull(transaction, "Assertion Failed - argument [transaction] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(transaction, "Argument [transaction] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving Transaction for Membership [{}]", transaction.getMembershipUID());
 

@@ -6,13 +6,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
     user.setUserUID(1L);
 
     repo = new MemberTypeRepositoryJdbc(createTestDataSource());
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**
@@ -91,7 +91,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IncorrectResultSizeDataAccessException.class)
   public void testGetMemberTypeByMeaningAsOf_FoundTooMany() {
-    DateTime dt = new DateTime(2005, 4, 19, 13, 15);
+    LocalDate dt = LocalDate.of(2005, 4, 19);
 
     repo.getMemberTypeByMeaningAsOf(MemberType.FAMILY_MEMBER, dt);
   }
@@ -101,7 +101,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMemberTypeByMeaningAsOf_FoundOne() {
-    DateTime dt = new DateTime(2005, 4, 19, 13, 15);
+    LocalDate dt = LocalDate.of(2005, 4, 19);
 
     MemberType type = repo.getMemberTypeByMeaningAsOf(MemberType.ASSOCIATE, dt);
     assertNotNull("Ensure we found a MemberType.", type);
@@ -125,7 +125,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetActiveMemberTypesAsOf() {
-    DateTime dt = new DateTime(2012, 4, 19, 13, 15, 0);
+    LocalDate dt = LocalDate.of(2012, 4, 19);
 
     Collection<MemberType> types = repo.getActiveMemberTypesAsOf(dt);
 
@@ -153,7 +153,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testSaveMemberType_Insert() {
-    DateTime now = new DateTime();
+    LocalDate now = LocalDate.now(repo.getClock());
 
     MemberType type = new MemberType();
     type.setMemberTypeDisplay("New Member Type");

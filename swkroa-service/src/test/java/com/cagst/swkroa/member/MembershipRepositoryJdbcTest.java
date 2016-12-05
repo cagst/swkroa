@@ -8,18 +8,20 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import com.google.common.collect.Sets;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -78,7 +80,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     when(memberTypeRepo.getMemberTypeByUID(anyLong())).thenReturn(new MemberType());
 
     repo = new MembershipRepositoryJdbc(createTestDataSource(), memberRepo, codeValueRepo, memberTypeRepo);
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**
@@ -156,14 +158,13 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMemberships_DueInXDays_NoneFound() {
-    DateTime currentTime = new DateTime(2013, 2, 15, 0, 0);
-    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+    LocalDateTime currentTime = LocalDateTime.of(2013, 2, 15, 0, 0);
+    Clock clock = Clock.fixed(currentTime.atZone(ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC"));
+    repo.setClock(clock);
 
     List<Membership> memberships = repo.getMembershipsDueInXDays(30);
     assertNotNull("Ensure the memberships collection is not null.", memberships);
     assertTrue("Ensure the memberships collection is empty.", memberships.isEmpty());
-
-    DateTimeUtils.setCurrentMillisSystem();
   }
 
   /**
@@ -171,15 +172,14 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMemberships_DueInXDays_Found1() {
-    DateTime currentTime = new DateTime(2014, 2, 15, 0, 0);
-    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+    LocalDateTime currentTime = LocalDateTime.of(2014, 2, 15, 0, 0);
+    Clock clock = Clock.fixed(currentTime.atZone(ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC"));
+    repo.setClock(clock);
 
     List<Membership> memberships = repo.getMembershipsDueInXDays(30);
     assertNotNull("Ensure the memberships collection is not null.", memberships);
     assertFalse("Ensure the memberships collection is not empty.", memberships.isEmpty());
     assertEquals("Ensure the correct number of memberships are found due.", 1, memberships.size());
-
-    DateTimeUtils.setCurrentMillisSystem();
   }
 
   /**
@@ -187,15 +187,14 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMemberships_DueInXDays_Found2() {
-    DateTime currentTime = new DateTime(2015, 2, 15, 0, 0);
-    DateTimeUtils.setCurrentMillisFixed(currentTime.getMillis());
+    LocalDateTime currentTime = LocalDateTime.of(2015, 2, 15, 0, 0);
+    Clock clock = Clock.fixed(currentTime.atZone(ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC"));
+    repo.setClock(clock);
 
     List<Membership> memberships = repo.getMembershipsDueInXDays(30);
     assertNotNull("Ensure the memberships collection is not null.", memberships);
     assertFalse("Ensure the memberships collection is not empty.", memberships.isEmpty());
     assertEquals("Ensure the correct number of memberships are found due.", 2, memberships.size());
-
-    DateTimeUtils.setCurrentMillisSystem();
   }
 
   /**
@@ -210,10 +209,8 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     assertFalse("Ensure the memberships collection is not empty!", memberships1.isEmpty());
     assertEquals("Ensure we found the correct number of memberships!", 4, memberships1.size());
 
-    DateTime now = new DateTime();
-
     Membership builder = new Membership();
-    builder.setNextDueDate(new DateTime(now.plusYears(1).toDate()));
+    builder.setNextDueDate(LocalDate.now(repo.getClock()).plusYears(1));
     builder.setEntityType(codeValueRepo.getCodeValueByUID(1L));
 
     MemberType type = new MemberType();
@@ -316,6 +313,6 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     Membership membership = repo.getMembershipByUID(1L);
 
     assertNotNull("Ensure we found the membership", membership);
-    assertEquals("Ensure the next due date was updated correctly", "01/23/2015", membership.getNextDueDate().toString("MM/dd/yyyy"));
+    assertEquals("Ensure the next due date was updated correctly","2015-01-23", membership.getNextDueDate().toString());
   }
 }

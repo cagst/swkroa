@@ -3,7 +3,6 @@ package com.cagst.swkroa.county;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.cagst.common.util.CGTCollatorBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -122,12 +121,16 @@ public final class County implements Serializable, Comparable<County> {
 
   @Override
   public int compareTo(final County rhs) {
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
+    int cmp = Boolean.compare(isSwkroaCounty(), rhs.isSwkroaCounty());
+    if (cmp != 0) {
+      return cmp;
+    }
 
-    builder.append(!isSwkroaCounty(), !rhs.isSwkroaCounty());
-    builder.append(state_code, rhs.getState());
-    builder.append(county_code, rhs.getCountyCode());
+    cmp = state_code.compareTo(rhs.getState());
+    if (cmp != 0) {
+      return cmp;
+    }
 
-    return builder.build();
+    return county_code.compareTo(rhs.getCountyCode());
   }
 }

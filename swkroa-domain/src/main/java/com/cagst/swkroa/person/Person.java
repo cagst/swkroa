@@ -1,22 +1,19 @@
 package com.cagst.swkroa.person;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 
-import com.cagst.common.formatter.DefaultNameFormatter;
-import com.cagst.common.formatter.NameFormatter;
-import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.joda.time.DateTimeZone;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Representation of a generic Person within the system.
@@ -32,7 +29,7 @@ public class Person implements Serializable, Comparable<Person> {
   private String name_first;
   private String name_middle;
   private Locale locale;
-  private DateTimeZone time_zone;
+  private TimeZone time_zone;
 
   private List<Address> addresses = new ArrayList<>();
   private List<EmailAddress> emailAddresses = new ArrayList<>();
@@ -41,9 +38,6 @@ public class Person implements Serializable, Comparable<Person> {
   // meta-data
   private boolean active_ind = true;
   private long updt_cnt;
-
-  @Autowired
-  private final NameFormatter nameFormatter = new DefaultNameFormatter();
 
   /**
    * Gets the unique identifier for the Person.
@@ -129,14 +123,6 @@ public class Person implements Serializable, Comparable<Person> {
     this.name_middle = middleName;
   }
 
-  public String getFullName() {
-    if (getPersonUID() == 1L) {
-      return name_last;
-    }
-
-    return nameFormatter.formatFullName(name_last, name_first, name_middle);
-  }
-
   public Locale getLocale() {
     return locale;
   }
@@ -158,24 +144,24 @@ public class Person implements Serializable, Comparable<Person> {
     this.locale = locale;
   }
 
-  public DateTimeZone getTimeZone() {
+  public TimeZone getTimeZone() {
     return time_zone;
   }
 
   /**
-   * @return The {@link DateTimeZone} associated with this Person or the default DateTimeZone if no specific time zone
+   * @return The {@link TimeZone} associated with this Person or the default DateTimeZone if no specific time zone
    * is associated with this person.
    */
   @JsonIgnore
-  public DateTimeZone getEffectiveTimeZone() {
+  public TimeZone getEffectiveTimeZone() {
     if (time_zone != null) {
       return time_zone;
     }
 
-    return DateTimeZone.getDefault();
+    return TimeZone.getDefault();
   }
 
-  public void setTimeZone(final DateTimeZone time_zone) {
+  public void setTimeZone(final TimeZone time_zone) {
     this.time_zone = time_zone;
   }
 
@@ -319,10 +305,14 @@ public class Person implements Serializable, Comparable<Person> {
       return 0;
     }
 
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(name_last, rhs.getLastName());
-    builder.append(name_first, rhs.getFirstName());
+    Collator collator = Collator.getInstance();
+    collator.setStrength(Collator.PRIMARY);
 
-    return builder.build();
+    int cmp = collator.compare(name_last, rhs.getLastName());
+    if (cmp != 0) {
+      return cmp;
+    }
+
+    return collator.compare(name_first, rhs.getFirstName());
   }
 }

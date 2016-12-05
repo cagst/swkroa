@@ -130,7 +130,7 @@ public final class MembershipApiController {
       primary.setPerson(new Person());
 
       Membership membership = new Membership();
-      membership.setEntityType(codeValueRepo.getCodeValueByMeaning(CodeSetType.EMAIL_TYPE, "ENTITY_INDIVIDUAL"));
+      membership.setEntityType(codeValueRepo.getCodeValueByMeaning(CodeSetType.ENTITY_TYPE, "ENTITY_INDIVIDUAL"));
       membership.addMember(primary);
 
       return membership;

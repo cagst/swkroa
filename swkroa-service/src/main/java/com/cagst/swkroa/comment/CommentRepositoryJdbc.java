@@ -3,12 +3,10 @@ package com.cagst.swkroa.comment;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
@@ -19,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
@@ -52,7 +51,7 @@ import org.springframework.util.Assert;
   @Override
   @Cacheable(value = "commentsList", key = "#membership.getMembershipUID()")
   public List<Comment> getCommentsForMembership(final Membership membership) {
-    Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
+    Assert.notNull(membership, "Argument [membership] cannot be null");
 
     LOGGER.info("Calling getCommentsForMembership [{}].", membership.getMembershipUID());
 
@@ -64,10 +63,11 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getCommentByUID for [{}]", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("comment_id", uid);
 
-    List<Comment> comments = getJdbcTemplate().query(stmtLoader.load(GET_COMMENT_BY_UID), params, new CommentMapper());
+    List<Comment> comments = getJdbcTemplate().query(
+        stmtLoader.load(GET_COMMENT_BY_UID),
+        new MapSqlParameterSource("comment_id", uid),
+        new CommentMapper());
 
     if (comments.size() == 1) {
       return comments.get(0);
@@ -83,8 +83,8 @@ import org.springframework.util.Assert;
   @Override
   @CacheEvict(value = "commentsList", key = "#comment.getParentEntityUID()")
   public Comment saveComment(final Comment comment, final User user) throws DataAccessException {
-    Assert.notNull(comment, "Assertion Failed - argument [comment] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(comment, "Argument [comment] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving Comment for [{}, {}].", comment.getParentEntityName(), comment.getParentEntityUID());
 
@@ -108,9 +108,9 @@ import org.springframework.util.Assert;
   private List<Comment> getCommentsForEntity(final String entityName, final long entityID) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, Object> params = new HashMap<>();
-    params.put("parent_entity_name", entityName);
-    params.put("parent_entity_id", entityID);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("parent_entity_name", entityName);
+    params.addValue("parent_entity_id", entityID);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_COMMENTS_FOR_ENTITY), params, new CommentMapper());
   }

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Optional;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.junit.Before;
@@ -33,7 +33,7 @@ public class RoleRepositoryJdbcTest extends BaseTestRepository {
     user12.setUserUID(12L);
 
     repo = new RoleRepositoryJdbc(createTestDataSource());
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**
