@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> {
-  private static final long serialVersionUID = 8469738041039540107L;
+  private static final long serialVersionUID = 1L;
 
   private long phone_id;
   private long parent_entity_id;

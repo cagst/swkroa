@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public final class Address implements Serializable, Comparable<Address> {
-  private static final long serialVersionUID = 7499345705626185164L;
+  private static final long serialVersionUID = 1L;
 
   private long address_id;
   private long parent_entity_id;

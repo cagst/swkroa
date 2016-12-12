@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public final class Member implements Serializable, Comparable<Member> {
-  private static final long serialVersionUID = 3919236058086901376L;
+  private static final long serialVersionUID = 1L;
 
   private long member_id;
   private String member_name;

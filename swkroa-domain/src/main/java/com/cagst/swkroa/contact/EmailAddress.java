@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public final class EmailAddress implements Serializable, Comparable<EmailAddress> {
-  private static final long serialVersionUID = 722090805243595723L;
+  private static final long serialVersionUID = 1L;
 
   private long email_id;
   private long parent_entity_id;

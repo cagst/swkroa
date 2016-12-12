@@ -56,13 +56,13 @@
                 <div class="btn-group pull-right">
                   <button type="button" class="btn btn-primary btn-xs" data-ng-click="editDeposit(deposit)">
                     <i class="fa fa-edit"></i>
-                    <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                    <span th:text="#{common.edit}">z_Edit</span>
                   </button>
                   <button type="button" class="btn btn-danger btn-xs"
                           data-ng-click="selectedDeposit(deposit)"
                           data-toggle="modal" data-target="#confirmDeletion">
                     <i class="fa fa-trash-o"></i>
-                    <span th:text="#{com.cagst.swkroa.delete}">zzz Delete</span>
+                    <span th:text="#{common.delete}">zzz Delete</span>
                   </button>
                 </div>
               </td>
@@ -142,7 +142,7 @@
                   </button>
                   <button type="button" class="btn btn-default"
                           data-ng-click="cancelChanges()"
-                          th:text="#{com.cagst.swkroa.cancel}">
+                          th:text="#{common.cancel}">
                   </button>
                 </div>
               </div>
@@ -299,7 +299,7 @@
                 </div>
                 <div class="col-xs-6">
                   <label for="entryAmount" class="control-label label-required"
-                         th:text="#{com.cagst.swkroa.membership.transaction.amount}">
+                         th:text="#{membership.transaction.amount}">
                     zzz Amount
                   </label>
                   <input id="entryAmount" type="number" class="form-control"
@@ -316,7 +316,7 @@
               </button>
               <button type="button" class="btn btn-default"
                       data-dismiss="modal"
-                      th:text="#{com.cagst.swkroa.cancel}">
+                      th:text="#{common.cancel}">
                 zzz Cancel
               </button>
             </div>

@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public class Person implements Serializable, Comparable<Person> {
-  private static final long serialVersionUID = 4546930957600757055L;
+  private static final long serialVersionUID = 1L;
 
   private long person_id;
   private long title_cd;

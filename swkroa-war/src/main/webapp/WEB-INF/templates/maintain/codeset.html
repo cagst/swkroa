@@ -5,7 +5,7 @@
 <head>
   <th:block th:replace="fragments/common :: head" />
 
-  <script type="text/javascript" th:src="@{/static/js/maintain/codeset.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/maintain/contact.service.js}"></script>
 </head>
 
 <body>
@@ -98,20 +98,20 @@
                       <a href="#" class="btn btn-xs btn-cancel" data-ng-disabled="rowform.$waiting"
                          data-ng-click="rowform.$cancel()">
                         <i class="fa fa-ban"></i>
-                        <span th:text="#{com.cagst.swkroa.cancel}">zzz Cancel</span>
+                        <span th:text="#{common.cancel}">zzz Cancel</span>
                       </a>
                     </div>
                   </form>
                   <div class="btn-group pull-right" data-ng-show="!rowform.$visible">
                     <button type="button" class="btn btn-primary btn-xs" data-ng-click="rowform.$show()">
                       <i class="fa fa-edit"></i>
-                      <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                      <span th:text="#{common.edit}">z_Edit</span>
                     </button>
                     <button type="button" class="btn btn-danger btn-xs"
                             data-ng-click="selectedCodeValue(codevalue)"
                             data-toggle="modal" data-target="#confirmDeletion">
                       <i class="fa fa-trash-o"></i>
-                      <span th:text="#{com.cagst.swkroa.delete}">zzz Delete</span>
+                      <span th:text="#{common.delete}">z_Delete</span>
                     </button>
                   </div>
                 </td>

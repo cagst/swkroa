@@ -120,13 +120,13 @@
                       <a href="#" class="btn btn-cancel btn-xs" data-ng-disabled="editform.$waiting"
                          data-ng-click="editform.$cancel()">
                         <i class="fa fa-ban"></i>
-                        <span th:text="#{com.cagst.swkroa.cancel}">zzz Cancel</span>
+                        <span th:text="#{common.cancel}">zzz Cancel</span>
                       </a>
                     </div>
                     <div class="row-spacer" data-ng-show="!editform.$visible">
                       <button type="button" class="btn btn-primary btn-xs" data-ng-click="editform.$show()">
                         <i class="fa fa-edit"></i>
-                        <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+                        <span th:text="#{common.edit}">z_Edit</span>
                       </button>
                     </div>
                   </div>
@@ -206,12 +206,12 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-success"
                   data-ng-click="saveNewRate()"
-                  th:text="#{com.cagst.swkroa.update}">
+                  th:text="#{common.update}">
             zzz Update
           </button>
           <button type="button" class="btn btn-default"
                   data-dismiss="modal"
-                  th:text="#{com.cagst.swkroa.cancel}">
+                  th:text="#{common.cancel}">
             zzz Cancel
           </button>
         </div>

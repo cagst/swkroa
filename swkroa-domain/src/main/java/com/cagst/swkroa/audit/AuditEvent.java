@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public class AuditEvent implements Serializable {
-  private static final long serialVersionUID = 5568939371877454284L;
+  private static final long serialVersionUID = 1L;
 
   private final AuditEventType audit_event_type;
   private final String audit_action;

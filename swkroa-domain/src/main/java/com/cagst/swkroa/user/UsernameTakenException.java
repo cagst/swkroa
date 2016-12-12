@@ -7,7 +7,7 @@ package com.cagst.swkroa.user;
  * @author Craig Gaskill
  */
 public class UsernameTakenException extends RuntimeException {
-  private static final long serialVersionUID = -6984306087180818384L;
+  private static final long serialVersionUID = 1L;
 
   /**
    * Constructs a {@code UsernameTakenException} with the specified message.

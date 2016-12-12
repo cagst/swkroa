@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public final class MemberType implements Serializable, Comparable<MemberType> {
-  private static final long serialVersionUID = -8799075313261854806L;
+  private static final long serialVersionUID = 1L;
 
   public static final String ASSOCIATE = "ASSOCIATE";
   public static final String FAMILY_HEAD = "FAMILY_HEAD";

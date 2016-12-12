@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 })
 @JsonDeserialize(builder = AutoValue_SecurityPolicy.Builder.class)
 public abstract class SecurityPolicy implements Serializable {
-  private static final long serialVersionUID = -5761738041576289806L;
+  private static final long serialVersionUID = 1L;
 
   @JsonProperty(value = "securityPolicyUID", required = true)
   public abstract long getSecurityPolicyUID();

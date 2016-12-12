@@ -23,7 +23,7 @@ import org.springframework.util.CollectionUtils;
  * @author Craig Gaskill
  */
 public final class Membership implements Serializable, Comparable<Membership> {
-  private static final long serialVersionUID = 5583617519331577882L;
+  private static final long serialVersionUID = 1L;
 
   private long membership_id;
   private String membership_name;

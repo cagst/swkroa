@@ -5,36 +5,30 @@
 
 <div th:fragment="sectionCounties" class="panel panel-default">
   <div class="panel-heading">
-    <span th:text="#{com.cagst.swkroa.membership.section.county}">zzz Counties</span>
+    <span th:text="#{membership.section.county}">zzz Counties</span>
       <span class="pull-right">
         <button type="button" class="btn btn-success btn-xs hover-reveal"
-                data-ng-click="addCounty()">
+                data-ng-click="ctrl.addCounty()">
           <i class="fa fa-plus"></i>
-          <span th:text="#{com.cagst.swkroa.membership.county.add}">zzz Add County</span>
+          <span th:text="#{membership.county.add}">zzz Add County</span>
         </button>
       </span>
   </div>
 
   <div class="panel-body">
     <div class="row">
-      <label class="col-xs-2 label-required" th:text="#{com.cagst.swkroa.membership.county.county}">
-        zzz County
-      </label>
-      <label class="col-xs-2" th:text="#{com.cagst.swkroa.membership.county.acres.mineral}">
-        zzz Minerals
-      </label>
-      <label class="col-xs-2" th:text="#{com.cagst.swkroa.membership.county.acres.surface}">
-        zzz Surface
-      </label>
+      <label class="col-xs-2 label-required" th:text="#{membership.county.county}">zzz County</label>
+      <label class="col-xs-2" th:text="#{membership.county.acres.mineral}">zzz Minerals</label>
+      <label class="col-xs-2" th:text="#{membership.county.acres.surface}">zzz Surface</label>
     </div>
 
     <div class="row spacer-bottom"
-         data-ng-repeat="membershipCounty in membership.membershipCounties"
+         data-ng-repeat="membershipCounty in ctrl.membership.membershipCounties"
          data-ng-show="membershipCounty.active"
          data-ng-form="countyForm">
       <div class="col-xs-2" data-ng-class="{'has-error': countyForm.county.$invalid}">
         <select class="form-control" name="county"
-                data-ng-options="cnty.countyName group by cnty.votingCounty for cnty in counties"
+                data-ng-options="cnty.countyName group by cnty.votingCounty for cnty in ctrl.counties"
                 data-ng-model="membershipCounty.county"
                 data-ng-required="membershipCounty.active">
         </select>
@@ -53,15 +47,15 @@
         <div data-ng-show="membershipCounty.county.swkroaCounty == true">
           <input type="checkbox" name="votingCounty"
                  data-ng-model="membershipCounty.votingCounty"
-                 data-ng-change="validateVotingCounty(membership, membershipCounty)" />
-          <label th:text="#{com.cagst.swkroa.membership.county.voting}">zzz Voting County</label>
+                 data-ng-change="ctrl.validateVotingCounty(ctrl.membership, membershipCounty)" />
+          <label th:text="#{membership.county.voting}">zzz Voting County</label>
         </div>
       </div>
       <div class="col-xs-2">
         <button type="button" class="btn btn-danger btn-xs hover-reveal"
-                data-ng-click="removeCounty(membershipCounty)">
+                data-ng-click="ctrl.removeCounty(membershipCounty)">
           <i class="fa fa-trash-o"></i>
-          <span th:text="#{com.cagst.swkroa.membership.county.remove}">zzz Remove County</span>
+          <span th:text="#{membership.county.remove}">zzz Remove County</span>
         </button>
       </div>
     </div>

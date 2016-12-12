@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 })
 @JsonDeserialize(builder = AutoValue_CodeSet.Builder.class)
 public abstract class CodeSet implements Serializable, Comparable<CodeSet> {
-  private static final long serialVersionUID = -8900456520585097319L;
+  private static final long serialVersionUID = 1L;
 
   @JsonProperty(value = "codeSetUID", required = true)
   public abstract long getCodeSetUID();

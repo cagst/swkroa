@@ -7,11 +7,11 @@
   <div class="spacer-top">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span class="panel-title" th:text="#{membership.transactions}">zzz Transactions</span>
+        <span class="panel-title" th:text="#{membership.transactions}">z_Transactions</span>
         <span class="pull-right">
           <button type="button" class="btn btn-success btn-xs"
                   data-toggle="modal" data-target="#modifyTransaction"
-                  data-ng-click="addTransaction()"
+                  data-ng-click="ctrl.addTransaction()"
                   th:attr="uib-tooltip=#{membership.transaction.create}"
                   data-tooltip-placement="left">
             <i class="fa fa-plus"></i>
@@ -25,11 +25,11 @@
             <th th:text="#{common.date}" style="width:100px">zzz Date</th>
             <th th:text="#{common.type}">zzz Type</th>
             <th th:text="#{common.desc}">zzz Desc</th>
-            <th th:text="#{com.cagst.swkroa.membership.transaction.amount}" style="width:100px; text-align:right">zzz Amount</th>
+            <th th:text="#{membership.transaction.amount}" style="width:100px; text-align:right">z_Amount</th>
             <th style="width:75px"></th>
           </tr>
         </thead>
-        <tbody data-ng-repeat="transaction in membership.transactions | orderBy: 'transactionDate': true"
+        <tbody data-ng-repeat="transaction in ctrl.membership.transactions | orderBy: 'transactionDate': true"
                data-ng-show="transaction.active">
           <tr>
             <td style="width:125px">
@@ -42,10 +42,10 @@
             </td>
             <td>
               <span data-ng-show="transaction.transactionType == 'INVOICE'"
-                    th:text="#{com.cagst.swkroa.membership.transaction.invoice}">
+                    th:text="#{membership.transaction.invoice}">
               </span>
               <span data-ng-show="transaction.transactionType == 'PAYMENT'"
-                    th:text="#{com.cagst.swkroa.membership.transaction.payment}">
+                    th:text="#{membership.transaction.payment}">
               </span>
               <div class="pull-right">
                 <a class="btn btn-default btn-xs"
@@ -53,7 +53,7 @@
                    data-ng-show="{{transaction.documentUID > 0}}"
                    data-ng-href="maintain/documents/{{transaction.documentUID}}">
                   <i class="fa fa-binoculars"></i>
-                  <span th:text="#{maintain.documents.action.view}">zzz View</span>
+                  <span th:text="#{maintain.documents.action.view}">z_View</span>
                 </a>
               </div>
             </td>
@@ -66,7 +66,7 @@
             <td style="width:75px">
               <div class="pull-right">
                 <button type="button" class="btn btn-primary btn-xs"
-                        data-ng-click="editTransaction(transaction)"
+                        data-ng-click="ctrl.editTransaction(transaction)"
                         data-ng-show="!transaction.inDeposit"
                         th:attr="uib-tooltip=#{membership.transaction.update}"
                         data-tooltip-placement="left">
@@ -74,9 +74,9 @@
                 </button>
                 <button type="button" class="btn btn-danger btn-xs"
                         data-toggle="modal" data-target="#deleteTransaction"
-                        data-ng-click="deleteTransaction(transaction)"
+                        data-ng-click="ctrl.deleteTransaction(transaction)"
                         data-ng-show="!transaction.inDeposit"
-                        th:attr="uib-tooltip=#{com.cagst.swkroa.membership.transaction.delete.title}"
+                        th:attr="uib-tooltip=#{membership.transaction.delete.title}"
                         data-tooltip-placement="left">
                   <i class="fa fa-trash-o"></i>
                 </button>

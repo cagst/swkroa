@@ -18,11 +18,11 @@
     </div>
     <div>
       <div class="col-xs-2">
-        <label th:text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
+        <label th:text="#{membership.member.title.label}">zzz Title</label>
         <select class="form-control"
                 data-ng-model="membership.spouse.person.titleCD"
                 data-ng-options="title.codeValueUID as title.display for title in titles">
-          <option value="" th:text="#{com.cagst.swkroa.none}"></option>
+          <option value="" th:text="#{common.none}"></option>
         </select>
       </div>
       <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseFirstName.$invalid}">

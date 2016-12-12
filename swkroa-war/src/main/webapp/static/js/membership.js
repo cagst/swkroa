@@ -5,553 +5,662 @@
  *
  * Author:  Craig Gaskill
  */
+(function(window, angular, $) {
+  'use strict';
 
-swkroaApp.controller('membershipController',
-                     ['$scope',
-                      '$http',
-                      'codesetService',
-                      'contactService',
-                      'membershipService',
-                      'transactionService',
-    function($scope, $http, codesetService, contactService, membershipService, transactionService) {
+  angular.module('swkroaApp').controller('MembershipController', MembershipController);
 
-  // Define functions
-  $scope.queryKeydown = function($event) {
-    if ($event.keyCode == 13 && $scope.query.length >= 2) {
-      $scope.getMemberships();
+  MembershipController.$inject = ['$http', 'CodeSetService', 'ContactService', 'MembershipService', 'TransactionService'];
+
+  function MembershipController($http, codeSetService, contactService, membershipService, transactionService) {
+    var vm = this;
+
+    vm.query            = "";
+    vm.view             = "listing";
+    vm.filterStatus     = "ACTIVE";
+    vm.filterBalance    = "ALL";
+    vm.filtering        = "off";
+    vm.showCalculations = false;
+
+    vm.searched    = false;
+    vm.fullyLoaded = false;
+    vm.original    = null;
+    vm.message     = null;
+    vm.created     = false;
+    vm.updated     = false;
+
+    vm.isOpen = {
+      dueDate: false,
+      primaryJoinDate: false,
+      spouseJoinDate: false,
+      commentDate: false,
+      transactionDate: false
+    };
+
+    /********************************************
+     * Define binding methods
+     ********************************************/
+
+    vm.onQueryKeydown = onQueryKeydown;
+
+    // Filter Methods
+    vm.getFilters = getFilters;
+    vm.showFilterOptions = showFilterOptions;
+    vm.applyFilter = applyFilter;
+    vm.cancelFilter = cancelFilter;
+
+    // Membership Methods
+    vm.getMemberships = getMemberships;
+    vm.getMembership = getMembership;
+    vm.addMembership = addMembership;
+    vm.editMembership = editMembership;
+    vm.openMembership = openMembership;
+    vm.closeMembership = closeMembership;
+
+    // Comment Methods
+    vm.selectComment = selectComment;
+    vm.addComment = addComment;
+    vm.removeComment = removeComment;
+    vm.saveComment = saveComment;
+
+    // Transaction Methods
+    vm.deleteTransaction = deleteTransaction;
+    vm.editTransaction = editTransaction;
+    vm.calculateTransactionAmount = calculateTransactionAmount;
+    vm.addTransaction = addTransaction;
+    vm.removeTransaction = removeTransaction;
+    vm.saveTransaction = saveTransaction;
+    vm.addTransactionEntry = addTransactionEntry;
+    vm.deleteTransactionEntry = deleteTransactionEntry;
+
+    // Date-Picker Methods
+    vm.openDueDate = openDueDate;
+    vm.openPrimaryJoinDate = openPrimaryJoinDate;
+    vm.openMemberJoinDate = openMemberJoinDate;
+    vm.openSpouseJoinDate = openSpouseJoinDate;
+    vm.openCommentDate = openCommentDate;
+    vm.openTransactionDate = openTransactionDate;
+
+    // Methods for Spouse
+    vm.addSpouse = addSpouse;
+    vm.removeSpouse = removeSpouse;
+
+    // Methods for County
+    vm.addCounty = addCounty;
+    vm.removeCounty = removeCounty;
+    vm.validateVotingCounty = validateVotingCounty;
+
+    // Methods for Member
+    vm.addMember = addMember;
+    vm.removeMember = removeMember;
+    vm.generateOwnerId = generateOwnerId;
+
+    // Status Methods
+    vm.hasChanges = hasChanges;
+    vm.cancelChanges = cancelChanges;
+
+    // Misc. Methods
+    vm.save = save;
+    vm.canClose = canClose;
+    vm.toggleShowCalculations = toggleShowCalculations;
+
+    vm.addAddress = addAddress;
+    vm.ensurePrimaryAddress = ensurePrimaryAddress;
+    vm.removeAddress = removeAddress;
+
+    vm.addPhone = addPhone;
+    vm.ensurePrimaryPhone = ensurePrimaryPhone;
+    vm.removePhone = removePhone;
+
+    vm.addEmail = addEmail;
+    vm.ensurePrimaryEmail = ensurePrimaryEmail;
+    vm.removeEmail = removeEmail;
+
+    activate();
+
+    /********************************************
+     * Implement Methods
+     ********************************************/
+
+    function activate() {
+      codeSetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
+        vm.entryTypes = data;
+      });
+
+      codeSetService.getCodeValuesForCodeSet('CLOSE_REASONS').success(function(data) {
+        vm.closeReasons = data;
+      });
+
+      vm.filterText = getFilters();
     }
-  };
 
-  $scope.getFilters = function() {
-    var filterText = "";
-
-    if ($scope.filterStatus == 'ACTIVE') {
-      if (filterText) {
-        filterText = filterText + ", ";
+    function onQueryKeydown($event) {
+      if ($event.keyCode == 13 && vm.query.length >= 2) {
+        vm.getMemberships();
       }
-      filterText = filterText + "Active";
-    } else if ($scope.filterStatus == 'INACTIVE') {
-      if (filterText) {
-        filterText = filterText + ", ";
-      }
-      filterText = filterText + "Inactive";
     }
 
-    if ($scope.filterBalance == 'DELINQUENT') {
-      if (filterText) {
-        filterText = filterText + ", ";
+    function getFilters() {
+      var filterText = "";
+
+      if (vm.filterStatus == 'ACTIVE') {
+        if (filterText) {
+          filterText = filterText + ", ";
+        }
+        filterText = filterText + "Active";
+      } else if (vm.filterStatus == 'INACTIVE') {
+        if (filterText) {
+          filterText = filterText + ", ";
+        }
+        filterText = filterText + "Inactive";
       }
-      filterText = filterText + "Delinquent";
-    } else if ($scope.filterBalance == 'PAID') {
-      if (filterText) {
-        filterText = filterText + ", ";
+
+      if (vm.filterBalance == 'DELINQUENT') {
+        if (filterText) {
+          filterText = filterText + ", ";
+        }
+        filterText = filterText + "Delinquent";
+      } else if (vm.filterBalance == 'PAID') {
+        if (filterText) {
+          filterText = filterText + ", ";
+        }
+        filterText = filterText + "Paid";
+      } else if (vm.filterBalance == 'CREDIT') {
+        if (filterText) {
+          filterText = filterText + ", ";
+        }
+        filterText = filterText + "Credit";
       }
-      filterText = filterText + "Paid";
-    } else if ($scope.filterBalance == 'CREDIT') {
-      if (filterText) {
-        filterText = filterText + ", ";
-      }
-      filterText = filterText + "Credit";
+
+      return filterText;
     }
 
-    return filterText;
-  };
-
-  $scope.showFilterOptions = function() {
-    $scope.filtering = 'on';
-  };
-
-  $scope.applyFilter = function() {
-    $scope.filtering  = "off";
-    $scope.filterText = $scope.getFilters();
-    if ($scope.query && $scope.query.length > 0) {
-      $scope.getMemberships();
+    function showFilterOptions() {
+      vm.filtering = 'on';
     }
-  };
 
-  $scope.cancelFilter = function() {
-    $scope.filtering = "off";
-  };
-
-  $scope.getMemberships = function() {
-    $scope.membership = null;
-
-    $('#createdMessage').hide();
-    $('#updatedMessage').hide();
-
-    membershipService.getMemberships($scope.query, $scope.filterStatus, $scope.filterBalance).then(function(response) {
-      if (response.status == 200) {
-        $scope.memberships = response.data;
-        $scope.searched    = true;
+    function applyFilter() {
+      vm.filtering  = "off";
+      vm.filterText = vm.getFilters();
+      if (vm.query && vm.query.length > 0) {
+        vm.getMemberships();
       }
-    });
-  };
+    }
 
-  $scope.getMembership = function(membershipUID) {
-    $('#createdMessage').hide();
-    $('#updatedMessage').hide();
+    function cancelFilter() {
+      vm.filtering = "off";
+    }
 
-    membershipService.getMembership(membershipUID).then(function(response) {
-      if (response.status == 200) {
-        $scope.membership = response.data;
-        for (var idx = 0; idx < $scope.memberships.length; idx++) {
-          if ($scope.memberships[idx].membershipUID == $scope.membership.membershipUID) {
-            $scope.memberships[idx] = $scope.membership;
-            break;
+    function getMemberships() {
+      vm.membership = null;
+
+      vm.created = false;
+      vm.updated = false;
+
+      membershipService.getMemberships(vm.query, vm.filterStatus, vm.filterBalance).then(function(response) {
+        if (response.status == 200) {
+          vm.memberships = response.data;
+          vm.searched    = true;
+        }
+      });
+    }
+
+    function getMembership(membershipUID) {
+      vm.created = false;
+      vm.updated = false;
+
+      membershipService.getMembership(membershipUID).then(function(response) {
+        if (response.status == 200) {
+          vm.membership = response.data;
+          for (var idx = 0; idx < vm.memberships.length; idx++) {
+            if (vm.memberships[idx].membershipUID == vm.membership.membershipUID) {
+              vm.memberships[idx] = vm.membership;
+              break;
+            }
           }
         }
-      }
-    });
-  };
-
-  $scope.addMembership = function() {
-    membershipService.getMembership(0).then(function(response) {
-      if (response.status == 200) {
-        $scope.membership      = response.data;
-        $scope.original        = angular.copy(response.data);
-      }
-    });
-
-    if (!$scope.fullyLoaded) {
-      loadAll($scope, $http);
-    } else {
-      syncAllItems($scope);
-    }
-
-    $scope.view = "add";
-  };
-
-  $scope.editMembership = function() {
-    if (!$scope.fullyLoaded) {
-      loadAll($scope, $http);
-    } else {
-      syncAllItems($scope);
-    }
-
-    $scope.original = angular.copy($scope.membership);
-    $scope.view     = "edit";
-  };
-
-  $scope.openMembership = function() {
-    $scope.membership.active          = true;
-    $scope.membership.closeReasonUID  = null;
-    $scope.membership.closeReasonText = null;
-    $scope.membership.closeDate       = null;
-
-    $('#openMembershipsDlg').modal('hide');
-
-    membershipService.saveMembership($scope.membership).then(function(response) {
-      if (response.status == 200) {
-        var idx = $scope.memberships.indexOf($scope.membership);
-        $scope.memberships.splice(idx, 1);
-        $scope.getMemberships();
-      } else {
-        $scope.membership.active = false;
-      }
-    });
-  };
-
-  $scope.selectComment = function(comment) {
-    $scope.commentIdx = $scope.membership.comments.indexOf(comment);
-    $scope.comment    = angular.copy(comment);
-  };
-
-  $scope.addComment = function() {
-    $scope.commentIdx = -1;
-    $scope.comment = {active: true, commentDate: new Date()};
-  };
-
-  $scope.removeComment = function() {
-    $scope.comment.active = false;
-    $http.put("/api/comments", $scope.comment).success(function(data) {
-      $scope.membership.comments.splice($scope.commentIdx, 1);
-    }).error(function(data) {
-      // TODO: Need to add a message for the user
-      $scope.comment.active = true;
-      $scope.membership.comments[$scope.commentIdx] = $scope.comment;
-    });
-    $scope.comment = null;
-    $('#deleteComment').modal('hide');
-  };
-
-  $scope.saveComment = function() {
-    $scope.comment.parentEntityName = "MEMBERSHIP";
-    $scope.comment.parentEntityUID  = $scope.membership.membershipUID;
-
-    $http.put("/api/comments", $scope.comment).success(function(data) {
-      if ($scope.commentIdx == -1) {
-        $scope.membership.comments.push(data);
-      } else {
-        $scope.membership.comments[$scope.commentIdx] = data;
-      }
-    });
-    $scope.comment = null;
-    $('#modifyComment').modal('hide');
-  };
-
-  $scope.deleteTransaction = function(transaction) {
-    $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
-    $scope.transaction    = angular.copy(transaction);
-  };
-
-  $scope.editTransaction = function(transaction) {
-    $scope.transactionIdx = $scope.membership.transactions.indexOf(transaction);
-    $scope.transaction    = angular.copy(transaction);
-
-    syncTransactionEntryType($scope);
-    syncMember($scope);
-    syncRelatedTransactions($scope);
-
-    $("#modifyTransaction").modal('toggle');
-    $scope.calculateTransactionAmount();
-  };
-
-  $scope.calculateTransactionAmount = function() {
-    var amount = 0;
-    for (var idx = 0; idx < $scope.transaction.transactionEntries.length; idx++) {
-      if ($scope.transaction.transactionEntries[idx].active) {
-        amount = amount + $scope.transaction.transactionEntries[idx].transactionEntryAmount;
-      }
-    }
-
-    $scope.transactionAmount = $filter('currency')(amount);
-  };
-
-  $scope.addTransaction = function() {
-    $scope.transactionIdx = -1;
-    $scope.transaction = {active: true, transactionDate: new Date(), transactionEntries: new Array()};
-  };
-
-  $scope.removeTransaction = function() {
-    $('#deleteTransaction').modal('hide');
-    $scope.transaction.active = false;
-
-    transactionService.saveTransaction($scope.transaction).success(function(data) {
-      $scope.membership.transactions.splice($scope.transactionIdx, 1);
-    })
-    .error(function(data) {
-      $scope.transaction.active = true;
-      $scope.membership.transactions[$scope.transactionIdx] = $scope.transaction;
-    });
-
-    $scope.transaction = null;
-  };
-
-  $scope.saveTransaction = function() {
-    $('#modifyTransaction').modal('hide');
-    $scope.transaction.membershipUID  = $scope.membership.membershipUID;
-
-    transactionService.saveTransaction($scope.transaction).success(function(data, status) {
-      if (status == 201) {
-        $scope.membership.transactions.push(data);
-      } else {
-        $scope.membership.transactions[$scope.transactionIdx] = data;
-      }
-    });
-
-    $scope.transaction = null;
-  };
-
-  $scope.addTransactionEntry = function() {
-    var entryType;
-
-    for (var idx = 0; idx < $scope.entryTypes.length; idx++) {
-      if ($scope.entryTypes[idx].meaning == 'TRANS_DUES_BASE') {
-        entryType = $scope.entryTypes[idx];
-        break;
-      }
-    }
-
-    var entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0, transactionEntryType: entryType};
-    $scope.transaction.transactionEntries.push(entry);
-  };
-
-  $scope.deleteTransactionEntry = function(entry) {
-    var idx = $scope.transaction.transactionEntries.indexOf(entry);
-    if (entry.transactionEntryUID == 0) {
-      $scope.transaction.transactionEntries.splice(idx, 1);
-    } else {
-      entry.active = false;
-      $scope.transaction.transactionEntries[idx] = entry;
-    }
-
-    $scope.calculateTransactionAmount();
-  };
-
-  $scope.openDueDate = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-
-    $scope.isOpen.dueDate = true;
-  };
-
-  $scope.openPrimaryJoinDate = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-
-    $scope.isOpen.primaryJoinDate = true;
-  };
-
-  $scope.openMemberJoinDate = function($event, member) {
-    $event.preventDefault();
-    $event.stopPropagation();
-
-    member.joinDateOpened = true;
-  };
-
-  $scope.openSpouseJoinDate = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-
-    $scope.isOpen.spouseJoinDate = true;
-  };
-
-  $scope.addSpouse = function() {
-    var spouseMember = null;
-    for (idx = 0; idx < $scope.memberTypes.length; idx++) {
-      if ($scope.memberTypes[idx].memberTypeMeaning === 'SPOUSE') {
-        spouseMember = $scope.memberTypes[idx];
-        break;
-      }
-    }
-
-    $scope.membership.spouse = {
-      active: true,
-      memberType: spouseMember
-    };
-  };
-
-  $scope.removeSpouse = function() {
-    if ($scope.membership.spouse.memberUID > 0) {
-      $scope.membership.spouse.active = false;
-    } else {
-      $scope.membership.spouse = null;
-    }
-  };
-
-  $scope.addCounty = function() {
-    $scope.membership.membershipCounties.push({
-      netMineralAcres: 0,
-      surfaceAcres: 0,
-      active: true
-    });
-  };
-
-  $scope.removeCounty = function(county) {
-    if (county.membershipCountyUID > 0) {
-      county.active = false;
-    } else {
-      var idx = $scope.membership.membershipCounties.indexOf(county);
-      $scope.membership.membershipCounties.splice(idx, 1);
-    }
-  };
-
-  $scope.validateVotingCounty = function(membership, membershipCounty) {
-    if (membershipCounty.votingCounty) {
-      angular.forEach(membership.membershipCounties, function(cnty) {
-        cnty.votingCounty = false;
       });
-
-      membershipCounty.votingCounty = true;
-    } else {
-      membershipCounty.votingCounty = false;
-    }
-  };
-
-  $scope.addMember = function() {
-    var familyMember = null;
-    for (idx = 0; idx < $scope.memberTypes.length; idx++) {
-      if ($scope.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
-        familyMember = $scope.memberTypes[idx];
-        break;
-      }
     }
 
-    $scope.membership.members.push({
-      active: true,
-      memberType: familyMember
-    });
-  };
-
-  $scope.removeMember = function(member) {
-    if (member.memberUID > 0) {
-      member.active = false;
-    } else {
-      var idx = $scope.membership.members.indexOf(member);
-      $scope.membership.members.splice(idx, 1);
-    }
-  };
-
-  $scope.generateOwnerId = function(member) {
-    var firstName  = member.person.firstName;
-    var lastName   = member.person.lastName;
-    var ownerIdent = member.ownerIdent;
-
-    if (firstName  && firstName.length > 2 &&
-        lastName   && lastName.length > 2 &&
-        (!ownerIdent || ownerIdent.length == 0)) {
-
-      membershipService.generateOwnerId(firstName, lastName).then(function(response) {
+    function addMembership() {
+      membershipService.getMembership(0).then(function(response) {
         if (response.status == 200) {
-          member.ownerIdent = response.data;
+          vm.membership      = response.data;
+          vm.original        = angular.copy(response.data);
+        }
+      });
+
+      if (!vm.fullyLoaded) {
+        loadAll();
+      }
+
+      vm.view = "add";
+    }
+
+    function editMembership() {
+      if (!vm.fullyLoaded) {
+        loadAll();
+      }
+
+      vm.original = angular.copy(vm.membership);
+      vm.view     = "edit";
+    }
+
+    function openMembership() {
+      vm.membership.active          = true;
+      vm.membership.closeReasonUID  = null;
+      vm.membership.closeReasonText = null;
+      vm.membership.closeDate       = null;
+
+      $('#openMembershipsDlg').modal('hide');
+
+      membershipService.saveMembership(vm.membership).then(function(response) {
+        if (response.status == 200) {
+          var idx = vm.memberships.indexOf(vm.membership);
+          vm.memberships.splice(idx, 1);
+          vm.getMemberships();
+        } else {
+          vm.membership.active = false;
         }
       });
     }
-  };
 
-  $scope.hasChanges = function(membership) {
-    return angular.equals(membership, $scope.original);
-  };
+    function closeMembership() {
+      var membershipIds = [];
+      membershipIds.push(vm.membership.membershipUID);
 
-  $scope.cancelChanges = function() {
-    if ($scope.membership.membershipUID == 0) {
-      $scope.membership = null;
+      membershipService.closeMemberships(membershipIds, vm.closeReason, vm.closeText).success(function() {
+        $('#closeMembershipsDlg').modal('hide');
+        vm.getMemberships();
+      });
     }
 
-    $scope.view = "listing";
-  };
+    function selectComment(comment) {
+      vm.commentIdx = vm.membership.comments.indexOf(comment);
+      vm.comment    = angular.copy(comment);
+    }
 
-  $scope.save = function() {
-    membershipService.saveMembership($scope.membership).then(function(response) {
-      if (response.status == 201) {
-        if ($scope.memberships) {
-          $scope.memberships.push(response.data);
+    function addComment() {
+      vm.commentIdx = -1;
+      vm.comment = {active: true, commentDate: new Date()};
+    }
+
+    function removeComment() {
+      vm.comment.active = false;
+      $http.put("/api/comments", vm.comment).success(function(data) {
+        vm.membership.comments.splice(vm.commentIdx, 1);
+      }).error(function(data) {
+        // TODO: Need to add a message for the user
+        vm.comment.active = true;
+        vm.membership.comments[vm.commentIdx] = vm.comment;
+      });
+      vm.comment = null;
+      $('#deleteComment').modal('hide');
+    }
+
+    function saveComment() {
+      vm.comment.parentEntityName = "MEMBERSHIP";
+      vm.comment.parentEntityUID  = vm.membership.membershipUID;
+
+      $http.put("/api/comments", vm.comment).success(function(data) {
+        if (vm.commentIdx == -1) {
+          vm.membership.comments.push(data);
         } else {
-          $scope.memberships = [response.data];
+          vm.membership.comments[vm.commentIdx] = data;
         }
+      });
 
-        $scope.membership = response.data;
-        $scope.view       = "listing";
-
-        $('#createdMessage').show();
-      } else if (response.status == 200) {
-        var idx = $scope.memberships.indexOf($scope.membership);
-
-        $scope.memberships[idx] = response.data;
-        $scope.membership       = response.data;
-        $scope.view             = "listing";
-
-        $('#updatedMessage').show();
-      }
-    });
-  };
-
-  $scope.canClose = function() {
-    if ($scope.closeReason) {
-      return ($scope.closeReason.codeValueUID > 0);
-    } else {
-      return false;
+      vm.comment = null;
+      $('#modifyComment').modal('hide');
     }
-  };
 
-  $scope.closeMembership = function() {
-    var membershipIds = [];
-    membershipIds.push($scope.membership.membershipUID);
+    function deleteTransaction(transaction) {
+      vm.transactionIdx = vm.membership.transactions.indexOf(transaction);
+      vm.transaction    = angular.copy(transaction);
+    }
 
-    membershipService.closeMemberships(membershipIds, $scope.closeReason, $scope.closeText).success(function(data) {
-      $('#closeMembershipsDlg').modal('hide');
-      $scope.getMemberships();
-    });
-  };
+    function editTransaction(transaction) {
+      vm.transactionIdx = vm.membership.transactions.indexOf(transaction);
+      vm.transaction    = angular.copy(transaction);
 
-  $scope.openMembership = function() {
-    $scope.membership.active          = true;
-    $scope.membership.closeReasonUID  = null;
-    $scope.membership.closeReasonText = null;
-    $scope.membership.closeDate       = null;
+      $("#modifyTransaction").modal('toggle');
+      vm.calculateTransactionAmount();
+    }
 
-    $('#openMembershipsDlg').modal('hide');
+    function calculateTransactionAmount() {
+      var amount = 0;
+      for (var idx = 0; idx < vm.transaction.transactionEntries.length; idx++) {
+        if (vm.transaction.transactionEntries[idx].active) {
+          amount = amount + vm.transaction.transactionEntries[idx].transactionEntryAmount;
+        }
+      }
 
-    membershipService.saveMembership($scope.membership).then(function(response) {
-      if (response.status == 200) {
-        var idx = $scope.memberships.indexOf($scope.membership);
-        $scope.memberships.splice(idx, 1);
-        $scope.getMemberships();
+      vm.transactionAmount = amount;
+    }
+
+    function addTransaction() {
+      vm.transactionIdx = -1;
+      vm.transaction = {active: true, transactionDate: new Date(), transactionEntries: []};
+    }
+
+    function removeTransaction() {
+      $('#deleteTransaction').modal('hide');
+      vm.transaction.active = false;
+
+      transactionService.saveTransaction(vm.transaction)
+        .success(function(data) {
+          vm.membership.transactions.splice(vm.transactionIdx, 1);
+      })
+        .error(function(data) {
+          vm.transaction.active = true;
+          vm.membership.transactions[vm.transactionIdx] = vm.transaction;
+        });
+
+      vm.transaction = null;
+    }
+
+    function saveTransaction() {
+      $('#modifyTransaction').modal('hide');
+      vm.transaction.membershipUID  = vm.membership.membershipUID;
+
+      transactionService.saveTransaction(vm.transaction).success(function(data, status) {
+        if (status == 201) {
+          vm.membership.transactions.push(data);
+        } else {
+          vm.membership.transactions[vm.transactionIdx] = data;
+        }
+      });
+
+      vm.transaction = null;
+    }
+
+    function addTransactionEntry() {
+      var entryType;
+
+      for (var idx = 0; idx < vm.entryTypes.length; idx++) {
+        if (vm.entryTypes[idx].meaning == 'TRANS_DUES_BASE') {
+          entryType = vm.entryTypes[idx];
+          break;
+        }
+      }
+
+      var entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0, transactionEntryType: entryType};
+      vm.transaction.transactionEntries.push(entry);
+    }
+
+    function deleteTransactionEntry(entry) {
+      var idx = vm.transaction.transactionEntries.indexOf(entry);
+      if (entry.transactionEntryUID == 0) {
+        vm.transaction.transactionEntries.splice(idx, 1);
       } else {
-        $scope.membership.active = false;
+        entry.active = false;
+        vm.transaction.transactionEntries[idx] = entry;
       }
-    });
-  };
 
-  $scope.toggleShowCalculations = function() {
-    if ($scope.showCalculations) {
-      $scope.showCalculations = false;
-    } else {
-      $scope.showCalculations = true;
+      vm.calculateTransactionAmount();
     }
-  };
 
-  // Set initial values
-  $scope.codesetService = codesetService;
-  $scope.contactService = contactService;
+    function openDueDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
 
-  $scope.query            = "";
-  $scope.view             = "listing";
-  $scope.filterStatus     = "ACTIVE";
-  $scope.filterBalance    = "ALL";
-  $scope.filterText       = $scope.getFilters();
-  $scope.filtering        = "off";
-  $scope.showCalculations = false;
-
-  $scope.searched    = false;
-  $scope.fullyLoaded = false;
-  $scope.original    = null;
-  $scope.message     = null;
-
-  $scope.isOpen = {
-    dueDate: false,
-    primaryJoinDate: false,
-    spouseJoinDate: false
-  };
-
-  $('#createdMessage').hide();
-  $('#updatedMessage').hide();
-
-  codesetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
-    $scope.entryTypes = data;
-  });
-
-  codesetService.getCodeValuesForCodeSet('CLOSE_REASONS').success(function(data) {
-    $scope.closeReasons = data;
-  });
-}]);
-
-var syncTransactionEntryType = function(scope) {
-  for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
-    for (var idx2 = 0; idx2 < scope.entryTypes.length; idx2++) {
-      if (scope.transaction.transactionEntries[idx1].transactionEntryType.codeValueUID == scope.entryTypes[idx2].codeValueUID) {
-        scope.transaction.transactionEntries[idx1].transactionEntryType = scope.entryTypes[idx2];
-        break;
-      }
+      vm.isOpen.dueDate = true;
     }
-  }
-};
 
-var syncMember = function(scope) {
-  for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
-    if (scope.transaction.transactionEntries[idx1].member) {
-      for (var idx2 = 0; idx2 < scope.membership.members.length; idx2++) {
-        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.membership.members[idx2].memberUID) {
-          scope.transaction.transactionEntries[idx1].member = scope.membership.members[idx2];
+    function openPrimaryJoinDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      vm.isOpen.primaryJoinDate = true;
+    }
+
+    function openMemberJoinDate($event, member) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      member.joinDateOpened = true;
+    }
+
+    function openSpouseJoinDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      vm.isOpen.spouseJoinDate = true;
+    }
+
+    function openCommentDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      vm.isOpen.commentDate = true;
+    }
+
+    function openTransactionDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      vm.isOpen.transactionDate = true;
+    }
+
+    function addSpouse() {
+      var spouseMember = null;
+      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
+        if (vm.memberTypes[idx].memberTypeMeaning === 'SPOUSE') {
+          spouseMember = vm.memberTypes[idx];
           break;
         }
       }
-    }
-  }
-};
 
-var syncRelatedTransactions = function(scope) {
-  for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
-    if (scope.transaction.transactionEntries[idx1].relatedTransactionUID > 0) {
-      for (var idx2 = 0; idx2 < scope.membership.transactions.length; idx2++) {
-        if (scope.transaction.transactionEntries[idx1].relatedTransactionUID == scope.membership.transactions[idx2].transactionUID) {
-          scope.transaction.transactionEntries[idx1].relatedTransaction = scope.membership.transactions[idx2];
+      vm.membership.spouse = {
+        active: true,
+        memberType: spouseMember
+      };
+    }
+
+    function removeSpouse() {
+      if (vm.membership.spouse.memberUID > 0) {
+        vm.membership.spouse.active = false;
+      } else {
+        vm.membership.spouse = null;
+      }
+    }
+
+    function addCounty() {
+      vm.membership.membershipCounties.push({
+        netMineralAcres: 0,
+        surfaceAcres: 0,
+        active: true
+      });
+    }
+
+    function removeCounty(county) {
+      if (county.membershipCountyUID > 0) {
+        county.active = false;
+      } else {
+        var idx = vm.membership.membershipCounties.indexOf(county);
+        vm.membership.membershipCounties.splice(idx, 1);
+      }
+    }
+
+    function validateVotingCounty(membership, membershipCounty) {
+      if (membershipCounty.votingCounty) {
+        angular.forEach(membership.membershipCounties, function(cnty) {
+          cnty.votingCounty = false;
+        });
+
+        membershipCounty.votingCounty = true;
+      } else {
+        membershipCounty.votingCounty = false;
+      }
+    }
+
+    function addMember() {
+      var familyMember = null;
+      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
+        if (vm.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
+          familyMember = vm.memberTypes[idx];
           break;
         }
       }
+
+      vm.membership.members.push({
+        active: true,
+        memberType: familyMember
+      });
     }
+
+    function removeMember(member) {
+      if (member.memberUID > 0) {
+        member.active = false;
+      } else {
+        var idx = vm.membership.members.indexOf(member);
+        vm.membership.members.splice(idx, 1);
+      }
+    }
+
+    function generateOwnerId(member) {
+      var firstName  = member.person.firstName;
+      var lastName   = member.person.lastName;
+      var ownerIdent = member.ownerIdent;
+
+      if (firstName  && firstName.length > 2 &&
+          lastName   && lastName.length > 2 &&
+          (!ownerIdent || ownerIdent.length == 0)) {
+
+        membershipService.generateOwnerId(firstName, lastName).then(function(response) {
+          if (response.status == 200) {
+            member.ownerIdent = response.data;
+          }
+        });
+      }
+    }
+
+    function hasChanges(membership) {
+      return angular.equals(membership, vm.original);
+    }
+
+    function cancelChanges() {
+      if (vm.membership.membershipUID == 0) {
+        vm.membership = null;
+      } else {
+        vm.membership = vm.original
+      }
+
+      vm.view = "listing";
+    }
+
+    function save() {
+      membershipService.saveMembership(vm.membership).then(function(response) {
+        if (response.status == 201) {
+          if (vm.memberships) {
+            vm.memberships.push(response.data);
+          } else {
+            vm.memberships = [response.data];
+          }
+
+          vm.membership = response.data;
+          vm.view       = "listing";
+          vm.created    = true;
+        } else if (response.status == 200) {
+          var idx = vm.memberships.indexOf(vm.membership);
+
+          vm.memberships[idx] = response.data;
+          vm.membership       = response.data;
+          vm.view             = "listing";
+          vm.updated          = true;
+        }
+      });
+    }
+
+    function canClose() {
+      if (vm.closeReason) {
+        return (vm.closeReason.codeValueUID > 0);
+      } else {
+        return false;
+      }
+    }
+
+    function toggleShowCalculations() {
+      vm.showCalculations = !vm.showCalculations;
+    }
+
+    function loadAll() {
+      if (vm.fullyLoaded) {
+        return
+      }
+
+      vm.states = contactService.getStates();
+
+      $http.get('/api/codesets/ENTITY_TYPE/').success(function(data) {
+        vm.entityTypes = data;
+      });
+
+      codeSetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
+        vm.titles = data;
+      });
+
+      codeSetService.getCodeValuesForCodeSet('ADDRESS_TYPE').success(function(data) {
+        vm.addressTypes = data;
+      });
+
+      codeSetService.getCodeValuesForCodeSet('PHONE_TYPE').success(function(data) {
+        vm.phoneTypes = data;
+      });
+
+      codeSetService.getCodeValuesForCodeSet('EMAIL_TYPE').success(function(data) {
+        vm.emailTypes = data;
+      });
+
+      $http.get('/api/membertypes').success(function(data) {
+        vm.memberTypes = data;
+      });
+
+      $http.get('/api/counties/').success(function(data) {
+        vm.counties = data;
+      });
+
+      vm.fullyLoaded = true
+    }
+
+    function addAddress(member) {
+      contactService.addAddress(member);
+    }
+
+    function ensurePrimaryAddress(member, address) {
+      contactService.ensurePrimaryAddress(member, address)
+    }
+
+    function removeAddress(member, address) {
+      contactService.removeAddress(member, address)
+    }
+
+    function addPhone(member) {
+      contactService.addPhone(member)
+    }
+
+    function ensurePrimaryPhone(member, phone) {
+      contactService.ensurePrimaryPhone(member, phone);
+    }
+
+    function removePhone(member, phone) {
+      contactService.removePhone(member, phone)
+    }
+
+    function addEmail(member) {
+      contactService.addEmail(member);
+    }
+
+    function ensurePrimaryEmail(member, email) {
+      contactService.ensurePrimaryEmail(member, email)
+    }
+
+    function removeEmail(member, email) {
+      contactService.removeEmail(member, email)
+    }
+
   }
-};
+
+})(window, window.angular, window.jQuery);
 
 var toggleTransactionDetails = function(transaction) {
   var img       = $(transaction).children()[0];
@@ -571,113 +680,3 @@ var toggleTransactionDetails = function(transaction) {
     $(img).removeClass("fa-caret-down");
   }
 };
-
-var loadAll = function($scope, $http) {
-  if ($scope.fullyLoaded) {
-    return
-  }
-
-  $scope.states = $scope.contactService.getStates();
-
-  var syncItems    = 0;
-  var syncCount    = 0;
-
-  syncItems++;
-  $http.get('/api/codesets/ENTITY_TYPE/').success(function(data) {
-    $scope.entityTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
-    }
-  });
-
-  $scope.codesetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
-    $scope.titles = data;
-  });
-
-  $scope.codesetService.getCodeValuesForCodeSet('ADDRESS_TYPE').success(function(data) {
-    $scope.addressTypes = data;
-  });
-
-  $scope.codesetService.getCodeValuesForCodeSet('PHONE_TYPE').success(function(data) {
-    $scope.phoneTypes = data;
-  });
-
-  $scope.codesetService.getCodeValuesForCodeSet('EMAIL_TYPE').success(function(data) {
-    $scope.emailTypes = data;
-  });
-
-  syncItems++;
-  $http.get('/api/membertypes').success(function(data) {
-    $scope.memberTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
-    }
-  });
-
-  syncItems++;
-  $http.get('/api/counties/').success(function(data) {
-    $scope.counties = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
-    }
-  });
-
-  $scope.fullyLoaded = true
-};
-
-var syncAllItems = function(scope) {
-  if (!scope.membership) {
-    return;
-  }
-
-  // sync up our code lists
-  if (scope.membership.entityType) {
-    for (var idx = 0; idx < scope.entityTypes.length; idx++) {
-      if (scope.membership.entityType.codeValueUID == scope.entityTypes[idx].codeValueUID) {
-        scope.membership.entityType = scope.entityTypes[idx];
-        break;
-      }
-    }
-  }
-
-  if (scope.membership.primaryMember) {
-    if (scope.membership.primaryMember.memberType) {
-      for (var idx = 0; idx < scope.memberTypes.length; idx++) {
-        if (scope.membership.primaryMember.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
-          scope.membership.primaryMember.memberType = scope.memberTypes[idx];
-          break;
-        }
-      }
-    }
-  }
-
-  if (scope.membership.primarySpouse && scope.membership.primarySpouse.person) {
-    if (scope.membership.primarySpouse.memberType) {
-      for (var idx = 0; idx < scope.memberTypes.length; idx++) {
-        if (scope.membership.primarySpouse.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
-          scope.membership.primarySpouse.memberType = scope.memberTypes[idx];
-          break;
-        }
-      }
-    }
-  }
-
-  for (var idx1 = 0; idx1 < scope.membership.membershipCounties.length; idx1++) {
-    for (var idx2 = 0; idx2 < scope.counties.length; idx2++) {
-      if (scope.membership.membershipCounties[idx1].county.countyUID == scope.counties[idx2].countyUID) {
-        scope.membership.membershipCounties[idx1].county = scope.counties[idx2];
-        break;
-      }
-    }
-  }
-};
-
-$(document).on('shown.bs.modal', function (event) {
-  $('[autofocus]', this).focus();
-});

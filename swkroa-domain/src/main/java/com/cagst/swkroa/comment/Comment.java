@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public final class Comment implements Serializable, Comparable<Comment> {
-  private static final long serialVersionUID = -4070620060954592537L;
+  private static final long serialVersionUID = 1L;
 
   public static final String MEMBERSHIP = "MEMBERSHIP";
 

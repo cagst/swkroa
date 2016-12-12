@@ -6,91 +6,91 @@
 <div th:fragment="spouse" class="spacer-top">
   <div class="row spacer-top">
     <div class="divider-inner">
-      <span th:text="#{com.cagst.swkroa.membership.member.spouse.divider}">zzz SPOUSE</span>
+      <span th:text="#{membership.member.spouse.divider}">zzz SPOUSE</span>
       <span class="pull-right">
         <button type="button" class="btn btn-danger btn-xs hover-reveal"
-                data-ng-show="membership.spouse && membership.spouse.active"
-                data-ng-click="removeSpouse()">
+                data-ng-show="ctrl.membership.spouse && ctrl.membership.spouse.active"
+                data-ng-click="ctrl.removeSpouse()">
           <i class="fa fa-trash-o"></i>
-          <span th:text="#{com.cagst.swkroa.membership.member.spouse.remove}">zzz Remove Spouse</span>
+          <span th:text="#{membership.member.spouse.remove}">zzz Remove Spouse</span>
         </button>
       </span>
     </div>
     <div>
       <div class="col-xs-2">
-        <label th:text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
-        <select class="form-control"
-                data-ng-model="membership.spouse.person.titleCD"
-                data-ng-options="title.codeValueUID as title.display for title in titles">
-          <option value="" th:text="#{com.cagst.swkroa.none}"></option>
+        <label for="primarySpouseTitle" th:text="#{membership.member.title.label}">zzz Title</label>
+        <select id="primarySpouseTitle" class="form-control"
+                data-ng-model="ctrl.membership.spouse.person.titleCD"
+                data-ng-options="title.codeValueUID as title.display for title in ctrl.titles">
+          <option value="" th:text="#{common.none}"></option>
         </select>
       </div>
       <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseFirstName.$invalid}">
-        <label class="control-label label-required"
-               th:text="#{com.cagst.swkroa.membership.member.firstname.label}">zzz First Name</label>
-        <input type="text" class="form-control" name="spouseFirstName" maxlength="50"
-               th:placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
-               data-ng-model="membership.spouse.person.firstName"
-               data-ng-required="membership.spouse"
-               data-ng-blur="generateOwnerId(membership.spouse)" />
+        <label for="primarySpouseFirstName" class="control-label label-required"
+               th:text="#{membership.member.firstname.label}">zzz First Name</label>
+        <input id="primarySpouseFirstName" type="text" class="form-control" name="spouseFirstName" maxlength="50"
+               th:placeholder="#{membership.member.firstname.prompt}"
+               data-ng-model="ctrl.membership.spouse.person.firstName"
+               data-ng-required="ctrl.membership.spouse"
+               data-ng-blur="ctrl.generateOwnerId(ctrl.membership.spouse)" />
       </div>
       <div class="col-xs-2">
-        <label th:text="#{com.cagst.swkroa.membership.member.middlename.label}">zzz Middle Name</label>
-        <input type="text" class="form-control" maxlength="50"
-               th:placeholder="#{com.cagst.swkroa.membership.member.middlename.prompt}"
-               data-ng-model="membership.spouse.person.middleName" />
+        <label for="primarySpouseMiddleName" th:text="#{membership.member.middlename.label}">zzz Middle Name</label>
+        <input id="primarySpouseMiddleName" type="text" class="form-control" maxlength="50"
+               th:placeholder="#{membership.member.middlename.prompt}"
+               data-ng-model="ctrl.membership.spouse.person.middleName" />
       </div>
       <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseLastName.$invalid}">
-        <label class="control-label label-required"
-               th:text="#{com.cagst.swkroa.membership.member.lastname.label}">
+        <label for="primarySpouseLastName" class="control-label label-required"
+               th:text="#{membership.member.lastname.label}">
           zzz Last Name
         </label>
-        <input type="text" class="form-control" name="spouseLastName" maxlength="50"
-               th:placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
-               data-ng-model="membership.spouse.person.lastName"
-               data-ng-required="membership.spouse"
-               data-ng-blur="generateOwnerId(membership.spouse)" />
+        <input id="primarySpouseLastName" type="text" class="form-control" name="spouseLastName" maxlength="50"
+               th:placeholder="#{membership.member.lastname.prompt}"
+               data-ng-model="ctrl.membership.spouse.person.lastName"
+               data-ng-required="ctrl.membership.spouse"
+               data-ng-blur="ctrl.generateOwnerId(ctrl.membership.spouse)" />
       </div>
       <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.spouseOwnerIdent.$invalid}">
-        <label class="control-label label-required"
-               th:text="#{com.cagst.swkroa.membership.member.ownerid.label}">
+        <label for="primarySpouseOwnerId" class="control-label label-required"
+               th:text="#{membership.member.ownerid.label}">
           zzz Owner ID
         </label>
-        <input type="text" class="form-control" name="spouseOwnerIdent" maxlength="15"
-               th:placeholder="#{com.cagst.swkroa.membership.member.ownerid.prompt}"
-               data-ng-model="membership.spouse.ownerIdent"
-               data-ng-required="membership.spouse" />
+        <input id="primarySpouseOwnerId" type="text" class="form-control" name="spouseOwnerIdent" maxlength="15"
+               th:placeholder="#{membership.member.ownerid.prompt}"
+               data-ng-model="ctrl.membership.spouse.ownerIdent"
+               data-ng-required="ctrl.membership.spouse" />
       </div>
     </div>
   </div>
 
   <div class="row spacer-top">
     <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.member.joined}">zzz Joined</label>
+      <label for="spouseJoinDate" th:text="#{membership.member.joined}">zzz Joined</label>
 
       <div class="input-group">
-        <input type="text" class="form-control" id="spouseJoinDate" name="spouseJoinDate"
+        <input id="spouseJoinDate" name="spouseJoinDate" type="text" class="form-control"
                data-uib-datepicker-popup="MM/dd/yyyy"
-               data-is-open="isOpen.spouseJoinDate"
-               data-ng-click="openSpouseJoinDate($event)"
-               data-ng-model="membership.spouse.joinDate" />
+               data-is-open="ctrl.isOpen.spouseJoinDate"
+               data-ng-click="ctrl.openSpouseJoinDate($event)"
+               data-ng-model="ctrl.membership.spouse.joinDate" />
         <span class="input-group-btn">
-          <button type="button" class="btn btn-default" data-ng-click="openSpouseJoinDate($event)">
+          <button type="button" class="btn btn-default" data-ng-click="ctrl.openSpouseJoinDate($event)">
             <i class="fa fa-calendar"></i>
           </button>
         </span>
       </div>
     </div>
     <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
-      <input type="text" class="form-control" maxlength="25"
-             th:placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
-             data-ng-model="membership.spouse.greeting" />
+      <label for="primarySpouseGreeting" th:text="#{membership.member.greeting.label}">zzz Greeting</label>
+      <input id="primarySpouseGreeting" type="text" class="form-control" maxlength="25"
+             th:placeholder="#{membership.member.greeting.prompt}"
+             data-ng-model="ctrl.membership.spouse.greeting" />
     </div>
     <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz Greeting</label>
-      <input type="text" class="form-control" maxlength="50"
-             data-ng-model="membership.spouse.inCareOf" />
+      <label for="primarySpouseCareOf" th:text="#{membership.member.incareof.label}">zzz Care Of</label>
+      <input id="primarySpouseCareOf" type="text" class="form-control" maxlength="50"
+             data-ng-model="ctrl.membership.spouse.inCareOf" />
     </div>
   </div>
 </div>

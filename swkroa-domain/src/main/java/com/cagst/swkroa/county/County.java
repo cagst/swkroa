@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Craig Gaskill
  */
 public final class County implements Serializable, Comparable<County> {
-  private static final long serialVersionUID = 6048112429446895825L;
+  private static final long serialVersionUID = 1L;
 
   private static final String VOTING_COUNTY = "Voting County";
   private static final String NON_VOTING_COUNTY = "Non-Voting County";

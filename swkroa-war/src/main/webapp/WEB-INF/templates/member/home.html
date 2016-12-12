@@ -233,14 +233,14 @@
     <button type="button" class="btn btn-primary"
             data-ng-click="editMembership()">
       <i class="fa fa-edit"></i>
-      <span th:text="#{com.cagst.swkroa.edit}">zzz Edit</span>
+      <span th:text="#{common.edit}">z_Edit</span>
     </button>
   </div>
 
   <!-- Modify (Add/Edit) Membership -->
   <div data-ng-show="membership && view == 'edit'">
     <div class="page-header">
-      <h3 th:text="#{com.cagst.swkroa.membership.edit}">zzz Edit Membership</h3>
+      <h3 th:text="#{membership.edit}">z_EditMembership</h3>
     </div>
 
     <form method="POST" name="membershipForm" novalidate data-ng-submit="save()" class="css-form">
@@ -267,7 +267,7 @@
             </button>
             <button type="button" class="btn btn-default"
                     data-ng-click="cancelChanges()"
-                    th:text="#{com.cagst.swkroa.cancel}">
+                    th:text="#{common.cancel}">
             </button>
           </div>
         </div>

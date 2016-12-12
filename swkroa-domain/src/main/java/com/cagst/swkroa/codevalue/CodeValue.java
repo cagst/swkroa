@@ -28,7 +28,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 })
 @JsonDeserialize(builder = AutoValue_CodeValue.Builder.class)
 public abstract class CodeValue implements Serializable, Comparable<CodeValue> {
-  private static final long serialVersionUID = 5527727350150906492L;
+  private static final long serialVersionUID = 1L;
 
   // CodeValue meanings
   public static final String DOCUMENT_NEWSLETTER = "DOCUMENT_NEWSLETTER";
