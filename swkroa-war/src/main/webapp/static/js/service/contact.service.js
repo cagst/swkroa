@@ -5,14 +5,35 @@
  *
  * Author: Craig Gaskill
  */
-
 (function(window, angular) {
   'use strict';
 
   angular.module('swkroaApp').service('ContactService', ContactService);
 
   function ContactService() {
-    this.getStates = function() {
+    var vm = this;
+
+    vm.getStates = getStates;
+    vm.addAddress = addAddress;
+    vm.removeAddress = removeAddress;
+    vm.ensurePrimaryAddress = ensurePrimaryAddress;
+    vm.getAddressTypeDisplay = getAddressTypeDisplay;
+
+    vm.addPhone = addPhone;
+    vm.removePhone = removePhone;
+    vm.ensurePrimaryPhone = ensurePrimaryPhone;
+    vm.getPhoneTypeDisplay = getPhoneTypeDisplay;
+
+    vm.addEmail = addEmail;
+    vm.removeEmail = removeEmail;
+    vm.ensurePrimaryEmail = ensurePrimaryEmail;
+    vm.getEmailTypeDisplay = getEmailTypeDisplay;
+
+    /********************************************
+     * Implement Methods
+     ********************************************/
+
+    function getStates() {
       return [
         {code:"AL", name:"Alabama"},
         {code:"AK", name:"Alaska"},
@@ -74,9 +95,9 @@
         {code:"WI", name:"Wisconsin"},
         {code:"WY", name:"Wyoming"}
       ]
-    };
+    }
 
-    this.addAddress = function(entity) {
+    function addAddress(entity) {
       if (!entity.addresses) {
         entity.addresses = [];
       }
@@ -84,18 +105,18 @@
       entity.addresses.push({
         active: true
       });
-    };
+    }
 
-    this.removeAddress = function(entity, address) {
+    function removeAddress(entity, address) {
       if (address.addressUID > 0) {
         address.active = false;
       } else {
         var idx = entity.addresses.indexOf(address);
         entity.addresses.splice(idx, 1);
       }
-    };
+    }
 
-    this.ensurePrimaryAddress = function(entity, address) {
+    function ensurePrimaryAddress(entity, address) {
       if (address.primary) {
         var pos = entity.addresses.indexOf(address);
 
@@ -105,9 +126,9 @@
           }
         }
       }
-    };
+    }
 
-    this.addPhone = function(entity) {
+    function addPhone(entity) {
       if (!entity.phoneNumbers) {
         entity.phoneNumbers = [];
       }
@@ -115,18 +136,18 @@
       entity.phoneNumbers.push({
         active: true
       });
-    };
+    }
 
-    this.removePhone = function(entity, phone) {
+    function removePhone(entity, phone) {
       if (phone.phoneUID > 0) {
         phone.active = false;
       } else {
         var idx = entity.phoneNumbers.indexOf(phone);
         entity.phoneNumbers.splice(idx, 1);
       }
-    };
+    }
 
-    this.ensurePrimaryPhone = function(entity, phone) {
+    function ensurePrimaryPhone(entity, phone) {
       if (phone.primary) {
         var pos = entity.phoneNumbers.indexOf(phone);
 
@@ -136,27 +157,27 @@
           }
         }
       }
-    };
+    }
 
-    this.addEmail = function(entity) {
+    function addEmail(entity) {
       if (!entity.emailAddresses) {
         entity.emailAddresses = [];
       }
       entity.emailAddresses.push({
         active: true
       });
-    };
+    }
 
-    this.removeEmail = function(entity, email) {
+    function removeEmail(entity, email) {
       if (email.emailAddressUID > 0) {
         email.active = false;
       } else {
         var idx = entity.emailAddresses.indexOf(email);
         entity.emailAddresses.splice(idx, 1);
       }
-    };
+    }
 
-    this.ensurePrimaryEmail = function(entity, email) {
+    function ensurePrimaryEmail(entity, email) {
       if (email.primary) {
         var pos = entity.emailAddresses.indexOf(email);
 
@@ -166,31 +187,31 @@
           }
         }
       }
-    };
+    }
 
-    this.getAddressTypeDisplay = function(address, types) {
+    function getAddressTypeDisplay(address, types) {
       for (var idx1 = 0; idx1 < types.length; idx1++) {
         if (address.addressTypeCD == types[idx1].codeValueUID) {
           return types[idx1].display;
         }
       }
-    };
+    }
 
-    this.getPhoneTypeDisplay = function(phone, types) {
+    function getPhoneTypeDisplay(phone, types) {
       for (var idx1 = 0; idx1 < types.length; idx1++) {
         if (phone.phoneTypeCD == types[idx1].codeValueUID) {
           return types[idx1].display;
         }
       }
-    };
+    }
 
-    this.getEmailTypeDisplay = function(email, types) {
+    function getEmailTypeDisplay(email, types) {
       for (var idx1 = 0; idx1 < types.length; idx1++) {
         if (email.emailTypeCD == types[idx1].codeValueUID) {
           return types[idx1].display;
         }
       }
-    };
+    }
   }
 
 })(window, window.angular);

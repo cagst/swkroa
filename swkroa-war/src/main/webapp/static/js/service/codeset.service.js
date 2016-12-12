@@ -5,7 +5,6 @@
  *
  * Author: Craig Gaskill
  */
-
 (function(window, angular) {
   'use strict';
 
@@ -14,93 +13,33 @@
   CodeSetService.$inject = ['$http'];
 
   function CodeSetService($http) {
-    this.getCodeSets = function() {
-      var promise = $http.get('/api/codesets');
+    var vm = this;
+    var rootUrl = "/api/codesets";
 
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+    vm.getCodeSets = getCodeSets;
+    vm.getCodeValuesForCodeSet = getCodeValuesForCodeSet;
+    vm.saveCodeSet = saveCodeSet;
+    vm.saveCodeValue = saveCodeValue;
 
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+    /********************************************
+     * Implement Methods
+     ********************************************/
 
-      return promise;
-    };
+    function getCodeSets() {
+      return $http.get(rootUrl);
+    }
 
-    this.getCodeValuesForCodeSet = function(codeSetMeaning) {
-      var promise = $http.get('/api/codesets/' + codeSetMeaning);
+    function getCodeValuesForCodeSet(codeSetMeaning) {
+      return $http.get(rootUrl + "/" + codeSetMeaning);
+    }
 
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+    function saveCodeSet(codeSet) {
+      return $http.post(rootUrl + "/", codeSet);
+    }
 
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
-    };
-
-    this.saveCodeSet = function(codeSet) {
-      var promise = $http.post('/api/codesets', codeset);
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
-    };
-
-    this.saveCodeValue = function(codeSetMeaning, codeValue) {
-      var promise = $http.post('/api/codesets/' + codeSetMeaning, codeValue);
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
-    };
+    function saveCodeValue(codeSetMeaning, codeValue) {
+      return $http.post(rootUrl + "/" + codeSetMeaning, codeValue);
+    }
   }
 
 })(window, window.angular);

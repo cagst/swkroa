@@ -5,7 +5,6 @@
  *
  * Author: Craig Gaskill
  */
-
 (function(window, angular) {
   'use strict';
 
@@ -14,50 +13,23 @@
   MemberTypeService.$inject = ['$http'];
 
   function MemberTypeService($http) {
-    this.getMemberTypes = function() {
-      var promise = $http.get('/api/membertypes');
+    var vm = this;
+    var rootUrl = "/api/membertypes";
 
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+    vm.getMemberTypes = getMemberTypes;
+    vm.getAllMemberTypesByMemberTypeId = getAllMemberTypesByMemberTypeId;
 
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+    /********************************************
+     * Implement Methods
+     ********************************************/
 
-      return promise;
-    };
+    function getMemberTypes() {
+      return $http.get(rootUrl);
+    }
 
-    this.getAllMemberTypesByMemberTypeId = function(memberTypeId) {
-      var promise = $http.get('/api/membertypes/' + memberTypeId);
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
-    };
-
+    function getAllMemberTypesByMemberTypeId(memberTypeId) {
+      return $http.get(rootUrl + "/" + memberTypeId);
+    }
   }
 
 })(window, window.angular);

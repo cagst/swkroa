@@ -123,12 +123,16 @@
      ********************************************/
 
     function activate() {
-      codeSetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
-        vm.entryTypes = data;
+      codeSetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.entryTypes = response.data;
+        }
       });
 
-      codeSetService.getCodeValuesForCodeSet('CLOSE_REASONS').success(function(data) {
-        vm.closeReasons = data;
+      codeSetService.getCodeValuesForCodeSet('CLOSE_REASONS').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.closeReasons = response.data;
+        }
       });
 
       vm.filterText = getFilters();
@@ -170,6 +174,10 @@
           filterText = filterText + ", ";
         }
         filterText = filterText + "Credit";
+      }
+
+      if (filterText.length === 0) {
+        filterText = "All";
       }
 
       return filterText;
@@ -591,24 +599,34 @@
 
       vm.states = contactService.getStates();
 
-      $http.get('/api/codesets/ENTITY_TYPE/').success(function(data) {
-        vm.entityTypes = data;
+      codeSetService.getCodeValuesForCodeSet('ENTITY_TYPE/').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.entityTypes = response.data;
+        }
       });
 
-      codeSetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
-        vm.titles = data;
+      codeSetService.getCodeValuesForCodeSet('TITLE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.titles = response.data;
+        }
       });
 
-      codeSetService.getCodeValuesForCodeSet('ADDRESS_TYPE').success(function(data) {
-        vm.addressTypes = data;
+      codeSetService.getCodeValuesForCodeSet('ADDRESS_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.addressTypes = response.data;
+        }
       });
 
-      codeSetService.getCodeValuesForCodeSet('PHONE_TYPE').success(function(data) {
-        vm.phoneTypes = data;
+      codeSetService.getCodeValuesForCodeSet('PHONE_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.phoneTypes = response.data;
+        }
       });
 
-      codeSetService.getCodeValuesForCodeSet('EMAIL_TYPE').success(function(data) {
-        vm.emailTypes = data;
+      codeSetService.getCodeValuesForCodeSet('EMAIL_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.emailTypes = response.data;
+        }
       });
 
       $http.get('/api/membertypes').success(function(data) {

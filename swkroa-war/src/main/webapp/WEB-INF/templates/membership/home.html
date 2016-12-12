@@ -73,7 +73,7 @@
             <div class="split-header-content expand">
               <div class="row">
                 <label for="filterStatus" class="col-xs-2">Status</label>
-                <select id="filterStatus" class="col-xs-8" data-ng-model="filterStatus">
+                <select id="filterStatus" class="col-xs-8" data-ng-model="ctrl.filterStatus">
                   <option value="ALL" th:text="#{membership.filter.all}">z_All</option>
                   <option value="ACTIVE" th:text="#{membership.filter.active}">z_Active</option>
                   <option value="INACTIVE" th:text="#{membership.filter.inactive}">z_Inactive</option>
@@ -284,9 +284,9 @@
                     z_CloseReason
                   </label>
                   <select id="closeReason" class="form-control"
-                          data-ng-model="closeReason"
+                          data-ng-model="ctrl.closeReason"
                           data-ng-required="true"
-                          data-ng-options="reason.display for reason in closeReasons">
+                          data-ng-options="reason.display for reason in ctrl.closeReasons">
                   </select>
                   <label for="companyName" class="control-label"
                          data-ng-class="{'label-required': closeReason.meaning == 'CLOSE_OTHER'}"
@@ -294,7 +294,7 @@
                     z_CloseText
                   </label>
                   <input id="companyName" name="companyName" type="text" class="form-control" maxlength="100"
-                         data-ng-model="closeText"
+                         data-ng-model="ctrl.closeText"
                          data-ng-disabled="closeReason.meaning != 'CLOSE_OTHER'"
                          data-ng-required="closeReason.meaning == 'CLOSE_OTHER'" />
                 </div>

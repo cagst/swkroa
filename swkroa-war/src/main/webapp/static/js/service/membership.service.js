@@ -36,25 +36,7 @@
         url = url + "?including=" + including.toString();
       }
 
-      var promise = $http.get(url);
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
+      return $http.get(url);
     }
 
     function getMemberships(query, status, balance) {
@@ -84,111 +66,23 @@
         params = params + "balance=" + balance;
       }
 
-      var promise = $http.get(rootUrl + params);
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
+      return $http.get(rootUrl + params);
     }
 
     function getDelinquentMemberships() {
-      var promise = $http.get(rootUrl + "?balance=DELINQUENT");
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
+      return $http.get(rootUrl + "?balance=DELINQUENT");
     }
 
     function getMembershipsDueInXDays(days) {
-      var promise = $http.get(rootUrl + "?dueInDays=" + days);
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
+      return $http.get(rootUrl + "?dueInDays=" + days);
     }
 
     function saveMembership(membership) {
-      var promise = $http.post(rootUrl, membership);
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
+      return $http.post(rootUrl, membership);
     }
 
     function generateOwnerId(firstName, lastName) {
-      var promise = $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName);
-
-      promise.success = function (fn) {
-        promise.then(function (response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function (fn) {
-        promise.then(function (response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+      return $http.get(rootUrl + '/ownerId/' + firstName + "/" + lastName);
     }
 
     function closeMemberships(membershipIdsArg, closeReasonArg, closeTextArg) {
@@ -203,25 +97,7 @@
         closeText: closeReasonText
       };
 
-      var promise = $http.post(rootUrl + '/close', JSON.stringify(data));
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
+      return $http.post(rootUrl + '/close', JSON.stringify(data));
     }
 
     function renewMemberships(membershipIdsArg, transDateArg, transDescArg, transMemoArg) {
@@ -243,25 +119,7 @@
         transactionMemo: transMemo
       };
 
-      var promise = $http.post(rootUrl + '/renew', JSON.stringify(data));
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
+      return $http.post(rootUrl + '/renew', JSON.stringify(data));
     }
   }
 

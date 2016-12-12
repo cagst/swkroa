@@ -5,100 +5,39 @@
  *
  * Author: Craig Gaskill
  */
-
 (function(window, angular) {
   angular.module('swkroaApp').service('TransactionService', TransactionService);
 
   TransactionService.$inject = ['$http'];
 
   function TransactionService($http) {
-    this.getInvoiceGroups = function(start, limit) {
-      var promise = $http.get('/api/transactions/invoices?start=' + start + '&limit=' + limit);
+    var vm = this;
+    var rootUrl = "/api/transactions/invoices";
 
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+    vm.getInvoiceGroups = getInvoiceGroups;
+    vm.getPaymentGroups = getPaymentGroups;
+    vm.getUnpaidTransactions = getUnpaidTransactions;
+    vm.saveTransaction = saveTransaction;
 
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+    /********************************************
+     * Implement Methods
+     ********************************************/
 
-      return promise;
-    };
+    function getInvoiceGroups(start, limit) {
+      return $http.get(rootUrl + "?start=" + start + "&limit=" + limit);
+    }
 
-    this.getPaymentGroups = function(start, limit) {
-      var promise = $http.get('/api/transactions/payments?start=' + start + '&limit=' + limit);
+    function getPaymentGroups(start, limit) {
+      return $http.get(rootUrl + '?start=' + start + '&limit=' + limit);
+    }
 
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
+    function getUnpaidTransactions() {
+      return $http.get(rootUrl + '/unpaid');
+    }
 
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
-    };
-
-    this.getUnpaidTransactions = function() {
-      var promise = $http.get('/api/transactions/unpaid');
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
-    };
-
-    this.saveTransaction = function(transaction) {
-      var promise = $http.post('/api/transactions', transaction);
-
-      promise.success = function(fn) {
-        promise.then(function(response) {
-          if (responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      promise.error = function(fn) {
-        promise.then(function(response) {
-          if (!responseSuccessful(response)) {
-            fn(response.data, response.status);
-          }
-        });
-      };
-
-      return promise;
-    };
+    function saveTransaction(transaction) {
+      return $http.post(rootUrl, transaction);
+    }
   }
 
 })(window, window.angular);
