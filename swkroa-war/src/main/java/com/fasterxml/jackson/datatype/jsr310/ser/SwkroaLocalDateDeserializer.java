@@ -8,7 +8,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -29,12 +28,12 @@ public class SwkroaLocalDateDeserializer extends LocalDateDeserializer {
     this(DEFAULT_FORMATTER);
   }
 
-  public SwkroaLocalDateDeserializer(DateTimeFormatter dtf) {
+  private SwkroaLocalDateDeserializer(DateTimeFormatter dtf) {
     super(dtf);
   }
 
   @Override
-  public LocalDate deserialize(JsonParser parser, DeserializationContext context) throws IOException, JsonProcessingException {
+  public LocalDate deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     if (parser.currentToken() == JsonToken.VALUE_NUMBER_INT) {
       BigInteger val = parser.getBigIntegerValue();
 

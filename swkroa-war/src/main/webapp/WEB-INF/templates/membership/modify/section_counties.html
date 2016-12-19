@@ -28,7 +28,7 @@
          data-ng-form="countyForm">
       <div class="col-xs-2" data-ng-class="{'has-error': countyForm.county.$invalid}">
         <select class="form-control" name="county"
-                data-ng-options="cnty.countyName group by cnty.votingCounty for cnty in ctrl.counties"
+                data-ng-options="cnty.countyName group by cnty.votingCounty for cnty in ctrl.counties track by cnty.countyUID"
                 data-ng-model="membershipCounty.county"
                 data-ng-required="membershipCounty.active">
         </select>

@@ -157,7 +157,7 @@ public final class StatementLoader {
      */
     private String readStatement(final String name, final Class owner) {
         StringBuffer resourceName = new StringBuffer(32);
-        resourceName.append("sql/").append(dialect).append("/").append(name).append(".sql");
+        resourceName.append("sql/").append(dialect.name().toLowerCase()).append("/").append(name).append(".sql");
 
         LOGGER.info("Loading statement from [{}]", resourceName);
 

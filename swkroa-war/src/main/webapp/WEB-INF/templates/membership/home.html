@@ -356,7 +356,7 @@
       <h3 th:text="#{membership.edit}" data-ng-show="ctrl.membership.membershipUID > 0">z_EditMembership</h3>
     </div>
 
-    <form method="POST" name="membershipForm" novalidate data-ng-submit="ctrl.save()" class="css-form">
+    <form method="POST" name="membershipForm" novalidate data-ng-submit="ctrl.saveMembership()" class="css-form">
       <div th:include="membership/modify/section_membership"></div>
       <div th:include="membership/modify/section_counties"></div>
       <div th:include="membership/modify/section_members"

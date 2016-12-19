@@ -6,96 +6,114 @@
  * Author:  Craig Gaskill
  */
 
-swkroaApp.controller('memberController',
-                     ['$scope',
-                      '$http',
-                      'codesetService',
-                      'contactService',
-                      'membershipService',
-  function ($scope, $http, codesetService, contactService, membershipService) {
-    $scope.contactService = contactService;
-    $scope.codesetService = codesetService;
+(function(window, angular) {
+  'use strict';
+
+  angular.module('swkroaApp').controller('MemberController', MemberController);
+
+  MemberController.$inject = ['$http', 'CodeSetService', 'ContactService', 'MembershipService'];
+
+  function MemberController($http, codeSetService, contactService, membershipService) {
+    var vm = this;
+
+    var membershipId = $('#membershipUID').val();
+    var including    = ['LOAD_MEMBERS', 'LOAD_CONTACTS', 'LOAD_COUNTIES'];
+
+    vm.view = "view";
+    vm.fullyLoaded = false;
+    vm.isPrimaryMember = ('true' === $('#isPrimaryMember').val());
 
     $('#updatedMessage').hide();
 
-    codesetService.getCodeValuesForCodeSet('ADDRESS_TYPE').success(function(data) {
-      $scope.addressTypes = data;
-    });
+    /********************************************
+     * Define binding methods
+     ********************************************/
 
-    codesetService.getCodeValuesForCodeSet('PHONE_TYPE').success(function(data) {
-      $scope.phoneTypes = data;
-    });
+    vm.editMembership = editMembership;
+    vm.addSpouse = addSpouse;
+    vm.removeSpouse = removeSpouse;
+    vm.addCounty = addCounty;
+    vm.removeCounty = removeCounty;
+    vm.validateVotingCounty = validateVotingCounty;
+    vm.addMember = addMember;
+    vm.removeMember = removeMember;
+    vm.generateOwnerId = generateOwnerId;
+    vm.hasChanges = hasChanges;
+    vm.cancelChanges = cancelChanges;
+    vm.saveMember = saveMember;
 
-    codesetService.getCodeValuesForCodeSet('EMAIL_TYPE').success(function(data) {
-      $scope.emailTypes = data;
-    });
+    vm.getAddressTypeDisplay = getAddressTypeDisplay;
+    vm.getPhoneTypeDisplay = getPhoneTypeDisplay;
+    vm.getEmailTypeDisplay = getEmailTypeDisplay;
 
-    var membershipId = $('#membershipUID').val();
+    vm.addAddress = addAddress;
+    vm.ensurePrimaryAddress = ensurePrimaryAddress;
+    vm.removeAddress = removeAddress;
 
-    var including = ['LOAD_MEMBERS', 'LOAD_CONTACTS'];
+    vm.addPhone = addPhone;
+    vm.ensurePrimaryPhone = ensurePrimaryPhone;
+    vm.removePhone = removePhone;
 
-    $scope.view = "view";
-    $scope.fullyLoaded = false;
-    $scope.isPrimaryMember = ('true' === $('#isPrimaryMember').val());
+    vm.addEmail = addEmail;
+    vm.ensurePrimaryEmail = ensurePrimaryEmail;
+    vm.removeEmail = removeEmail;
 
-    membershipService.getMembership(membershipId, including).then(function(response) {
-      if (responseSuccessful(response)) {
-        $scope.membership = response.data;
+    activate();
+
+    /********************************************
+     * Implement Methods
+     ********************************************/
+
+    function editMembership() {
+      if (!vm.fullyLoaded) {
+        loadAll(vm, $http);
       }
-    });
 
-    $scope.editMembership = function() {
-      if (!$scope.fullyLoaded) {
-        loadAll($scope, $http);
-      } else {
-        syncAllItems($scope);
-      }
+      vm.original = angular.copy(vm.membership);
+      vm.view     = "edit";
+    }
 
-      $scope.original = angular.copy($scope.membership);
-      $scope.view     = "edit";
-    };
-
-    $scope.addSpouse = function() {
+    function addSpouse() {
       var spouseMember = null;
-      for (idx = 0; idx < $scope.memberTypes.length; idx++) {
-        if ($scope.memberTypes[idx].memberTypeMeaning === 'SPOUSE') {
-          spouseMember = $scope.memberTypes[idx];
+      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
+        if (vm.memberTypes[idx].memberTypeMeaning === 'SPOUSE') {
+          spouseMember = vm.memberTypes[idx];
           break;
         }
       }
 
-      $scope.membership.spouse = {
+      vm.membership.spouse = {
         active: true,
         memberType: spouseMember
       };
-    };
+    }
 
-    $scope.removeSpouse = function() {
-      if ($scope.membership.spouse.memberUID > 0) {
-        $scope.membership.spouse.active = false;
+    function removeSpouse() {
+      if (vm.membership.spouse.memberUID > 0) {
+        vm.membership.spouse.active = false;
       } else {
-        $scope.membership.spouse = null;
+        vm.membership.spouse = null;
       }
-    };
+    }
 
-    $scope.addCounty = function() {
-      $scope.membership.membershipCounties.push({
+    function addCounty() {
+      vm.membership.membershipCounties.push({
         netMineralAcres: 0,
         surfaceAcres: 0,
         active: true
       });
-    };
+    }
 
-    $scope.removeCounty = function(county) {
+    function removeCounty(county) {
       if (county.membershipCountyUID > 0) {
         county.active = false;
       } else {
-        var idx = $scope.membership.membershipCounties.indexOf(county);
-        $scope.membership.membershipCounties.splice(idx, 1);
+        var idx = vm.membership.membershipCounties.indexOf(county);
+        vm.membership.membershipCounties.splice(idx, 1);
       }
-    };
+    }
 
-    $scope.validateVotingCounty = function(membership, membershipCounty) {
+    function validateVotingCounty(membership, membershipCounty) {
       if (membershipCounty.votingCounty) {
         angular.forEach(membership.membershipCounties, function(cnty) {
           cnty.votingCounty = false;
@@ -105,33 +123,33 @@ swkroaApp.controller('memberController',
       } else {
         membershipCounty.votingCounty = false;
       }
-    };
+    }
 
-    $scope.addMember = function() {
+    function addMember() {
       var familyMember = null;
-      for (idx = 0; idx < $scope.memberTypes.length; idx++) {
-        if ($scope.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
-          familyMember = $scope.memberTypes[idx];
+      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
+        if (vm.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
+          familyMember = vm.memberTypes[idx];
           break;
         }
       }
 
-      $scope.membership.members.push({
+      vm.membership.members.push({
         active: true,
         memberType: familyMember
       });
-    };
+    }
 
-    $scope.removeMember = function(member) {
+    function removeMember(member) {
       if (member.memberUID > 0) {
         member.active = false;
       } else {
-        var idx = $scope.membership.members.indexOf(member);
-        $scope.membership.members.splice(idx, 1);
+        var idx = vm.membership.members.indexOf(member);
+        vm.membership.members.splice(idx, 1);
       }
-    };
+    }
 
-    $scope.generateOwnerId = function(member) {
+    function generateOwnerId(member) {
       var firstName  = member.person.firstName;
       var lastName   = member.person.lastName;
       var ownerIdent = member.ownerIdent;
@@ -144,102 +162,127 @@ swkroaApp.controller('memberController',
           member.ownerIdent = data;
         });
       }
-    };
+    }
 
-    $scope.hasChanges = function(membership) {
-      return angular.equals(membership, $scope.original);
-    };
+    function hasChanges(membership) {
+      return angular.equals(membership, vm.original);
+    }
 
-    $scope.cancelChanges = function() {
-      $scope.view = "view";
-    };
+    function cancelChanges() {
+      vm.membership = angular.copy(vm.original);
+      vm.original = null;
+      vm.view = "view";
+    }
 
-    $scope.save = function() {
-      membershipService.saveMembership($scope.membership).then(function(response) {
+    function saveMember() {
+      membershipService.saveMembership(vm.membership).then(function(response) {
         membershipService.getMembership(membershipId, including).then(function(response) {
           if (responseSuccessful(response)) {
-            $scope.membership = response.data;
+            vm.membership = response.data;
           }
         });
 
-        $scope.view = "view";
+        vm.view = "view";
 
         $('#updatedMessage').show();
       });
-    };
-
-  }]);
-
-var loadAll = function($scope, $http) {
-  if ($scope.fullyLoaded) {
-    return
-  }
-
-  $scope.states = $scope.contactService.getStates();
-
-  var syncItems    = 0;
-  var syncCount    = 0;
-
-  syncItems++;
-
-  $scope.codesetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
-    $scope.titles = data;
-  });
-
-  syncItems++;
-  $http.get('/api/membertypes').success(function(data) {
-    $scope.memberTypes = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
     }
-  });
 
-  syncItems++;
-  $http.get('/api/counties/').success(function(data) {
-    $scope.counties = data;
-
-    syncCount++;
-    if (syncCount == syncItems) {
-      syncAllItems($scope);
+    function getAddressTypeDisplay(address) {
+      return contactService.getAddressTypeDisplay(address, vm.addressTypes);
     }
-  });
 
-  $scope.fullyLoaded = true
-};
+    function getPhoneTypeDisplay(phone) {
+      return contactService.getPhoneTypeDisplay(phone, vm.phoneTypes);
+    }
 
-var syncAllItems = function(scope) {
-  // sync up our code lists
+    function getEmailTypeDisplay(email) {
+      return contactService.getEmailTypeDisplay(email, vm.emailTypes);
+    }
 
-  if (scope.membership.primaryMember) {
-    if (scope.membership.primaryMember.memberType) {
-      for (var idx = 0; idx < scope.memberTypes.length; idx++) {
-        if (scope.membership.primaryMember.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
-          scope.membership.primaryMember.memberType = scope.memberTypes[idx];
-          break;
+    function activate() {
+      codeSetService.getCodeValuesForCodeSet('ADDRESS_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.addressTypes = response.data;
         }
-      }
-    }
-  }
+      });
 
-  if (scope.membership.primarySpouse && scope.membership.primarySpouse.person) {
-    if (scope.membership.primarySpouse.memberType) {
-      for (var idx = 0; idx < scope.memberTypes.length; idx++) {
-        if (scope.membership.primarySpouse.memberType.memberTypeMeaning == scope.memberTypes[idx].memberTypeMeaning) {
-          scope.membership.primarySpouse.memberType = scope.memberTypes[idx];
-          break;
+      codeSetService.getCodeValuesForCodeSet('PHONE_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.phoneTypes = response.data;
         }
-      }
-    }
-  }
+      });
 
-  for (var idx1 = 0; idx1 < scope.membership.membershipCounties.length; idx1++) {
-    for (var idx2 = 0; idx2 < scope.counties.length; idx2++) {
-      if (scope.membership.membershipCounties[idx1].county.countyUID == scope.counties[idx2].countyUID) {
-        scope.membership.membershipCounties[idx1].county = scope.counties[idx2];
-        break;
-      }
+      codeSetService.getCodeValuesForCodeSet('EMAIL_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.emailTypes = response.data;
+        }
+      });
+
+      membershipService.getMembership(membershipId, including).then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.membership = response.data;
+        }
+      });
     }
+
+    function addAddress(member) {
+      contactService.addAddress(member);
+    }
+
+    function ensurePrimaryAddress(member, address) {
+      contactService.ensurePrimaryAddress(member, address)
+    }
+
+    function removeAddress(member, address) {
+      contactService.removeAddress(member, address)
+    }
+
+    function addPhone(member) {
+      contactService.addPhone(member)
+    }
+
+    function ensurePrimaryPhone(member, phone) {
+      contactService.ensurePrimaryPhone(member, phone);
+    }
+
+    function removePhone(member, phone) {
+      contactService.removePhone(member, phone)
+    }
+
+    function addEmail(member) {
+      contactService.addEmail(member);
+    }
+
+    function ensurePrimaryEmail(member, email) {
+      contactService.ensurePrimaryEmail(member, email)
+    }
+
+    function removeEmail(member, email) {
+      contactService.removeEmail(member, email)
+    }
+
+    function loadAll() {
+      if (vm.fullyLoaded) {
+        return
+      }
+
+      vm.states = contactService.getStates();
+
+      codeSetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
+        vm.titles = data;
+      });
+
+      $http.get('/api/membertypes').success(function(data) {
+        vm.memberTypes = data;
+      });
+
+      $http.get('/api/counties/').success(function(data) {
+        vm.counties = data;
+      });
+
+      vm.fullyLoaded = true
+    }
+
   }
-};
+})(window, window.angular);

@@ -100,7 +100,7 @@
     vm.cancelChanges = cancelChanges;
 
     // Misc. Methods
-    vm.save = save;
+    vm.saveMembership = saveMembership;
     vm.canClose = canClose;
     vm.toggleShowCalculations = toggleShowCalculations;
 
@@ -557,7 +557,7 @@
       vm.view = "listing";
     }
 
-    function save() {
+    function saveMembership() {
       membershipService.saveMembership(vm.membership).then(function(response) {
         if (response.status == 201) {
           if (vm.memberships) {

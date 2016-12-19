@@ -6,62 +6,62 @@
 <div th:fragment="primaryMember">
   <div class="row spacer">
     <div class="col-xs-2">
-      <label th:text="#{membership.member.title.label}">zzz Title</label>
-      <select class="form-control"
-              data-ng-model="membership.primaryMember.person.titleCD"
-              data-ng-options="title.codeValueUID as title.display for title in titles">
+      <label for="primaryTitle" th:text="#{membership.member.title.label}">zzz Title</label>
+      <select id="primaryTitle" class="form-control"
+              data-ng-model="ctrl.membership.primaryMember.person.titleCD"
+              data-ng-options="title.codeValueUID as title.display for title in ctrl.titles">
         <option value="" th:text="#{common.none}"></option>
       </select>
     </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryFirstName.$invalid}">
-      <label class="control-label label-required" th:text="#{com.cagst.swkroa.membership.member.firstname.label}">
+      <label for="primaryFirstName" class="control-label label-required" th:text="#{membership.member.firstname.label}">
         zzz First Name
       </label>
-      <input type="text" class="form-control" name="primaryFirstName" maxlength="50"
-             th:placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
-             data-ng-model="membership.primaryMember.person.firstName"
-             data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
-             data-ng-blur="generateOwnerId(membership.primaryMember)" />
+      <input id="primaryFirstName" name="primaryFirstName" type="text" class="form-control" maxlength="50"
+             th:placeholder="#{membership.member.firstname.prompt}"
+             data-ng-model="ctrl.membership.primaryMember.person.firstName"
+             data-ng-required="ctrl.membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
+             data-ng-blur="ctrl.generateOwnerId(ctrl.membership.primaryMember)" />
     </div>
     <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.member.middlename.label}">zzz Middle Name</label>
-      <input type="text" class="form-control" maxlength="50"
-             th:placeholder="#{com.cagst.swkroa.membership.member.middlename.prompt}"
-             data-ng-model="membership.primaryMember.person.middleName" />
+      <label for="primaryMiddleName" th:text="#{membership.member.middlename.label}">zzz Middle Name</label>
+      <input id="primaryMiddleName" type="text" class="form-control" maxlength="50"
+             th:placeholder="#{membership.member.middlename.prompt}"
+             data-ng-model="ctrl.membership.primaryMember.person.middleName" />
     </div>
     <div class="col-xs-2" data-ng-class="{'has-error': membershipForm.primaryLastName.$invalid}">
-      <label class="control-label label-required" th:text="#{com.cagst.swkroa.membership.member.lastname.label}">
+      <label for="primaryLastName" class="control-label label-required" th:text="#{membership.member.lastname.label}">
         zzz Last Name
       </label>
-      <input type="text" class="form-control" name="primaryLastName" maxlength="50"
-             th:placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
-             data-ng-model="membership.primaryMember.person.lastName"
-             data-ng-required="membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
-             data-ng-blur="generateOwnerId(membership.primaryMember)" />
+      <input id="primaryLastName" name="primaryLastName" type="text" class="form-control" maxlength="50"
+             th:placeholder="#{membership.member.lastname.prompt}"
+             data-ng-model="ctrl.membership.primaryMember.person.lastName"
+             data-ng-required="ctrl.membership.entityType.meaning == 'ENTITY_INDIVIDUAL'"
+             data-ng-blur="ctrl.generateOwnerId(ctrl.membership.primaryMember)" />
     </div>
   </div>
 
   <div class="row spacer-top">
     <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
-      <input type="text" class="form-control" maxlength="25"
-             th:placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
-             data-ng-model="membership.primaryMember.greeting" />
+      <label for="primaryGreeting" th:text="#{membership.member.greeting.label}">zzz Greeting</label>
+      <input id="primaryGreeting" type="text" class="form-control" maxlength="25"
+             th:placeholder="#{membership.member.greeting.prompt}"
+             data-ng-model="ctrl.membership.primaryMember.greeting" />
     </div>
     <div class="col-xs-2">
-      <label th:text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz In Care Of</label>
-      <input type="text" class="form-control" maxlength="50"
-             data-ng-model="membership.primaryMember.inCareOf" />
-    </div>
-    <div class="col-xs-2">
-      <div>&nbsp;</div>
-      <input id="primaryMailNewsletter" type="checkbox" data-ng-model="membership.primaryMember.mailNewsletter" />
-      <label for="primaryMailNewsletter" th:text="#{com.cagst.swkroa.membership.member.newsletter.mail}">zzz Mail</label>
+      <label for="primaryCareOf" th:text="#{membership.member.incareof.label}">zzz In Care Of</label>
+      <input id="primaryCareOf" type="text" class="form-control" maxlength="50"
+             data-ng-model="ctrl.membership.primaryMember.inCareOf" />
     </div>
     <div class="col-xs-2">
       <div>&nbsp;</div>
-      <input id="primaryEmailNewsletter" type="checkbox" data-ng-model="membership.primaryMember.emailNewsletter" />
-      <label for="primaryEmailNewsletter" th:text="#{com.cagst.swkroa.membership.member.newsletter.email}">zzz Email</label>
+      <input id="primaryMailNewsletter" type="checkbox" data-ng-model="ctrl.membership.primaryMember.mailNewsletter" />
+      <label for="primaryMailNewsletter" th:text="#{membership.member.newsletter.mail}">zzz Mail</label>
+    </div>
+    <div class="col-xs-2">
+      <div>&nbsp;</div>
+      <input id="primaryEmailNewsletter" type="checkbox" data-ng-model="ctrl.membership.primaryMember.emailNewsletter" />
+      <label for="primaryEmailNewsletter" th:text="#{membership.member.newsletter.email}">zzz Email</label>
     </div>
   </div>
 </div>

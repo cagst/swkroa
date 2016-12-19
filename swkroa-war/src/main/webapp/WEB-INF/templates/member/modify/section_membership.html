@@ -20,7 +20,7 @@
                     data-ng-show="isPrimaryMember && (!membership.spouse || !membership.spouse.active)"
                     data-ng-click="addSpouse()">
               <i class="fa fa-plus"></i>
-              <span th:text="#{com.cagst.swkroa.membership.member.spouse.add}">zzz Add Spouse</span>
+              <span th:text="#{membership.member.spouse.add}">zzz Add Spouse</span>
             </button>
           </span>
         </div>
@@ -30,7 +30,7 @@
     <div class="panel-body">
       <div th:include="member/modify/section_primary_member"></div>
       <div th:include="member/modify/section_primary_spouse"
-           data-ng-show="membership.spouse && membership.spouse.active"></div>
+           data-ng-show="ctrl.membership.spouse && ctrl.membership.spouse.active"></div>
       <div th:include="member/modify/section_primary_contact"></div>
     </div>
   </div>

@@ -6,11 +6,11 @@
   <th:block th:replace="fragments/common :: head" />
 </head>
 
-<body>
+<body data-ng-app="swkroaApp">
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="memberController" data-ng-cloak>
+<div id="page-content" data-ng-controller="MemberController as ctrl" data-ng-cloak>
   <input id="membershipUID" type="hidden" th:value="${membershipUID}"/>
   <input id="isPrimaryMember" type="hidden" th:value="${isPrimaryMember}"/>
 
@@ -23,14 +23,14 @@
   </div>
 
   <!-- View Member(ship) -->
-  <div data-ng-show="membership && view == 'view'">
-    <h1 data-ng-if="membership.primaryMember.memberType.memberTypeMeaning == 'ASSOCIATE'">
+  <div data-ng-show="ctrl.membership && ctrl.view == 'view'">
+    <h1 data-ng-if="ctrl.membership.primaryMember.memberType.memberTypeMeaning == 'ASSOCIATE'">
       <span th:text="#{member.type.associate}">zzz Associate</span>
     </h1>
-    <h1 data-ng-if="membership.primaryMember.memberType.memberTypeMeaning == 'FAMILY_HEAD'">
+    <h1 data-ng-if="ctrl.membership.primaryMember.memberType.memberTypeMeaning == 'FAMILY_HEAD'">
       <span th:text="#{member.type.family}">zzz Family</span>
     </h1>
-    <h1 data-ng-if="membership.primaryMember.memberType.memberTypeMeaning == 'REGULAR'">
+    <h1 data-ng-if="ctrl.membership.primaryMember.memberType.memberTypeMeaning == 'REGULAR'">
       <span th:text="#{member.type.regular}">zzz Regular</span>
     </h1>
 
@@ -45,38 +45,36 @@
       <div class="panel-body">
         <!-- Primary Member -->
         <div>
-          <span data-ng-bind="membership.membershipName" class="lead lead-in">zzz Membership Name</span>
-          <small>(<span data-ng-bind="membership.primaryMember.ownerIdent">zzz Owner Id</span>)</small>
+          <span data-ng-bind="ctrl.membership.membershipName" class="lead lead-in">zzz Membership Name</span>
+          <small>(<span data-ng-bind="ctrl.membership.primaryMember.ownerIdent">zzz Owner Id</span>)</small>
           <span th:text="#{member.membership.member.since}"
-                data-ng-if="membership.joinDate != null" class="pull-right">
+                data-ng-if="ctrl.membership.joinDate != null" class="pull-right">
             zzz Member Since
           </span>
         </div>
 
         <!-- Spouse -->
-        <div data-ng-show="membership.spouse">
+        <div data-ng-show="ctrl.membership.spouse">
           <span th:text="#{member.spouse}">zzz Spouse</span>
-          <small>(<span data-ng-bind="membership.spouse.ownerIdent">zzz Spouse Owner Id</span>)</small>
+          <small>(<span data-ng-bind="ctrl.membership.spouse.ownerIdent">zzz Spouse Owner Id</span>)</small>
         </div>
 
         <!-- Dues -->
         <div>
-          <span th:text="#{member.membership.dues}">
-            zzz Dues Of
-          </span>
+          <span th:text="#{member.membership.dues}">zzz Dues Of</span>
           <span class="pull-right text-danger"
                 th:text="#{member.membership.pastdue}"
-                data-ng-show="membership.balance < 0">
+                data-ng-show="ctrl.membership.balance < 0">
             zzz Past Due
           </span>
           <span class="pull-right text-success"
                 th:text="#{member.membership.credit}"
-                data-ng-show="membership.balance > 0">
+                data-ng-show="ctrl.membership.balance > 0">
             zzz Credit
           </span>
           <span class="pull-right"
                 th:text="#{member.membership.paid}"
-                data-ng-show="membership.balance === 0">
+                data-ng-show="ctrl.membership.balance === 0">
             zzz Paid
           </span>
         </div>
@@ -88,10 +86,10 @@
               <h4 class="divider-bottom">Addresses</h4>
 
               <div class="row"
-                   data-ng-repeat="address in membership.primaryMember.addresses"
-                   data-ng-show="membership.primaryMember.addresses.length > 0">
+                   data-ng-repeat="address in ctrl.membership.primaryMember.addresses"
+                   data-ng-show="ctrl.membership.primaryMember.addresses.length > 0">
                 <div class="col-xs-3">
-                  <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+                  <strong data-ng-bind="ctrl.getAddressTypeDisplay(address)"></strong>
                 </div>
                 <div class="col-xs-9">
                   <div data-ng-bind="address.addressLine1"></div>
@@ -109,10 +107,10 @@
               <h4 class="divider-bottom">Phone Numbers</h4>
 
               <div class="row"
-                   data-ng-repeat="phone in membership.primaryMember.phoneNumbers"
-                   data-ng-show="membership.primaryMember.phoneNumbers.length > 0">
+                   data-ng-repeat="phone in ctrl.membership.primaryMember.phoneNumbers"
+                   data-ng-show="ctrl.membership.primaryMember.phoneNumbers.length > 0">
                 <div class="col-xs-3">
-                  <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+                  <strong data-ng-bind="ctrl.getPhoneTypeDisplay(phone)"></strong>
                 </div>
                 <div class="col-xs-9">
                   <span data-ng-bind-template="{{phone.phoneNumber | tel}}"></span>
@@ -128,10 +126,10 @@
               <h4 class="divider-bottom">Email Addresses</h4>
 
               <div class="row"
-                   data-ng-repeat="email in membership.primaryMember.emailAddresses"
-                   data-ng-show="membership.primaryMember.emailAddresses.length > 0">
+                   data-ng-repeat="email in ctrl.membership.primaryMember.emailAddresses"
+                   data-ng-show="ctrl.membership.primaryMember.emailAddresses.length > 0">
                 <div class="col-xs-3">
-                  <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
+                  <strong data-ng-bind="ctrl.getEmailTypeDisplay(email)"></strong>
                 </div>
                 <div class="col-xs=9">
                   <span data-ng-bind="email.emailAddress"></span>
@@ -145,7 +143,7 @@
     </div>
 
     <!-- Additional Members -->
-    <div class="panel panel-default" data-ng-show="membership.memberType.allowMember || membership.members.length > 1">
+    <div class="panel panel-default" data-ng-show="ctrl.membership.memberType.allowMember || ctrl.membership.members.length > 1">
       <div class="panel-heading">
         <span class="panel-title" th:text="#{member.family.heading}">
           zzz Family Members
@@ -154,7 +152,7 @@
 
       <div class="panel-body">
         <div class="list-group constrain-view-sm">
-          <div class="list-group-item alt-list-group-item" data-ng-repeat="member in membership.members"
+          <div class="list-group-item alt-list-group-item" data-ng-repeat="member in ctrl.membership.members"
                data-ng-show="!member.memberType.primary && member.memberType.memberTypeMeaning !== 'SPOUSE'">
             <div>
               <span data-ng-bind="member.memberName" class="lead lead-in">zzz Member Name</span>
@@ -175,7 +173,7 @@
                        data-ng-repeat="address in member.addresses"
                        data-ng-show="member.addresses.length > 0">
                     <div class="col-xs-3">
-                      <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+                      <strong data-ng-bind="ctrl.getAddressTypeDisplay(address)"></strong>
                     </div>
                     <div class="col-xs-9">
                       <div data-ng-bind="address.addressLine1"></div>
@@ -196,7 +194,7 @@
                        data-ng-repeat="phone in member.phoneNumbers"
                        data-ng-show="member.phoneNumbers.length > 0">
                     <div class="col-xs-3">
-                      <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+                      <strong data-ng-bind="ctrl.getPhoneTypeDisplay(phone)"></strong>
                     </div>
                     <div class="col-xs-9">
                       <span data-ng-bind-template="{{phone.phoneNumber | tel}}"></span>
@@ -215,7 +213,7 @@
                        data-ng-repeat="email in member.emailAddresses"
                        data-ng-show="member.emailAddresses.length > 0">
                     <div class="col-xs-3">
-                      <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
+                      <strong data-ng-bind="ctrl.getEmailTypeDisplay(email)"></strong>
                     </div>
                     <div class="col-xs=9">
                       <span data-ng-bind="email.emailAddress"></span>
@@ -231,42 +229,42 @@
     </div>
 
     <button type="button" class="btn btn-primary"
-            data-ng-click="editMembership()">
+            data-ng-click="ctrl.editMembership()">
       <i class="fa fa-edit"></i>
       <span th:text="#{common.edit}">z_Edit</span>
     </button>
   </div>
 
   <!-- Modify (Add/Edit) Membership -->
-  <div data-ng-show="membership && view == 'edit'">
+  <div data-ng-show="ctrl.membership && ctrl.view == 'edit'">
     <div class="page-header">
       <h3 th:text="#{membership.edit}">z_EditMembership</h3>
     </div>
 
-    <form method="POST" name="membershipForm" novalidate data-ng-submit="save()" class="css-form">
+    <form method="POST" name="membershipForm" novalidate data-ng-submit="ctrl.saveMember()" class="css-form">
       <div th:include="member/modify/section_membership"></div>
       <div th:include="member/modify/section_counties"></div>
       <div th:include="member/modify/section_members"
-           data-ng-show="membership.memberType.allowMember ||
-                         membership.members.length > 1"></div>
+           data-ng-show="ctrl.membership.memberType.allowMember ||
+                         ctrl.membership.members.length > 1"></div>
 
       <div class="spacer-top">
         <div class="divider-top">
           <div class="spacer-top">
             <button type="submit"
                     class="btn btn-primary"
-                    th:text="#{com.cagst.swkroa.membership.create}"
-                    data-ng-show="membership.membershipUID == 0"
+                    th:text="#{membership.create}"
+                    data-ng-show="ctrl.membership.membershipUID == 0"
                     data-ng-disabled="membershipForm.$invalid">
             </button>
             <button type="submit"
                     class="btn btn-primary"
-                    th:text="#{com.cagst.swkroa.membership.update}"
-                    data-ng-show="membership.membershipUID > 0"
+                    th:text="#{membership.update}"
+                    data-ng-show="ctrl.membership.membershipUID > 0"
                     data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
             </button>
             <button type="button" class="btn btn-default"
-                    data-ng-click="cancelChanges()"
+                    data-ng-click="ctrl.cancelChanges()"
                     th:text="#{common.cancel}">
             </button>
           </div>

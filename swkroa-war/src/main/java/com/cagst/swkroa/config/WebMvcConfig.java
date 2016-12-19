@@ -7,6 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.ser.SwkroaLocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.SwkroaLocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.SwkroaLocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.SwkroaLocalDateTimeSerializer;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -83,6 +84,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Application
     javaTimeModule.addSerializer(LocalDate.class, SwkroaLocalDateSerializer.INSTANCE);
     javaTimeModule.addDeserializer(LocalDate.class, SwkroaLocalDateDeserializer.INSTANCE);
     javaTimeModule.addSerializer(LocalDateTime.class, SwkroaLocalDateTimeSerializer.INSTANCE);
+    javaTimeModule.addDeserializer(LocalDateTime.class, SwkroaLocalDateTimeDeserializer.INSTANCE);
 
     jacksonBuilder.modules(javaTimeModule);
 

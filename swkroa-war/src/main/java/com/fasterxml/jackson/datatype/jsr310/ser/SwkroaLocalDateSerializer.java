@@ -23,13 +23,13 @@ public class SwkroaLocalDateSerializer extends JSR310FormattedSerializerBase<Loc
 
   public static final SwkroaLocalDateSerializer INSTANCE = new SwkroaLocalDateSerializer();
 
-  protected SwkroaLocalDateSerializer() {
+  private SwkroaLocalDateSerializer() {
     super(LocalDate.class);
   }
 
-  protected SwkroaLocalDateSerializer(SwkroaLocalDateSerializer base,
-                                      Boolean useTimestamp,
-                                      DateTimeFormatter dtf) {
+  private SwkroaLocalDateSerializer(SwkroaLocalDateSerializer base,
+                                    Boolean useTimestamp,
+                                    DateTimeFormatter dtf) {
     super(base, useTimestamp, dtf);
   }
 
