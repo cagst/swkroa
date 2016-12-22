@@ -3,11 +3,11 @@ package com.cagst.swkroa.user;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import com.cagst.swkroa.person.BasePersonMapper;
-import com.cagst.swkroa.utils.LocalDateTimeConverter;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
@@ -64,24 +64,25 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     String time_zone = rs.getString(TIME_ZONE);
     if (!StringUtils.isEmpty(time_zone)) {
       try {
-        user.setTimeZone(TimeZone.getTimeZone(time_zone));
+        DateTimeZone tz = DateTimeZone.forID(time_zone);
+        user.setTimeZone(tz);
       } catch (IllegalArgumentException ex) {
         logger.warn(ex.getMessage());
       }
     }
 
-    user.setLastSigninDate(LocalDateTimeConverter.convert(rs.getTimestamp(LAST_SIGNIN_DATE)));
+    user.setLastSigninDate(DateTimeConverter.convert(rs.getTimestamp(LAST_SIGNIN_DATE)));
     user.setLastSigninIp(rs.getString(LAST_SIGNIN_IP));
-    user.setAccountedLockedDate(LocalDateTimeConverter.convert(rs.getTimestamp(ACCOUNT_LOCKED_DATE)));
-    user.setAccountExpiredDate(LocalDateTimeConverter.convert(rs.getTimestamp(ACCOUNT_EXPIRED_DATE)));
-    user.setPasswordChangedDate(LocalDateTimeConverter.convert(rs.getTimestamp(PASSWORD_CHANGED_DATE)));
+    user.setAccountedLockedDate(DateTimeConverter.convert(rs.getTimestamp(ACCOUNT_LOCKED_DATE)));
+    user.setAccountExpiredDate(DateTimeConverter.convert(rs.getTimestamp(ACCOUNT_EXPIRED_DATE)));
+    user.setPasswordChangedDate(DateTimeConverter.convert(rs.getTimestamp(PASSWORD_CHANGED_DATE)));
     user.setUserType(UserType.valueOf(rs.getString(USER_TYPE)));
 
     // meta-data
     user.setActive(rs.getBoolean(ACTIVE_IND));
     user.setUserUpdateCount(rs.getLong(USER_UPDT_CNT));
     user.setPersonUpdateCount(rs.getLong(PERSON_UPDT_CNT));
-    user.setCreateDateTime(LocalDateTimeConverter.convert(rs.getTimestamp(USER_CREATE_DT_TM)));
+    user.setCreateDateTime(DateTimeConverter.convert(rs.getTimestamp(USER_CREATE_DT_TM)));
 
     return user;
   }
@@ -101,10 +102,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     params.addValue(PERSON_ID, newUser.getPersonUID());
     params.addValue(USERNAME, newUser.getUsername());
     params.addValue(PASSWORD, newUser.getPassword());
-    params.addValue(PASSWORD_CHANGED_DATE, LocalDateTimeConverter.convert(newUser.getPasswordChangedDate()));
+    params.addValue(PASSWORD_CHANGED_DATE, DateTimeConverter.convert(newUser.getPasswordChangedDate()));
     params.addValue(TEMPORARY_PWD_IND, newUser.isPasswordTemporary());
-    params.addValue(ACCOUNT_LOCKED_DATE, LocalDateTimeConverter.convert(newUser.getAccountLockedDate()));
-    params.addValue(ACCOUNT_EXPIRED_DATE, LocalDateTimeConverter.convert(newUser.getAccountExpiredDate()));
+    params.addValue(ACCOUNT_LOCKED_DATE, DateTimeConverter.convert(newUser.getAccountLockedDate()));
+    params.addValue(ACCOUNT_EXPIRED_DATE, DateTimeConverter.convert(newUser.getAccountExpiredDate()));
     params.addValue(USER_TYPE, newUser.getUserType().name());
     params.addValue(ACTIVE_IND, newUser.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
@@ -127,8 +128,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(USERNAME, saveUser.getUsername());
     params.addValue(TEMPORARY_PWD_IND, saveUser.isPasswordTemporary());
-    params.addValue(ACCOUNT_LOCKED_DATE, LocalDateTimeConverter.convert(saveUser.getAccountLockedDate()));
-    params.addValue(ACCOUNT_EXPIRED_DATE, LocalDateTimeConverter.convert(saveUser.getAccountExpiredDate()));
+    params.addValue(ACCOUNT_LOCKED_DATE, DateTimeConverter.convert(saveUser.getAccountLockedDate()));
+    params.addValue(ACCOUNT_EXPIRED_DATE, DateTimeConverter.convert(saveUser.getAccountExpiredDate()));
     params.addValue(USER_TYPE, saveUser.getUserType().name());
     params.addValue(ACTIVE_IND, saveUser.isActive());
     params.addValue(UPDT_ID, user.getUserUID());

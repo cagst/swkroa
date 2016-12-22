@@ -74,13 +74,15 @@
     <slf4j-version>1.7.19</slf4j-version>
     <logback-version>1.1.6</logback-version>
 
+    <!-- JodaTime Framework -->
+    <jodatime-version>2.9.2</jodatime-version>
+
     <!-- ECache Framework -->
     <cache-version>1.0.0</cache-version>
     <ehcache-version>3.0.0.rc1</ehcache-version>
 
     <!-- Thymeleaf Framework -->
     <thymeleaf-version>3.0.1.RELEASE</thymeleaf-version>
-    <thymeleaf-java8time-version>3.0.0.RELEASE</thymeleaf-java8time-version>
 
     <!-- Jackson JSON Framework -->
     <fasterxml.jackson-version>2.8.5</fasterxml.jackson-version>
@@ -173,6 +175,13 @@
         <groupId>com.cagst.swkroa</groupId>
         <artifactId>swkroa-war</artifactId>
         <version>${project.version}</version>
+      </dependency>
+
+      <!-- Joda Time Dependencies -->
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${jodatime-version}</version>
       </dependency>
 
       <!-- Spring Core Dependencies -->
@@ -357,11 +366,6 @@
         <artifactId>thymeleaf-extras-springsecurity4</artifactId>
         <version>${thymeleaf-version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.thymeleaf.extras</groupId>
-        <artifactId>thymeleaf-extras-java8time</artifactId>
-        <version>${thymeleaf-java8time-version}</version>
-      </dependency>
 
       <!-- Jackson JSON -->
       <dependency>
@@ -381,12 +385,7 @@
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jdk8</artifactId>
-        <version>${fasterxml.jackson-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-jsr310</artifactId>
+        <artifactId>jackson-datatype-joda</artifactId>
         <version>${fasterxml.jackson-version}</version>
       </dependency>
 

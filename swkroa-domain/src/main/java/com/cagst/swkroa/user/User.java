@@ -1,7 +1,5 @@
 package com.cagst.swkroa.user;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -13,6 +11,8 @@ import com.cagst.swkroa.security.SecurityPolicy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,15 +28,15 @@ public final class User extends Person implements UserDetails {
   private long user_id;
   private String username;
   private String password;
-  private LocalDateTime last_signin_dt_tm;
+  private DateTime last_signin_dt_tm;
   private String last_signin_ip;
   private int signin_attempts;
   private boolean temporary_pwd_ind;
-  private LocalDateTime account_locked_dt_tm;
-  private LocalDateTime account_expired_dt_tm;
-  private LocalDateTime password_changed_dt_tm;
+  private DateTime account_locked_dt_tm;
+  private DateTime account_expired_dt_tm;
+  private DateTime password_changed_dt_tm;
   private long updt_cnt;
-  private LocalDateTime create_dt_tm;
+  private DateTime create_dt_tm;
 
   private SecurityPolicy securityPolicy;
   private UserType userType = UserType.STAFF;
@@ -107,9 +107,9 @@ public final class User extends Person implements UserDetails {
   /**
    * Gets the date this User last signed in.
    *
-   * @return The {@link LocalDateTime} this User last signed in.
+   * @return The {@link DateTime} this User last signed in.
    */
-  public LocalDateTime getLastSigninDate() {
+  public DateTime getLastSigninDate() {
     return last_signin_dt_tm;
   }
 
@@ -117,9 +117,9 @@ public final class User extends Person implements UserDetails {
    * Sets the date this User last signed in.
    *
    * @param lastSignin
-   *     The {@link LocalDateTime} this User lasted signed in.
+   *     The {@link DateTime} this User lasted signed in.
    */
-  public void setLastSigninDate(LocalDateTime lastSignin) {
+  public void setLastSigninDate(DateTime lastSignin) {
     this.last_signin_dt_tm = lastSignin;
   }
 
@@ -182,43 +182,43 @@ public final class User extends Person implements UserDetails {
   /**
    * @return The date this account was locked.
    */
-  public LocalDateTime getAccountLockedDate() {
+  public DateTime getAccountLockedDate() {
     return account_locked_dt_tm;
   }
 
   @Override
   public boolean isAccountNonLocked() {
-    return (account_locked_dt_tm == null || account_locked_dt_tm.isAfter(LocalDateTime.now()));
+    return (account_locked_dt_tm == null || account_locked_dt_tm.isAfterNow());
   }
 
   /**
    * Sets the date this account was locked.
    *
    * @param accountLockedDate
-   *     The {@link LocalDateTime} this account was locked.
+   *     The {@link DateTime} this account was locked.
    */
-  public void setAccountedLockedDate(LocalDateTime accountLockedDate) {
+  public void setAccountedLockedDate(DateTime accountLockedDate) {
     this.account_locked_dt_tm = accountLockedDate;
   }
 
-  public LocalDateTime getAccountExpiredDate() {
+  public DateTime getAccountExpiredDate() {
     return account_expired_dt_tm;
   }
 
   @Override
   public boolean isAccountNonExpired() {
-    return (account_expired_dt_tm == null || account_expired_dt_tm.isAfter(LocalDateTime.now()));
+    return (account_expired_dt_tm == null || account_expired_dt_tm.isAfterNow());
   }
 
-  public void setAccountExpiredDate(LocalDateTime expiredDate) {
+  public void setAccountExpiredDate(DateTime expiredDate) {
     this.account_expired_dt_tm = expiredDate;
   }
 
-  public LocalDateTime getPasswordChangedDate() {
+  public DateTime getPasswordChangedDate() {
     return password_changed_dt_tm;
   }
 
-  public void setPasswordChangedDate(LocalDateTime changedDate) {
+  public void setPasswordChangedDate(DateTime changedDate) {
     this.password_changed_dt_tm = changedDate;
   }
 
@@ -243,8 +243,8 @@ public final class User extends Person implements UserDetails {
       return true;
     }
 
-    LocalDateTime expireDtTm = password_changed_dt_tm.plusDays(securityPolicy.getPasswordExpiryInDays());
-    return expireDtTm.isBefore(LocalDateTime.now());
+    DateTime expireDtTm = password_changed_dt_tm.plusDays(securityPolicy.getPasswordExpiryInDays());
+    return expireDtTm.isBeforeNow();
   }
 
   /**
@@ -257,10 +257,10 @@ public final class User extends Person implements UserDetails {
       return -1L;
     }
 
-    LocalDateTime lastChangedDtTm = (password_changed_dt_tm != null ? password_changed_dt_tm : create_dt_tm);
-    Duration variance = Duration.between(lastChangedDtTm, LocalDateTime.now());
+    DateTime lastChangedDtTm = (password_changed_dt_tm != null ? password_changed_dt_tm : create_dt_tm);
+    Duration variance = new Duration(lastChangedDtTm, DateTime.now());
 
-    return variance.toDays();
+    return variance.getStandardDays();
   }
 
   /**
@@ -268,13 +268,15 @@ public final class User extends Person implements UserDetails {
    * expire.
    */
   @JsonIgnore
-  public LocalDateTime getPasswordExpiryDate() {
+  public Date getPasswordExpiryDate() {
     if (!willPasswordExpire()) {
       return null;
     }
 
-    LocalDateTime lastChangedDtTm = (password_changed_dt_tm != null ? password_changed_dt_tm : create_dt_tm);
-    return lastChangedDtTm.plusDays(securityPolicy.getPasswordExpiryInDays());
+    DateTime lastChangedDtTm = (password_changed_dt_tm != null ? password_changed_dt_tm : create_dt_tm);
+    DateTime expiryDate = lastChangedDtTm.plusDays(securityPolicy.getPasswordExpiryInDays());
+
+    return expiryDate.toDate();
   }
 
   @Override
@@ -320,21 +322,21 @@ public final class User extends Person implements UserDetails {
   }
 
   /**
-   * Gets the {@link LocalDateTime} when this object was created.
+   * Gets the {@link DateTime} when this object was created.
    *
-   * @return The {@link LocalDateTime} of when this object was created.
+   * @return The {@link DateTime} of when this object was created.
    */
-  public LocalDateTime getCreateDateTime() {
+  public DateTime getCreateDateTime() {
     return create_dt_tm;
   }
 
   /**
-   * Sets the {@link LocalDateTime} of when this object was created.
+   * Sets the {@link DateTime} of when this object was created.
    *
    * @param createDtTm
-   *     The {@link LocalDateTime} of when this object was created.
+   *     The {@link DateTime} of when this object was created.
    */
-  public void setCreateDateTime(LocalDateTime createDtTm) {
+  public void setCreateDateTime(DateTime createDtTm) {
     this.create_dt_tm = createDtTm;
   }
 

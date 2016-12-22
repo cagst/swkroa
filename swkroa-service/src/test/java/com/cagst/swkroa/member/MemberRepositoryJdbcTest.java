@@ -9,7 +9,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +20,7 @@ import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -323,7 +323,7 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     Member builder = new Member();
     builder.setPerson(person);
     builder.setOwnerIdent("LNAFNA0");
-    builder.setJoinDate(LocalDate.now());
+    builder.setJoinDate(new DateTime());
     builder.setMemberType(type);
 
     Member member = repo.saveMember(builder, membership, user);
@@ -358,7 +358,7 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
 
     Member builder = new Member();
     builder.setOwnerIdent("LNAFNA1");
-    builder.setJoinDate(LocalDate.now());
+    builder.setJoinDate(new DateTime());
     builder.setMemberType(type);
     builder.setPerson(person);
 

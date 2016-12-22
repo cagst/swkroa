@@ -1,7 +1,8 @@
 package com.cagst.swkroa.model;
 
-import java.time.LocalDate;
 import java.util.Set;
+
+import org.joda.time.DateTime;
 
 /**
  * A model that contains information needed to create a new billing run.
@@ -9,16 +10,16 @@ import java.util.Set;
  * @author Craig Gaskill
  */
 public class BillingRunModel {
-  private LocalDate transactionDt;
+  private DateTime transactionDt;
   private String transactionDesc;
   private String transactionMemo;
   private Set<Long> membershipIds;
 
-  public LocalDate getTransactionDate() {
+  public DateTime getTransactionDate() {
     return transactionDt;
   }
 
-  public void setTransactionDate(LocalDate transactionDate) {
+  public void setTransactionDate(DateTime transactionDate) {
     this.transactionDt = transactionDate;
   }
 

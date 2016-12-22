@@ -2,7 +2,6 @@ package com.cagst.swkroa.member;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +26,7 @@ import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserType;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -213,7 +213,7 @@ public final class MembershipServiceImpl implements MembershipService {
 
   @Override
   @Async
-  public void renewMemberships(LocalDate transactionDate,
+  public void renewMemberships(DateTime transactionDate,
                                String transactionDescription,
                                String transactionMemo,
                                Job job,

@@ -4,8 +4,6 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.Collator;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -15,6 +13,7 @@ import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.transaction.Transaction;
+import org.joda.time.DateTime;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -28,11 +27,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private long membership_id;
   private String membership_name;
   private CodeValue entity_type;
-  private LocalDate next_due_dt;
+  private DateTime next_due_dt;
   private long member_id;
   private String company_name;
   private String owner_ident;
-  private LocalDate join_dt;
+  private DateTime join_dt;
   private MemberType member_type;
   private String name_last;
   private String name_middle;
@@ -40,10 +39,10 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private BigDecimal calculated_dues;
   private BigDecimal incremental_dues;
   private BigDecimal balance;
-  private LocalDateTime last_payment_dt_tm;
+  private DateTime last_payment_dt_tm;
   private long close_reason_id;
   private String close_reason_txt;
-  private LocalDateTime close_dt_tm;
+  private DateTime close_dt_tm;
 
   // meta-data
   private boolean active_ind = true;
@@ -79,11 +78,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.entity_type = entityType;
   }
 
-  public LocalDate getNextDueDate() {
+  public DateTime getNextDueDate() {
     return next_due_dt;
   }
 
-  public void setNextDueDate(final LocalDate dueDate) {
+  public void setNextDueDate(final DateTime dueDate) {
     this.next_due_dt = dueDate;
   }
 
@@ -111,11 +110,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.owner_ident = ownderId;
   }
 
-  public LocalDate getJoinDate() {
+  public DateTime getJoinDate() {
     return join_dt;
   }
 
-  public void setJoinDate(final LocalDate joinDate) {
+  public void setJoinDate(final DateTime joinDate) {
     this.join_dt = joinDate;
   }
 
@@ -184,11 +183,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.balance = balance;
   }
 
-  public LocalDateTime getLastPaymentDate() {
+  public DateTime getLastPaymentDate() {
     return last_payment_dt_tm;
   }
 
-  public void setLastPaymentDate(final LocalDateTime paymentDate) {
+  public void setLastPaymentDate(final DateTime paymentDate) {
     this.last_payment_dt_tm = paymentDate;
   }
 
@@ -216,11 +215,11 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.close_reason_txt = closeReasonText;
   }
 
-  public LocalDateTime getCloseDate() {
+  public DateTime getCloseDate() {
     return close_dt_tm;
   }
 
-  public void setCloseDate(final LocalDateTime closeDate) {
+  public void setCloseDate(final DateTime closeDate) {
     this.close_dt_tm = closeDate;
   }
 

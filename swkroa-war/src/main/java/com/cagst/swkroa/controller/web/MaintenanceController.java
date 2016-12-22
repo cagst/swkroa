@@ -3,8 +3,6 @@ package com.cagst.swkroa.controller.web;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.cagst.swkroa.codevalue.CodeSetType;
@@ -13,19 +11,16 @@ import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.document.DocumentRepository;
 import com.cagst.swkroa.exception.ResourceNotFoundException;
-import com.cagst.swkroa.utils.LocalDateConverter;
 import com.cagst.swkroa.web.util.WebAppUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,8 +38,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RolesAllowed("ROLE_ADMIN")
 public class MaintenanceController {
   private static final Logger LOGGER = LoggerFactory.getLogger(MaintenanceController.class);
-
-  private DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 
   private final DocumentRepository documentRepository;
   private final CodeValueRepository codeValueRepository;
@@ -156,8 +149,8 @@ public class MaintenanceController {
       uploadDocument.setDocumentName(uploadFile.getOriginalFilename());
       uploadDocument.setDocumentFormat(uploadFile.getContentType());
       uploadDocument.setDocumentContents(uploadFile.getBytes());
-      uploadDocument.setBeginEffectiveDate(LocalDateConverter.convert(beginDate));
-      uploadDocument.setEndEffectiveDate(LocalDateConverter.convert(endDate));
+      uploadDocument.setBeginEffectiveDate(new DateTime(beginDate));
+      uploadDocument.setEndEffectiveDate(endDate != null ? new DateTime(endDate) : null);
 
       documentRepository.saveDocument(uploadDocument, WebAppUtils.getUser());
     } catch (IOException ex) {
@@ -190,8 +183,8 @@ public class MaintenanceController {
 
     document.setDocumentDescription(documentDescription);
     document.setDocumentType(documentType);
-    document.setBeginEffectiveDate(LocalDateConverter.convert(beginDate));
-    document.setEndEffectiveDate(LocalDateConverter.convert(endDate));
+    document.setBeginEffectiveDate(new DateTime(beginDate));
+    document.setEndEffectiveDate(endDate != null ? new DateTime(endDate) : null);
 
     documentRepository.saveDocument(document, WebAppUtils.getUser());
 

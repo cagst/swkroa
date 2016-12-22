@@ -6,8 +6,7 @@ import java.sql.SQLException;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
-import com.cagst.swkroa.utils.LocalDateConverter;
-import com.cagst.swkroa.utils.LocalDateTimeConverter;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -68,10 +67,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     membership.setMemberUID(rs.getLong(MEMBER_ID));
     membership.setEntityType(codeValueRepo.getCodeValueByUID(rs.getLong(ENTITY_TYPE_CD)));
     membership.setMemberType(memberTypeRepo.getMemberTypeByUID(rs.getLong(MEMBER_TYPE_ID)));
-    membership.setNextDueDate(LocalDateConverter.convert(rs.getTimestamp(NEXT_DUE_DT)));
+    membership.setNextDueDate(DateTimeConverter.convert(rs.getTimestamp(NEXT_DUE_DT)));
     membership.setCompanyName(rs.getString(COMPANY_NAME));
     membership.setOwnerId(rs.getString(OWNER_IDENT));
-    membership.setJoinDate(LocalDateConverter.convert(rs.getTimestamp(JOIN_DT)));
+    membership.setJoinDate(DateTimeConverter.convert(rs.getTimestamp(JOIN_DT)));
 
     membership.setLastName(rs.getString(NAME_LAST));
     membership.setMiddleName(rs.getString(NAME_MIDDLE));
@@ -86,10 +85,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     } else {
       membership.setBalance(new BigDecimal(0.0));
     }
-    membership.setLastPaymentDate(LocalDateTimeConverter.convert(rs.getTimestamp(LAST_PAYMENT_DT)));
+    membership.setLastPaymentDate(DateTimeConverter.convert(rs.getTimestamp(LAST_PAYMENT_DT)));
     membership.setCloseReasonUID(rs.getLong(CLOSE_REASON_ID));
     membership.setCloseReasonText(rs.getString(CLOSE_REASON_TXT));
-    membership.setCloseDate(LocalDateTimeConverter.convert(rs.getTimestamp(CLOSE_DT_TM)));
+    membership.setCloseDate(DateTimeConverter.convert(rs.getTimestamp(CLOSE_DT_TM)));
     membership.setMembershipUpdateCount(rs.getLong(MEMBERSHIP_UPDT_CNT));
     membership.setActive(rs.getBoolean(ACTIVE_IND));
 
@@ -139,13 +138,13 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
                                           final Membership membership,
                                           final User user) {
 
-    params.addValue(NEXT_DUE_DT, LocalDateConverter.convert(membership.getNextDueDate()));
+    params.addValue(NEXT_DUE_DT, DateTimeConverter.convert(membership.getNextDueDate()));
     params.addValue(ENTITY_TYPE_CD, membership.getEntityType().getCodeValueUID());
     params.addValue(INCREMENTAL_DUES, membership.getIncrementalDues());
     params.addValue(ACTIVE_IND, membership.isActive());
     params.addValue(CLOSE_REASON_ID, membership.getCloseReasonUID() > 0 ? membership.getCloseReasonUID() : null);
     params.addValue(CLOSE_REASON_TXT, membership.getCloseReasonText());
-    params.addValue(CLOSE_DT_TM, LocalDateTimeConverter.convert(membership.getCloseDate()));
+    params.addValue(CLOSE_DT_TM, DateTimeConverter.convert(membership.getCloseDate()));
     params.addValue(UPDT_ID, user.getUserUID());
   }
 }

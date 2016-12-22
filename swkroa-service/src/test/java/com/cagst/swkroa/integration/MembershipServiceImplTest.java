@@ -1,7 +1,5 @@
 package com.cagst.swkroa.integration;
 
-import java.time.LocalDate;
-
 import com.cagst.swkroa.job.Job;
 import com.cagst.swkroa.job.JobDetail;
 import com.cagst.swkroa.job.JobStatus;
@@ -9,6 +7,7 @@ import com.cagst.swkroa.job.JobType;
 import com.cagst.swkroa.member.MembershipService;
 import com.cagst.swkroa.user.User;
 import com.google.common.collect.Lists;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class MembershipServiceImplTest {
   @Test
   @Ignore
   public void testRenewMemberships() {
-    LocalDate transDate = LocalDate.of(2015, 3, 1);
+    DateTime transDate = new DateTime(2015, 3, 1, 0, 0);
     String transDesc = "2015 - 2016 Dues";
     String transMemo = "Due upon receipt";
 

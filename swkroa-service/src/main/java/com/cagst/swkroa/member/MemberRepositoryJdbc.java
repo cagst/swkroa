@@ -3,7 +3,6 @@ package com.cagst.swkroa.member;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,6 +21,7 @@ import com.cagst.swkroa.user.UserType;
 import com.cagst.swkroa.utils.SwkroaStringUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -357,7 +357,7 @@ import org.springframework.util.Assert;
       member.setActive(false);
       member.setCloseReasonUID(closeReason.getCodeValueUID());
       member.setCloseReasonText(closeText);
-      member.setCloseDate(LocalDateTime.now(getClock()));
+      member.setCloseDate(new DateTime());
 
       return member;
     } else {

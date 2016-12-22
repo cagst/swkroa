@@ -1,9 +1,9 @@
 package com.cagst.swkroa.document;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import com.cagst.swkroa.codevalue.CodeValue;
+import org.joda.time.DateTime;
 
 /**
  * Represents a Document stored in the system.
@@ -22,8 +22,8 @@ public final class Document implements Serializable {
   private String document_location;
   private byte[] document_content;
   private String document_desc;
-  private LocalDate beg_eff_dt;
-  private LocalDate end_eff_dt;
+  private DateTime beg_eff_dt;
+  private DateTime end_eff_dt;
 
   // meta-data
   private boolean active_ind = true;
@@ -101,19 +101,19 @@ public final class Document implements Serializable {
     this.document_desc = description;
   }
 
-  public LocalDate getBeginEffectiveDate() {
+  public DateTime getBeginEffectiveDate() {
     return beg_eff_dt;
   }
 
-  public void setBeginEffectiveDate(final LocalDate effectiveDate) {
+  public void setBeginEffectiveDate(final DateTime effectiveDate) {
     this.beg_eff_dt = effectiveDate;
   }
 
-  public LocalDate getEndEffectiveDate() {
+  public DateTime getEndEffectiveDate() {
     return end_eff_dt;
   }
 
-  public void setEndEffectiveDate(final LocalDate effectiveDate) {
+  public void setEndEffectiveDate(final DateTime effectiveDate) {
     this.end_eff_dt = effectiveDate;
   }
 

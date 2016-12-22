@@ -27,7 +27,7 @@
     <tbody th:each="doc : ${documents}">
     <tr>
       <td style="width:125px">
-        <div th:text="${#temporals.format(doc.beginEffectiveDate, 'MMM dd, yyyy')}"></div>
+        <div th:text="${#dates.format(doc.beginEffectiveDate, 'MMM dd, yyyy')}"></div>
       </td>
       <td th:text="${doc.documentType.display}"></td>
       <td th:text="${doc.documentDescription}"></td>

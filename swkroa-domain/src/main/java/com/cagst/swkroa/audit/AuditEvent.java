@@ -1,11 +1,11 @@
 package com.cagst.swkroa.audit;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
 
 /**
  * This class represents an auditable event within the system.
@@ -19,7 +19,7 @@ public class AuditEvent implements Serializable {
   private final String audit_action;
   private final String audit_instigator;
   private final String audit_message;
-  private final LocalDateTime create_dt_tm;
+  private final DateTime create_dt_tm;
 
   /**
    * Primary Constructor used to create an instance of a new <i>AuditEvent</i>.
@@ -57,10 +57,10 @@ public class AuditEvent implements Serializable {
    *     A {@link String} that identifies any additional information to associate with the
    *     audit event. triggered.
    * @param createDtTm
-   *     A {@link LocalDateTime} that represents when the audit event was created.
+   *     A {@link DateTime} that represents when the audit event was created.
    */
   /* package */AuditEvent(final AuditEventType eventType, final String action, final String instigator,
-                          final String message, final LocalDateTime createDtTm) {
+                          final String message, final DateTime createDtTm) {
 
     this.audit_event_type = eventType;
     this.audit_action = action;
@@ -85,7 +85,7 @@ public class AuditEvent implements Serializable {
     return audit_message;
   }
 
-  public LocalDateTime getCreateDateTime() {
+  public DateTime getCreateDateTime() {
     return create_dt_tm;
   }
 

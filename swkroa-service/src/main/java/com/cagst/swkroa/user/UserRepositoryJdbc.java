@@ -3,7 +3,6 @@ package com.cagst.swkroa.user;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +22,7 @@ import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.role.Role;
 import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -242,7 +242,7 @@ import org.springframework.util.Assert;
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    user.setAccountedLockedDate(LocalDateTime.now(getClock()));
+    user.setAccountedLockedDate(new DateTime());
 
     return user;
   }
@@ -351,7 +351,7 @@ import org.springframework.util.Assert;
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    user.setPasswordChangedDate(LocalDateTime.now(getClock()));
+    user.setPasswordChangedDate(new DateTime());
     user.setPasswordTemporary(false);
 
     return user;

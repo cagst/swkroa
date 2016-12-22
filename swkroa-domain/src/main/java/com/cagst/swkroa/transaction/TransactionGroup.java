@@ -2,11 +2,11 @@ package com.cagst.swkroa.transaction;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.auto.value.AutoValue;
+import org.joda.time.DateTime;
 
 /**
  * Contains information about a grouping of transactions.
@@ -21,7 +21,7 @@ import com.google.auto.value.AutoValue;
 })
 public abstract class TransactionGroup implements Serializable {
   @JsonProperty(value = "transactionDate")
-  public abstract LocalDate getTransactionDate();
+  public abstract DateTime getTransactionDate();
 
   @JsonProperty(value = "transactionCount")
   public abstract long getTransactionCount();
@@ -36,7 +36,7 @@ public abstract class TransactionGroup implements Serializable {
   @AutoValue.Builder
   interface Builder {
     @JsonProperty(value = "transactionDate")
-    Builder setTransactionDate(LocalDate transactionDate);
+    Builder setTransactionDate(DateTime transactionDate);
 
     @JsonProperty(value = "transactionCount")
     Builder setTransactionCount(long transactionCount);

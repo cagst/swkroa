@@ -8,7 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import com.cagst.swkroa.codevalue.CodeValue;
@@ -18,6 +17,7 @@ import com.cagst.swkroa.deposit.DepositTransaction;
 import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -181,7 +181,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct number of transactions.", 2, transactions1.size());
 
     Transaction newTrans = new Transaction();
-    newTrans.setTransactionDate(LocalDate.now());
+    newTrans.setTransactionDate(new DateTime());
     newTrans.setTransactionType(TransactionType.INVOICE);
     newTrans.setMembershipUID(membership.getMembershipUID());
 
@@ -205,7 +205,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct number of transactions.", 2, transactions1.size());
 
     Transaction newTrans = new Transaction();
-    newTrans.setTransactionDate(LocalDate.now());
+    newTrans.setTransactionDate(new DateTime());
     newTrans.setTransactionType(TransactionType.INVOICE);
     newTrans.setMembershipUID(membership.getMembershipUID());
 

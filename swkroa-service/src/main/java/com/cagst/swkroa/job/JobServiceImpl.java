@@ -6,7 +6,6 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +33,7 @@ import com.google.common.net.MediaType;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -88,7 +88,7 @@ public class JobServiceImpl implements JobService {
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void processRenewalJob(JobDetail jobDetail,
                                 String transactionDescription,
-                                LocalDate transactionDate,
+                                DateTime transactionDate,
                                 String transactionMemo,
                                 User user) {
     // set JobDetail as started (In-Process)
@@ -126,7 +126,7 @@ public class JobServiceImpl implements JobService {
       document.setDocumentName(transactionDescription);
       document.setDocumentFormat(MediaType.PDF.toString());
       document.setDocumentContents(reportContent);
-      document.setBeginEffectiveDate(LocalDate.now());
+      document.setBeginEffectiveDate(new DateTime());
       document.setDocumentDescription(transactionDescription);
 
       // Save the Renewal Membership Letter document

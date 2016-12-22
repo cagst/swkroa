@@ -2,8 +2,6 @@ package com.cagst.swkroa.member;
 
 import java.io.Serializable;
 import java.text.Collator;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +13,7 @@ import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.utils.SwkroaStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
 
 /**
  * Representation of a Member within the system.
@@ -33,12 +32,12 @@ public final class Member implements Serializable, Comparable<Member> {
   private MemberType member_type;
   private String greeting;
   private String inCareOf;
-  private LocalDate join_dt;
+  private DateTime join_dt;
   private boolean mail_newsletter_ind = true;
   private boolean email_newsletter_ind = false;
   private long close_reason_id;
   private String close_reason_txt;
-  private LocalDateTime close_dt_tm;
+  private DateTime close_dt_tm;
 
   private List<Address> addresses = new ArrayList<>();
   private List<EmailAddress> emailAddresses = new ArrayList<>();
@@ -143,13 +142,13 @@ public final class Member implements Serializable, Comparable<Member> {
   }
 
   /**
-   * @return The {@link LocalDate} the member started (Joined) the association.
+   * @return The {@link DateTime} the member started (Joined) the association.
    */
-  public LocalDate getJoinDate() {
+  public DateTime getJoinDate() {
     return join_dt;
   }
 
-  public void setJoinDate(final LocalDate joinDate) {
+  public void setJoinDate(final DateTime joinDate) {
     this.join_dt = joinDate;
   }
 
@@ -185,11 +184,11 @@ public final class Member implements Serializable, Comparable<Member> {
     this.close_reason_txt = closeReasonText;
   }
 
-  public LocalDateTime getCloseDate() {
+  public DateTime getCloseDate() {
     return close_dt_tm;
   }
 
-  public void setCloseDate(final LocalDateTime closeDate) {
+  public void setCloseDate(final DateTime closeDate) {
     this.close_dt_tm = closeDate;
   }
 

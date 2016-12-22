@@ -3,14 +3,12 @@ package com.cagst.swkroa.member;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 import com.cagst.swkroa.internal.BaseRepositoryJdbc;
 import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -81,12 +79,12 @@ import org.springframework.util.Assert;
   public MemberType getMemberTypeByMeaning(String meaning) throws IncorrectResultSizeDataAccessException {
     LOGGER.info("Calling getMemberTypeByMeaning for [{}].", meaning);
 
-    return getMemberTypeByMeaningAsOf(meaning, LocalDate.now(getClock()));
+    return getMemberTypeByMeaningAsOf(meaning, DateTime.now());
   }
 
   @Override
   @Cacheable(value = "memberTypes")
-  public MemberType getMemberTypeByMeaningAsOf(String meaning, LocalDate effectiveDate)
+  public MemberType getMemberTypeByMeaningAsOf(String meaning, DateTime effectiveDate)
       throws IncorrectResultSizeDataAccessException {
 
     Assert.hasText(meaning, "Argument [meaning] cannot be null or empty");
@@ -96,7 +94,7 @@ import org.springframework.util.Assert;
 
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("member_type_meaning", meaning);
-    params.addValue("eff_dt", Date.from(effectiveDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+    params.addValue("eff_dt", effectiveDate.toDate());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
@@ -122,12 +120,12 @@ import org.springframework.util.Assert;
   public List<MemberType> getActiveMemberTypes() {
     LOGGER.info("Calling getActiveMemberTypes.");
 
-    return getActiveMemberTypesAsOf(LocalDate.now(getClock()));
+    return getActiveMemberTypesAsOf(DateTime.now());
   }
 
   @Override
   @Cacheable(value = "memberTypeList")
-  public List<MemberType> getActiveMemberTypesAsOf(LocalDate effectiveDate) {
+  public List<MemberType> getActiveMemberTypesAsOf(DateTime effectiveDate) {
     Assert.notNull(effectiveDate, "Argument [effectiveDate] cannot be null");
 
     LOGGER.info("Calling getActiveMemberTypesAsOf [{}]", effectiveDate);
@@ -136,7 +134,7 @@ import org.springframework.util.Assert;
 
     return getJdbcTemplate().query(
         stmtLoader.load(GET_MEMBERTYPES_ACTIVE),
-        new MapSqlParameterSource("eff_dt", Date.from(effectiveDate.atStartOfDay(ZoneId.systemDefault()).toInstant())),
+        new MapSqlParameterSource("eff_dt", effectiveDate.toDate()),
         new MemberTypeMapper());
   }
 

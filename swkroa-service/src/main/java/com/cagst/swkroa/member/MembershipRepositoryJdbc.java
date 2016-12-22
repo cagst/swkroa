@@ -3,8 +3,6 @@ package com.cagst.swkroa.member;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.time.Clock;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -13,9 +11,9 @@ import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.internal.BaseRepositoryJdbc;
 import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
-import com.cagst.swkroa.utils.LocalDateConverter;
 import com.cagst.swkroa.utils.SwkroaStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -144,7 +142,7 @@ import org.springframework.util.Assert;
 
     return getJdbcTemplate().query(
         stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS),
-        new MapSqlParameterSource("nextDueDate", LocalDateConverter.convert(LocalDate.now(getClock()).plusDays(days))),
+        new MapSqlParameterSource("nextDueDate", DateTime.now().plusDays(days).toDate()),
         new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
 

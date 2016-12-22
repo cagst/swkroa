@@ -1,9 +1,9 @@
 package com.cagst.swkroa.member;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import com.cagst.swkroa.user.User;
+import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -52,8 +52,8 @@ public interface MemberTypeRepository {
    *
    * @param meaning
    *     A {@link String} that identifies the member type to retrieve.
-   * @param effectiveDate
-   *     A {@link LocalDate} that specifies the effective date to retrieve the member type for.
+   * @param effectiveDateTime
+   *     A {@link DateTime} that specifies the effective time to retrieve the member type for.
    *
    * @return A {@link MemberType}, if one exists, that matches the specified meaning and is in
    * effect as of the time specified; otherwise, a {@code null} is returned.
@@ -63,7 +63,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByMeaningAsOf(String meaning, LocalDate effectiveDate)
+  MemberType getMemberTypeByMeaningAsOf(String meaning, DateTime effectiveDate)
       throws IncorrectResultSizeDataAccessException;
 
   /**
@@ -79,13 +79,13 @@ public interface MemberTypeRepository {
    * Retrieves all active {@link MemberType MemberTypes} in the system that were in effect as of the
    * time specified
    *
-   * @param effectiveDate
-   *     The {@link LocalDate} to retrieve member types for.
+   * @param effectiveDateTime
+   *     The {@link DateTime} to retrieve member types for.
    *
    * @return A {@link List} of active {@link MemberType MemberTypes} in the system that were in
    * effect as of the time specified.
    */
-  List<MemberType> getActiveMemberTypesAsOf(LocalDate effectiveDate);
+  List<MemberType> getActiveMemberTypesAsOf(DateTime effectiveDate);
 
   /**
    * Retrieves all active {@link MemberType MemberTypes} in the system that correspond to the specified MemberType.

@@ -9,7 +9,7 @@ import java.sql.Types;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
-import com.cagst.swkroa.utils.LocalDateConverter;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,8 +71,8 @@ import org.springframework.jdbc.core.support.SqlLobValue;
     document.setDocumentFormat(rs.getString(DOCUMENT_FORMAT));
     document.setDocumentLocation(rs.getString(DOCUMENT_LOCATION));
     document.setDocumentDescription(rs.getString(DOCUMENT_DESCRIPTION));
-    document.setBeginEffectiveDate(LocalDateConverter.convert(rs.getTimestamp(BEG_EFF_DT)));
-    document.setEndEffectiveDate(LocalDateConverter.convert(rs.getTimestamp(END_EFF_DT)));
+    document.setBeginEffectiveDate(DateTimeConverter.convert(rs.getTimestamp(BEG_EFF_DT)));
+    document.setEndEffectiveDate(DateTimeConverter.convert(rs.getTimestamp(END_EFF_DT)));
 
     if (retrieveContent) {
       Blob content = rs.getBlob(DOCUMENT_CONTENT);
@@ -114,8 +114,8 @@ import org.springframework.jdbc.core.support.SqlLobValue;
     params.addValue(DOCUMENT_FORMAT,document.getDocumentFormat());
     params.addValue(DOCUMENT_LOCATION, document.getDocumentLocation());
     params.addValue(DOCUMENT_CONTENT, document.getDocumentContents() != null ? new SqlLobValue(document.getDocumentContents()) : null, Types.BLOB);
-    params.addValue(BEG_EFF_DT, LocalDateConverter.convert(document.getBeginEffectiveDate()));
-    params.addValue(END_EFF_DT, LocalDateConverter.convert(document.getEndEffectiveDate()));
+    params.addValue(BEG_EFF_DT, document.getBeginEffectiveDate().toDate());
+    params.addValue(END_EFF_DT, document.getEndEffectiveDate() != null ? document.getEndEffectiveDate().toDate() : null);
 
     params.addValue(ACTIVE_IND, document.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
@@ -138,8 +138,8 @@ import org.springframework.jdbc.core.support.SqlLobValue;
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(DOCUMENT_DESCRIPTION, document.getDocumentDescription());
     params.addValue(DOCUMENT_TYPE_CD, document.getDocumentType().getCodeValueUID());
-    params.addValue(BEG_EFF_DT, LocalDateConverter.convert(document.getBeginEffectiveDate()));
-    params.addValue(END_EFF_DT, LocalDateConverter.convert(document.getEndEffectiveDate()));
+    params.addValue(BEG_EFF_DT, document.getBeginEffectiveDate().toDate());
+    params.addValue(END_EFF_DT, document.getEndEffectiveDate() != null ? document.getEndEffectiveDate().toDate() : null);
     params.addValue(ACTIVE_IND, document.isActive());
     params.addValue(UPDT_ID, user.getUserUID());
 

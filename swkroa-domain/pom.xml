@@ -21,6 +21,12 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
 
+    <!-- Joda Time Dependencies -->
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+    </dependency>
+
     <!-- Spring Security Dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -43,6 +49,10 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-joda</artifactId>
     </dependency>
 
     <!-- Google JSR-305 Annotations -->

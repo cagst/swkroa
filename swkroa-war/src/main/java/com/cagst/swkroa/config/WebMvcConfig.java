@@ -1,14 +1,5 @@
 package com.cagst.swkroa.config;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.ser.SwkroaLocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.SwkroaLocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.SwkroaLocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.SwkroaLocalDateTimeSerializer;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -17,16 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
@@ -76,21 +63,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Application
     return messageSource;
   }
 
-  @Override
-  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-    Jackson2ObjectMapperBuilder jacksonBuilder = new Jackson2ObjectMapperBuilder();
-
-    JavaTimeModule javaTimeModule = new JavaTimeModule();
-    javaTimeModule.addSerializer(LocalDate.class, SwkroaLocalDateSerializer.INSTANCE);
-    javaTimeModule.addDeserializer(LocalDate.class, SwkroaLocalDateDeserializer.INSTANCE);
-    javaTimeModule.addSerializer(LocalDateTime.class, SwkroaLocalDateTimeSerializer.INSTANCE);
-    javaTimeModule.addDeserializer(LocalDateTime.class, SwkroaLocalDateTimeDeserializer.INSTANCE);
-
-    jacksonBuilder.modules(javaTimeModule);
-
-    converters.add(new MappingJackson2HttpMessageConverter(jacksonBuilder.build()));
-  }
-
   @Bean(name = "multipartResolver")
   public MultipartResolver getMultipartResolver() {
     return new CommonsMultipartResolver();
@@ -111,7 +83,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Application
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
     templateEngine.setTemplateResolver(getTemplateResolver());
     templateEngine.addDialect(new SpringSecurityDialect());
-    templateEngine.addDialect(new Java8TimeDialect());
     templateEngine.setMessageSource(getMessageSource());
 
     return templateEngine;

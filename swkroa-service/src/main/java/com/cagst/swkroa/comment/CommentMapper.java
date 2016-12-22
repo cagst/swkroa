@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.cagst.swkroa.user.User;
-import com.cagst.swkroa.utils.LocalDateConverter;
+import org.joda.time.DateTime;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -34,7 +34,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     comment.setCommentUID(rs.getLong(COMMENT_ID));
     comment.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
     comment.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    comment.setCommentDate(LocalDateConverter.convert(rs.getTimestamp(COMMENT_DT)));
+    comment.setCommentDate(new DateTime(rs.getTimestamp(COMMENT_DT)));
     comment.setCommentText(rs.getString(COMMENT_TXT));
 
     // meta-data
@@ -58,7 +58,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(PARENT_ENTITY_NAME, comment.getParentEntityName());
     params.addValue(PARENT_ENTITY_ID, comment.getParentEntityUID());
-    params.addValue(COMMENT_DT, LocalDateConverter.convert(comment.getCommentDate()));
+    params.addValue(COMMENT_DT, comment.getCommentDate().toDate());
     params.addValue(COMMENT_TXT, comment.getCommentText());
     params.addValue(ACTIVE_IND, comment.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
@@ -79,7 +79,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
    */
   public static MapSqlParameterSource mapUpdateStatement(final Comment comment, final User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue(COMMENT_DT, LocalDateConverter.convert(comment.getCommentDate()));
+    params.addValue(COMMENT_DT, comment.getCommentDate().toDate());
     params.addValue(COMMENT_TXT, comment.getCommentText());
     params.addValue(ACTIVE_IND, comment.isActive());
     params.addValue(UPDT_ID, user.getUserUID());

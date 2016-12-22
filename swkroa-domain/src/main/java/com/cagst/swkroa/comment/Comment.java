@@ -1,11 +1,11 @@
 package com.cagst.swkroa.comment;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
 
 /**
  * Represents a Comment within the system.
@@ -20,7 +20,7 @@ public final class Comment implements Serializable, Comparable<Comment> {
   private long comment_id;
   private long parent_entity_id;
   private String parent_entity_name;
-  private LocalDate comment_dt;
+  private DateTime comment_dt;
   private String comment_txt;
 
   // meta-data
@@ -51,11 +51,11 @@ public final class Comment implements Serializable, Comparable<Comment> {
     this.parent_entity_name = name;
   }
 
-  public LocalDate getCommentDate() {
+  public DateTime getCommentDate() {
     return comment_dt;
   }
 
-  public void setCommentDate(final LocalDate dt) {
+  public void setCommentDate(final DateTime dt) {
     this.comment_dt = dt;
   }
 

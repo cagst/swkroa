@@ -2,13 +2,13 @@ package com.cagst.swkroa.deposit;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
 
 /**
  * Represents a Deposit within the system.
@@ -17,7 +17,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public final class Deposit implements Serializable {
   private long deposit_id;
-  private LocalDate deposit_dt;
+  private DateTime deposit_dt;
   private String deposit_ref;
   private BigDecimal deposit_amount;
 
@@ -35,11 +35,11 @@ public final class Deposit implements Serializable {
     this.deposit_id = uid;
   }
 
-  public LocalDate getDepositDate() {
+  public DateTime getDepositDate() {
     return deposit_dt;
   }
 
-  public void setDepositDate(final LocalDate dt) {
+  public void setDepositDate(final DateTime dt) {
     this.deposit_dt = dt;
   }
 

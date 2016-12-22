@@ -6,13 +6,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
 import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,7 +91,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test(expected = IncorrectResultSizeDataAccessException.class)
   public void testGetMemberTypeByMeaningAsOf_FoundTooMany() {
-    LocalDate dt = LocalDate.of(2005, 4, 19);
+    DateTime dt = new DateTime(2005, 4, 19, 13, 15);
 
     repo.getMemberTypeByMeaningAsOf(MemberType.FAMILY_MEMBER, dt);
   }
@@ -101,7 +101,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetMemberTypeByMeaningAsOf_FoundOne() {
-    LocalDate dt = LocalDate.of(2005, 4, 19);
+    DateTime dt = new DateTime(2005, 4, 19, 13, 15);
 
     MemberType type = repo.getMemberTypeByMeaningAsOf(MemberType.ASSOCIATE, dt);
     assertNotNull("Ensure we found a MemberType.", type);
@@ -125,7 +125,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetActiveMemberTypesAsOf() {
-    LocalDate dt = LocalDate.of(2012, 4, 19);
+    DateTime dt = new DateTime(2012, 4, 19, 13, 15, 0);
 
     Collection<MemberType> types = repo.getActiveMemberTypesAsOf(dt);
 
@@ -153,7 +153,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testSaveMemberType_Insert() {
-    LocalDate now = LocalDate.now(repo.getClock());
+    DateTime now = new DateTime();
 
     MemberType type = new MemberType();
     type.setMemberTypeDisplay("New Member Type");

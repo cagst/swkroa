@@ -54,12 +54,12 @@
             zzz Type
           </td>
           <td th:text="${document.getDocumentName()}">zzz Name</td>
-          <td th:text="${#temporals.format(document.getBeginEffectiveDate(), 'MMM d, yyyy')}"
-              th:name="${#temporals.format(document.getBeginEffectiveDate(), 'MM/dd/yyyy')}">
+          <td th:text="${#dates.format(document.getBeginEffectiveDate(), 'MMM d, yyyy')}"
+              th:name="${#dates.format(document.getBeginEffectiveDate(), 'MM/dd/yyyy')}">
             zzz Begin
           </td>
-          <td th:text="${document.getEndEffectiveDate()} ? ${#temporals.format(document.getEndEffectiveDate(), 'MMM d, yyyy')}"
-              th:name="${document.getEndEffectiveDate()} ? ${#temporals.format(document.getEndEffectiveDate(), 'MM/dd/yyyy')}">
+          <td th:text="${document.getEndEffectiveDate()} ? ${#dates.format(document.getEndEffectiveDate(), 'MMM d, yyyy')}"
+              th:name="${document.getEndEffectiveDate()} ? ${#dates.format(document.getEndEffectiveDate(), 'MM/dd/yyyy')}">
             zzz End
           </td>
           <td>
