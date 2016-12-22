@@ -4,74 +4,109 @@
  * Author: Craig Gaskill
  */
 
-swkroaApp.run(function(editableOptions) {
-  editableOptions.theme = 'bs3';
-});
+(function(window, angular) {
+  'use strict';
 
-swkroaApp.controller('codesetController', ['$scope', 'codesetService', function($scope, codesetService) {
-  codesetService.getCodeSets().then(function(response) {
-    if (response.status == 200) {
-      $scope.codesets = response.data;
-    }
+  angular.module('swkroaApp').run(function(editableOptions) {
+    editableOptions.theme = 'bs3';
   });
 
-  $scope.getCodeValues = function(codeSet) {
-    $scope.selectedCodeSet = codeSet;
+  angular.module('swkroaApp').controller('CodeSetController', CodeSetController);
 
-    codesetService.getCodeValuesForCodeSet(codeSet.meaning).then(function(response) {
-      if (response.status == 200) {
-        $scope.codevalues = response.data;
-      }
-    });
-  };
+  CodeSetController.$inject = ['CodeSetService'];
 
-  $scope.selectedCodeValue = function(codevalue) {
-    $scope.codevalue = codevalue;
-  };
+  function CodeSetController(codeSetService) {
+    var vm = this;
 
-  $scope.removeCodeValue = function() {
-    $scope.codevalue.active = false;
-    $('#confirmDeletion').modal('hide');
+    vm.codeSets = null;
+    vm.selectedCodeSet = null;
+    vm.codeValues = null;
+    vm.selectedCodeValue = null;
 
-    codesetService.saveCodeValue($scope.selectedCodeSet.meaning, $scope.codevalue).then(function(response) {
-      if (response.status == 200) {
-        $scope.codevalue = data;
-      } else {
-        // we failed to save (remove) the codevalue
-        // set it back to active
-        $scope.codevalue.active = true;
-      }
-    });
-  };
+    /********************************************
+     * Define binding methods
+     ********************************************/
 
-  $scope.validate = function(display) {
-    if (display.length == 0) {
-      return "Display is required!";
-    } else {
-      return true;
+    vm.getCodeValues = getCodeValues;
+    vm.selectedCodeValue = selectedCodeValue;
+    vm.removeCodeValue = removeCodeValue;
+    vm.validate = validate;
+    vm.saveCodeValue = saveCodeValue;
+    vm.addCodeValue = addCodeValue;
+
+    activate();
+
+    /********************************************
+     * Implement Methods
+     ********************************************/
+
+    function getCodeValues(codeSet) {
+      vm.selectedCodeSet = codeSet;
+
+      codeSetService.getCodeValuesForCodeSet(codeSet.meaning).then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.codeValues = response.data;
+        }
+      });
     }
-  };
 
-  $scope.saveCodeValue = function(codeValue) {
-    codesetService.saveCodeValue($scope.selectedCodeSet.meaning, codeValue).then(function(response) {
-      if (response.status == 201) {
-        codeValue = response.data;
-      } else if (response.status == 200) {
-        codeValue = response.data;
+    function selectedCodeValue(codeValue) {
+      vm.selectedCodeValue = codeValue;
+    }
+
+    function removeCodeValue() {
+      vm.selectedCodeValue.active = false;
+      $('#confirmDeletion').modal('hide');
+
+      codeSetService.saveCodeValue(vm.selectedCodeSet.meaning, vm.selectedCodeValue).then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.selectedCodeValue = response.data;
+        } else {
+          // we failed to save (remove) the codevalue
+          // set it back to active
+          vm.selectedCodeValue.active = true;
+        }
+      });
+    }
+
+    function validate(display) {
+      if (display.length == 0) {
+        return "Display is required!";
+      } else {
+        return true;
       }
-    });
-  };
+    }
 
-  $scope.addCodeValue = function() {
-    $scope.inserted = {
-      codeSetUID: $scope.selectedCodeSet.codeSetUID,
-      codeValueUID: 0,
-      display: '',
-      meaning: null,
-      active: true,
-      codeValueUpdateCount: 0
-    };
+    function saveCodeValue(codeValue) {
+      codeSetService.saveCodeValue(vm.selectedCodeSet.meaning, codeValue).then(function(response) {
+        if (response.status == 201) {
+          vm.selectedCodeValue = response.data;
+        } else if (response.status == 200) {
+          vm.selectedCodeValue = response.data;
+        }
+      });
+    }
 
-    $scope.codevalues.push($scope.inserted);
-  };
-}]);
+    function addCodeValue() {
+      vm.inserted = {
+        codeSetUID: vm.selectedCodeSet.codeSetUID,
+        codeValueUID: 0,
+        display: '',
+        meaning: null,
+        active: true,
+        codeValueUpdateCount: 0
+      };
+
+      vm.codeValues.push(vm.inserted);
+    }
+
+    function activate() {
+      codeSetService.getCodeSets().then(function(reponse) {
+        if (responseSuccessful(reponse)) {
+          vm.codeSets = reponse.data;
+        }
+      });
+    }
+  }
+
+})(window, window.angular);

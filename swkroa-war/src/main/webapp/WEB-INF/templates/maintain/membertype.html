@@ -69,7 +69,7 @@
                     <div data-ng-class="{'form-row-spacer': !editform.$visible}">
                       <label for="meaning" class="control-label"
                              data-ng-class="{'label-required': editform.$visible}"
-                             th:text="#{com.cagst.swkroa.mean}">zzz Meaning</label>
+                             th:text="#{common.mean}">zzz Meaning</label>
                     </div>
                     <div>
                       <span id="meaning"
@@ -115,7 +115,7 @@
                     <div class="row-spacer" data-ng-show="editform.$visible">
                       <button type="submit" class="btn btn-success btn-xs" data-ng-disabled="editform.$waiting">
                         <i class="fa fa-save"></i>
-                        <span th:text="#{com.cagst.swkroa.save}">zzz Save</span>
+                        <span th:text="#{common.save}">zzz Save</span>
                       </button>
                       <a href="#" class="btn btn-cancel btn-xs" data-ng-disabled="editform.$waiting"
                          data-ng-click="editform.$cancel()">

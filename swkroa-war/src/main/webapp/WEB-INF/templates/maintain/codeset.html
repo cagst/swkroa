@@ -5,82 +5,78 @@
 <head>
   <th:block th:replace="fragments/common :: head" />
 
-  <script type="text/javascript" th:src="@{/static/js/maintain/contact.service.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/maintain/codeset.js}"></script>
 </head>
 
-<body>
+<body data-ng-app="swkroaApp">
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="codesetController">
+<div id="page-content" data-ng-controller="CodeSetController as ctrl">
   <div class="page-header">
-    <h3 th:text="#{com.cagst.swkroa.maintain.codeset.title}">zzz Maintain Code Sets</h3>
+    <h3 th:text="#{maintain.codeset.title}">zzz Maintain Code Sets</h3>
   </div>
   <div class="container container-outline">
     <div class="row container-split">
       <div class="col-xs-5 pull-left clear-left clear-right">
         <div class="split-header divider-right">
           <div class="split-header-content">
-            <label class="control-label" th:text="#{com.cagst.swkroa.maintain.codeset.codesets}">
-              zzz Code Sets
-            </label>
+            <label class="control-label" th:text="#{maintain.codeset.codesets}">zzz Code Sets</label>
           </div>
         </div>
         <table class="table table-bordered table-hover">
-          <tr data-ng-repeat="codeset in codesets"
-              data-ng-click="getCodeValues(codeset)"
-              data-ng-class="{active: codeset.codeSetUID == selectedCodeSet.codeSetUID}">
-            <td data-ng-bind="codeset.display"></td>
+          <tr data-ng-repeat="codeSet in ctrl.codeSets"
+              data-ng-click="ctrl.getCodeValues(codeSet)"
+              data-ng-class="{active: codeSet.codeSetUID == ctrl.selectedCodeSet.codeSetUID}">
+            <td data-ng-bind="codeSet.display"></td>
           </tr>
         </table>
       </div>
       <div class="col-xs-7 pull-right clear-left clear-right">
         <div class="split-header divider-bottom">
           <div class="split-header-content">
-            <label class="control-label" th:text="#{com.cagst.swkroa.maintain.codeset.codevalues}">
-              zzz Coded Values
-            </label>
+            <label class="control-label" th:text="#{maintain.codeset.codevalues}">zzz Coded Values</label>
           </div>
         </div>
         <div class="list-group">
-          <div data-ng-show="!codevalues.length">
+          <div data-ng-show="!ctrl.codeValues.length">
             <em>
-              <label class="panel-body text-muted text-center" th:text="#{com.cagst.swkroa.maintain.notselected}">
+              <label class="panel-body text-muted text-center" th:text="#{maintain.notselected}">
                 zzz No records found!
               </label>
             </em>
           </div>
-          <div data-ng-show="codevalues.length">
+          <div data-ng-show="ctrl.codeValues.length">
             <table class="table table-bordered table-hover table-inner">
               <thead>
               <tr>
-                <th th:text="#{com.cagst.swkroa.disp}" style="width:36%">zzz Display</th>
-                <th th:text="#{com.cagst.swkroa.mean}" style="width:36%">zzz Meaning</th>
+                <th th:text="#{common.disp}" style="width:36%">zzz Display</th>
+                <th th:text="#{common.mean}" style="width:36%">zzz Meaning</th>
                 <th style="width: 24%">
-                  <a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="addCodeValue()">
+                  <a href="#" class="btn btn-success btn-xs hover-reveal pull-right" data-ng-click="ctrl.addCodeValue()">
                     <i class="fa fa-plus"></i>
-                    <span th:text="#{com.cagst.swkroa.maintain.codeset.codevalue.add}">zzz Add</span>
+                    <span th:text="#{maintain.codeset.codevalue.add}">zzz Add</span>
                   </a>
                 </th>
               </tr>
               </thead>
               <tbody>
               <tr class="hover-buttons"
-                  data-ng-repeat="codevalue in codevalues"
-                  data-ng-show="codevalue.active">
+                  data-ng-repeat="codeValue in ctrl.codeValues"
+                  data-ng-show="codeValue.active">
                 <td>
-                  <span data-editable-text="codevalue.display"
+                  <span data-editable-text="codeValue.display"
                         data-e-name="display"
                         data-e-form="rowform"
-                        onbeforesave="validate($data)">
-                    {{codevalue.display}}
+                        onbeforesave="ctrl.validate($data)"
+                        data-ng-bind="codeValue.display">
                   </span>
                 </td>
                 <td>
-                  <span data-editable-text="codevalue.meaning"
+                  <span data-editable-text="codeValue.meaning"
                         data-e-name="meaning"
-                        data-e-form="rowform">
-                    {{codevalue.meaning}}
+                        data-e-form="rowform"
+                        data-ng-bind="codeValue.meaning">
                   </span>
                 </td>
                 <td>
@@ -88,12 +84,12 @@
                         class="form-buttons form-inline"
                         data-editable-form
                         data-ng-show="rowform.$visible"
-                        data-shown="inserted == codevalue"
-                        onaftersave="saveCodeValue(codevalue)">
+                        data-shown="ctrl.inserted == codeValue"
+                        onaftersave="ctrl.saveCodeValue(codeValue)">
                     <div class="form-group btn-group pull-right">
                       <button type="submit" class="btn btn-success btn-xs" data-ng-disabled="rowform.$waiting">
                         <i class="fa fa-save"></i>
-                        <span th:text="#{com.cagst.swkroa.save}">zzz Save</span>
+                        <span th:text="#{common.save}">zzz Save</span>
                       </button>
                       <a href="#" class="btn btn-xs btn-cancel" data-ng-disabled="rowform.$waiting"
                          data-ng-click="rowform.$cancel()">
@@ -108,7 +104,7 @@
                       <span th:text="#{common.edit}">z_Edit</span>
                     </button>
                     <button type="button" class="btn btn-danger btn-xs"
-                            data-ng-click="selectedCodeValue(codevalue)"
+                            data-ng-click="ctrl.selectedCodeValue(codeValue)"
                             data-toggle="modal" data-target="#confirmDeletion">
                       <i class="fa fa-trash-o"></i>
                       <span th:text="#{common.delete}">z_Delete</span>
@@ -128,18 +124,22 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" th:text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.title}">
-            zzz Please confirm
-          </h4>
+          <h4 class="modal-title" th:text="#{maintain.codeset.codevalue.delete.title}">zzz Please confirm</h4>
         </div>
         <div class="modal-body">
-          <span th:text="#{com.cagst.swkroa.maintain.codeset.codevalue.delete.message}">
-            zzz Delete this?
-          </span>
+          <span th:text="#{maintain.codeset.codevalue.delete.message}">zzz Delete this?</span>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-ng-click="removeCodeValue()">Delete</button>
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Keep</button>
+          <button type="button" class="btn btn-danger"
+                  th:text="#{common.delete}"
+                  data-ng-click="ctrl.removeCodeValue()">
+            z_Delete
+          </button>
+          <button type="button" class="btn btn-primary"
+                  th:text="#{common.keep}"
+                  data-dismiss="modal">
+            z_Keep
+          </button>
         </div>
       </div>
     </div>
