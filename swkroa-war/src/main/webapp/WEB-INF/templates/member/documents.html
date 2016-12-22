@@ -10,7 +10,7 @@
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="documentController" data-ng-cloak>
+<div id="page-content">
   <input id="membershipUID" type="hidden" th:value="${membershipUID}"/>
 
   <h1 th:text="#{member.documents.page}">zzz Documents</h1>
@@ -24,19 +24,18 @@
       <th style="width:75px"></th>
     </tr>
     </thead>
-    <tbody data-ng-repeat="doc in documents | orderBy: 'beginEffectiveDate': true"
-           data-ng-show="doc.active">
+    <tbody th:each="doc : ${documents}">
     <tr>
       <td style="width:125px">
-        <div>{{doc.beginEffectiveDate | date:'mediumDate'}}</div>
+        <div th:text="${#temporals.format(doc.beginEffectiveDate, 'MMM dd, yyyy')}"></div>
       </td>
-      <td>{{doc.documentType.display}}</td>
-      <td>{{doc.documentDescription}}</td>
+      <td th:text="${doc.documentType.display}"></td>
+      <td th:text="${doc.documentDescription}"></td>
       <td style="width:75px">
         <div class="pull-right">
           <a class="btn btn-default btn-xs"
              target="_blank"
-             data-ng-href="documents/{{doc.documentUID}}">
+             th:href="@{'/member/documents/' + ${doc.documentUID}}">
             <i class="fa fa-binoculars"></i>
             <span th:text="#{member.documents.view}">zzz View</span>
           </a>
@@ -48,6 +47,5 @@
 
 </div>
 
-<script type="text/javascript" th:src="@{/static/js/member/documents.js}"></script>
 </body>
 </html>

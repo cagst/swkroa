@@ -8,7 +8,6 @@ import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.document.DocumentRepository;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
-import com.cagst.swkroa.member.MemberType;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
@@ -90,7 +89,10 @@ public class MemberController {
     if (user != null) {
       Optional<Member> checkMember = memberRepository.getMemberByPersonUID(user.getPersonUID());
       if (checkMember.isPresent()) {
-        mav.addObject("membershipUID", checkMember.get().getMembershipUID());
+        long membershipUID = checkMember.get().getMembershipUID();
+
+        mav.addObject("membershipUID", membershipUID);
+        mav.addObject("documents", documentRepository.getDocumentsForMembership(membershipUID));
       }
     }
 

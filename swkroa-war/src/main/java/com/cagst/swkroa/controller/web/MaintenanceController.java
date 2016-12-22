@@ -63,10 +63,10 @@ public class MaintenanceController {
     this.codeValueRepository = codeValueRepository;
   }
 
-  @InitBinder
-  protected void initBinder(WebDataBinder binder) {
-    binder.registerCustomEditor(Date.class, new CustomDateEditor(DATE_FORMAT, true));
-  }
+//  @InitBinder
+//  protected void initBinder(WebDataBinder binder) {
+//    binder.registerCustomEditor(Date.class, new CustomDateEditor(DATE_FORMAT, true));
+//  }
 
   /**
    * Handles and retrieves the CodeSet page.

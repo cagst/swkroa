@@ -126,7 +126,7 @@ public final class MembershipServiceImpl implements MembershipService {
     }
 
     if (loadingPolicy.containsAttribute(LOAD_DOCUMENTS)) {
-      List<Document> documents = documentRepository.getDocumentsForMembership(membership);
+      List<Document> documents = documentRepository.getDocumentsForMembership(membership.getMembershipUID());
       membership.setDocuments(documents);
     }
 

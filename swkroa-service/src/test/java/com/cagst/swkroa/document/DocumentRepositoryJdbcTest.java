@@ -14,7 +14,6 @@ import java.util.List;
 
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
-import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.junit.Before;
@@ -78,10 +77,7 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetDocumentsForMembership() {
-    Membership membership = new Membership();
-    membership.setMembershipUID(1L);
-
-    List<Document> documents = repo.getDocumentsForMembership(membership);
+    List<Document> documents = repo.getDocumentsForMembership(1L);
     assertNotNull("Ensure we have a valid collection", documents);
     assertFalse("Ensure the collection is not empty", documents.isEmpty());
     assertEquals("Ensure we found the correct number of documents", 3, documents.size());
@@ -118,10 +114,7 @@ public class DocumentRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure it has the proper update count", 0, document.getDocumentUpdateCount());
     assertNull("Ensure the location was not set", document.getDocumentLocation());
 
-    Membership membership = new Membership();
-    membership.setMembershipUID(1L);
-
-    List<Document> documents = repo.getDocumentsForMembership(membership);
+    List<Document> documents = repo.getDocumentsForMembership(1L);
     assertNotNull("Ensure we have a valid collection", documents);
     assertFalse("Ensure the collection is not empty", documents.isEmpty());
     assertEquals("Ensure we found the correct number of documents", 4, documents.size());

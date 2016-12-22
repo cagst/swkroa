@@ -8,7 +8,6 @@ import java.util.List;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.internal.BaseRepositoryJdbc;
 import com.cagst.swkroa.internal.StatementLoader;
-import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,12 +77,10 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Document> getDocumentsForMembership(Membership membership) {
-    Assert.notNull(membership, "Argument [membership] cannot be null");
+  public List<Document> getDocumentsForMembership(long membershipUID) {
+    LOGGER.info("Calling getDocumentsForMembership [{}]", membershipUID);
 
-    LOGGER.info("Calling getDocumentsForMembership [{}]", membership.getMemberUID());
-
-    return getDocumentsForEntity(Document.MEMBERSHIP, membership.getMembershipUID());
+    return getDocumentsForEntity(Document.MEMBERSHIP, membershipUID);
   }
 
   @Override
