@@ -7,13 +7,13 @@
   <script type="text/javascript" th:src="@{/static/js/maintain/membertype.js}"></script>
 </head>
 
-<body>
+<body data-ng-app="swkroaApp">
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="membertypeController">
+<div id="page-content" data-ng-controller="MemberTypeController as ctrl">
   <div class="page-header">
-    <h3 th:text="#{com.cagst.swkroa.maintain.membertype.title}">zzz Maintain Member Types</h3>
+    <h3 th:text="#{maintain.membertype.title}">zzz Maintain Member Types</h3>
   </div>
 
   <div class="container container-outline clear-left">
@@ -21,9 +21,9 @@
       <div class="col-xs-5">
         <div class="list-group constrain-view divider-right">
           <div class="list-group-item alt-list-group-item sel-list-group-item"
-               data-ng-repeat="type in types"
-               data-ng-class="{active: type.memberTypeUID === selected.memberTypeUID}"
-               data-ng-click="getType(type)">
+               data-ng-repeat="type in ctrl.types"
+               data-ng-class="{active: type.memberTypeUID === ctrl.selected.memberTypeUID}"
+               data-ng-click="ctrl.getType(type)">
             <div>
               <span data-ng-bind="type.memberTypeDisplay"></span>
             </div>
@@ -32,23 +32,22 @@
       </div>
 
       <div class="col-xs-7">
-        <div data-ng-show="!selected">
+        <div data-ng-show="!ctrl.selected">
           <em>
-            <label class="panel-body text-muted text-center"
-                   th:text="#{com.cagst.swkroa.maintain.membertype.notselected}">
+            <label class="panel-body text-muted text-center" th:text="#{maintain.membertype.notselected}">
               zzz No record selected!
             </label>
           </em>
         </div>
-        <div data-ng-show="selected" class="spacer-top">
+        <div data-ng-show="ctrl.selected" class="spacer-top">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <span class="panel-title" th:text="#{com.cagst.swkroa.details}">zzz Details</span>
+              <span class="panel-title" th:text="#{common.details}">zzz Details</span>
             </div>
             <div class="panel-body">
               <form name="editform"
                     data-editable-form
-                    onaftersave="saveMemberType(selected)">
+                    onaftersave="ctrl.saveMemberType(ctrl.selected)">
                 <div class="row">
                   <div class="col-xs-6 form-group">
                     <div>
@@ -60,10 +59,10 @@
                     </div>
                     <div>
                       <span id="description"
-                            data-editable-text="selected.memberTypeDisplay"
+                            data-editable-text="ctrl.selected.memberTypeDisplay"
                             data-e-name="display"
-                            data-e-form="editform">
-                        {{selected.memberTypeDisplay}}
+                            data-e-form="editform"
+                            data-ng-bind="ctrl.selected.memberTypeDisplay">
                       </span>
                     </div>
                     <div data-ng-class="{'form-row-spacer': !editform.$visible}">
@@ -73,42 +72,42 @@
                     </div>
                     <div>
                       <span id="meaning"
-                            data-editable-text="selected.memberTypeMeaning"
+                            data-editable-text="ctrl.selected.memberTypeMeaning"
                             data-e-name="meaning"
-                            data-e-form="editform">
-                        {{selected.memberTypeMeaning}}
+                            data-e-form="editform"
+                            data-ng-bind="ctrl.selected.memberTypeMeaning">
                       </span>
                     </div>
                   </div>
                   <div class="col-xs-6 form-group">
                     <div class="row-spacer">
                       <span id="primary"
-                            data-editable-checkbox="selected.primary"
+                            data-editable-checkbox="ctrl.selected.primary"
                             data-e-name="primary"
                             data-e-form="editform"
-                            th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.primary}">
-                        <b th:text="#{com.cagst.swkroa.maintain.membertype.primary}">zzz Primary</b>
-                        {{selected.primary && "Yes" || "No"}}
+                            th:attr="e-title=#{maintain.membertype.primary}">
+                        <b th:text="#{maintain.membertype.primary}">zzz Primary</b>
+                        {{ctrl.selected.primary && "Yes" || "No"}}
                       </span>
                     </div>
                     <div class="row-spacer">
                       <span id="allowSpouse"
-                            data-editable-checkbox="selected.allowSpouse"
+                            data-editable-checkbox="ctrl.selected.allowSpouse"
                             data-e-name="allowSpouse"
                             data-e-form="editform"
-                            th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.spouse}">
-                        <b th:text="#{com.cagst.swkroa.maintain.membertype.spouse}">zzz Spouse</b>
-                        {{selected.allowSpouse && "Yes" || "No"}}
+                            th:attr="e-title=#{maintain.membertype.spouse}">
+                        <b th:text="#{maintain.membertype.spouse}">zzz Spouse</b>
+                        {{ctrl.selected.allowSpouse && "Yes" || "No"}}
                       </span>
                     </div>
                     <div class="row-spacer">
                       <span id="allowMember"
-                            data-editable-checkbox="selected.allowMember"
+                            data-editable-checkbox="ctrl.selected.allowMember"
                             data-e-name="allowMember"
                             data-e-form="editform"
-                            th:attr="e-title=#{com.cagst.swkroa.maintain.membertype.family}">
-                        <b th:text="#{com.cagst.swkroa.maintain.membertype.family}">zzz Members</b>
-                        {{selected.allowMember && "Yes" || "No"}}
+                            th:attr="e-title=#{maintain.membertype.family}">
+                        <b th:text="#{maintain.membertype.family}">zzz Members</b>
+                        {{ctrl.selected.allowMember && "Yes" || "No"}}
                       </span>
                     </div>
 
@@ -137,13 +136,13 @@
 
           <div class="panel panel-default">
             <div class="panel-heading">
-              <span class="panel-title" th:text="#{com.cagst.swkroa.maintain.membertype.rates}">
+              <span class="panel-title" th:text="#{maintain.membertype.rates}">
                 zzz Rates
               </span>
               <button type="button" class="btn btn-primary btn-xs pull-right"
                       data-toggle="modal" data-target="#changeRateDlg"
-                      data-ng-click="newRate()">
-                <span th:text="#{com.cagst.swkroa.maintain.membertype.newrate}">zzz Change</span>
+                      data-ng-click="ctrl.newRate()">
+                <span th:text="#{maintain.membertype.newrate}">zzz Change</span>
               </button>
             </div>
             <div class="panel-body clear-padding">
@@ -151,13 +150,13 @@
                   <table class="table table-hover table-inner">
                     <thead>
                     <tr>
-                      <th th:text="#{com.cagst.swkroa.maintain.membertype.dues.amount}">zzz Amount</th>
-                      <th th:text="#{com.cagst.swkroa.maintain.membertype.dues.start}">zzz Beginning On</th>
-                      <th th:text="#{com.cagst.swkroa.maintain.membertype.dues.stop}">zzz Ending On</th>
+                      <th th:text="#{maintain.membertype.dues.amount}">zzz Amount</th>
+                      <th th:text="#{maintain.membertype.dues.start}">zzz Beginning On</th>
+                      <th th:text="#{maintain.membertype.dues.stop}">zzz Ending On</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr data-ng-repeat="type in allMemberTypes | orderBy: 'beginEffectiveDate': true">
+                    <tr data-ng-repeat="type in ctrl.allMemberTypes | orderBy: 'beginEffectiveDate': true">
                       <td>{{type.duesAmount | currency}}</td>
                       <td>{{type.beginEffectiveDate | date:'mediumDate'}}</td>
                       <td>{{type.endEffectiveDate | date:'mediumDate'}}</td>
@@ -176,36 +175,32 @@
     <div class="modal-dialog" style="width:300px">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" th:text="#{com.cagst.swkroa.maintain.membertype.newrate}">
-            zzz Change Dues
-          </h4>
+          <h4 class="modal-title" th:text="#{maintain.membertype.newrate}">zzz Change Dues</h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="beginDate" class="form-label" th:text="#{com.cagst.swkroa.maintain.membertype.dues.start}">
-              zzz Begin Date
-            </label>
+            <label for="beginDate" class="form-label" th:text="#{maintain.membertype.dues.start}">zzz Begin Date</label>
             <div class="input-group">
               <input id="beginDate" name="beginDate" type="text" class="form-control"
-                     data-datepicker-popup="MM/dd/yyyy"
-                     data-is-open="beginDateIsOpen"
-                     data-ng-model="memberRate.beginEffectiveDate" />
+                     data-uib-datepicker-popup="MM/dd/yyyy"
+                     data-is-open="ctrl.isOpen.beginDate"
+                     data-ng-model="ctrl.memberRate.beginEffectiveDate"
+                     data-ng-click="ctrl.openBeginDate($event)"
+                     data-ng-required="true"/>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-default" data-ng-click="openBeginDate($event)">
+                <button type="button" class="btn btn-default" data-ng-click="ctrl.openBeginDate($event)">
                   <i class="fa fa-calendar"></i>
                 </button>
               </span>
             </div>
           </div>
-          <label for="rateAmount" class="form-label" th:text="#{com.cagst.swkroa.maintain.membertype.dues.amount}">
-            zzz Amount
-          </label>
+          <label for="rateAmount" class="form-label" th:text="#{maintain.membertype.dues.amount}">zzz Amount</label>
           <input id="rateAmount" name="rateAmount" type="number" class="form-control"
-                 data-ng-model="memberRate.duesAmount"/>
+                 data-ng-model="ctrl.memberRate.duesAmount"/>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success"
-                  data-ng-click="saveNewRate()"
+                  data-ng-click="ctrl.saveNewRate()"
                   th:text="#{common.update}">
             zzz Update
           </button>

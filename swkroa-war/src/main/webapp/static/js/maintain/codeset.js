@@ -3,7 +3,6 @@
  *
  * Author: Craig Gaskill
  */
-
 (function(window, angular) {
   'use strict';
 
