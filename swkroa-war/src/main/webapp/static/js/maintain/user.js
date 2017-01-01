@@ -5,176 +5,281 @@
  *
  * Author:  Craig Gaskill
  */
-swkroaApp.controller('userController',
-  ['$scope', '$http', 'codesetService', 'contactService',
-  function($scope, $http, codesetService, contactService) {
+(function(window, angular, $) {
+  'use strict';
 
-  $scope.contactService = contactService;
-  $scope.status = {
-    opened: false
-  };
+  angular.module('swkroaApp').controller('UserController', UserController);
 
-  $scope.openExpireDate = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
+  UserController.$inject = ['$http', 'CodeSetService', 'ContactService'];
 
-    $scope.status.opened = true;
-  };
+  function UserController($http, codeSetService, contactService) {
+    var vm = this;
 
-  $http.get('/api/users').success(function(data) {
-    $scope.users = data;
-    $("#successMessage").hide();
-  });
+    vm.view = 'home';
+    vm.successMessage = null;
+    vm.errorMessage = null;
 
-  codesetService.getCodeValuesForCodeSet('ADDRESS_TYPE').success(function(data) {
-    $scope.addressTypes = data;
-  });
+    vm.isOpen = {
+      expireDate: false
+    };
 
-  codesetService.getCodeValuesForCodeSet('PHONE_TYPE').success(function(data) {
-    $scope.phoneTypes = data;
-  });
+    activate();
 
-  codesetService.getCodeValuesForCodeSet('EMAIL_TYPE').success(function(data) {
-    $scope.emailTypes = data;
-  });
+    /********************************************
+     * Define binding methods
+     ********************************************/
 
-  $scope.getUser = function(user) {
-    var url = "/api/users/" + user.userUID;
+    vm.openExpireDate = openExpireDate;
+    vm.getUser = getUser;
+    vm.unlockUser = unlockUser;
+    vm.disableUser = disableUser;
+    vm.enableUser = enableUser;
+    vm.resetUserPassword = resetUserPassword;
+    vm.editUser = editUser;
+    vm.newUser = newUser;
 
-    $http.get(url).success(function(data) {
-      var idx = $scope.users.indexOf(user);
-      $scope.users[idx] = data;
-      $scope.share = {
-        user: data,
-        successMessage: null
-      }
-    });
-  };
+    vm.addAddress = addAddress;
+    vm.ensurePrimaryAddress = ensurePrimaryAddress;
+    vm.removeAddress = removeAddress;
 
-  $scope.unlockUser = function() {
-    var url = "/api/users/" + $scope.share.user.userUID + "?actions=unlock";
+    vm.addPhone = addPhone;
+    vm.ensurePrimaryPhone = ensurePrimaryPhone;
+    vm.removePhone = removePhone;
 
-    $http.put(url).success(function(data) {
-      var idx = $scope.users.indexOf($scope.share.user);
-      $scope.users[idx] = data;
-      $scope.share.user = data;
-    });
-  };
+    vm.addEmail = addEmail;
+    vm.ensurePrimaryEmail = ensurePrimaryEmail;
+    vm.removeEmail = removeEmail;
 
-  $scope.disableUser = function() {
-    var url = "/api/users/" + $scope.share.user.userUID + "?action=disable";
+    vm.hasChanges = hasChanges;
+    vm.cancelChanges = cancelChanges;
+    vm.doesUsernameExist = doesUsernameExist;
+    vm.validatePasswordFields = validatePasswordFields;
+    vm.saveUser = saveUser;
 
-    $http.put(url).success(function(data) {
-      var idx = $scope.users.indexOf($scope.share.user);
-      $scope.users[idx] = data;
-      $scope.share.user = data;
-    });
-  };
+    /********************************************
+     * Implement Methods
+     ********************************************/
 
-  $scope.enableUser = function() {
-    var url = "/api/users/" + $scope.share.user.userUID + "?action=enable";
+    function activate() {
+      $http.get('/api/users').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.users = response.data;
+          $("#successMessage").hide();
+        }
+      });
 
-    $http.put(url).success(function(data) {
-      var idx = $scope.users.indexOf($scope.share.user);
-      $scope.users[idx] = data;
-      $scope.share.user = data;
-    });
-  };
+      codeSetService.getCodeValuesForCodeSet('ADDRESS_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.addressTypes = response.data;
+        }
+      });
 
-  $scope.resetUserPassword = function() {
-    var url = "/api/users/" + $scope.share.user.userUID + "?action=resetpwd";
+      codeSetService.getCodeValuesForCodeSet('PHONE_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.phoneTypes = response.data;
+        }
+      });
 
-    $http.put(url).success(function(data) {
-      var idx = $scope.users.indexOf($scope.share.user);
-      $scope.users[idx] = data;
-      $scope.share.user = data;
-      $('#passwordReset').modal('show');
-    });
-  };
+      codeSetService.getCodeValuesForCodeSet('EMAIL_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.emailTypes = response.data;
+        }
+      });
 
-  $scope.newUser = function() {
-    $scope.share = {
-      user: {
+      codeSetService.getCodeValuesForCodeSet('TITLE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.titles = response.data;
+        }
+      });
+
+      vm.states = contactService.getStates();
+    }
+
+    function openExpireDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      vm.isOpen.expireDate = true;
+    }
+
+    function getUser(user) {
+      var url = "/api/users/" + user.userUID;
+
+      $http.get(url).then(function(response) {
+        if (responseSuccessful(response)) {
+          var idx = vm.users.indexOf(user);
+          vm.users[idx] = response.data;
+          vm.selectedUser = response.data;
+        }
+      });
+    }
+
+    function unlockUser() {
+      var url = "/api/users/" + vm.selectedUser.userUID + "?actions=unlock";
+
+      $http.put(url).then(function(response) {
+        if (responseSuccessful(response)) {
+          var idx = vm.users.indexOf(vm.selectedUser);
+          vm.users[idx] = response.data;
+          vm.selectedUser = response.data;
+        }
+      });
+    }
+
+    function disableUser() {
+      var url = "/api/users/" + vm.selectedUser.userUID + "?action=disable";
+
+      $http.put(url).then(function(response) {
+        if (responseSuccessful(response)) {
+          var idx = vm.users.indexOf(vm.selectedUser);
+          vm.users[idx] = response.data;
+          vm.selectedUser = response.data;
+        }
+      });
+    }
+
+    function enableUser() {
+      var url = "/api/users/" + vm.selectedUser.userUID + "?action=enable";
+
+      $http.put(url).then(function(response) {
+        if (responseSuccessful(response)) {
+          var idx = vm.users.indexOf(vm.selectedUser);
+          vm.users[idx] = response.data;
+          vm.selectedUser = response.data;
+        }
+      });
+    }
+
+    function resetUserPassword() {
+      var url = "/api/users/" + vm.selectedUser.userUID + "?action=resetpwd";
+
+      $http.put(url).then(function(response) {
+        if (responseSuccessful(response)) {
+          var idx = vm.users.indexOf(vm.selectedUser);
+          vm.users[idx] = response.data;
+          vm.selectedUser = response.data;
+
+          $('#passwordReset').modal('show');
+        }
+      });
+    }
+
+    function editUser() {
+      vm.original = angular.copy(vm.selectedUser);
+      vm.view = 'edit';
+    }
+
+    function newUser() {
+      vm.selectedUser = {
         userUID: 0,
         passwordTemporary: true,
         active: true
-      },
-      successMessage: null
-    };
+      };
 
-    $scope.view = 'add';
-  };
-}]);
-
-swkroaApp.controller('modifyUserController',
-    ['$scope', '$http', 'codesetService',
-    function($scope, $http, codesetService) {
-  var original = angular.copy($scope.share.user);
-
-  $("#errorMessage").hide();
-
-  $scope.states = $scope.contactService.getStates();
-
-  codesetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
-    $scope.titles = data;
-  });
-
-  $scope.hasChanges = function(user) {
-    return angular.equals(user, original);
-  };
-
-  $scope.doesUsernameExist = function() {
-    if ($scope.share.user.userUID == 0 &&  $scope.share.user.username && $scope.share.user.username.length > 0) {
-      var url = "/api/users/" + $scope.share.user.username + "/exists";
-
-      $http.get(url).success(function(data) {
-        $scope.usernameExists = data;
-      });
+      vm.view = 'add';
+      vm.original = angular.copy(vm.selectedUser);
     }
-  };
 
-  $scope.validatePasswordFields = function() {
-    $scope.passwordError = null;
+    function addAddress(member) {
+      contactService.addAddress(member);
+    }
 
-    if ($scope.share.user.password && $scope.share.user.password.length > 0 &&
-        $scope.confirmPassword && $scope.confirmPassword.length > 0) {
+    function ensurePrimaryAddress(member, address) {
+      contactService.ensurePrimaryAddress(member, address)
+    }
 
-      if ($scope.share.user.password != $scope.confirmPassword) {
-        $scope.passwordError = "The confirmation password does not match the password!";
+    function removeAddress(member, address) {
+      contactService.removeAddress(member, address)
+    }
+
+    function addPhone(member) {
+      contactService.addPhone(member)
+    }
+
+    function ensurePrimaryPhone(member, phone) {
+      contactService.ensurePrimaryPhone(member, phone);
+    }
+
+    function removePhone(member, phone) {
+      contactService.removePhone(member, phone)
+    }
+
+    function addEmail(member) {
+      contactService.addEmail(member);
+    }
+
+    function ensurePrimaryEmail(member, email) {
+      contactService.ensurePrimaryEmail(member, email)
+    }
+
+    function removeEmail(member, email) {
+      contactService.removeEmail(member, email)
+    }
+
+    function hasChanges() {
+      return angular.equals(vm.selectedUser, vm.original);
+    }
+
+    function cancelChanges() {
+      vm.original = null;
+      vm.view = 'home';
+    }
+
+    function doesUsernameExist() {
+      if (vm.selectedUser.userUID == 0 && vm.selectedUser.username && vm.selectedUser.username.length > 0) {
+        var url = "/api/users/" + vm.selectedUser.username + "/exists";
+
+        $http.get(url).then(function(response) {
+          if (responseSuccessful(response)) {
+            vm.usernameExists = response.data;
+          }
+        });
       }
     }
-  };
 
-  $scope.save = function() {
-    $http.post('/api/users', $scope.share.user).
-      success(function(data, status) {
-        if (status == 201) {
-          $scope.users.push(data);
-          $scope.share.user = data;
-          $scope.share.successMessage = "User " + data.fullName + " was created successfully!";
-        } else {
-          var idx = $scope.users.indexOf($scope.user);
+    function validatePasswordFields() {
+      vm.passwordError = null;
 
-          $scope.users[idx] = data;
-          $scope.share.user = data;
-          $scope.share.successMessage = "User " + data.fullName + " was updated successfully!";
+      if (vm.selectedUser.password && vm.selectedUser.password.length > 0 && vm.confirmPassword && vm.confirmPassword.length > 0) {
+        if (vm.selectedUser.password != vm.confirmPassword) {
+          vm.passwordError = "The confirmation password does not match the password!";
         }
+      }
+    }
 
-        $scope.view = 'listing';
-      }).
-      error(function(data, status) {
-        switch (status) {
-        case 400: // bad request
-          $scope.errorMessage = data.message;
-          break;
-        case 409: // conflict
-          $scope.errorMessage = "User " + data.fullName + " has been updated by another user!";
-          break;
-        default:
-          $scope.errorMessage = "Unknown Exception, unable to save user!";
-          break;
-        }
-        $("#errorMessage").show();
-      });
-  };
-}]);
+    function saveUser() {
+      $http.post('/api/users', vm.selectedUser).
+        success(function(data, status) {
+          if (status == 201) {
+            vm.users.push(data);
+            vm.selectedUser = data;
+            vm.successMessage = "User " + data.fullName + " was created successfully!";
+          } else {
+            var idx = vm.users.indexOf(vm.selectedUser);
+
+            vm.users[idx] = data;
+            vm.selectedUser = data;
+            vm.successMessage = "User " + data.fullName + " was updated successfully!";
+          }
+
+          vm.view = 'home';
+        }).
+        error(function(data, status) {
+          switch (status) {
+            case 400: // bad request
+              vm.errorMessage = data.message;
+              break;
+            case 409: // conflict
+              vm.errorMessage = "User " + data.fullName + " has been updated by another user!";
+              break;
+            default:
+              vm.errorMessage = "Unknown Exception, unable to save user!";
+              break;
+          }
+          $('#errorMessage').show();
+        });
+    }
+
+  }
+
+})(window, window.angular, window.jQuery);

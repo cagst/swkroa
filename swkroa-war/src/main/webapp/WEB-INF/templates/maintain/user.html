@@ -7,205 +7,208 @@
   <script type="text/javascript" th:src="@{/static/js/maintain/user.js}"></script>
 </head>
 
-<body>
+<body data-ng-app="swkroaApp">
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="userController" data-ng-cloak="">
+<div id="page-content" data-ng-controller="UserController as ctrl" data-ng-cloak="">
   <div class="row row-inner">
-    <div class="page-header">
-      <h3 th:text="#{user.page.title}">z_Users</h3>
+    <!-- View (home) Page -->
+    <div data-ng-show="ctrl.view === 'home'">
+      <div class="page-header">
+        <h3 th:text="#{user.page.title}">z_Users</h3>
 
-      <div id="successMessage" class="alert alert-success alert-dismissible" role="alert" data-ng-show="share.successMessage">
-        <button type="button" class="close" data-dismiss="alert">
-          <span aria-hidden="true">&times;</span>
-          <span class="sr-only" th:text="#{common.close}">z_Close</span>
-        </button>
-        <strong th:text="#{common.success}">z_Success</strong>
+        <div id="successMessage" class="alert alert-success alert-dismissible" role="alert" data-ng-show="ctrl.successMessage">
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only" th:text="#{common.close}">z_Close</span>
+          </button>
+          <strong th:text="#{common.success}">z_Success</strong>
 
-        <div data-ng-bind="share.successMessage" th:text="#{user.created.message}">z_Created</div>
+          <div data-ng-bind="ctrl.successMessage" th:text="#{user.created.message}">z_Created</div>
+        </div>
       </div>
-    </div>
 
-    <div class="container-outline">
-      <div class="row row-inner">
-        <!-- List View -->
-        <div class="col-xs-5 stretch">
-          <div class="split-header">
-            <div class="split-header-content expand divider-bottom">
-              <div class="input-group">
-                <a class="input-group-addon add-btn"
-                   th:attr="data-uib-tooltip=#{user.add.tooltip}"
-                   data-tooltip-placement="right"
-                   data-ng-click="newUser()">
-                  <i class="fa fa-plus"></i>
-                </a>
-                <input type="text" class="form-control" data-ng-disabled="true" autofocus />
-                <a class="input-group-addon btn btn-primary" data-ng-disabled="true" th:text="#{common.search}">z_Search</a>
+      <div class="container-outline">
+        <div class="row row-inner">
+          <!-- List View -->
+          <div class="col-xs-5 stretch">
+            <div class="split-header">
+              <div class="split-header-content expand divider-bottom">
+                <div class="input-group">
+                  <a class="input-group-addon add-btn"
+                     th:attr="data-uib-tooltip=#{user.add.tooltip}"
+                     data-tooltip-placement="right"
+                     data-ng-click="ctrl.newUser()">
+                    <i class="fa fa-plus"></i>
+                  </a>
+                  <input type="text" class="form-control" data-ng-disabled="true" autofocus />
+                  <a class="input-group-addon btn btn-primary" data-ng-disabled="true" th:text="#{common.search}">z_Search</a>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="list-group constrain-view divider-right">
-            <div>
-              <div class="panel-body text-muted" data-ng-show="!users.length">
-                <em th:text="#{user.none.found}">z_None</em>
-              </div>
-              <div data-ng-show="users.length">
-                <div class="list-group-item alt-list-group-item sel-list-group-item"
-                     data-ng-repeat="usr in users"
-                     data-ng-class="{active: usr.userUID === share.user.userUID}"
-                     data-ng-click="getUser(usr)">
-                  <div>
-                    <span data-ng-bind-template="{{usr.lastName}}, {{usr.firstName}}"></span>
-                    <small class="text-muted">
-                      <span data-ng-bind-template="({{usr.username}})"></span>
-                    </small>
-                    <span class="pull-right" data-ng-show="usr.accountNonLocked == false">
+
+            <div class="list-group constrain-view divider-right">
+              <div>
+                <div class="panel-body text-muted" data-ng-show="!ctrl.users.length">
+                  <em th:text="#{user.none.found}">z_None</em>
+                </div>
+                <div data-ng-show="ctrl.users.length">
+                  <div class="list-group-item alt-list-group-item sel-list-group-item"
+                       data-ng-repeat="usr in ctrl.users"
+                       data-ng-class="{active: usr.userUID === ctrl.selectedUser.userUID}"
+                       data-ng-click="ctrl.getUser(usr)">
+                    <div>
+                      <span data-ng-bind-template="{{usr.lastName}}, {{usr.firstName}}"></span>
+                      <small class="text-muted">
+                        <span data-ng-bind-template="({{usr.username}})"></span>
+                      </small>
+                      <span class="pull-right" data-ng-show="usr.accountNonLocked == false">
                       <i class="fa fa-lock"></i>
                     </span>
-                    <span class="pull-right" data-ng-show="usr.enabled == false">
+                      <span class="pull-right" data-ng-show="usr.enabled == false">
                       <i class="fa fa-ban"></i>
                     </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Detail View -->
-        <div class="col-xs-7 divider-left stretch pull-right">
-          <div data-ng-show="!share.user">
-            <div class="panel-body text-muted text-center">
-              <em th:text="#{user.select}">z_Select</em>
+          <!-- Detail View -->
+          <div class="col-xs-7 divider-left stretch pull-right">
+            <div data-ng-show="!ctrl.selectedUser">
+              <div class="panel-body text-muted text-center">
+                <em th:text="#{user.select}">z_Select</em>
+              </div>
             </div>
-          </div>
-          <div data-ng-show="share.user">
-            <div class="container-inner constrain-view">
-              <div class="pull-left">
-                <h3 class="clear-bottom">
-                  <span data-ng-bind-template="{{share.user.lastName}}, {{share.user.firstName}}"></span>
-                  <small class="text-muted" data-ng-bind-template="({{share.user.username}})"></small>
-                </h3>
-                <div th:attr="data-ng-bind-template=#{user.last.signed.in}"></div>
+            <div data-ng-show="ctrl.selectedUser">
+              <div class="container-inner constrain-view">
+                <div class="pull-left">
+                  <h3 class="clear-bottom">
+                    <span data-ng-bind-template="{{ctrl.selectedUser.lastName}}, {{ctrl.selectedUser.firstName}}"></span>
+                    <small class="text-muted" data-ng-bind-template="({{ctrl.selectedUser.username}})"></small>
+                  </h3>
+                  <div th:attr="data-ng-bind-template=#{user.last.signed.in}"></div>
 
-                <div data-ng-show="share.user.addresses.length > 0">
-                  <h4 class="divider-bottom">Addresses</h4>
+                  <div data-ng-show="ctrl.selectedUser.addresses.length > 0">
+                    <h4 class="divider-bottom" th:text="#{user.addresses}">z_Addresses</h4>
 
-                  <div data-ng-repeat="address in share.user.addresses" class="row">
-                    <div class="col-xs-4">
-                      <strong data-ng-bind="contactService.getAddressTypeDisplay(address, addressTypes)"></strong>
+                    <div data-ng-repeat="address in ctrl.selectedUser.addresses" class="row spacer-top">
+                      <div class="col-xs-4">
+                        <strong data-ng-bind="ctrl.getAddressTypeDisplay(address, addressTypes)"></strong>
+                      </div>
+                      <div class="col-xs-8">
+                        <div data-ng-bind="address.addressLine1"></div>
+                        <div data-ng-bind="address.addressLine2"></div>
+                        <div data-ng-bind="address.addressLine3"></div>
+                        <div data-ng-bind-template="{{address.city}}, {{address.state}} {{address.postalCode | zip}}"></div>
+                      </div>
                     </div>
-                    <div class="col-xs-8">
-                      <div data-ng-bind="address.addressLine1"></div>
-                      <div data-ng-bind="address.addressLine2"></div>
-                      <div data-ng-bind="address.addressLine3"></div>
-                      <div>
-                        {{address.city}}, {{address.state}} {{address.postalCode | zip}}
+                  </div>
+
+                  <div data-ng-show="ctrl.selectedUser.phoneNumbers.length > 0">
+                    <h4 class="divider-bottom" th:text="#{user.phoneNumber}">z_PhoneNumbers</h4>
+
+                    <div data-ng-repeat="phone in ctrl.selectedUser.phoneNumbers" class="row spacer-top">
+                      <div class="col-xs-4">
+                        <strong data-ng-bind="ctrl.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
+                      </div>
+                      <div class="col-xs=8">
+                        <span data-ng-bind="phone.phoneNumber | tel"></span>
+                        <span data-ng-show="phone.phoneExtension" data-ng-bind-template="Ext. {{phone.phoneExtension}}"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div data-ng-show="ctrl.selectedUser.emailAddresses.length > 0">
+                    <h4 class="divider-bottom" th:text="#{user.emailAddress}">z_EmailAddresses</h4>
+
+                    <div data-ng-repeat="email in ctrl.selectedUser.emailAddresses" class="row spacer-top">
+                      <div class="col-xs-4">
+                        <strong data-ng-bind="ctrl.getEmailTypeDisplay(email, emailTypes)"></strong>
+                      </div>
+                      <div class="col-xs=8">
+                        <span data-ng-bind="email.emailAddress"></span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div data-ng-show="share.user.phoneNumbers.length > 0">
-                  <h4 class="divider-bottom">Phone Numbers</h4>
-
-                  <div data-ng-repeat="phone in share.user.phoneNumbers" class="row">
-                    <div class="col-xs-4">
-                      <strong data-ng-bind="contactService.getPhoneTypeDisplay(phone, phoneTypes)"></strong>
-                    </div>
-                    <div class="col-xs=8">
-            <span>
-              {{phone.phoneNumber | tel}}
-            </span>
-                      <span data-ng-show="phone.phoneExtension">
-              Ext. {{phone.phoneExtension}}
-            </span>
-                    </div>
+                <div class="container-small container-outline container-inner pull-right">
+                  <div class="text_bold" th:text="#{user.account.status}">z_AccountStatus</div>
+                  <div class="indent-left"
+                       th:text="#{user.expired}"
+                       data-ng-show="ctrl.selectedUser.accountNonExpired == false">
+                    z_Expired
                   </div>
-                </div>
-
-                <div data-ng-show="share.user.emailAddresses.length > 0">
-                  <h4 class="divider-bottom">Email Addresses</h4>
-
-                  <div data-ng-repeat="email in share.user.emailAddresses" class="row">
-                    <div class="col-xs-4">
-                      <strong data-ng-bind="contactService.getEmailTypeDisplay(email, emailTypes)"></strong>
-                    </div>
-                    <div class="col-xs=8">
-                      <span data-ng-bind="email.emailAddress"></span>
-                    </div>
+                  <div class="indent-left"
+                       th:text="#{user.locked}"
+                       data-ng-show="ctrl.selectedUser.accountNonLocked == false">
+                    z_Locked
+                  </div>
+                  <div class="indent-left"
+                       th:text="#{user.disabled}"
+                       data-ng-show="ctrl.selectedUser.enabled == false">
+                    z_Disabled
+                  </div>
+                  <div class="indent-left"
+                       th:text="#{user.enabled}"
+                       data-ng-show="ctrl.selectedUser.enabled == true && selectedUser.accountNonExpired == true && ctrl.selectedUser.accountNonLocked == true">
+                    z_Enabled
                   </div>
                 </div>
               </div>
-              <div class="container-small container-outline container-inner pull-right">
-                <div class="text_bold">Account Status</div>
-                <div class="indent-left"
-                     data-ng-show="share.user.accountNonExpired == false">
-                  Expired
-                </div>
-                <div class="indent-left"
-                     data-ng-show="share.user.accountNonLocked == false">
-                  Locked
-                </div>
-                <div class="indent-left"
-                     data-ng-show="share.user.enabled == false">
-                  Disabled
-                </div>
-                <div class="indent-left"
-                     data-ng-show="share.user.enabled == true && share.user.accountNonExpired == true && share.user.accountNonLocked == true">
-                  Enabled
-                </div>
-              </div>
-            </div>
 
-            <div class="divider-top split-footer">
-              <div class="split-footer-content pull-left">
-                <button type="button" class="btn btn-warning btn-xs"
-                        data-ng-click="unlockUser()"
-                        data-ng-show="share.user.accountNonLocked == false">
-                  <i class="fa fa-unlock"></i>
-                  <span>Unlock User</span>
-                </button>
-                <button type="button" class="btn btn-warning btn-xs"
-                        data-ng-click="enableUser()"
-                        data-ng-show="share.user.enabled == false">
-                  <span>Enable User</span>
-                </button>
-                <button type="button" class="btn btn-warning btn-xs"
-                        data-ng-click="disableUser()"
-                        data-ng-show="share.user.enabled == true && share.user.accountNonLocked == true">
-                  <i class="fa fa-ban"></i>
-                  <span>Disable User</span>
-                </button>
-                <button type="button" class="btn btn-warning btn-xs"
-                        data-ng-click="resetUserPassword()">
-                  <span>Reset Password</span>
-                </button>
+              <div class="divider-top split-footer">
+                <div class="split-footer-content pull-left">
+                  <button type="button" class="btn btn-warning btn-xs"
+                          data-ng-click="ctrl.unlockUser()"
+                          data-ng-show="ctrl.selectedUser.accountNonLocked == false">
+                    <i class="fa fa-unlock"></i>
+                    <span th:text="#{user.unlock}">z_Unlock</span>
+                  </button>
+                  <button type="button" class="btn btn-warning btn-xs"
+                          data-ng-click="ctrl.enableUser()"
+                          data-ng-show="ctrl.selectedUser.enabled == false">
+                    <span th:text="#{user.enable}">z_Enable</span>
+                  </button>
+                  <button type="button" class="btn btn-warning btn-xs"
+                          data-ng-click="ctrl.disableUser()"
+                          data-ng-show="ctrl.selectedUser.enabled == true && ctrl.selectedUser.accountNonLocked == true">
+                    <i class="fa fa-ban"></i>
+                    <span th:text="#{user.disable}">z_Disable</span>
+                  </button>
+                  <button type="button" class="btn btn-warning btn-xs"
+                          data-ng-click="ctrl.resetUserPassword()">
+                    <span th:text="#{user.reset.password}">z_ResetPassword</span>
+                  </button>
+                </div>
+                <div class="split-footer-content pull-right">
+                  <a class="btn btn-primary btn-xs" data-ng-click="ctrl.editUser()">
+                    <i class="fa fa-edit"></i>
+                    <span th:text="#{user.edit}">z_Edit</span>
+                  </a>
+                </div>
               </div>
-              <div class="split-footer-content pull-right">
-                <a class="btn btn-primary btn-xs" data-ui-sref="edit">
-                  <i class="fa fa-edit"></i>
-                  <span>Edit User</span>
-                </a>
-              </div>
-            </div>
 
-            <div class="modal fade" id="passwordReset" tabindex="-1">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                      <span aria-hidden="true">&times;</span>
-                      <span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title">Password Was Reset</h4>
-                  </div>
-                  <div class="modal-body">
-                    <p>Temporary Password</p>
-                    <blockquote>
-                      <p class="comment-text">{{share.user.password}}</p>
-                    </blockquote>
+              <div class="modal fade" id="passwordReset" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only" th:text="#{common.close}">z_Close</span>
+                      </button>
+                      <h4 class="modal-title" th:text="#{user.password.reset.msg}">z_PasswordReset</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p th:text="#{user.password.temporary.msg}">z_TemporaryPassword</p>
+                      <blockquote>
+                        <p class="comment-text" data-ng-bind="ctrl.selectedUser.password"></p>
+                      </blockquote>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -213,6 +216,304 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Modify Page -->
+    <div data-ng-show="ctrl.view === 'edit' || ctrl.view === 'add'">
+      <div class="page-header">
+        <h3 data-ng-show="ctrl.selectedUser.userUID === 0" th:text="#{user.add}">z_AddUser</h3>
+        <h3 data-ng-show="ctrl.selectedUser.userUID > 0" th:text="#{user.edit}">z_EditUser</h3>
+
+        <div id="errorMessage" class="alert alert-danger alert-dismissible" role="alert" data-ng-show="ctrl.errorMessage">
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only" th:text="#{common.close}">z_Close</span>
+          </button>
+          <strong th:text="#{common.warning}">z_Warning</strong>
+
+          <div data-ng-bind="errorMessage"></div>
+        </div>
+      </div>
+
+      <form method="POST" name="userForm" novalidate data-ng-submit="ctrl.saveUser()" class="css-form">
+        <div class="row row-inner spacer-top">
+          <div class="col-xs-2">
+            <label for="title" th:text="#{user.title}">z_Title</label>
+            <select id="title" class="form-control"
+                    data-ng-model="ctrl.selectedUser.titleCD"
+                    data-ng-options="title.codeValueUID as title.display for title in ctrl.titles">
+            </select>
+          </div>
+          <div class="col-xs-2" data-ng-class="{'has-error': userForm.firstName.$invalid}">
+            <label for="firstName" class="control-label label-required" th:text="#{user.name.first}">z_FirstName</label>
+            <input id="firstName" name="firstName" type="text" class="form-control" maxlength="50"
+                   th:placeholder="#{user.name.first}"
+                   data-ng-model="ctrl.selectedUser.firstName" data-ng-required="true" />
+          </div>
+          <div class="col-xs-2">
+            <label for="middleName" class="control-label" th:text="#{user.name.middle}">z_MiddleName</label>
+            <input id="middleName" name="middleName" type="text" class="form-control" maxlength="50"
+                   th:placeholder="#{user.name.middle}"
+                   data-ng-model="ctrl.selectedUser.middleName" />
+          </div>
+          <div class="col-xs-2" data-ng-class="{'has-error': userForm.lastName.$invalid}">
+            <label for="lastName" class="control-label label-required" th:text="#{user.name.last}">z_LastName</label>
+            <input id="lastName" name="lastName" type="text" class="form-control" maxlength="50"
+                   th:placeholder="#{user.name.last}"
+                   data-ng-model="ctrl.selectedUser.lastName" data-ng-required="true" />
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="row row-inner spacer-top">
+          <div class="col-xs-4">
+            <div class="divider-inner-row">
+              <span th:text="#{user.addresses}">z_Addresses</span>
+              <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
+                      data-ng-click="ctrl.addAddress(ctrl.selectedUser)">
+                <i class="fa fa-plus"></i>
+                <span th:text="#{user.address.add}">z_AddAddress</span>
+              </button>
+            </div>
+
+            <div data-ng-repeat="address in ctrl.selectedUser.addresses"
+                 data-ng-show="address.active"
+                 data-ng-form="addressForm"
+                 class="grouper">
+              <div class="row spacer-top">
+                <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
+                  <select class="form-control" name="addressType"
+                          data-ng-options="type.codeValueUID as type.display for type in ctrl.addressTypes"
+                          data-ng-model="address.addressTypeCD"
+                          data-ng-required="true">
+                  </select>
+                </div>
+                <div class="col-xs-4 col-xs-offset-4">
+                  <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
+                          data-ng-click="ctrl.removeAddress(ctrl.selectedUser, address)">
+                    <i class="fa fa-trash-o"></i>
+                    <span th:text="#{user.address.remove}">z_RemoveAddress</span>
+                  </button>
+                </div>
+              </div>
+              <div class="row spacer-top">
+                <div class="col-xs-12" data-ng-class="{'has-error': addressForm.address1.$invalid}">
+                  <input type="text" class="form-control" name="address1" maxlength="50"
+                         th:placeholder="#{user.address.line1}"
+                         data-ng-model="address.addressLine1"
+                         data-ng-required="true" />
+                </div>
+              </div>
+              <div class="row spacer-top">
+                <div class="col-xs-12">
+                  <input type="text" class="form-control" maxlength="50"
+                         th:placeholder="#{user.address.line2}"
+                         data-ng-model="address.addressLine2" />
+                </div>
+              </div>
+              <div class="row spacer-top">
+                <div class="col-xs-12">
+                  <input type="text" class="form-control" maxlength="50"
+                         th:placeholder="#{user.address.line3}"
+                         data-ng-model="address.addressLine3" />
+                </div>
+              </div>
+              <div class="row spacer-top">
+                <div class="col-xs-4" data-ng-class="{'has-error': addressForm.city.$invalid}">
+                  <input type="text" class="form-control" name="city" maxlength="50"
+                         th:placeholder="#{user.address.city}"
+                         data-ng-model="address.city"
+                         data-ng-required="true" />
+                </div>
+                <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressState.$invalid}">
+                  <select class="form-control" name="addressState"
+                          data-ng-model="address.state"
+                          data-ng-options="state.code as state.name for state in ctrl.states"
+                          data-ng-required="true">
+                  </select>
+                </div>
+                <div class="col-xs-4" data-ng-class="{'has-error': addressForm.postalCode.$invalid}">
+                  <input type="text" class="form-control" name="postalCode" maxlength="15"
+                         data-ng-model="address.postalCode"
+                         data-ng-required="true" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-4">
+            <div class="divider-inner-row">
+              <span th:text="#{user.phoneNumber}">z_PhoneNumbers</span>
+              <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
+                      data-ng-click="ctrl.addPhone(ctrl.selectedUser)">
+                <i class="fa fa-plus"></i>
+                <span th:text="#{user.phone.add}">z_AddPhone</span>
+              </button>
+            </div>
+            <div data-ng-repeat="phone in ctrl.selectedUser.phoneNumbers"
+                 data-ng-show="phone.active"
+                 data-ng-form="phoneForm"
+                 class="grouper">
+              <div class="row spacer-top">
+                <div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
+                  <select class="form-control" name="phoneType"
+                          data-ng-options="type.codeValueUID as type.display for type in ctrl.phoneTypes"
+                          data-ng-model="phone.phoneTypeCD"
+                          data-ng-required="true">
+                  </select>
+                </div>
+                <div class="col-xs-4 col-xs-offset-4">
+                  <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
+                          data-ng-click="ctrl.removePhone(ctrl.selectedUser, phone)">
+                    <i class="fa fa-trash-o"></i>
+                    <span th:text="#{user.phone.remove}">z_RemovePhone</span>
+                  </button>
+                </div>
+              </div>
+              <div class="row spacer-top">
+                <div class="col-xs-8" data-ng-class="{'has-error': phoneForm.number.$invalid}">
+                  <input type="tel" class="form-control" name="number" maxlength="25"
+                         data-ng-model="phone.phoneNumber"
+                         data-ui-mask="(999) 999-9999"
+                         data-ng-required="true" />
+                </div>
+                <div class="col-xs-4">
+                  <input type="text" class="form-control" maxlength="10"
+                         th:placeholder="#{user.phone.extension}"
+                         data-ng-model="phone.phoneExtension" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-4">
+            <div class="divider-inner-row">
+              <span th:text="#{user.emailAddress}">z_EmailAddresses</span>
+              <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
+                      data-ng-click="ctrl.addEmail(ctrl.selectedUser)">
+                <i class="fa fa-plus"></i>
+                <span th:text="#{user.email.add}">z_AddEmail</span>
+              </button>
+            </div>
+            <div data-ng-repeat="email in ctrl.selectedUser.emailAddresses"
+                 data-ng-show="email.active"
+                 data-ng-form="emailForm"
+                 class="grouper">
+              <div class="row spacer-top">
+                <div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
+                  <select class="form-control" name="emailType"
+                          data-ng-options="type.codeValueUID as type.display for type in ctrl.emailTypes"
+                          data-ng-model="email.emailTypeCD"
+                          data-ng-required="true">
+                  </select>
+                </div>
+                <div class="col-xs-4 col-xs-offset-4">
+                  <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
+                          data-ng-click="ctrl.removeEmail(ctrl.selectedUser, email)">
+                    <i class="fa fa-trash-o"></i>
+                    <span th:text="#{user.email.remove}">z_RemoveEmail</span>
+                  </button>
+                </div>
+              </div>
+              <div class="row spacer-top">
+                <div class="col-xs-12" data-ng-class="{'has-error': emailForm.emailAddress.$invalid}">
+                  <input type="email" class="form-control" name="emailAddress" maxlength="256"
+                         th:placeholder="#{user.email.address}"
+                         data-ng-model="email.emailAddress"
+                         data-ng-required="true" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row row-inner spacer-top">
+          <div class="col-xs-12">
+            <div class="divider-inner-row">
+              <span th:text="#{user.account.information}">z_AccountInformation</span>
+            </div>
+          </div>
+        </div>
+        <div class="row row-inner spacer-top">
+          <div class="col-xs-2" data-ng-class="{'has-error': userForm.username.$invalid}">
+            <label for="username" class="label-required" th:text="#{user.account.username}">z_Username</label>
+            <input id="username" name="username"
+                   type="text" class="form-control" maxlength="50" autocomplete="off"
+                   th:placeholder="#{user.account.username}"
+                   data-ng-model="ctrl.selectedUser.username"
+                   data-ng-disabled="ctrl.selectedUser.userUID > 0"
+                   data-ng-required="true" />
+          </div>
+          <div class="col-xs-2">
+            <label for="expire-dt" th:text="#{user.account.expiresOn}">z_ExpiresOn</label>
+
+            <div class="input-group">
+              <input id="expire-dt" type="text" class="form-control"
+                     data-uib-datepicker-popup="MM/dd/yyyy"
+                     data-is-open="ctrl.isOpen.expireDate"
+                     data-ng-click="ctrl.openExpireDate($event)"
+                     data-ng-model="ctrl.selectedUser.accountExpiredDate"/>
+              <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-ng-click="ctrl.openExpireDate($event)">
+              <i class="fa fa-calendar"></i>
+            </button>
+          </span>
+            </div>
+          </div>
+        </div>
+        <div class="row row-inner" data-ng-show="usernameExists == 'true'">
+          <div class="col-xs-12">
+            <span class="label label-danger" th:text="#{user.account.exists}">z_UsernameExists</span>
+          </div>
+        </div>
+
+        <div class="row row-inner spacer-top" data-ng-show="ctrl.selectedUser.userUID == 0">
+          <div class="col-xs-2" data-ng-class="{'has-error': userForm.password.$invalid}">
+            <label class="label-required" for="new-password">Password</label>
+            <input id="new-password" type="password" class="form-control" name="password" maxlength="60"
+                   data-ng-model="ctrl.selectedUser.password"
+                   data-ng-blur="validatePasswordFields()"
+                   data-ng-required="ctrl.selectedUser.userUID == 0" />
+          </div>
+          <div class="col-xs-2" data-ng-class="{'has-error': userForm.confirmPassword.$invalid}">
+            <label class="label-required" for="confirm-password">Confirm Password</label>
+            <input id="confirm-password" type="password" class="form-control" name="confirmPassword" maxlength="60"
+                   data-ng-model="confirmPassword"
+                   data-ng-blur="validatePasswordFields()"
+                   data-ng-required="ctrl.selectedUser.userUID == 0" />
+          </div>
+          <div class="col-xs-2">
+            <div>&nbsp;</div>
+            <input id="tempPassword" type="checkbox" data-ng-model="ctrl.selectedUser.passwordTemporary" />
+            <label for="tempPassword" th:text="#{user.account.temporary}">z_TemporaryPassword</label>
+          </div>
+        </div>
+        <div class="row row-inner" data-ng-show="passwordError">
+          <div class="col-xs-12">
+            <span class="label label-danger" data-ng-bind="passwordError"></span>
+          </div>
+        </div>
+
+        <div class="spacer-top">
+          <div class="divider-top">
+            <div class="spacer-top">
+              <button type="submit"
+                      class="btn btn-primary"
+                      data-ng-show="ctrl.selectedUser.userUID == 0"
+                      data-ng-disabled="ctrl.hasChanges() || userForm.$invalid">
+                <span th:text="#{user.create}">z_CreateUser</span>
+              </button>
+              <button type="submit"
+                      class="btn btn-primary"
+                      data-ng-show="ctrl.selectedUser.userUID > 0"
+                      data-ng-disabled="ctrl.hasChanges() || userForm.$invalid">
+                <span th:text="#{user.update}">z_UpdateUser</span>
+              </button>
+              <a class="btn btn-default" data-ng-click="ctrl.cancelChanges()" th:text="#{common.cancel}">z_Cancel</a>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
