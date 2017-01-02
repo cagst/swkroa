@@ -120,7 +120,7 @@ public final class MembershipServiceImpl implements MembershipService {
     }
 
     if (loadingPolicy.containsAttribute(LOAD_TRANSACTIONS)) {
-      List<Transaction> transactions = transactionRepo.getTransactionsForMembership(membership);
+      List<Transaction> transactions = transactionRepo.getTransactionsForMembership(membership.getMembershipUID());
       Collections.sort(transactions);
       membership.setTransactions(transactions);
     }

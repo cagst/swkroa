@@ -14,7 +14,6 @@ import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.deposit.Deposit;
 import com.cagst.swkroa.deposit.DepositTransaction;
-import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
@@ -88,10 +87,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetTransactionsForMembership_NoneFound() {
-    Membership membership = new Membership();
-    membership.setMembershipUID(99L);
-
-    List<Transaction> transactions = repo.getTransactionsForMembership(membership);
+    List<Transaction> transactions = repo.getTransactionsForMembership(99L);
     assertNotNull("Ensure the transaction list exists.", transactions);
     assertTrue("Ensure the transaction list is empty.", transactions.isEmpty());
   }
@@ -101,10 +97,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
    */
   @Test
   public void testGetTransactionsForMembership_Found() {
-    Membership membership = new Membership();
-    membership.setMembershipUID(2L);
-
-    List<Transaction> transactions = repo.getTransactionsForMembership(membership);
+    List<Transaction> transactions = repo.getTransactionsForMembership(2L);
     assertNotNull("Ensure the transaction list exists.", transactions);
     assertFalse("Ensure the transaction list is not empty.", transactions.isEmpty());
     assertEquals("Ensure we found the correct number of transactions.", 2, transactions.size());
@@ -172,10 +165,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     User user = new User();
     user.setUserUID(1L);
 
-    Membership membership = new Membership();
-    membership.setMembershipUID(2L);
-
-    List<Transaction> transactions1 = repo.getTransactionsForMembership(membership);
+    List<Transaction> transactions1 = repo.getTransactionsForMembership(2L);
     assertNotNull("Ensure the transaction list exists.", transactions1);
     assertFalse("Ensure the transaction list is empty.", transactions1.isEmpty());
     assertEquals("Ensure we found the correct number of transactions.", 2, transactions1.size());
@@ -183,7 +173,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     Transaction newTrans = new Transaction();
     newTrans.setTransactionDate(new DateTime());
     newTrans.setTransactionType(TransactionType.INVOICE);
-    newTrans.setMembershipUID(membership.getMembershipUID());
+    newTrans.setMembershipUID(2L);
 
     repo.saveTransaction(newTrans, user);
   }
@@ -196,10 +186,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     User user = new User();
     user.setUserUID(1L);
 
-    Membership membership = new Membership();
-    membership.setMembershipUID(2L);
-
-    List<Transaction> transactions1 = repo.getTransactionsForMembership(membership);
+    List<Transaction> transactions1 = repo.getTransactionsForMembership(2L);
     assertNotNull("Ensure the transaction list exists.", transactions1);
     assertFalse("Ensure the transaction list is empty.", transactions1.isEmpty());
     assertEquals("Ensure we found the correct number of transactions.", 2, transactions1.size());
@@ -207,7 +194,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     Transaction newTrans = new Transaction();
     newTrans.setTransactionDate(new DateTime());
     newTrans.setTransactionType(TransactionType.INVOICE);
-    newTrans.setMembershipUID(membership.getMembershipUID());
+    newTrans.setMembershipUID(2L);
 
     TransactionEntry newEntry = new TransactionEntry();
     newEntry.setTransactionEntryAmount(new BigDecimal(-25));
@@ -222,7 +209,7 @@ public class TransactionRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure it is the same transaction (amount).", newTrans.getTransactionAmount(),
         insertedTrans.getTransactionAmount());
 
-    List<Transaction> transactions2 = repo.getTransactionsForMembership(membership);
+    List<Transaction> transactions2 = repo.getTransactionsForMembership(2L);
     assertNotNull("Ensure the transaction list exists.", transactions2);
     assertFalse("Ensure the transaction list is empty.", transactions2.isEmpty());
     assertEquals("Ensure we found the correct number of transactions.", 3, transactions2.size());

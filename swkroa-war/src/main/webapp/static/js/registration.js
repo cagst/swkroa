@@ -94,7 +94,7 @@
       $http({
         method: 'POST',
         url: rootUrl + '/verification/' + vm.registerUser.ownerId,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain'},
         data: $.param({
           'firstName': vm.registerUser.firstName,
           'lastName': vm.registerUser.lastName,
@@ -102,8 +102,10 @@
           'zipCode': vm.registerUser.zipCode})
       }).then(function(response) {
         if (responseSuccessful(response)) {
-          codeSetService.getCodeValuesForCodeSet('SECURITY_QUESTION').success(function(data) {
-            vm.questions = data;
+          codeSetService.getCodeValuesForCodeSet('SECURITY_QUESTION').then(function (response2) {
+            if (responseSuccessful(response2)) {
+              vm.questions = response2.data;
+            }
           });
 
           vm.errorText = "";
@@ -119,7 +121,7 @@
       $http({
         method: 'POST',
         url: rootUrl + '/completion/' + vm.registerUser.ownerId,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain'},
         data: $.param({
           'firstName': vm.registerUser.firstName,
           'lastName': vm.registerUser.lastName,

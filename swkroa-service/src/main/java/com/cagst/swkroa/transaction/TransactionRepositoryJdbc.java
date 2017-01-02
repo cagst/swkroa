@@ -10,7 +10,6 @@ import com.cagst.swkroa.deposit.Deposit;
 import com.cagst.swkroa.deposit.DepositTransaction;
 import com.cagst.swkroa.internal.BaseRepositoryJdbc;
 import com.cagst.swkroa.internal.StatementLoader;
-import com.cagst.swkroa.member.Membership;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
   }
 
   @Override
-  public Transaction getTransactionByUID(final long uid)
+  public Transaction getTransactionByUID(long uid)
       throws IncorrectResultSizeDataAccessException {
 
     LOGGER.info("Calling getTransactionByUID for [{}]", uid);
@@ -91,21 +90,19 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
   }
 
   @Override
-  public List<Transaction> getTransactionsForMembership(final Membership membership) {
-    Assert.notNull(membership, "Argument [membership] cannot be null.");
-
-    LOGGER.info("Calling getTransactionsForMembership [{}].", membership.getMembershipUID());
+  public List<Transaction> getTransactionsForMembership(long membershipUID) {
+    LOGGER.info("Calling getTransactionsForMembership [{}].", membershipUID);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
     return getJdbcTemplate().query(
         stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP),
-        new MapSqlParameterSource("membership_id", membership.getMembershipUID()),
+        new MapSqlParameterSource("membership_id", membershipUID),
         new TransactionListExtractor(codeValueRepo));
   }
 
   @Override
-  public long getCountOfTransactionGroupsForType(final TransactionType type) {
+  public long getCountOfTransactionGroupsForType(TransactionType type) {
     LOGGER.info("Calling getCountOfTransactionGroupsForInvoices");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -118,7 +115,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
   }
 
   @Override
-  public List<TransactionGroup> getTransactionGroupsForType(final TransactionType type, final int start, final int limit) {
+  public List<TransactionGroup> getTransactionGroupsForType(TransactionType type, int start, int limit) {
     LOGGER.info("Calling getTransactionListForInvoices");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -136,7 +133,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
   }
 
   @Override
-  public List<DepositTransaction> getTransactionsForDeposit(final Deposit deposit) {
+  public List<DepositTransaction> getTransactionsForDeposit(Deposit deposit) {
     Assert.notNull(deposit, "Assertion Failed - argument [deposit] cannot be null.");
 
     LOGGER.info("Calling getTransactionsForDeposit [{}].", deposit.getDepositNumber());
@@ -160,7 +157,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
   }
 
   @Override
-  public Transaction saveTransaction(final Transaction transaction, final User user) throws DataAccessException {
+  public Transaction saveTransaction(Transaction transaction, User user) throws DataAccessException {
     Assert.notNull(transaction, "Argument [transaction] cannot be null");
     Assert.notNull(user, "Argument [user] cannot be null");
 
@@ -195,7 +192,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     return trans;
   }
 
-  private Transaction insertTransaction(final Transaction transaction, final User user) {
+  private Transaction insertTransaction(Transaction transaction, User user) {
     LOGGER.info("Inserting Transaction for Membership [{}]", transaction.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -213,7 +210,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     return transaction;
   }
 
-  private Transaction updateTransaction(final Transaction transaction, final User user) {
+  private Transaction updateTransaction(Transaction transaction, User user) {
     LOGGER.info("Updating Transaction for Membership [{}]", transaction.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -233,7 +230,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     return transaction;
   }
 
-  private TransactionEntry saveTransactionEntry(final TransactionEntry entry, final User user) {
+  private TransactionEntry saveTransactionEntry(TransactionEntry entry, User user) {
     if (entry.getTransactionEntryUID() == 0L) {
       return insertTransactionEntry(entry, user);
     } else {
@@ -241,7 +238,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     }
   }
 
-  private TransactionEntry insertTransactionEntry(final TransactionEntry entry, final User user) {
+  private TransactionEntry insertTransactionEntry(TransactionEntry entry, User user) {
     LOGGER.info("Inserting TransactionEntry for Transaction [{}]", entry.getTransactionEntryUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
@@ -259,7 +256,7 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
     return entry;
   }
 
-  private TransactionEntry updateTransactionEntry(final TransactionEntry entry, final User user) {
+  private TransactionEntry updateTransactionEntry(TransactionEntry entry, User user) {
     LOGGER.info("Updating TransactionEntry for Transaction [{}]", entry.getTransactionEntryUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());

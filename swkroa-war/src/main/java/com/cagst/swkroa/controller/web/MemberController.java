@@ -8,6 +8,7 @@ import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.document.DocumentRepository;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
@@ -36,11 +37,16 @@ public class MemberController {
 
   private final MemberRepository memberRepository;
   private final DocumentRepository documentRepository;
+  private final TransactionRepository transactionRepository;
 
   @Inject
-  public MemberController(MemberRepository memberRepository, DocumentRepository documentRepository) {
+  public MemberController(MemberRepository memberRepository,
+                          DocumentRepository documentRepository,
+                          TransactionRepository transactionRepository
+  ) {
     this.memberRepository = memberRepository;
     this.documentRepository = documentRepository;
+    this.transactionRepository = transactionRepository;
   }
 
   @RequestMapping(value = "/home", method = RequestMethod.GET)
@@ -72,7 +78,10 @@ public class MemberController {
     if (user != null) {
       Optional<Member> checkMember = memberRepository.getMemberByPersonUID(user.getPersonUID());
       if (checkMember.isPresent()) {
-        mav.addObject("membershipUID", checkMember.get().getMembershipUID());
+        long membershipUID = checkMember.get().getMembershipUID();
+
+        mav.addObject("membershipUID", membershipUID);
+        mav.addObject("transactions", transactionRepository.getTransactionsForMembership(membershipUID));
       }
     }
 
