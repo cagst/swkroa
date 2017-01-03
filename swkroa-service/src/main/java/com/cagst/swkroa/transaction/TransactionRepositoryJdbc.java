@@ -3,6 +3,7 @@ package com.cagst.swkroa.transaction;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
+import java.util.Comparator;
 import java.util.List;
 
 import com.cagst.swkroa.codevalue.CodeValueRepository;
@@ -95,10 +96,13 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    return getJdbcTemplate().query(
+    List<Transaction> results = getJdbcTemplate().query(
         stmtLoader.load(GET_TRANSACTIONS_FOR_MEMBERSHIP),
         new MapSqlParameterSource("membership_id", membershipUID),
         new TransactionListExtractor(codeValueRepo));
+
+    results.sort(Comparator.comparing(Transaction::getTransactionDate));
+    return results;
   }
 
   @Override

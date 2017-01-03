@@ -5,26 +5,6 @@
  *
  * Author:  Craig Gaskill
  */
-
-swkroaApp.controller('transactionController',
-                     ['$scope',
-                      '$http',
-                      'codesetService',
-                      'contactService',
-                      'membershipService',
-  function ($scope, $http, codesetService, contactService, membershipService) {
-    var membershipId = $('#membershipUID').val();
-
-    var including = ['LOAD_TRANSACTIONS'];
-
-    membershipService.getMembership(membershipId, including).then(function(response) {
-      if (responseSuccessful(response)) {
-        $scope.transactions = response.data.transactions;
-      }
-    });
-
-}]);
-
 var toggleTransactionDetails = function(transaction) {
   var img       = $(transaction).children()[0];
   var collapsed = $(img).hasClass("fa-caret-right");
