@@ -8,25 +8,25 @@
   <script type="text/javascript" th:src="@{/static/js/accounting/deposit.js}"></script>
 </head>
 
-<body>
+<body data-ng-app="swkroaApp">
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="depositController">
+<div id="page-content" data-ng-controller="DepositController as ctrl" data-ng-cloak="">
   <!-- Deposit Listing Page -->
-  <div data-ng-show="view == 'listing'">
+  <div data-ng-show="ctrl.view == 'listing'">
     <div class="page-header">
       <h3 th:text="#{deposits.title}">zzz Deposit Overview</h3>
       <div id="createdMessage" class="alert alert-success alert-dismissible" role="alert">
-        <strong>Success!</strong>
+        <strong th:text="#{common.success}">z_Success</strong>
         <div th:text="#{deposits.save.created}">zzz Created</div>
       </div>
       <div id="updatedMessage" class="alert alert-success alert-dismissible" role="alert">
-        <strong>Success!</strong>
+        <strong th:text="#{common.success}">z_Success</strong>
         <div th:text="#{deposits.save.updated}">zzz Updated</div>
       </div>
     </div>
-    <div class="row" data-ng-show="deposits">
+    <div class="row" data-ng-show="ctrl.deposits">
       <div class="col-xs-3"></div>
       <div class="col-xs-6">
         <table class="table table-hover table-bordered">
@@ -36,7 +36,7 @@
               <th th:text="#{deposits.number.label}">zzz Ref Num</th>
               <th th:text="#{deposits.amount}">zzz Amount</th>
               <th style="width: 24%">
-                <a href="#" class="btn btn-success btn-xs pull-right" data-ng-click="addDeposit()">
+                <a href="#" class="btn btn-success btn-xs pull-right" data-ng-click="ctrl.addDeposit()">
                   <i class="fa fa-plus"></i>
                   <span th:text="#{deposits.add.button}">zzz Add</span>
                 </a>
@@ -45,21 +45,19 @@
           </thead>
           <tbody>
             <tr class="hover-buttons"
-                data-ng-repeat="deposit in deposits | orderBy: 'depositDate': true"
-                data-ng-show="deposit.active">
-              <td>{{deposit.depositDate | date:'mediumDate'}}</td>
-              <td>
-                {{deposit.depositNumber}}
-              </td>
-              <td>{{deposit.depositAmount | currency}}</td>
+                data-ng-repeat="dep in ctrl.deposits | orderBy: 'depositDate': true"
+                data-ng-show="dep.active">
+              <td data-ng-bind="dep.depositDate | date:'mediumDate'"></td>
+              <td data-ng-bind="dep.depositNumber"></td>
+              <td data-ng-bind="dep.depositAmount | currency"></td>
               <td>
                 <div class="btn-group pull-right">
-                  <button type="button" class="btn btn-primary btn-xs" data-ng-click="editDeposit(deposit)">
+                  <button type="button" class="btn btn-primary btn-xs" data-ng-click="ctrl.editDeposit(dep)">
                     <i class="fa fa-edit"></i>
                     <span th:text="#{common.edit}">z_Edit</span>
                   </button>
                   <button type="button" class="btn btn-danger btn-xs"
-                          data-ng-click="selectedDeposit(deposit)"
+                          data-ng-click="ctrl.selectedDeposit(dep)"
                           data-toggle="modal" data-target="#confirmDeletion">
                     <i class="fa fa-trash-o"></i>
                     <span th:text="#{common.delete}">zzz Delete</span>
@@ -75,17 +73,17 @@
   </div>
 
   <!-- Modify (Add/Edit) Deposit Page -->
-  <div data-ng-show="view == 'add' || view == 'edit'">
+  <div data-ng-show="ctrl.view == 'add' || ctrl.view == 'edit'">
     <div class="page-header">
-      <h3 th:text="#{deposits.add.button}" data-ng-show="deposit.depositUID == 0">
+      <h3 th:text="#{deposits.add.button}" data-ng-show="ctrl.deposit.depositUID == 0">
         zzz Add Deposit
       </h3>
-      <h3 th:text="#{deposits.edit.button}" data-ng-show="deposit.depositUID > 0">
+      <h3 th:text="#{deposits.edit.button}" data-ng-show="ctrl.deposit.depositUID > 0">
         zzz Edit Deposit
       </h3>
     </div>
 
-    <form method="POST" name="depositForm" novalidate data-ng-submit="save()" class="css-form">
+    <form method="POST" name="depositForm" novalidate data-ng-submit="ctrl.saveDeposit()" class="css-form">
       <div class="row">
         <div class="col-xs-3">
           <div class="row" style="margin-left:10px; margin-right:10px;">
@@ -95,12 +93,13 @@
             </label>
             <p class="input-group">
               <input id="depositDate" name="depositDate" type="text" class="form-control"
-                     data-datepicker-popup="MM/dd/yyyy"
-                     data-is-open="openDepositDate"
-                     data-ng-model="deposit.depositDate"
+                     data-uib-datepicker-popup="MM/dd/yyyy"
+                     data-is-open="ctrl.isOpen.depositDate"
+                     data-ng-click="ctrl.openDepositDate($event)"
+                     data-ng-model="ctrl.deposit.depositDate"
                      data-ng-required="true" />
             <span class="input-group-btn">
-              <button type="button" class="btn btn-default" data-ng-click="openDepositDate($event)">
+              <button type="button" class="btn btn-default" data-ng-click="ctrl.openDepositDate($event)">
                 <i class="fa fa-calendar"></i>
               </button>
             </span>
@@ -114,13 +113,12 @@
             <input id="depositNumber" name="depositNumber"
                    type="text" class="form-control" maxlength="25"
                    th:placeholder="#{deposits.number.prompt}"
-                   data-ng-model="deposit.depositNumber"
+                   data-ng-model="ctrl.deposit.depositNumber"
                    data-ng-required="true" />
           </div>
           <div class="row" style="margin-left:10px; margin-right:10px;">
             <label class="control-label" th:text="#{deposits.amount}">zzz Amount</label>
-            <h3 class="clear-top"
-                data-ng-bind="deposit.depositAmount | currency">
+            <h3 class="clear-top" data-ng-bind="ctrl.deposit.depositAmount | currency">
               zzz Deposit Amount
             </h3>
           </div>
@@ -131,17 +129,17 @@
                   <button type="submit"
                           class="btn btn-primary"
                           th:text="#{deposits.create}"
-                          data-ng-show="deposit.depositUID == 0"
+                          data-ng-show="ctrl.deposit.depositUID == 0"
                           data-ng-disabled="depositForm.$invalid">
                   </button>
                   <button type="submit"
                           class="btn btn-primary"
                           th:text="#{deposits.update}"
-                          data-ng-show="deposit.depositUID > 0"
+                          data-ng-show="ctrl.deposit.depositUID > 0"
                           data-ng-disabled="depositForm.$invalid">
                   </button>
                   <button type="button" class="btn btn-default"
-                          data-ng-click="cancelChanges()"
+                          data-ng-click="ctrl.cancelChanges()"
                           th:text="#{common.cancel}">
                   </button>
                 </div>
@@ -154,20 +152,19 @@
         <div class="col-xs-9">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <span class="panel-title">Unpaid Invoices</span>
+              <span class="panel-title" th:text="#{deposits.unpaid.invoices}">z_UnpaidInvoices</span>
               <span class="pull-right">
-                <input type="text" data-ng-model="searchText" placeholder="Search"/>
+                <input type="text" data-ng-model="searchText" th:placeholder="#{common.search}" />
               </span>
             </div>
             <div class="panel-body clear-padding" style="height:225px; overflow-y:scroll;">
-              <em data-ng-show="!unpaid">
+              <em data-ng-show="!ctrl.unpaid">
                 <label class="panel-body text-muted text-center">
                   <i class="fa fa-spinner fa-pulse"></i>
                   <span th:text="#{deposits.loading}">zzz Loading</span>
                 </label>
               </em>
-              <table class="table table-hover table-bordered table-condensed"
-                     data-ng-show="unpaid">
+              <table class="table table-hover table-bordered table-condensed" data-ng-show="ctrl.unpaid">
                   <thead>
                     <tr>
                       <th></th>
@@ -181,13 +178,13 @@
                       <th class="col-xs-1" th:text="#{deposits.transaction.remaining}">zzz Remaining</th>
                     </tr>
                   </thead>
-                  <tbody data-ng-repeat="inv in unpaid | filter: searchText | orderBy: ['membershipName', 'transactionDate']"
+                  <tbody data-ng-repeat="inv in ctrl.unpaid | filter: searchText | orderBy: ['membershipName', 'transactionDate']"
                          data-ng-show="!inv.transactionInDeposit">
                     <tr>
                       <td>
                         <button type="button" class="btn btn-success btn-xs"
                                 th:attr="data-uib-tooltip=#{deposits.add.tooltip}"
-                                data-ng-click="addInvoiceToDeposit(inv)">
+                                data-ng-click="ctrl.addInvoiceToDeposit(inv)">
                           <i class="fa fa-plus"></i>
                         </button>
                       </td>
@@ -208,7 +205,7 @@
           <!-- Transactions in Deposit -->
           <div class="spacer-top panel panel-default">
             <div class="panel-heading">
-              <span class="panel-title">Transactions in Deposit</span>
+              <span class="panel-title" th:text="#{deposits.transaction.included}">z_TransactionsDeposit</span>
             </div>
             <div class="panel-body clear-padding" style="height:225px; overflow-y:scroll;">
               <table class="table table-hover table-bordered table-condensed">
@@ -225,13 +222,13 @@
                   <th class="col-xs-1"></th>
                 </tr>
               </thead>
-              <tbody data-ng-repeat="tx in deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
+              <tbody data-ng-repeat="tx in ctrl.deposit.transactions | orderBy: ['membershipName', 'transactionDate']"
                      data-ng-show="tx.active">
                 <tr>
                   <td>
                     <button type="button" class="btn btn-danger btn-xs"
                             th:attr="data-uib-tooltip=#{deposits.remove.tooltip}"
-                            data-ng-click="removeInvoiceFromDeposit(tx)">
+                            data-ng-click="ctrl.removeInvoiceFromDeposit(tx)">
                       <i class="fa fa-minus"></i>
                     </button>
                   </td>
@@ -251,7 +248,7 @@
                   <td><span class="pull-right" data-ng-bind="tx.amountPaid | currency"></span></td>
                   <td>
                     <button type="button" class="btn btn-primary btn-xs pull-right"
-                            data-ng-click="createTransactionEntry(tx)">
+                            data-ng-click="ctrl.createTransactionEntry(tx)">
                       <span th:text="#{deposits.transaction.add.entry}"></span>
                     </button>
                   </td>
@@ -293,8 +290,8 @@
                     zzz Type
                   </label>
                   <select id="entryType" name="entryType" class="form-control"
-                          data-ng-model="newTransactionEntry.transactionEntryType"
-                          data-ng-options="type.display for type in entryTypes">
+                          data-ng-model="ctrl.newTransactionEntry.transactionEntryType"
+                          data-ng-options="type.display for type in ctrl.entryTypes">
                   </select>
                 </div>
                 <div class="col-xs-6">
@@ -303,14 +300,14 @@
                     zzz Amount
                   </label>
                   <input id="entryAmount" type="number" class="form-control"
-                         data-ng-model="newTransactionEntry.transactionEntryAmount" />
+                         data-ng-model="ctrl.newTransactionEntry.transactionEntryAmount" />
                 </div>
               </div>
             </div>
 
             <div class="modal-footer">
               <button type="button" class="btn btn-success"
-                      data-ng-click="addTransactionEntry()"
+                      data-ng-click="ctrl.addTransactionEntry()"
                       th:text="#{com.cagst.swkroa.add}">
                 zzz Add
               </button>

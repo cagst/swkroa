@@ -89,7 +89,7 @@ public final class TransactionApiController {
    *
    * @return A JSON representation of the {@link List} of {@link UnpaidInvoice UnpaidInvoices}.
    */
-  @RequestMapping(value = "/unpaid", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/unpaid", method = RequestMethod.GET)
   public List<UnpaidInvoice> getUnpaidInvoices() {
     LOGGER.info("Received request to retrieve unpaid invoices");
 

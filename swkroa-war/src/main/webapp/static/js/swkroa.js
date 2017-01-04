@@ -11,7 +11,7 @@ if (typeof String.prototype.startsWith != 'function') {
   };
 }
 
-(function(window, angular) {
+(function(window, angular, $) {
   'use strict';
 
   angular.module('swkroaApp',
@@ -124,16 +124,35 @@ if (typeof String.prototype.startsWith != 'function') {
     };
   });
 
-})(window, window.angular);
+})(window, window.angular, window.jQuery);
 
-responseSuccessful = function(response) {
+function responseSuccessful(response) {
   return (200 <= response.status && response.status <= 299);
-};
+}
 
-showProcessingDialog = function() {
+function showProcessingDialog() {
   $('#pleaseWaitDlg').modal('show');
-};
+}
 
-hideProcessingDialog = function() {
+function hideProcessingDialog() {
   $('#pleaseWaitDlg').modal('hide');
-};
+}
+
+function toggleTransactionDetails(transaction) {
+  var img       = $(transaction).children()[0];
+  var collapsed = $(img).hasClass("fa-caret-right");
+
+  var parentDiv = $(transaction).parent();
+  var parentCol = $(parentDiv).parent();
+  var parentRow = $(parentCol).parent();
+
+  if (collapsed) {
+    $(parentRow).siblings().removeClass("hide");
+    $(img).removeClass("fa-caret-right");
+    $(img).addClass("fa-caret-down");
+  } else {
+    $(parentRow).siblings().addClass("hide");
+    $(img).addClass("fa-caret-right");
+    $(img).removeClass("fa-caret-down");
+  }
+}

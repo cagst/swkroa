@@ -275,19 +275,6 @@ var syncTransactionEntryType = function(scope) {
   }
 };
 
-//var syncMember = function(scope) {
-//  for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
-//    if (scope.transaction.transactionEntries[idx1].member) {
-//      for (var idx2 = 0; idx2 < scope.membership.members.length; idx2++) {
-//        if (scope.transaction.transactionEntries[idx1].member.memberUID == scope.membership.members[idx2].memberUID) {
-//          scope.transaction.transactionEntries[idx1].member = scope.membership.members[idx2];
-//          break;
-//        }
-//      }
-//    }
-//  }
-//}
-
 var syncRelatedTransactions = function(scope) {
   for (var idx1 = 0; idx1 < scope.transaction.transactionEntries.length; idx1++) {
     if (scope.transaction.transactionEntries[idx1].relatedTransactionUID > 0) {
@@ -298,25 +285,6 @@ var syncRelatedTransactions = function(scope) {
         }
       }
     }
-  }
-};
-
-var toggleTransactionDetails = function(transaction) {
-  var img       = $(transaction).children()[0];
-  var collapsed = $(img).hasClass("fa-caret-right");
-
-  var parentDiv = $(transaction).parent();
-  var parentCol = $(parentDiv).parent();
-  var parentRow = $(parentCol).parent();
-
-  if (collapsed) {
-    $(parentRow).siblings().removeClass("hide");
-    $(img).removeClass("fa-caret-right");
-    $(img).addClass("fa-caret-down");
-  } else {
-    $(parentRow).siblings().addClass("hide");
-    $(img).addClass("fa-caret-right");
-    $(img).removeClass("fa-caret-down");
   }
 };
 

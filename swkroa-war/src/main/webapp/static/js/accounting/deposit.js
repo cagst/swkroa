@@ -5,229 +5,202 @@
  *
  * Author:  Craig Gaskill
  */
+(function(window, angular, $) {
+  'use strict';
 
-swkroaApp.service('depositService', ['$http', function($http) {
-  this.getDeposits = function() {
-    var promise = $http.get('/api/deposits');
+  angular.module('swkroaApp').controller('DepositController', DepositController);
 
-    promise.success = function(fn) {
-      promise.then(function(response) {
-        if (responseSuccessful(response)) {
-          fn(response.data, response.status);
-        }
-      });
-    };
+  DepositController.$inject = ['CodeSetService', 'DepositService', 'TransactionService'];
 
-    promise.error = function(fn) {
-      promise.then(function(response) {
-        if (!responseSuccessful(response)) {
-          fn(response.data, response.status);
-        }
-      });
-    };
+  function DepositController(codeSetService, depositService, transactionService) {
+    var vm = this;
 
-    return promise;
-  };
-
-  this.getDeposit = function(depositUID) {
-    var promise = $http.get('/api/deposits/' + depositUID);
-
-    promise.success = function(fn) {
-      promise.then(function(response) {
-        if (responseSuccessful(response)) {
-          fn(response.data, response.status);
-        }
-      });
-    };
-
-    promise.error = function(fn) {
-      promise.then(function(response) {
-        if (!responseSuccessful(response)) {
-          fn(response.data, response.status);
-        }
-      });
-    };
-
-    return promise;
-  };
-
-  this.saveDeposit = function(deposit) {
-    var promise = $http.post('/api/deposits', deposit);
-
-    promise.success = function(fn) {
-      promise.then(function(response) {
-        if (responseSuccessful(response)) {
-          fn(response.data, response.status);
-        }
-      });
-    };
-
-    promise.error = function(fn) {
-      promise.then(function(response) {
-        if (!responseSuccessful(response)) {
-          fn(response.data, response.status);
-        }
-      });
-    };
-
-    return promise;
-  };
-}]);
-
-swkroaApp.controller('depositController', ['$scope', 'depositService', 'transactionService', 'codesetService',
-    function($scope, depositService, transactionService, codesetService) {
-
-  $('#createdMessage').hide();
-  $('#updatedMessage').hide();
-
-  $scope.view     = "listing";
-  $scope.deposit  = null;
-
-  depositService.getDeposits().success(function(data) {
-    $scope.deposits = data;
-  });
-
-  codesetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').success(function(data) {
-    $scope.entryTypes = data;
-  });
-
-  $scope.addDeposit = function() {
-    depositService.getDeposit(0).success(function(data) {
-      $scope.deposit  = data;
-
-      $scope.view = "add";
-    });
-
-    transactionService.getUnpaidTransactions().success(function(data) {
-      $scope.unpaid = data;
-    });
-  };
-
-  $scope.editDeposit = function(deposit) {
     $('#createdMessage').hide();
     $('#updatedMessage').hide();
 
-    depositService.getDeposit(deposit.depositUID).success(function(data) {
-      $scope.deposit  = data;
+    vm.view     = "listing";
+    vm.deposit  = null;
 
-      // need to add the paidAmount to the deposit transaction so when it is removed it can be removed from the total
-      for (var idx = 0; idx < $scope.deposit.transactions.length; idx++) {
-        $scope.deposit.transactions[idx].amountPaid = $scope.deposit.transactions[idx].transactionAmount;
-        $scope.deposit.transactions[idx].amountRemaining = $scope.deposit.transactions[idx].transactionAmount;
-        $scope.deposit.transactions[idx].transactionInDeposit = true;
-      }
+    vm.isOpen = {
+      depositDate: false
+    };
 
-      $scope.view = "edit";
-    });
+    /********************************************
+     * Define binding methods
+     ********************************************/
 
-    transactionService.getUnpaidTransactions().success(function(data) {
-      $scope.unpaid = data;
+    vm.addDeposit = addDeposit;
+    vm.editDeposit = editDeposit;
+    vm.selectDeposit = selectDeposit;
+    vm.deleteDeposit = deleteDeposit;
+    vm.cancelChanges = cancelChanges;
+    vm.addInvoiceToDeposit = addInvoiceToDeposit;
+    vm.removeInvoiceFromDeposit = removeInvoiceFromDeposit;
+    vm.createTransactionEntry = createTransactionEntry;
+    vm.addTransactionEntry = addTransactionEntry;
+    vm.saveDeposit = saveDeposit;
 
-      // need to add the deposit transaction to the unpaid but mark it as included in deposit so if it is removed it will re-appear in the unpaid invoices section
-      for (var idx = 0; idx < $scope.deposit.transactions.length; idx++) {
-        $scope.unpaid.push($scope.deposit.transactions[idx]);
-      }
-    });
-  };
+    // Date-Picker Methods
+    vm.openDepositDate = openDepositDate;
 
-  $scope.selectDeposit = function(deposit) {
-    $scope.deposit = deposit;
-  };
+    activate();
 
-  $scope.deleteDeposit = function() {
-  };
+    /********************************************
+     * Implement Methods
+     ********************************************/
 
-  $scope.cancelChanges = function() {
-    $scope.view = "listing";
-  };
-
-  $scope.addInvoiceToDeposit = function(transaction) {
-    transaction.transactionInDeposit = true;
-
-    var tx = angular.copy(transaction);
-    tx.amountPaid = tx.amountRemaining;
-    tx.amountRemaining = 0;
-
-    // flip the polarity of the transaction entries
-    for (var idx = 0; idx < tx.transactionEntries.length; idx++) {
-      tx.transactionEntries[idx].transactionEntryAmount = Math.abs(tx.transactionEntries[idx].transactionEntryAmount);
-    }
-
-    $scope.deposit.transactions.push(tx);
-    $scope.deposit.depositAmount += tx.amountPaid;
-  };
-
-  $scope.removeInvoiceFromDeposit = function(transaction) {
-    for (var idx1 = 0; idx1 < $scope.unpaid.length; idx1++) {
-      if ($scope.unpaid[idx1].transactionUID == transaction.transactionUID) {
-        $scope.unpaid[idx1].transactionInDeposit = false;
-        break;
-      }
-    }
-
-    $scope.deposit.depositAmount -= transaction.amountPaid;
-    transaction.amountPaid = 0;
-    
-    if (transaction.depositTransactionUID) {
-      transaction.active = false;
-    } else {
-      var idx2 = $scope.deposit.transactions.indexOf(transaction);
-      $scope.deposit.transactions.splice(idx2, 1);
-    }
-  };
-  
-  $scope.createTransactionEntry = function(transaction) {
-    $scope.selectedTransaction    = angular.copy(transaction);
-    $scope.selectedTransactionIdx = $scope.deposit.transactions.indexOf(transaction);
-    $scope.newTransactionEntry    = {transactionEntryAmount: 0};
-
-    $("#addEntry").modal('toggle');
-  };
-
-  $scope.addTransactionEntry = function() {
-    $('#addEntry').modal('hide');
-
-    $scope.selectedTransaction.transactionEntries.push($scope.newTransactionEntry);
-    $scope.selectedTransaction.amountPaid += $scope.newTransactionEntry.transactionEntryAmount;
-    $scope.selectedTransaction.transactionAmount += $scope.newTransactionEntry.transactionEntryAmount;
-
-    $scope.deposit.transactions[$scope.selectedTransactionIdx] = angular.copy($scope.selectedTransaction);
-    $scope.deposit.depositAmount += $scope.newTransactionEntry.transactionEntryAmount;
-  };
-
-  $scope.save = function() {
-    depositService.saveDeposit($scope.deposit).success(function(data, status) {
-      if (status == 201) {
-        $('#createdMessage').show();
-      } else if (status == 200) {
-        $('#updatedMessage').show();
-      }
-
-      $scope.view     = "listing";
-      $scope.deposit  = data;
-
-      depositService.getDeposits().success(function(data) {
-        $scope.deposits = data;
+    function activate() {
+      depositService.getDeposits().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.deposits = response.data;
+        }
       });
-    });
-  };
-}]);
 
-var toggleTransactionDetails = function(transaction) {
-  var img       = $(transaction).children()[0];
-  var collapsed = $(img).hasClass("fa-caret-right");
+      codeSetService.getCodeValuesForCodeSet('TRANSACTION_ENTRY_TYPE').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.entryTypes = response.data;
+        }
+      });
+    }
 
-  var parentDiv = $(transaction).parent();
-  var parentCol = $(parentDiv).parent();
-  var parentRow = $(parentCol).parent();
+    function addDeposit() {
+      depositService.getDeposit(0).then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.deposit = response.data;
+          vm.view = "add";
+        }
+      });
 
-  if (collapsed) {
-    $(parentRow).siblings().removeClass("hide");
-    $(img).removeClass("fa-caret-right");
-    $(img).addClass("fa-caret-down");
-  } else {
-    $(parentRow).siblings().addClass("hide");
-    $(img).addClass("fa-caret-right");
-    $(img).removeClass("fa-caret-down");
+      transactionService.getUnpaidTransactions().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.unpaid = response.data;
+        }
+      });
+    }
+
+    function editDeposit(deposit) {
+      $('#createdMessage').hide();
+      $('#updatedMessage').hide();
+
+      depositService.getDeposit(deposit.depositUID).then(function(reponse) {
+        if (responseSuccessful(reponse)) {
+          vm.deposit  = reponse.data;
+
+          // need to add the paidAmount to the deposit transaction so when it is removed it can be removed from the total
+          for (var idx = 0; idx < vm.deposit.transactions.length; idx++) {
+            vm.deposit.transactions[idx].amountPaid = vm.deposit.transactions[idx].transactionAmount;
+            vm.deposit.transactions[idx].amountRemaining = vm.deposit.transactions[idx].transactionAmount;
+            vm.deposit.transactions[idx].transactionInDeposit = true;
+          }
+
+          vm.view = "edit";
+        }
+      });
+
+      transactionService.getUnpaidTransactions().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.unpaid = response.data;
+
+          // need to add the deposit transaction to the unpaid but mark it as included in deposit so if it is removed it will re-appear in the unpaid invoices section
+          for (var idx = 0; idx < vm.deposit.transactions.length; idx++) {
+            vm.unpaid.push(vm.deposit.transactions[idx]);
+          }
+        }
+      });
+    }
+
+    function selectDeposit(deposit) {
+      vm.deposit = deposit;
+    }
+
+    function deleteDeposit() {
+    }
+
+    function cancelChanges() {
+      vm.view = "listing";
+    }
+
+    function addInvoiceToDeposit(transaction) {
+      transaction.transactionInDeposit = true;
+
+      var tx = angular.copy(transaction);
+      tx.amountPaid = tx.amountRemaining;
+      tx.amountRemaining = 0;
+
+      // flip the polarity of the transaction entries
+      for (var idx = 0; idx < tx.transactionEntries.length; idx++) {
+        tx.transactionEntries[idx].transactionEntryAmount = Math.abs(tx.transactionEntries[idx].transactionEntryAmount);
+      }
+
+      vm.deposit.transactions.push(tx);
+      vm.deposit.depositAmount += tx.amountPaid;
+    }
+
+    function removeInvoiceFromDeposit(transaction) {
+      for (var idx1 = 0; idx1 < vm.unpaid.length; idx1++) {
+        if (vm.unpaid[idx1].transactionUID == transaction.transactionUID) {
+          vm.unpaid[idx1].transactionInDeposit = false;
+          break;
+        }
+      }
+
+      vm.deposit.depositAmount -= transaction.amountPaid;
+      transaction.amountPaid = 0;
+
+      if (transaction.depositTransactionUID) {
+        transaction.active = false;
+      } else {
+        var idx2 = vm.deposit.transactions.indexOf(transaction);
+        vm.deposit.transactions.splice(idx2, 1);
+      }
+    }
+
+    function createTransactionEntry(transaction) {
+      vm.selectedTransaction    = angular.copy(transaction);
+      vm.selectedTransactionIdx = vm.deposit.transactions.indexOf(transaction);
+      vm.newTransactionEntry    = {transactionEntryAmount: 0};
+
+      $("#addEntry").modal('toggle');
+    }
+
+    function addTransactionEntry() {
+      $('#addEntry').modal('hide');
+
+      vm.selectedTransaction.transactionEntries.push(vm.newTransactionEntry);
+      vm.selectedTransaction.amountPaid += vm.newTransactionEntry.transactionEntryAmount;
+      vm.selectedTransaction.transactionAmount += vm.newTransactionEntry.transactionEntryAmount;
+
+      vm.deposit.transactions[vm.selectedTransactionIdx] = angular.copy(vm.selectedTransaction);
+      vm.deposit.depositAmount += vm.newTransactionEntry.transactionEntryAmount;
+    }
+
+    function saveDeposit() {
+      depositService.saveDeposit(vm.deposit).then(function(response) {
+        if (responseSuccessful(response)) {
+          if (response.status == 201) {
+            $('#createdMessage').show();
+          } else if (response.status == 200) {
+            $('#updatedMessage').show();
+          }
+
+          vm.view     = "listing";
+          vm.deposit  = response.data;
+
+          depositService.getDeposits().then(function(response) {
+            if (responseSuccessful(response)) {
+              vm.deposits = response.data;
+            }
+          });
+        }
+      });
+    }
+
+    function openDepositDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      vm.isOpen.depositDate = true;
+    }
+
   }
-};
+})(window, window.angular, window.jQuery);

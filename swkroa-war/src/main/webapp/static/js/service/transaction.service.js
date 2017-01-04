@@ -12,7 +12,11 @@
 
   function TransactionService($http) {
     var vm = this;
-    var rootUrl = "/api/transactions/invoices";
+    var INVOICES = 'invoices';
+    var PAYMENTS = "payments";
+    var UNPAID   = 'unpaid';
+
+    var rootUrl = "/api/transactions";
 
     vm.getInvoiceGroups = getInvoiceGroups;
     vm.getPaymentGroups = getPaymentGroups;
@@ -24,15 +28,15 @@
      ********************************************/
 
     function getInvoiceGroups(start, limit) {
-      return $http.get(rootUrl + "?start=" + start + "&limit=" + limit);
+      return $http.get(rootUrl + "/" + INVOICES + "?start=" + start + "&limit=" + limit);
     }
 
     function getPaymentGroups(start, limit) {
-      return $http.get(rootUrl + '?start=' + start + '&limit=' + limit);
+      return $http.get(rootUrl + "/" + PAYMENTS + '?start=' + start + '&limit=' + limit);
     }
 
     function getUnpaidTransactions() {
-      return $http.get(rootUrl + '/unpaid');
+      return $http.get(rootUrl + '/' + UNPAID);
     }
 
     function saveTransaction(transaction) {
