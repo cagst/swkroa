@@ -5,102 +5,126 @@
  *
  * Author:  Craig Gaskill
  */
+(function(window, angular, $) {
+  'use strict';
 
-swkroaApp.controller('invoiceController', ['$scope', 'codesetService', 'membershipService',
-    function($scope, codesetService, membershipService) {
+  angular.module('swkroaApp').controller('InvoiceController', InvoiceController);
 
-  $scope.membershipsDue = [];
+  InvoiceController.$inject = ['MembershipService'];
 
-  $scope.getMemberhipsDueIn = function(days) {
-    showProcessingDialog();
+  function InvoiceController(membershipService) {
+    var vm = this;
 
-    membershipService.getMembershipsDueInXDays(days).success(function(data) {
-      $scope.membershipsDue = data;
-      $scope.checkAll = true;
-      $scope.totalAmount = 0;
+    vm.membershipsDue = [];
+    vm.days = 30;
+    vm.totalMemberships = 0;
+    vm.totalAmount = 0;
+    vm.transactionDate = new Date();
 
-      for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
-          $scope.membershipsDue[idx].selected = true;
-          $scope.totalAmount += $scope.membershipsDue[idx].calculatedDuesAmount;
-      }
+    activate();
 
-      $scope.totalMemberships = $scope.membershipsDue.length;
+    /********************************************
+     * Define binding methods
+     ********************************************/
+    vm.getMembershipsDueIn = getMembershipsDueIn;
+    vm.toggleCheckAll = toggleCheckAll;
+    vm.toggleCheck = toggleCheck;
+    vm.canExport = canExport;
+    vm.renewingMemberships = renewingMemberships;
+    vm.openTransactionDate = openTransactionDate;
 
-      hideProcessingDialog();
-    });
-  };
+    /********************************************
+     * Implement Methods
+     ********************************************/
 
-  $scope.toggleCheckAll = function() {
-    for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
-        $scope.membershipsDue[idx].selected = $scope.checkAll;
-    }
+    function getMembershipsDueIn() {
+      showProcessingDialog();
 
-    calculateTotals($scope);
-  };
+      membershipService.getMembershipsDueInXDays(vm.days).then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.membershipsDue = response.data;
+          vm.checkAll = true;
+          vm.totalAmount = 0;
 
-  $scope.toggleCheck = function() {
-    calculateTotals($scope);
-  };
+          for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+            vm.membershipsDue[idx].selected = true;
+            vm.totalAmount += vm.membershipsDue[idx].calculatedDuesAmount;
+          }
 
-  $scope.canExport = function() {
-    var membershipsSelected = false;
-    for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
-      if ($scope.membershipsDue[idx].selected) {
-        membershipsSelected = true;
-      }
-    }
+          vm.totalMemberships = vm.membershipsDue.length;
 
-    return membershipsSelected;
-  };
-
-  $scope.renewingMemberships = function() {
-    $('#renewMembershipsDlg').modal('hide');
-
-    var memberships = [];
-    for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
-      if ($scope.membershipsDue[idx].selected) {
-        memberships.push($scope.membershipsDue[idx].membershipUID);
-      }
-    }
-
-    membershipService.renewMemberships(memberships, $scope.transactionDate, $scope.transactionDescription, $scope.transactionMemo);
-
-    $('#transactionJobSubmittedDlg').modal('show');
-  };
-
-  $scope.openTransactionDate = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-
-    $scope.openedTransactionDate = true;
-  };
-
-  determineRenewalPeriod($scope);
-
-  $scope.days = 30;
-  $scope.totalMemberships = 0;
-  $scope.totalAmount = 0;
-  $scope.transactionDate = new Date();
-}]);
-
-var calculateTotals = function($scope) {
-    $scope.totalMemberships = 0;
-    $scope.totalAmount = 0;
-
-    for (var idx = 0; idx < $scope.membershipsDue.length; idx++) {
-        if ($scope.membershipsDue[idx].selected) {
-          $scope.totalAmount += $scope.membershipsDue[idx].calculatedDuesAmount;
-          $scope.totalMemberships += 1;
+          hideProcessingDialog();
         }
+      });
     }
-};
 
-var determineRenewalPeriod = function($scope) {
-  var currentYear = new Date().getFullYear();
+    function toggleCheckAll() {
+      for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+        vm.membershipsDue[idx].selected = vm.checkAll;
+      }
 
-  $scope.membershipRenewalPeriod = "(" + currentYear + " - " + (currentYear + 1) + ")";
-  $scope.transactionDescription  = "Invoice " + currentYear + " - " + (currentYear + 1);
-};
+      calculateTotals();
+    }
+
+    function toggleCheck() {
+      calculateTotals();
+    }
+
+    function canExport() {
+      var membershipsSelected = false;
+      for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+        if (vm.membershipsDue[idx].selected) {
+          membershipsSelected = true;
+        }
+      }
+
+      return membershipsSelected;
+    }
+
+    function renewingMemberships() {
+      $('#renewMembershipsDlg').modal('hide');
+
+      var memberships = [];
+      for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+        if (vm.membershipsDue[idx].selected) {
+          memberships.push(vm.membershipsDue[idx].membershipUID);
+        }
+      }
+
+      membershipService.renewMemberships(memberships, vm.transactionDate, vm.transactionDescription, vm.transactionMemo);
+
+      $('#transactionJobSubmittedDlg').modal('show');
+    }
+
+    function openTransactionDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      vm.openedTransactionDate = true;
+    }
+
+    function calculateTotals() {
+      vm.totalMemberships = 0;
+      vm.totalAmount = 0;
+
+      for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+        if (vm.membershipsDue[idx].selected) {
+          vm.totalAmount += vm.membershipsDue[idx].calculatedDuesAmount;
+          vm.totalMemberships += 1;
+        }
+      }
+    }
+
+    function activate() {
+      var currentYear = new Date().getFullYear();
+
+      vm.membershipRenewalPeriod = "(" + currentYear + " - " + (currentYear + 1) + ")";
+      vm.transactionDescription  = "Invoice " + currentYear + " - " + (currentYear + 1);
+    }
+
+  }
+
+})(window, window.angular, window.jQuery);
 
 var generateMembershipRenewalLetters = function(reportyType) {
   $('#renewalLetterDlg').modal('hide');

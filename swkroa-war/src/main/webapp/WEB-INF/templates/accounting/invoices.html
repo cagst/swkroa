@@ -9,20 +9,20 @@
   <script type="text/javascript" th:src="@{/static/js/report.js}"></script>
 </head>
 
-<body>
+<body data-ng-app="swkroaApp">
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="invoiceController">
+<div id="page-content" data-ng-controller="InvoiceController as ctrl">
   <div class="page-header">
     <h3 th:text="#{invoices.title}">zzz Invoices</h3>
   </div>
   <form name="reportForm" th:attr="action=@{/report/membership/invoices}" target="_blank" method="post">
-    <div class="row" data-ng-show="invoiceGroups">
+    <div class="row" data-ng-show="ctrl.invoiceGroups">
       <div class="col-xs-2">
         <div class="btn-group-vertical">
           <a class="btn btn-primary" th:href="@{/accounting/invoices/new}"
-             data-ng-disabled="jobsPending">
+             data-ng-disabled="ctrl.jobsPending">
             <span th:text="#{invoices.renew.button}">zzz Renew Membership</span>
           </a>
         </div>
@@ -38,17 +38,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr data-ng-repeat="group in invoiceGroups" class="hover-buttons">
+            <tr data-ng-repeat="group in ctrl.invoiceGroups" class="hover-buttons">
               <td data-ng-bind="group.transactionDate | date:'mediumDate'" style="width:25%"></td>
               <td data-ng-bind="group.transactionCount" style="width:25%"></td>
               <td data-ng-bind="group.transactionAmount | currency" style="width:25%"></td>
               <td style="width:25%">
                 <div class="btn-group">
-                  <a type="button" class="btn btn-info btn-xs" data-ng-click="generateInvoicesReport('pdf', group.transactionDate, group.transactionDate)">
+                  <a type="button" class="btn btn-info btn-xs" data-ng-click="ctrl.generateInvoicesReport('pdf', group.transactionDate, group.transactionDate)">
                     <i class="fa fa-print"></i>
                     <span th:text="#{com.cagst.swkroa.print}">zzz Print</span>
                   </a>
-                  <a type="button" class="btn btn-default btn-xs" data-ng-click="generateInvoicesReport('csv', group.transactionDate, group.transactionDate)">
+                  <a type="button" class="btn btn-default btn-xs" data-ng-click="ctrl.generateInvoicesReport('csv', group.transactionDate, group.transactionDate)">
                     <i class="fa fa-download"></i>
                     <span th:text="#{com.cagst.swkroa.export}">zzz Export</span>
                   </a>
@@ -62,26 +62,26 @@
                 <div class="text-center">
                   <ul class="pagination clear-top clear-bottom">
                     <li id="firstPage"
-                        data-ng-class="{'disabled': page == 1}"
-                        data-ng-click="firstPage()">
+                        data-ng-class="{'disabled': ctrl.page == 1}"
+                        data-ng-click="ctrl.firstPage()">
                       <a href="#"><i class="fa fa-angle-double-left"></i></a>
                     </li>
                     <li id="prevPage"
-                        data-ng-class="{'disabled': page == 1}"
-                        data-ng-click="prevPage()">
+                        data-ng-class="{'disabled': ctrl.page == 1}"
+                        data-ng-click="ctrl.prevPage()">
                       <a><i class="fa fa-angle-left"></i></a>
                     </li>
                     <li class="disabled">
                       <span th:text="#{com.cagst.swkroa.page.of.pages}"></span>
                     </li>
                     <li id="nextPage"
-                        data-ng-class="{'disabled': page == pages}"
-                        data-ng-click="nextPage()">
+                        data-ng-class="{'disabled': ctrl.page == ctrl.pages}"
+                        data-ng-click="ctrl.nextPage()">
                       <a href="#"><i class="fa fa-angle-right"></i></a>
                     </li>
                     <li id="lastPage"
-                        data-ng-class="{'disabled': page == pages}"
-                        data-ng-click="lastPage()">
+                        data-ng-class="{'disabled': ctrl.page == ctrl.pages}"
+                        data-ng-click="ctrl.lastPage()">
                       <a href="#"><i class="fa fa-angle-double-right"></i></a>
                     </li>
                   </ul>
