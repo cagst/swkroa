@@ -543,8 +543,8 @@
       }
     }
 
-    function hasChanges(membership) {
-      return angular.equals(membership, vm.original);
+    function hasChanges() {
+      return angular.equals(vm.membership, vm.original);
     }
 
     function cancelChanges() {

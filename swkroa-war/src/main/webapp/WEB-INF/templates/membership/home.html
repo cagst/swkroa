@@ -376,7 +376,7 @@
                     class="btn btn-primary"
                     th:text="#{membership.update}"
                     data-ng-show="ctrl.membership.membershipUID > 0"
-                    data-ng-disabled="ctrl.hasChanges(membership) || membershipForm.$invalid">
+                    data-ng-disabled="ctrl.hasChanges() || membershipForm.$invalid">
             </button>
             <button type="button" class="btn btn-default"
                     data-ng-click="ctrl.cancelChanges()"
