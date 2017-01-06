@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -121,7 +122,7 @@ public final class MembershipServiceImpl implements MembershipService {
 
     if (loadingPolicy.containsAttribute(LOAD_TRANSACTIONS)) {
       List<Transaction> transactions = transactionRepo.getTransactionsForMembership(membership.getMembershipUID());
-      Collections.sort(transactions);
+      transactions.sort(Comparator.comparing(Transaction::getTransactionDate).reversed());
       membership.setTransactions(transactions);
     }
 

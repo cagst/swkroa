@@ -2,12 +2,15 @@ package com.cagst.swkroa.controller.web;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 import com.cagst.swkroa.document.Document;
 import com.cagst.swkroa.document.DocumentRepository;
 import com.cagst.swkroa.member.Member;
 import com.cagst.swkroa.member.MemberRepository;
+import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.web.util.WebAppUtils;
@@ -80,8 +83,11 @@ public class MemberController {
       if (checkMember.isPresent()) {
         long membershipUID = checkMember.get().getMembershipUID();
 
+        List<Transaction> transactions = transactionRepository.getTransactionsForMembership(membershipUID);
+        transactions.sort(Comparator.comparing(Transaction::getTransactionDate).reversed());
+
         mav.addObject("membershipUID", membershipUID);
-        mav.addObject("transactions", transactionRepository.getTransactionsForMembership(membershipUID));
+        mav.addObject("transactions", transactions);
       }
     }
 
@@ -100,8 +106,11 @@ public class MemberController {
       if (checkMember.isPresent()) {
         long membershipUID = checkMember.get().getMembershipUID();
 
+        List<Document> documents = documentRepository.getDocumentsForMembership(membershipUID);
+        documents.sort(Comparator.comparing(Document::getBeginEffectiveDate).reversed());
+
         mav.addObject("membershipUID", membershipUID);
-        mav.addObject("documents", documentRepository.getDocumentsForMembership(membershipUID));
+        mav.addObject("documents", documents);
       }
     }
 

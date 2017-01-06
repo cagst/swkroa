@@ -113,25 +113,6 @@ public class JobServiceImpl implements JobService {
     CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning(CodeSetType.TRANSACTION_ENTRY_TYPE, "TRANS_DUES_INC");
 
     try {
-      // load the report template
-      JasperReport jasperReport = JasperReportLoader.getReport(JasperReportLoader.MEMBERSHIP_RENEWAL_PDF);
-
-      // Create the Document for the Renewal Membership Letter
-      byte[] reportContent = generateDueRenewalReport(jasperReport, membershipId, transactionDescription);
-
-      Document document = new Document();
-      document.setParentEntityUID(membershipId);
-      document.setParentEntityName(Document.MEMBERSHIP);
-      document.setDocumentType(renewalLetter);
-      document.setDocumentName(transactionDescription);
-      document.setDocumentFormat(MediaType.PDF.toString());
-      document.setDocumentContents(reportContent);
-      document.setBeginEffectiveDate(new DateTime());
-      document.setDocumentDescription(transactionDescription);
-
-      // Save the Renewal Membership Letter document
-      documentRepo.saveDocument(document, user);
-
       List<Member> members = memberRepo.getMembersForMembership(membership);
 
       // Create Transaction
@@ -169,7 +150,26 @@ public class JobServiceImpl implements JobService {
       }
 
       // Save the Invoice (transaction)
-      transactionRepo.saveTransaction(invoice, user);
+      Transaction savedTransaction = transactionRepo.saveTransaction(invoice, user);
+
+      // load the report template
+      JasperReport jasperReport = JasperReportLoader.getReport(JasperReportLoader.MEMBERSHIP_RENEWAL_PDF);
+
+      // Create the Document for the Renewal Membership Letter
+      byte[] reportContent = generateDueRenewalReport(jasperReport, membershipId, transactionDescription);
+
+      Document document = new Document();
+      document.setParentEntityUID(savedTransaction.getTransactionUID());
+      document.setParentEntityName(Document.TRANSACTION);
+      document.setDocumentType(renewalLetter);
+      document.setDocumentName(transactionDescription);
+      document.setDocumentFormat(MediaType.PDF.toString());
+      document.setDocumentContents(reportContent);
+      document.setBeginEffectiveDate(new DateTime());
+      document.setDocumentDescription(transactionDescription);
+
+      // Save the Renewal Membership Letter document
+      documentRepo.saveDocument(document, user);
 
       // Update Membership (next_due_dt)
       membershipRepo.updateNextDueDate(membershipId, user);

@@ -41,7 +41,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Application
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/static/**")
         .addResourceLocations("/static/", "classpath:/static/");
-
     //        .setCacheControl(CacheControl.maxAge(15, TimeUnit.DAYS).cachePublic());
   }
 

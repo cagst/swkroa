@@ -16,7 +16,9 @@ import org.joda.time.DateTime;
  *
  * @author Craig Gaskill
  */
-public class Transaction implements Serializable, Comparable<Transaction> {
+public class Transaction implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   private long transaction_id;
   private long membership_id;
   private String membership_name;
@@ -195,14 +197,5 @@ public class Transaction implements Serializable, Comparable<Transaction> {
         Objects.equals(transaction_dt, rhs.getTransactionDate()) &&
         Objects.equals(transaction_type, rhs.getTransactionType()) &&
         Objects.equals(getTransactionAmount(), rhs.getTransactionAmount());
-  }
-
-  @Override
-  public int compareTo(final Transaction rhs) {
-    if (rhs == null) {
-      return 0;
-    }
-
-    return transaction_dt.compareTo(rhs.getTransactionDate());
   }
 }
