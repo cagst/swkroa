@@ -217,7 +217,7 @@
     }
 
     function hasChanges() {
-      return !angular.equals(vm.selectedUser, vm.original);
+      return (vm.original && !angular.equals(vm.selectedUser, vm.original));
     }
 
     function cancelChanges() {

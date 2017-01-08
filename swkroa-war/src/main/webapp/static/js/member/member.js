@@ -165,7 +165,7 @@
     }
 
     function hasChanges() {
-      return !angular.equals(vm.membership, vm.original);
+      return (vm.original && !angular.equals(vm.membership, vm.original));
     }
 
     function cancelChanges() {

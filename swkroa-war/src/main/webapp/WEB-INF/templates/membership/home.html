@@ -41,9 +41,8 @@
                    data-tooltip-placement="right">
                   <i class="fa fa-plus"></i>
                 </a>
-                <input type="text" class="form-control" autofocus
+                <input id="search" type="text" class="form-control"
                        th:placeholder="#{membership.search.prompt}"
-                       data-ng-focus=""
                        data-ng-model="ctrl.query"
                        data-ng-keydown="ctrl.onQueryKeydown($event)" />
                 <a class="input-group-addon btn btn-primary"
@@ -356,7 +355,9 @@
       <h3 th:text="#{membership.edit}" data-ng-show="ctrl.membership.membershipUID > 0">z_EditMembership</h3>
     </div>
 
-    <form method="POST" name="membershipForm" novalidate data-ng-submit="ctrl.saveMembership()" class="css-form">
+    <form method="POST" name="membershipForm" novalidate class="css-form"
+          confirm-on-exit data-has-changes="ctrl.hasChanges()"
+          data-ng-submit="ctrl.saveMembership()">
       <div th:include="membership/modify/section_membership"></div>
       <div th:include="membership/modify/section_counties"></div>
       <div th:include="membership/modify/section_members"
@@ -370,13 +371,13 @@
                     class="btn btn-primary"
                     th:text="#{membership.create}"
                     data-ng-show="ctrl.membership.membershipUID == 0"
-                    data-ng-disabled="membershipForm.$invalid">
+                    data-ng-disabled="!ctrl.hasChanges() || membershipForm.$invalid">
             </button>
             <button type="submit"
                     class="btn btn-primary"
                     th:text="#{membership.update}"
                     data-ng-show="ctrl.membership.membershipUID > 0"
-                    data-ng-disabled="ctrl.hasChanges() || membershipForm.$invalid">
+                    data-ng-disabled="!ctrl.hasChanges() || membershipForm.$invalid">
             </button>
             <button type="button" class="btn btn-default"
                     data-ng-click="ctrl.cancelChanges()"
