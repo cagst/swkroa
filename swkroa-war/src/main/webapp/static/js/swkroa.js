@@ -124,6 +124,25 @@ if (typeof String.prototype.startsWith != 'function') {
     };
   });
 
+  angular.module('swkroaApp').directive('confirmOnExit', function() {
+    return {
+      require: 'form',
+      restrict: 'A',
+      scope: {
+        hasChanges: '&'
+      },
+      link: dirtyCheckLink
+    };
+    
+    function dirtyCheckLink(scope, element, attrs, controller) {
+      window.onbeforeunload = function () {
+        if (scope.hasChanges()) {
+          return "There are unsaved changes, do you want to continue?";
+        }
+      }
+    }
+  });
+
 })(window, window.angular, window.jQuery);
 
 function responseSuccessful(response) {

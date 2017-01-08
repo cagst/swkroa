@@ -241,12 +241,14 @@
       <h3 th:text="#{membership.edit}">z_EditMembership</h3>
     </div>
 
-    <form method="POST" name="membershipForm" novalidate data-ng-submit="ctrl.saveMember()" class="css-form">
+    <form method="POST" name="membershipForm" class="css-form" novalidate
+          confirm-on-exit data-has-changes="ctrl.hasChanges()"
+          data-ng-submit="ctrl.saveMember()">
       <div th:include="member/modify/section_membership"></div>
       <div th:include="member/modify/section_counties"></div>
       <div th:include="member/modify/section_members"
-           data-ng-show="ctrl.membership.memberType.allowMember ||
-                         ctrl.membership.members.length > 1"></div>
+           data-ng-show="ctrl.membership.memberType.allowMember || ctrl.membership.members.length > 1">
+      </div>
 
       <div class="spacer-top">
         <div class="divider-top">
@@ -255,13 +257,13 @@
                     class="btn btn-primary"
                     th:text="#{membership.create}"
                     data-ng-show="ctrl.membership.membershipUID == 0"
-                    data-ng-disabled="membershipForm.$invalid">
+                    data-ng-disabled="!ctrl.hasChanges() || membershipForm.$invalid">
             </button>
             <button type="submit"
                     class="btn btn-primary"
                     th:text="#{membership.update}"
                     data-ng-show="ctrl.membership.membershipUID > 0"
-                    data-ng-disabled="hasChanges(membership) || membershipForm.$invalid">
+                    data-ng-disabled="!ctrl.hasChanges() || membershipForm.$invalid">
             </button>
             <button type="button" class="btn btn-default"
                     data-ng-click="ctrl.cancelChanges()"

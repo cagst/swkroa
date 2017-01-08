@@ -235,7 +235,9 @@
         </div>
       </div>
 
-      <form method="POST" name="userForm" novalidate data-ng-submit="ctrl.saveUser()" class="css-form">
+      <form method="POST" name="editForm" novalidate class="css-form"
+            confirm-on-exit data-has-changes="ctrl.hasChanges()"
+            data-ng-submit="ctrl.saveUser()">
         <div class="row row-inner spacer-top">
           <div class="col-xs-2">
             <label for="title" th:text="#{user.title}">z_Title</label>
@@ -244,7 +246,7 @@
                     data-ng-options="title.codeValueUID as title.display for title in ctrl.titles">
             </select>
           </div>
-          <div class="col-xs-2" data-ng-class="{'has-error': userForm.firstName.$invalid}">
+          <div class="col-xs-2" data-ng-class="{'has-error': editForm.firstName.$invalid}">
             <label for="firstName" class="control-label label-required" th:text="#{user.name.first}">z_FirstName</label>
             <input id="firstName" name="firstName" type="text" class="form-control" maxlength="50"
                    th:placeholder="#{user.name.first}"
@@ -256,7 +258,7 @@
                    th:placeholder="#{user.name.middle}"
                    data-ng-model="ctrl.selectedUser.middleName" />
           </div>
-          <div class="col-xs-2" data-ng-class="{'has-error': userForm.lastName.$invalid}">
+          <div class="col-xs-2" data-ng-class="{'has-error': editForm.lastName.$invalid}">
             <label for="lastName" class="control-label label-required" th:text="#{user.name.last}">z_LastName</label>
             <input id="lastName" name="lastName" type="text" class="form-control" maxlength="50"
                    th:placeholder="#{user.name.last}"
@@ -435,7 +437,7 @@
           </div>
         </div>
         <div class="row row-inner spacer-top">
-          <div class="col-xs-2" data-ng-class="{'has-error': userForm.username.$invalid}">
+          <div class="col-xs-2" data-ng-class="{'has-error': editForm.username.$invalid}">
             <label for="username" class="label-required" th:text="#{user.account.username}">z_Username</label>
             <input id="username" name="username"
                    type="text" class="form-control" maxlength="50" autocomplete="off"
@@ -468,14 +470,14 @@
         </div>
 
         <div class="row row-inner spacer-top" data-ng-show="ctrl.selectedUser.userUID == 0">
-          <div class="col-xs-2" data-ng-class="{'has-error': userForm.password.$invalid}">
+          <div class="col-xs-2" data-ng-class="{'has-error': editForm.password.$invalid}">
             <label class="label-required" for="new-password">Password</label>
             <input id="new-password" type="password" class="form-control" name="password" maxlength="60"
                    data-ng-model="ctrl.selectedUser.password"
                    data-ng-blur="validatePasswordFields()"
                    data-ng-required="ctrl.selectedUser.userUID == 0" />
           </div>
-          <div class="col-xs-2" data-ng-class="{'has-error': userForm.confirmPassword.$invalid}">
+          <div class="col-xs-2" data-ng-class="{'has-error': editForm.confirmPassword.$invalid}">
             <label class="label-required" for="confirm-password">Confirm Password</label>
             <input id="confirm-password" type="password" class="form-control" name="confirmPassword" maxlength="60"
                    data-ng-model="confirmPassword"
@@ -500,13 +502,13 @@
               <button type="submit"
                       class="btn btn-primary"
                       data-ng-show="ctrl.selectedUser.userUID == 0"
-                      data-ng-disabled="ctrl.hasChanges() || userForm.$invalid">
+                      data-ng-disabled="!ctrl.hasChanges() || editForm.$invalid">
                 <span th:text="#{user.create}">z_CreateUser</span>
               </button>
               <button type="submit"
                       class="btn btn-primary"
                       data-ng-show="ctrl.selectedUser.userUID > 0"
-                      data-ng-disabled="ctrl.hasChanges() || userForm.$invalid">
+                      data-ng-disabled="!ctrl.hasChanges() || editForm.$invalid">
                 <span th:text="#{user.update}">z_UpdateUser</span>
               </button>
               <a class="btn btn-default" data-ng-click="ctrl.cancelChanges()" th:text="#{common.cancel}">z_Cancel</a>

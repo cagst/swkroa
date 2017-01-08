@@ -217,10 +217,11 @@
     }
 
     function hasChanges() {
-      return angular.equals(vm.selectedUser, vm.original);
+      return !angular.equals(vm.selectedUser, vm.original);
     }
 
     function cancelChanges() {
+      vm.selectedUser = angular.copy(vm.original);
       vm.original = null;
       vm.view = 'home';
     }
