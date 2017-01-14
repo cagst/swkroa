@@ -12,7 +12,7 @@ import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
-import com.cagst.swkroa.county.CountyRepository;
+import com.cagst.swkroa.country.CountryRepository;
 import com.cagst.swkroa.internal.BaseRepositoryJdbc;
 import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.person.PersonRepository;
@@ -64,7 +64,7 @@ import org.springframework.util.Assert;
 
   private final PersonRepository personRepo;
   private final MemberTypeRepository memberTypeRepo;
-  private final CountyRepository countyRepo;
+  private final CountryRepository countryRepo;
   private final ContactRepository contactRepo;
 
   /**
@@ -76,8 +76,8 @@ import org.springframework.util.Assert;
    *     The {@link PersonRepository} to use to retrieve the Person attributes.
    * @param memberTypeRepo
    *     The {@link MemberTypeRepository} to use to populate the {@link MemberType} objects.
-   * @param countyRepo
-   *     The {@link CountyRepository} to use to populate the MembershipCounty objects.
+   * @param countryRepo
+   *     The {@link CountryRepository} to use to populate the MembershipCounty objects.
    * @param contactRepo
    *     The {@link ContactRepository} to use to populate contact objects.
    */
@@ -85,14 +85,14 @@ import org.springframework.util.Assert;
   public MemberRepositoryJdbc(DataSource dataSource,
                               PersonRepository personRepo,
                               MemberTypeRepository memberTypeRepo,
-                              CountyRepository countyRepo,
+                              CountryRepository countryRepo,
                               ContactRepository contactRepo) {
 
     super(dataSource);
 
     this.personRepo = personRepo;
     this.memberTypeRepo = memberTypeRepo;
-    this.countyRepo = countyRepo;
+    this.countryRepo = countryRepo;
     this.contactRepo = contactRepo;
   }
 
@@ -220,7 +220,7 @@ import org.springframework.util.Assert;
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP),
         new MapSqlParameterSource("membership_id", membership.getMembershipUID()),
-        new MembershipCountyMapper(countyRepo));
+        new MembershipCountyMapper(countryRepo));
   }
 
   @Override
@@ -232,7 +232,7 @@ import org.springframework.util.Assert;
     List<MembershipCounty> counties = getJdbcTemplate().query(
         stmtLoader.load(GET_MEMBERSHIP_COUNTY_BY_UID),
         new MapSqlParameterSource("membership_county_id", uid),
-        new MembershipCountyMapper(countyRepo));
+        new MembershipCountyMapper(countryRepo));
 
     if (counties.size() == 1) {
       return counties.get(0);

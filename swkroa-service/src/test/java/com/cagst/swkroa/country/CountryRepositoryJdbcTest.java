@@ -1,4 +1,4 @@
-package com.cagst.swkroa.county;
+package com.cagst.swkroa.country;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,12 +20,23 @@ import org.junit.runners.JUnit4;
  * @author Craig Gaskill
  */
 @RunWith(JUnit4.class)
-public class CountyRepositoryJdbcTest extends BaseTestRepository {
-  private CountyRepositoryJdbc repo;
+public class CountryRepositoryJdbcTest extends BaseTestRepository {
+  private CountryRepositoryJdbc repo;
 
   @Before
   public void setUp() {
-    repo = new CountyRepositoryJdbc(createTestDataSource());
+    repo = new CountryRepositoryJdbc(createTestDataSource());
+  }
+
+  /**
+   * Test the getActiveCountries method.
+   */
+  @Test
+  public void testGetActiveCountries() {
+    Collection<Country> countries = repo.getActiveCountries();
+    assertNotNull("Ensure the countries collection is not null.", countries);
+    assertFalse("Ensure the countries collection is not empty.", countries.isEmpty());
+    assertEquals("Ensure we found the correct number of countries.", 2, countries.size());
   }
 
   /**
@@ -37,6 +48,22 @@ public class CountyRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure the counties collection is not null.", counties);
     assertFalse("Ensure the counties collection is not empty.", counties.isEmpty());
     assertEquals("Ensure we found the correct number of counties.", 6, counties.size());
+  }
+
+  /**
+   * Test the getActiveStatesForCountry method.
+   */
+  @Test
+  public void testGetActiveStatesForCountry() {
+    Collection<State> usStates = repo.getActiveStatesForCountry("US");
+    assertNotNull("Ensure the states collection is not null.", usStates);
+    assertFalse("Ensure the states collection is not empty.", usStates.isEmpty());
+    assertEquals("Ensure we found the correct number of states.", 4, usStates.size());
+
+    Collection<State> caStates = repo.getActiveStatesForCountry("CA");
+    assertNotNull("Ensure the states collection is not null.", caStates);
+    assertFalse("Ensure the states collection is not empty.", caStates.isEmpty());
+    assertEquals("Ensure we found the correct number of states.", 2, caStates.size());
   }
 
   /**

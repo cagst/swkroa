@@ -10,9 +10,13 @@
 
   angular.module('swkroaApp').service('ContactService', ContactService);
 
-  function ContactService() {
-    var vm = this;
+  ContactService.$inject = ['$http'];
 
+  function ContactService($http) {
+    var vm = this;
+    var rootUrl = "/api/countries";
+
+    vm.getCountries = getCountries;
     vm.getStates = getStates;
     vm.addAddress = addAddress;
     vm.removeAddress = removeAddress;
@@ -32,6 +36,10 @@
     /********************************************
      * Implement Methods
      ********************************************/
+
+    function getCountries() {
+      return $http.get(rootUrl);
+    }
 
     function getStates() {
       return [

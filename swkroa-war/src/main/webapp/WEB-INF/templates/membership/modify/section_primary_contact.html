@@ -85,6 +85,15 @@
                    data-ng-required="address.active" />
           </div>
         </div>
+        <div class="row spacer-top">
+          <div class="col-xs-12" data-ng-class="{'has-error': addressForm.country.$invalid}">
+            <select class="form-control" name="country"
+                    data-ng-model="address.country"
+                    data-ng-options="country.countryCode as country.countryName for country in ctrl.countries"
+                    data-ng-required="address.country">
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 

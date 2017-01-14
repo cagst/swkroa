@@ -1,6 +1,16 @@
 INSERT INTO audit_log (audit_log_id, audit_event_type, audit_action, audit_instigator, create_dt_tm) VALUES (1, 0, 'SIGNIN_ATTEMP', 'cgaskill', CURRENT_TIMESTAMP);
 INSERT INTO audit_log (audit_log_id, audit_event_type, audit_action, audit_instigator, create_dt_tm) VALUES (2, 0, 'SIGNIN_SUCCESSFUL', 'cgaskill', CURRENT_TIMESTAMP);
 
+INSERT INTO country (country_code, country_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'United States', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO country (country_code, country_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('CA', 'Canada', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'CO', 'Colorado', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'KS', 'Kansas', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'MO', 'Missouri', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'NE', 'Nebraska', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('CA', 'AB', 'Alberta', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('CA', 'BC', 'British Columbia', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+
 INSERT INTO county (state_code, county_code, county_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('KS', 'JO', 'Johnson', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO county (state_code, county_code, county_name, swkroa_county_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('KS', 'SV', 'Stevents', 1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO county (state_code, county_code, county_name, swkroa_county_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('KS', 'GT', 'Grant', 1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);

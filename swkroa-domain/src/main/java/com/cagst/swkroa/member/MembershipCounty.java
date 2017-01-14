@@ -2,7 +2,7 @@ package com.cagst.swkroa.member;
 
 import java.io.Serializable;
 
-import com.cagst.swkroa.county.County;
+import com.cagst.swkroa.country.County;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -124,7 +124,7 @@ public final class MembershipCounty implements Serializable {
   /*
    * (non-Javadoc)
    *
-   * @see com.cagst.swkroa.county.County#toString()
+   * @see County#toString()
    */
   @Override
   public String toString() {

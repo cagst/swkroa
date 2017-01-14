@@ -37,6 +37,10 @@
       answer3: ""
     };
 
+    /********************************************
+     * Define binding methods
+     ********************************************/
+
     vm.enableVerify = enableVerify;
     vm.enableComplete = enableComplete;
     vm.registerIdentification = registerIdentification;
@@ -44,7 +48,7 @@
     vm.registerComplete = registerComplete;
 
     /********************************************
-     * Define binding methods
+     * Implement binding methods
      ********************************************/
 
     function enableVerify() {
@@ -79,15 +83,18 @@
     function registerIdentification() {
       var url = rootUrl + "/identification/" + vm.registerUser.ownerId;
 
-      $http.get(url)
-        .then(function(response) {
-          if (responseSuccessful(response)) {
-            vm.errorText = "";
-            vm.step = 'VERIFY';
-          } else {
-            vm.errorText = response.data;
-          }
-        });
+      $http({
+        method: 'GET',
+        url: rootUrl + "/identification/" + vm.registerUser.ownerId,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain'}
+      }).then(function (response) {
+        if (responseSuccessful(response)) {
+          vm.errorText = "";
+          vm.step = 'VERIFY';
+        } else {
+          vm.errorText = response.data;
+        }
+      });
     }
 
     function registerVerify() {

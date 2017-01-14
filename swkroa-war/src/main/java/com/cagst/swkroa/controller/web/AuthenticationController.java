@@ -122,6 +122,18 @@ public class AuthenticationController {
   }
 
   /**
+   * Handles and retrieves the Forgot Password page.
+   *
+   * @return The name of the page.
+   */
+  @RequestMapping(value = "forgotPassword", method = RequestMethod.GET)
+  public String getForgotPasswordPage() {
+    LOGGER.info("Received request to show the forgot password page.");
+
+    return "auth/forgotPassword";
+  }
+
+  /**
    * Handles the request to actually change the password.
    *
    * @param oldPassword

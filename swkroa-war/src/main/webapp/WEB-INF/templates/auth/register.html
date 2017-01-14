@@ -254,8 +254,7 @@
         </div>
       </div>
 
-    <div id="finish" th:attr="wz-title=#{signin.register.finish.section}"
-         data-ng-show="ctrl.step == 'FINISH'">
+    <div id="finish" data-ng-show="ctrl.step == 'FINISH'">
         <div class="row" style="padding-left:15px">
           <p class="lead lead-sm" th:text="#{signin.register.finish.title}">zzz Identify</p>
         </div>
@@ -270,7 +269,7 @@
   </div>
 </div>
 
-<script type="text/javascript" th:src="@{/static/js/registration.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/auth/registration.js}"></script>
 
 </body>
 </html>

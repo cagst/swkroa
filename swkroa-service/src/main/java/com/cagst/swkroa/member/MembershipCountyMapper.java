@@ -3,8 +3,8 @@ package com.cagst.swkroa.member;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cagst.swkroa.county.County;
-import com.cagst.swkroa.county.CountyRepository;
+import com.cagst.swkroa.country.CountryRepository;
+import com.cagst.swkroa.country.County;
 import com.cagst.swkroa.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -28,24 +28,24 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String UPDT_ID = "updt_id";
   private static final String MEMBERSHIP_COUNTY_UPDT_CNT = "membership_county_updt_cnt";
 
-  private final CountyRepository countyRepo;
+  private final CountryRepository countryRepo;
 
   /**
    * Primary constructor used to create an instance of <i>MembershipCountyMapper</i>.
    *
-   * @param countyRepo
-   *     The {@link CountyRepository} to use to retrieve the {@link County} associated with
+   * @param countryRepo
+   *     The {@link CountryRepository} to use to retrieve the {@link County} associated with
    *     this Membership.
    */
-  public MembershipCountyMapper(final CountyRepository countyRepo) {
-    this.countyRepo = countyRepo;
+  MembershipCountyMapper(CountryRepository countryRepo) {
+    this.countryRepo = countryRepo;
   }
 
   @Override
-  public MembershipCounty mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+  public MembershipCounty mapRow(ResultSet rs, int rowNum) throws SQLException {
     MembershipCounty county = new MembershipCounty();
 
-    County cnty = countyRepo.getCountyByUID(rs.getLong(COUNTY_ID));
+    County cnty = countryRepo.getCountyByUID(rs.getLong(COUNTY_ID));
 
     county.setMembershipCountyUID(rs.getLong(MEMBERSHIP_COUNTY_ID));
     county.setCounty(cnty);
@@ -63,7 +63,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
    * Will marshal a {@link MembershipCounty} into a {@link MapSqlParameterSource} for inserting into
    * the database.
    *
-   * @param builder
+   * @param county
    *     The {@link MembershipCounty} to map into an insert statement.
    * @param membership
    *     The {@link Membership} this Member is associated with.
@@ -73,9 +73,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update}
    * statement.
    */
-  public static MapSqlParameterSource mapInsertStatement(final MembershipCounty county, final Membership membership,
-                                                         final User user) {
-
+  public static MapSqlParameterSource mapInsertStatement(MembershipCounty county, Membership membership, User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
 
     params.addValue(MEMBERSHIP_ID, membership.getMembershipUID());
@@ -104,9 +102,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update}
    * statement.
    */
-  public static MapSqlParameterSource mapUpdateStatement(final MembershipCounty county, final Membership membership,
-                                                         final User user) {
-
+  public static MapSqlParameterSource mapUpdateStatement(MembershipCounty county, Membership membership, User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
 
     params.addValue(MEMBERSHIP_ID, membership.getMembershipUID());

@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.cagst.swkroa.contact.ContactRepository;
-import com.cagst.swkroa.county.County;
-import com.cagst.swkroa.county.CountyRepository;
+import com.cagst.swkroa.country.CountryRepository;
+import com.cagst.swkroa.country.County;
 import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.person.PersonRepository;
@@ -51,7 +51,7 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
 
     personRepo = mock(PersonRepository.class);
 
-    CountyRepository countyRepo = mock(CountyRepository.class);
+    CountryRepository countryRepo = mock(CountryRepository.class);
     ContactRepository contactRepo = mock(ContactRepository.class);
 
     memberTypeRepo = mock(MemberTypeRepository.class);
@@ -72,15 +72,16 @@ public class MemberRepositoryJdbcTest extends BaseTestRepository {
     when(memberTypeRepo.getMemberTypeByMeaning(MemberType.REGULAR)).thenReturn(regularMember);
     when(memberTypeRepo.getMemberTypeByMeaning(MemberType.FAMILY_HEAD)).thenReturn(familyHead);
 
-    svCounty = new County();
-    svCounty.setCountyUID(1L);
-    svCounty.setState("KS");
-    svCounty.setCountyCode("SV");
-    svCounty.setCountyName("Stevens");
+    svCounty = County.builder()
+        .setCountyUID(1L)
+        .setStateCode("KS")
+        .setCountyCode("SV")
+        .setCountyName("Stevens")
+        .build();
 
-    when(countyRepo.getCountyByUID(1L)).thenReturn(svCounty);
+    when(countryRepo.getCountyByUID(1L)).thenReturn(svCounty);
 
-    repo = new MemberRepositoryJdbc(createTestDataSource(), personRepo, memberTypeRepo, countyRepo, contactRepo);
+    repo = new MemberRepositoryJdbc(createTestDataSource(), personRepo, memberTypeRepo, countryRepo, contactRepo);
     repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 

@@ -600,6 +600,12 @@
 
       vm.states = contactService.getStates();
 
+      contactService.getCountries().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.countries = response.data;
+        }
+      });
+
       codeSetService.getCodeValuesForCodeSet('ENTITY_TYPE/').then(function(response) {
         if (responseSuccessful(response)) {
           vm.entityTypes = response.data;
