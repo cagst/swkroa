@@ -169,7 +169,7 @@
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.state.$invalid}">
                 <select class="form-control" name="state"
                         data-ng-model="address.state"
-                        data-ng-options="state.code as state.name for state in ctrl.states"
+                        data-ng-options="state.stateCode as state.stateName for state in ctrl.states | filter:{countryCode:address.country}"
                         data-ng-required="address.active">
                 </select>
               </div>
@@ -178,6 +178,15 @@
                        th:placeholder="#{membership.member.address.zip}"
                        data-ng-model="address.postalCode"
                        data-ng-required="address.active" />
+              </div>
+            </div>
+            <div class="row spacer-top">
+              <div class="col-xs-12" data-ng-class="{'has-error': addressForm.country.$invalid}">
+                <select class="form-control" name="country"
+                        data-ng-model="address.country"
+                        data-ng-options="country.countryCode as country.countryName for country in ctrl.countries"
+                        data-ng-required="address.country">
+                </select>
               </div>
             </div>
           </div>

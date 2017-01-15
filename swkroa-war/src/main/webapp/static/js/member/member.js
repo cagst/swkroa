@@ -183,6 +183,7 @@
         });
 
         vm.view = "view";
+        vm.original = null;
 
         $('#updatedMessage').show();
       });
@@ -267,7 +268,17 @@
         return
       }
 
-      vm.states = contactService.getStates();
+      contactService.getAllStates().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.states = response.data;
+        }
+      });
+
+      contactService.getCountries().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.countries = response.data;
+        }
+      });
 
       codeSetService.getCodeValuesForCodeSet('TITLE').success(function(data) {
         vm.titles = data;
