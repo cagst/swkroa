@@ -24,6 +24,7 @@ import org.springframework.util.Assert;
 
   private static final String GET_ACTIVE_COUNTRIES = "GET_ACTIVE_COUNTRIES";
 
+  private static final String GET_ACTIVE_STATES = "GET_ACTIVE_STATES";
   private static final String GET_ACTIVE_STATES_FOR_COUNTRY = "GET_ACTIVE_STATES_FOR_COUNTRY";
 
   private static final String GET_ACTIVE_COUNTIES = "GET_ACTIVE_COUNTIES";
@@ -50,6 +51,16 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getActiveCountries");
 
     return getJdbcTemplate().query(statementLoader.load(GET_ACTIVE_COUNTRIES), new CountryMapper());
+  }
+
+  @Override
+  @Cacheable("stateLists")
+  public List<State> getActiveStates() {
+    StatementLoader statementLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
+    LOGGER.info("Calling getActiveStates");
+
+    return getJdbcTemplate().query(statementLoader.load(GET_ACTIVE_STATES), new StateMapper());
   }
 
   @Override

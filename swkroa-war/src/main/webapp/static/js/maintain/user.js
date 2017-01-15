@@ -92,7 +92,17 @@
         }
       });
 
-      vm.states = contactService.getStates();
+      contactService.getAllStates().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.states = response.data;
+        }
+      });
+
+      contactService.getCountries().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.countries = response.data;
+        }
+      });
     }
 
     function openExpireDate($event) {
@@ -264,6 +274,7 @@
           }
 
           vm.view = 'home';
+          vm.original = null;
         }).
         error(function(data, status) {
           switch (status) {

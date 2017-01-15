@@ -1,6 +1,5 @@
 package com.cagst.swkroa.country;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,37 +9,44 @@ import java.util.List;
  */
 public interface CountryRepository {
   /**
-   * Retrieves a {@link Collection} of active {@link Country Countries} defined within the system.
+   * Retrieves a {@link List} of active {@link Country Countries} defined within the system.
    *
-   * @return A {@link Collection} of active {@link Country Countries} defined within the system.
+   * @return A {@link List} of active {@link Country Countries} defined within the system.
    */
   List<Country> getActiveCountries();
 
   /**
-   * Retrieves a {@link Collection} of active {@link State States} for the specified Country defined within the system.
+   * Retrieves a {@link List} of active {@link State States} defined within the system.
+   *
+   * @return A {@link List} of active {@link State States} defined within the system.
+   */
+  List<State> getActiveStates();
+
+  /**
+   * Retrieves a {@link List} of active {@link State States} for the specified Country defined within the system.
    *
    * @param countryCode
    *    A {@link String} that represents the Country to retrieves states for.
    *
-   * @return A {@link Collection} of active {@link State States} for the specified Country.
+   * @return A {@link List} of active {@link State States} for the specified Country.
    */
   List<State> getActiveStatesForCountry(String countryCode);
 
   /**
-   * Retrieves a {@link Collection} of active {@link County Counties} defined within the system.
+   * Retrieves a {@link List} of active {@link County Counties} defined within the system.
    *
-   * @return A {@link Collection} of active {@link County Counties} defined within the system.
+   * @return A {@link List} of active {@link County Counties} defined within the system.
    */
   List<County> getActiveCounties();
 
   /**
-   * Retrieves a {@link Collection} of {@link County Counties} associated with the specified State.
+   * Retrieves a {@link List} of {@link County Counties} associated with the specified State.
    *
    * @param stateCode
-   *     A {@link String} that represents the State to retrieve a {@link Collection} of
+   *     A {@link String} that represents the State to retrieve a {@link List} of
    *     {@link County Counties} for.
    *
-   * @return The {@link Collection} of {@link County Counties} associated with the specified State.
+   * @return The {@link List} of {@link County Counties} associated with the specified State.
    */
   List<County> getCountiesForState(String stateCode);
 

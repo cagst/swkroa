@@ -47,6 +47,21 @@ public class CountryApiController {
   }
 
   /**
+   * Handles the request and retrieves the States within the system.
+   *
+   * @return A JSON representation of the States within the system.
+   */
+  @RequestMapping(value = "/states", method = RequestMethod.GET)
+  public List<State> getStates() {
+    LOGGER.info("Received request to retrieve states");
+
+    List<State> states = countryRepo.getActiveStates();
+    states.sort(Comparator.comparing(State::getStateName));
+
+    return states;
+  }
+
+  /**
    * Handles the request and retrieves the States within the system for the specific Country.
    *
    * @param countryCode

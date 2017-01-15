@@ -556,6 +556,7 @@
       }
 
       vm.view = "listing";
+      vm.original = null;
     }
 
     function saveMembership() {
@@ -569,6 +570,7 @@
 
           vm.membership = response.data;
           vm.view       = "listing";
+          vm.original   = null;
           vm.created    = true;
         } else if (response.status == 200) {
           var idx = vm.memberships.indexOf(vm.membership);
@@ -576,6 +578,7 @@
           vm.memberships[idx] = response.data;
           vm.membership       = response.data;
           vm.view             = "listing";
+          vm.original         = null;
           vm.updated          = true;
         }
       });
@@ -598,7 +601,11 @@
         return
       }
 
-      vm.states = contactService.getStates();
+      contactService.getAllStates().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.states = response.data;
+        }
+      });
 
       contactService.getCountries().then(function(response) {
         if (responseSuccessful(response)) {
