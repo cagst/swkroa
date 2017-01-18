@@ -103,11 +103,12 @@ public class CommentRepositoryJdbcTest extends BaseTestRepository {
     User user = new User();
     user.setUserUID(11L);
 
-    Comment comment = new Comment();
-    comment.setParentEntityName("MEMBERSHIP");
-    comment.setParentEntityUID(1L);
-    comment.setCommentDate(new DateTime());
-    comment.setCommentText(msg);
+    Comment comment = Comment.builder()
+        .setParentEntityName("MEMBERSHIP")
+        .setParentEntityUID(1L)
+        .setCommentDate(new DateTime())
+        .setCommentText(msg)
+        .build();
 
     Comment newComment = repo.saveComment(comment, user);
     assertNotNull("Ensure we have a new Comment.", newComment);
@@ -135,9 +136,9 @@ public class CommentRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure we found a comment.", comment1);
 
     String newComment = comment1.getCommentText() + "- EDITED";
-    comment1.setCommentText(newComment);
+    Comment updateComment = Comment.builder(comment1).setCommentText(newComment).build();
 
-    Comment updatedComment = repo.saveComment(comment1, user);
+    Comment updatedComment = repo.saveComment(updateComment, user);
     assertNotNull("Ensure we have a valid comment.", updatedComment);
     assertEquals("Ensure the comment was updated.", 1L, updatedComment.getCommentUpdateCount());
     assertEquals("Ensure it is the same comment.", newComment, updatedComment.getCommentText());
@@ -162,11 +163,12 @@ public class CommentRepositoryJdbcTest extends BaseTestRepository {
     assertNotNull("Ensure we found a comment.", comment1);
 
     String newComment = comment1.getCommentText() + "- EDITED";
-    comment1.setCommentText(newComment);
+    Comment updateComment = Comment.builder(comment1)
+        .setCommentText(newComment)
+        // force a failure by manually updating the update count.
+        .setCommentUpdateCount(comment1.getCommentUpdateCount() + 1)
+        .build();
 
-    // force a failure by manually updating the update count.
-    comment1.setCommentUpdateCount(comment1.getCommentUpdateCount() + 1);
-
-    repo.saveComment(comment1, user);
+    repo.saveComment(updateComment, user);
   }
 }

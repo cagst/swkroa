@@ -124,13 +124,11 @@ import org.springframework.util.Assert;
     int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_COMMENT),
         CommentMapper.mapInsertStatement(comment, user), keyHolder);
 
-    if (cnt == 1) {
-      comment.setCommentUID(keyHolder.getKey().longValue());
-    } else {
+    if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return comment;
+    return Comment.builder(comment).setCommentUID(keyHolder.getKey().longValue()).build();
   }
 
   private Comment updateCommentForEntity(final Comment comment, final User user) {
@@ -142,14 +140,12 @@ import org.springframework.util.Assert;
         .update(stmtLoader.load(UPDATE_COMMENT), CommentMapper.mapUpdateStatement(comment, user));
 
     if (cnt == 1) {
-      comment.setCommentUpdateCount(comment.getCommentUpdateCount() + 1);
+      return Comment.builder(comment).setCommentUpdateCount(comment.getCommentUpdateCount() + 1).build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");
     } else {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
-
-    return comment;
   }
 }

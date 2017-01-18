@@ -6,9 +6,11 @@ import java.text.Collator;
 import java.util.Objects;
 
 import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -26,7 +28,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
     "active",
     "codeValueUpdateCount"
 })
-@JsonDeserialize(builder = AutoValue_CodeValue.Builder.class)
+@JsonDeserialize(builder = CodeValue.Builder.class)
 public abstract class CodeValue implements Serializable, Comparable<CodeValue> {
   private static final long serialVersionUID = 1L;
 
@@ -125,25 +127,31 @@ public abstract class CodeValue implements Serializable, Comparable<CodeValue> {
   }
 
   @AutoValue.Builder
-  public interface Builder {
+  @JsonPOJOBuilder
+  public abstract static class Builder {
     @JsonProperty(value = "codeSetUID", required = true)
-    Builder setCodeSetUID(long codeSetId);
+    public abstract Builder setCodeSetUID(long codeSetId);
 
     @JsonProperty(value = "codeValueUID", required = true)
-    Builder setCodeValueUID(long codeValueUID);
+    public abstract Builder setCodeValueUID(long codeValueUID);
 
     @JsonProperty(value = "display", required = true)
-    Builder setDisplay(String display);
+    public abstract Builder setDisplay(String display);
 
     @JsonProperty(value = "meaning")
-    Builder setMeaning(String meaning);
+    public abstract Builder setMeaning(String meaning);
 
     @JsonProperty(value = "active")
-    Builder setActive(boolean active);
+    public abstract Builder setActive(boolean active);
 
     @JsonProperty(value = "codeValueUpdateCount")
-    Builder setCodeValueUpdateCount(long updateCount);
+    public abstract Builder setCodeValueUpdateCount(long updateCount);
 
-    CodeValue build();
+    public abstract CodeValue build();
+
+    @JsonCreator
+    private static Builder builder() {
+      return CodeValue.builder();
+    }
   }
 }

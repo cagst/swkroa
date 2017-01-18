@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.text.Collator;
 
 import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -23,7 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
     "active",
     "codeSetUpdateCount"
 })
-@JsonDeserialize(builder = AutoValue_CodeSet.Builder.class)
+@JsonDeserialize(builder = CodeSet.Builder.class)
 public abstract class CodeSet implements Serializable, Comparable<CodeSet> {
   private static final long serialVersionUID = 1L;
 
@@ -89,22 +91,28 @@ public abstract class CodeSet implements Serializable, Comparable<CodeSet> {
   }
 
   @AutoValue.Builder
-  public interface Builder {
+  @JsonPOJOBuilder
+  public abstract static class Builder {
     @JsonProperty(value = "codeSetUID", required = true)
-    Builder setCodeSetUID(long uid);
+    public abstract Builder setCodeSetUID(long uid);
 
     @JsonProperty(value = "display", required = true)
-    Builder setDisplay(String display);
+    public abstract Builder setDisplay(String display);
 
     @JsonProperty(value = "meaning", required = true)
-    Builder setMeaning(String meaning);
+    public abstract Builder setMeaning(String meaning);
 
     @JsonProperty(value = "active")
-    Builder setActive(boolean active);
+    public abstract Builder setActive(boolean active);
 
     @JsonProperty(value = "codeSetUpdateCount")
-    Builder setCodeSetUpdateCount(long updateCount);
+    public abstract Builder setCodeSetUpdateCount(long updateCount);
 
-    CodeSet build();
+    public abstract CodeSet build();
+
+    @JsonCreator
+    private static Builder builder() {
+      return CodeSet.builder();
+    }
   }
 }

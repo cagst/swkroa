@@ -188,10 +188,12 @@ public final class MembershipServiceImpl implements MembershipService {
 
     // save Comments
     for (Comment comment : savedMembership.getComments()) {
-      comment.setParentEntityUID(savedMembership.getMembershipUID());
-      comment.setParentEntityName(Comment.MEMBERSHIP);
+      Comment saveComment = Comment.builder(comment)
+          .setParentEntityUID(savedMembership.getMembershipUID())
+          .setParentEntityName(Comment.MEMBERSHIP)
+          .build();
 
-      commentRepo.saveComment(comment, user);
+      commentRepo.saveComment(saveComment, user);
     }
 
     // save Transactions

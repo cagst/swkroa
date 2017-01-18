@@ -64,7 +64,7 @@
     <google-guava-version>19.0</google-guava-version>
 
     <!-- Google AutoValue Library -->
-    <google-autovalue-version>1.1</google-autovalue-version>
+    <google-autovalue-version>1.3</google-autovalue-version>
 
     <!-- Spring Frameworks -->
     <spring-version>4.2.5.RELEASE</spring-version>

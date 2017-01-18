@@ -3,8 +3,14 @@ package com.cagst.swkroa.comment;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
 
 /**
@@ -12,80 +18,46 @@ import org.joda.time.DateTime;
  *
  * @author Craig Gaskill
  */
-public final class Comment implements Serializable, Comparable<Comment> {
+@AutoValue
+@JsonPropertyOrder({
+    "commentUID",
+    "parentEntityUID",
+    "parentEntityName",
+    "commentDate",
+    "commentText",
+    "active",
+    "commentUpdateCount"
+})
+@JsonDeserialize(builder = Comment.Builder.class)
+public abstract class Comment implements Serializable, Comparable<Comment> {
   private static final long serialVersionUID = 1L;
 
   public static final String MEMBERSHIP = "MEMBERSHIP";
 
-  private long comment_id;
-  private long parent_entity_id;
-  private String parent_entity_name;
-  private DateTime comment_dt;
-  private String comment_txt;
+  @JsonProperty(value = "commentUID")
+  public abstract long getCommentUID();
 
-  // meta-data
-  private boolean active_ind = true;
-  private long updt_cnt;
+  @JsonProperty(value = "parentEntityUID")
+  public abstract long getParentEntityUID();
 
-  public long getCommentUID() {
-    return comment_id;
-  }
+  @JsonProperty(value = "parentEntityName", required = true)
+  public abstract String getParentEntityName();
 
-  /* package */void setCommentUID(final long uid) {
-    comment_id = uid;
-  }
+  @JsonProperty(value = "commentDate", required = true)
+  public abstract DateTime getCommentDate();
 
-  public long getParentEntityUID() {
-    return parent_entity_id;
-  }
+  @JsonProperty(value = "commentText", required = true)
+  public abstract String getCommentText();
 
-  public void setParentEntityUID(final long uid) {
-    this.parent_entity_id = uid;
-  }
+  @JsonProperty(value = "active")
+  public abstract boolean isActive();
 
-  public String getParentEntityName() {
-    return parent_entity_name;
-  }
-
-  public void setParentEntityName(final String name) {
-    this.parent_entity_name = name;
-  }
-
-  public DateTime getCommentDate() {
-    return comment_dt;
-  }
-
-  public void setCommentDate(final DateTime dt) {
-    this.comment_dt = dt;
-  }
-
-  public String getCommentText() {
-    return comment_txt;
-  }
-
-  public void setCommentText(final String comment) {
-    this.comment_txt = comment;
-  }
-
-  public boolean isActive() {
-    return active_ind;
-  }
-
-  public void setActive(final boolean active) {
-    this.active_ind = active;
-  }
-
-  public long getCommentUpdateCount() {
-    return updt_cnt;
-  }
-
-  /* package */void setCommentUpdateCount(final long count) {
-    this.updt_cnt = count;
-  }
+  @JsonProperty(value = "commentUpdateCount")
+  public abstract long getCommentUpdateCount();
 
   @Override
   public int hashCode() {
-    return Objects.hash(comment_dt, comment_txt);
+    return Objects.hash(getCommentDate(), getCommentText());
   }
 
   @Override
@@ -102,15 +74,15 @@ public final class Comment implements Serializable, Comparable<Comment> {
 
     Comment rhs = (Comment) obj;
 
-    return Objects.equals(comment_dt, rhs.getCommentDate()) &&
-        Objects.equals(comment_txt, rhs.getCommentText());
+    return Objects.equals(getCommentDate(), rhs.getCommentDate()) &&
+        Objects.equals(getCommentText(), rhs.getCommentText());
   }
 
   @Override
   public String toString() {
-    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    builder.append("comment_dt", comment_dt);
-    builder.append("comment_txt", comment_txt);
+    ToStringBuilder builder = new ToStringBuilder(this, SwkroaToStringStyle.SWKROA_PREFIX_STYLE);
+    builder.append("comment_dt", getCommentDate());
+    builder.append("comment_txt", getCommentText());
 
     return builder.build();
   }
@@ -121,6 +93,70 @@ public final class Comment implements Serializable, Comparable<Comment> {
       return 0;
     }
 
-    return comment_dt.compareTo(rhs.getCommentDate());
+    return getCommentDate().compareTo(rhs.getCommentDate());
+  }
+
+  /**
+   * Returns a new {@link Builder} with default values.
+   *
+   * @return A new {@link Builder}
+   */
+  public static Builder builder() {
+    return new AutoValue_Comment.Builder()
+        .setCommentUID(0L)
+        .setParentEntityUID(0L)
+        .setActive(true)
+        .setCommentUpdateCount(0L);
+  }
+
+  /**
+   * Returns a new {@link Builder} based upon the values from the specified {@link Comment}.
+   *
+   * @param comment
+   *    The {@link Comment} to base this builder off of.
+   *
+   * @return A new {@link Builder}.
+   */
+  public static Builder builder(Comment comment) {
+    return new AutoValue_Comment.Builder()
+        .setCommentUID(comment.getCommentUID())
+        .setParentEntityUID(comment.getParentEntityUID())
+        .setParentEntityName(comment.getParentEntityName())
+        .setCommentDate(comment.getCommentDate())
+        .setCommentText(comment.getCommentText())
+        .setActive(comment.isActive())
+        .setCommentUpdateCount(comment.getCommentUpdateCount());
+  }
+
+  @AutoValue.Builder
+  @JsonPOJOBuilder
+  public abstract static class Builder {
+    @JsonProperty(value = "commentUID")
+    public abstract Builder setCommentUID(long uid);
+
+    @JsonProperty(value = "parentEntityUID")
+    public abstract Builder setParentEntityUID(long entityUID);
+
+    @JsonProperty(value = "parentEntityName", required = true)
+    public abstract Builder setParentEntityName(String entityName);
+
+    @JsonProperty(value = "commentDate", required = true)
+    public abstract Builder setCommentDate(DateTime commentDate);
+
+    @JsonProperty(value = "commentText", required = true)
+    public abstract Builder setCommentText(String commentText);
+
+    @JsonProperty(value = "active", defaultValue = "true")
+    public abstract Builder setActive(boolean active);
+
+    @JsonProperty(value = "commentUpdateCount")
+    public abstract Builder setCommentUpdateCount(long updateCount);
+
+    public abstract Comment build();
+
+    @JsonCreator
+    private static Builder builder() {
+      return Comment.builder();
+    }
   }
 }
