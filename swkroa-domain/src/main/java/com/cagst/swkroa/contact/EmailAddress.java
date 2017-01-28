@@ -3,98 +3,59 @@ package com.cagst.swkroa.contact;
 import java.io.Serializable;
 import java.text.Collator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Represents an EmailAddress within the system.
  *
  * @author Craig Gaskill
  */
-public final class EmailAddress implements Serializable, Comparable<EmailAddress> {
+@AutoValue
+@JsonPropertyOrder({
+    "emailAddressUID",
+    "parentEntityUID",
+    "parentEntityName",
+    "emailTypeCD",
+    "primary",
+    "active",
+    "emailAddressUpdateCount"
+})
+public abstract class EmailAddress implements Serializable, Comparable<EmailAddress> {
   private static final long serialVersionUID = 1L;
 
-  private long email_id;
-  private long parent_entity_id;
-  private String parent_entity_name;
-  private long email_type_cd;
-  private String email_address;
-  private boolean primary_ind;
+  @JsonProperty(value = "emailAddressUID", required = true)
+  public abstract long getEmailAddressUID();
 
-  // meta-data
-  private boolean active_ind = true;
-  private long updt_cnt;
+  @JsonProperty(value = "parentEntityUID", required = true)
+  public abstract long getParentEntityUID();
 
-  public long getEmailAddressUID() {
-    return email_id;
-  }
+  @JsonProperty(value = "parentEntityName", required = true)
+  public abstract String getParentEntityName();
 
-  /* package */void setEmailAddressUID(final long uid) {
-    this.email_id = uid;
-  }
+  @JsonProperty(value = "emailTypeCD", required = true)
+  public abstract long getEmailTypeCD();
 
-  @JsonIgnore
-  public long getParentEntityUID() {
-    return parent_entity_id;
-  }
+  @JsonProperty(value = "emailAddress", required =  true)
+  public abstract String getEmailAddress();
 
-  public void setParentEntityUID(final long uid) {
-    this.parent_entity_id = uid;
-  }
+  @JsonProperty(value = "primary", required = true)
+  public abstract boolean isPrimary();
 
-  @JsonIgnore
-  public String getParentEntityName() {
-    return parent_entity_name;
-  }
+  @JsonProperty(value = "active", required = true)
+  public abstract boolean isActive();
 
-  public void setParentEntityName(final String name) {
-    this.parent_entity_name = name;
-  }
-
-  public long getEmailTypeCD() {
-    return email_type_cd;
-  }
-
-  public void setEmailTypeCD(final long email_type_cd) {
-    this.email_type_cd = email_type_cd;
-  }
-
-  public String getEmailAddress() {
-    return email_address;
-  }
-
-  public void setEmailAddress(final String emailAddress) {
-    this.email_address = emailAddress;
-  }
-
-  public boolean isPrimary() {
-    return primary_ind;
-  }
-
-  public void setPrimary(boolean primary_ind) {
-    this.primary_ind = primary_ind;
-  }
-
-  public boolean isActive() {
-    return active_ind;
-  }
-
-  public void setActive(final boolean active) {
-    this.active_ind = active;
-  }
-
-  public long getEmailAddressUpdateCount() {
-    return updt_cnt;
-  }
-
-  /* package */void setEmailAddressUpdateCount(final long updateCount) {
-    this.updt_cnt = updateCount;
-  }
+  @JsonProperty(value = "emailAddressUpdateCount", required = true)
+  public abstract long getEmailAddressUpdateCount();
 
   @Override
   public int hashCode() {
-    return email_address.hashCode();
+    return getEmailAddress().hashCode();
   }
 
   @Override
@@ -111,13 +72,13 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
 
     EmailAddress rhs = (EmailAddress) obj;
 
-    return email_address.equals(rhs.getEmailAddress());
+    return getEmailAddress().equals(rhs.getEmailAddress());
   }
 
   @Override
   public String toString() {
-    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    builder.append("email", email_address);
+    ToStringBuilder builder = new ToStringBuilder(this, SwkroaToStringStyle.SWKROA_PREFIX_STYLE);
+    builder.append("email", getEmailAddress());
 
     return builder.build();
   }
@@ -127,6 +88,75 @@ public final class EmailAddress implements Serializable, Comparable<EmailAddress
     Collator collator = Collator.getInstance();
     collator.setStrength(Collator.PRIMARY);
 
-    return collator.compare(email_address, rhs.getEmailAddress());
+    return collator.compare(getEmailAddress(), rhs.getEmailAddress());
+  }
+
+  /**
+   * Returns a {@link Builder} with default values.
+   *
+   * @return A {@link Builder}
+   */
+  public static Builder builder() {
+    return new AutoValue_EmailAddress.Builder()
+        .setEmailAddressUID(0L)
+        .setParentEntityUID(0L)
+        .setPrimary(false)
+        .setActive(true)
+        .setEmailAddressUpdateCount(0L);
+  }
+
+  /**
+   * Returns a {@link Builder} based upon the values from the specified {@link EmailAddress}.
+   *
+   * @param emailAddress
+   *    The {@link EmailAddress} to base this builder off of.
+   *
+   * @return A {@link Builder}.
+   */
+  public static Builder builder(EmailAddress emailAddress) {
+    return new AutoValue_EmailAddress.Builder()
+        .setEmailAddressUID(emailAddress.getEmailAddressUID())
+        .setParentEntityUID(emailAddress.getParentEntityUID())
+        .setEmailTypeCD(emailAddress.getEmailTypeCD())
+        .setParentEntityName(emailAddress.getParentEntityName())
+        .setEmailAddress(emailAddress.getEmailAddress())
+        .setPrimary(emailAddress.isPrimary())
+        .setActive(emailAddress.isActive())
+        .setEmailAddressUpdateCount(emailAddress.getEmailAddressUpdateCount());
+  }
+
+  @AutoValue.Builder
+  @JsonPOJOBuilder
+  public abstract static class Builder {
+    @JsonProperty(value = "emailAddressUID", required = true)
+    public abstract Builder setEmailAddressUID(long emailAddressUID);
+
+    @JsonProperty(value = "parentEntityUID", required = true)
+    public abstract Builder setParentEntityUID(long parentEntityUID);
+
+    @JsonProperty(value = "parentEntityName", required = true)
+    public abstract Builder setParentEntityName(String parentEntityName);
+
+    @JsonProperty(value = "emailTypeCD", required = true)
+    public abstract Builder setEmailTypeCD(long emailTypeCD);
+
+    @JsonProperty(value = "emailAddress", required =  true)
+    public abstract Builder setEmailAddress(String emailAddress);
+
+    @JsonProperty(value = "primary", required = true)
+    public abstract Builder setPrimary(boolean primary);
+
+    @JsonProperty(value = "active", required = true)
+    public abstract Builder setActive(boolean active);
+
+    @JsonProperty(value = "emailAddressUpdateCount", required = true)
+    public abstract Builder setEmailAddressUpdateCount(long updateCount);
+
+    public abstract EmailAddress build();
+
+    @JsonCreator
+    private static Builder builder() {
+      return EmailAddress.builder();
+    }
   }
 }

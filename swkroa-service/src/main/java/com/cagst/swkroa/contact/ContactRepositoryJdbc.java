@@ -162,9 +162,9 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    address.setAddressUID(keyHolder.getKey().longValue());
-
-    return address;
+    return Address.builder(address)
+        .setAddressUID(keyHolder.getKey().longValue())
+        .build();
   }
 
   private Address update(Address address, User user) {
@@ -175,8 +175,9 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     int cnt = getJdbcTemplate()
         .update(stmtLoader.load(UPDATE_ADDRESS), AddressMapper.mapUpdateStatement(address, user));
     if (cnt == 1) {
-      address.setAddressUpdateCount(address.getAddressUpdateCount() + 1);
-      return address;
+      return Address.builder(address)
+          .setAddressUpdateCount(address.getAddressUpdateCount() + 1)
+          .build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");
@@ -260,13 +261,13 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_EMAIL),
         EmailAddressMapper.mapInsertStatement(emailAddress, user), keyHolder);
 
-    if (cnt == 1) {
-      emailAddress.setEmailAddressUID(keyHolder.getKey().longValue());
-    } else {
+    if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return emailAddress;
+    return EmailAddress.builder(emailAddress)
+        .setEmailAddressUID(keyHolder.getKey().longValue())
+        .build();
   }
 
   public EmailAddress update(EmailAddress emailAddress, User user) {
@@ -278,14 +279,14 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
         EmailAddressMapper.mapUpdateStatement(emailAddress, user));
 
     if (cnt == 1) {
-      emailAddress.setEmailAddressUpdateCount(emailAddress.getEmailAddressUpdateCount() + 1);
+      return EmailAddress.builder(emailAddress)
+          .setEmailAddressUpdateCount(emailAddress.getEmailAddressUpdateCount() + 1)
+          .build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");
     } else {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
-
-    return emailAddress;
   }
 }

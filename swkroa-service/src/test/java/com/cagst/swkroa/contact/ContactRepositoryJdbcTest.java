@@ -137,15 +137,16 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
 
     Address address1 = addresses1.iterator().next();
 
-    Address newAddress = new Address();
-    newAddress.setParentEntityUID(member.getMemberUID());
-    newAddress.setParentEntityName(UserType.MEMBER.name());
-    newAddress.setAddressTypeCD(1L);
-    newAddress.setAddressLine1("ADDRESS_LINE_1");
-    newAddress.setCity("CITY");
-    newAddress.setState(address1.getState());
-    newAddress.setPostalCode("POSTAL_CODE");
-    newAddress.setCountry(address1.getCountry());
+    Address newAddress = Address.builder()
+        .setParentEntityUID(member.getMemberUID())
+        .setParentEntityName(UserType.MEMBER.name())
+        .setAddressTypeCD(1L)
+        .setAddressLine1("ADDRESS_LINE_1")
+        .setCity("CITY")
+        .setState(address1.getState())
+        .setPostalCode("POSTAL_CODE")
+        .setCountry(address1.getCountry())
+        .build();
 
     Address address2 = repo.saveAddress(newAddress, user);
     assertNotNull("Ensure we have a new address.", address2);
@@ -174,9 +175,11 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     Address address1 = addresses1.iterator().next();
     String newAddressLine1 = address1.getAddressLine1() + "_EDITED";
 
-    address1.setAddressLine1(newAddressLine1);
+    Address saveAddress = Address.builder(address1)
+        .setAddressLine1(newAddressLine1)
+        .build();
 
-    Address address2 = repo.saveAddress(address1, user);
+    Address address2 = repo.saveAddress(saveAddress, user);
     assertNotNull("Ensure we have a new address.", address2);
     assertEquals("Ensure the address was updated.", 1, address2.getAddressUpdateCount());
     assertEquals("Ensure it is the correct address.", address2.getAddressLine1(), newAddressLine1);
@@ -203,10 +206,12 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     Address address1 = addresses1.iterator().next();
 
     // force a failure due to update count
-    address1.setAddressLine1(address1.getAddressLine1() + "_EDITED");
-    address1.setAddressUpdateCount(99L);
+    Address saveAddress = Address.builder(address1)
+        .setAddressLine1(address1.getAddressLine1() + "_EDITED")
+        .setAddressUpdateCount(99L)
+        .build();
 
-    repo.saveAddress(address1, user);
+    repo.saveAddress(saveAddress, user);
   }
 
   /**
@@ -303,11 +308,12 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     assertFalse("Ensure the emails collection not is empty.", emails.isEmpty());
     assertEquals("Ensure we found the correct number of emails.", 2, emails.size());
 
-    EmailAddress email = new EmailAddress();
-    email.setParentEntityUID(member.getMemberUID());
-    email.setParentEntityName(UserType.MEMBER.name());
-    email.setEmailTypeCD(1L);
-    email.setEmailAddress("emailme@aol.com");
+    EmailAddress email = EmailAddress.builder()
+        .setParentEntityUID(member.getMemberUID())
+        .setParentEntityName(UserType.MEMBER.name())
+        .setEmailTypeCD(1L)
+        .setEmailAddress("emailme@aol.com")
+        .build();
 
     EmailAddress newEmail = repo.saveEmailAddress(email, user);
     assertNotNull("Ensure we have a new email.", newEmail);
@@ -334,12 +340,15 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct number of emails.", 2, emails1.size());
 
     EmailAddress email1 = emails1.iterator().next();
-    email1.setEmailAddress(email1.getEmailAddress() + "_EDITED");
 
-    EmailAddress email2 = repo.saveEmailAddress(email1, user);
+    EmailAddress saveEmailAddress = EmailAddress.builder(email1)
+        .setEmailAddress(email1.getEmailAddress() + "_EDITED")
+        .build();
+
+    EmailAddress email2 = repo.saveEmailAddress(saveEmailAddress, user);
     assertNotNull("Ensure we have a new email address.", email2);
     assertEquals("Ensure the email address was updated.", 1, email2.getEmailAddressUpdateCount());
-    assertEquals("Ensure it is the correct email address.", email2.getEmailAddress(), email1.getEmailAddress());
+    assertEquals("Ensure it is the correct email address.", email2.getEmailAddress(), saveEmailAddress.getEmailAddress());
 
     Collection<EmailAddress> emails2 = repo.getEmailAddressesForMember(member);
     assertNotNull("Ensure the emails collection is not null.", emails2);
@@ -361,11 +370,13 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct number of emails.", 2, emails1.size());
 
     EmailAddress email1 = emails1.iterator().next();
-    email1.setEmailAddress(email1.getEmailAddress() + "_EDITED");
 
     // force a failure due to update count
-    email1.setEmailAddressUpdateCount(99L);
+    EmailAddress saveEmailAddress = EmailAddress.builder(email1)
+        .setEmailAddress(email1.getEmailAddress() + "_EDITED")
+        .setEmailAddressUpdateCount(99L)
+        .build();
 
-    repo.saveEmailAddress(email1, user);
+    repo.saveEmailAddress(saveEmailAddress, user);
   }
 }

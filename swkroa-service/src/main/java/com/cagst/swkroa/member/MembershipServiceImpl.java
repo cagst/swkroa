@@ -165,10 +165,12 @@ public final class MembershipServiceImpl implements MembershipService {
     // save the Contact information (Addresses, Phone Numbers, Email Addresses)
     for (Member member : savedMembership.getMembers()) {
       for (Address address : member.getAddresses()) {
-        address.setParentEntityUID(member.getMemberUID());
-        address.setParentEntityName(UserType.MEMBER.name());
+        Address saveAddress = Address.builder(address)
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
 
-        contactRepo.saveAddress(address, user);
+        contactRepo.saveAddress(saveAddress, user);
       }
 
       for (PhoneNumber phone : member.getPhoneNumbers()) {
@@ -179,10 +181,12 @@ public final class MembershipServiceImpl implements MembershipService {
       }
 
       for (EmailAddress email : member.getEmailAddresses()) {
-        email.setParentEntityUID(member.getMemberUID());
-        email.setParentEntityName(UserType.MEMBER.name());
+        EmailAddress saveEmailAddress = EmailAddress.builder(email)
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
 
-        contactRepo.saveEmailAddress(email, user);
+        contactRepo.saveEmailAddress(saveEmailAddress, user);
       }
     }
 

@@ -274,13 +274,14 @@ public class RegistrationApiController {
     } else {
       CodeValue codeValue = codeValueRepository.getCodeValueByMeaning(CodeSetType.EMAIL_TYPE, "EMAIL_HOME");
       if (codeValue != null) {
-        primaryEmailAddress = new EmailAddress();
-        primaryEmailAddress.setEmailAddress(emailAddress);
-        primaryEmailAddress.setPrimary(true);
-        primaryEmailAddress.setActive(true);
-        primaryEmailAddress.setEmailTypeCD(codeValue.getCodeValueUID());
-        primaryEmailAddress.setParentEntityUID(member.getMemberUID());
-        primaryEmailAddress.setParentEntityName(UserType.MEMBER.name());
+        primaryEmailAddress = EmailAddress.builder()
+            .setEmailAddress(emailAddress)
+            .setPrimary(true)
+            .setActive(true)
+            .setEmailTypeCD(codeValue.getCodeValueUID())
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
 
         contactRepo.saveEmailAddress(primaryEmailAddress, systemUser);
       }

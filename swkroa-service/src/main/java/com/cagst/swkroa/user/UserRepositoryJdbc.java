@@ -460,15 +460,21 @@ import org.springframework.util.Assert;
     }
 
     for (Address address : savedUser.getAddresses()) {
-      if (member.isPresent()) {
-        address.setParentEntityUID(member.get().getMemberUID());
-        address.setParentEntityName(UserType.MEMBER.name());
-      } else {
-        address.setParentEntityUID(savedUser.getUserUID());
-        address.setParentEntityName(UserType.STAFF.name());
-      }
+      Address saveAddress;
 
-      contactRepo.saveAddress(address, user);
+      saveAddress = member.map(
+          member1 ->
+              Address.builder(address)
+                  .setParentEntityUID(member1.getMemberUID())
+                  .setParentEntityName(UserType.MEMBER.name())
+                  .build())
+          .orElseGet(() ->
+              Address.builder(address)
+                  .setParentEntityUID(savedUser.getUserUID())
+                  .setParentEntityName(UserType.STAFF.name())
+                  .build());
+
+      contactRepo.saveAddress(saveAddress, user);
     }
 
     for (PhoneNumber phone : savedUser.getPhoneNumbers()) {
@@ -484,15 +490,21 @@ import org.springframework.util.Assert;
     }
 
     for (EmailAddress email : savedUser.getEmailAddresses()) {
-      if (member.isPresent()) {
-        email.setParentEntityUID(member.get().getMemberUID());
-        email.setParentEntityName(UserType.MEMBER.name());
-      } else {
-        email.setParentEntityUID(savedUser.getUserUID());
-        email.setParentEntityName(UserType.STAFF.name());
-      }
+      EmailAddress saveEmailAddress;
 
-      contactRepo.saveEmailAddress(email, user);
+      saveEmailAddress = member.map(
+          member1 ->
+              EmailAddress.builder(email)
+                  .setParentEntityUID(member1.getMemberUID())
+                  .setParentEntityName(UserType.MEMBER.name())
+                  .build())
+          .orElseGet(() ->
+              EmailAddress.builder(email)
+                  .setParentEntityUID(savedUser.getUserUID())
+                  .setParentEntityName(UserType.STAFF.name())
+                  .build());
+
+      contactRepo.saveEmailAddress(saveEmailAddress, user);
     }
 
     return savedUser;

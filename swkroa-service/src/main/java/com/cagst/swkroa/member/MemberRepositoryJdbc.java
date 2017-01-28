@@ -291,10 +291,12 @@ import org.springframework.util.Assert;
     }
 
     for (Address address : member.getPerson().getAddresses()) {
-      address.setParentEntityUID(member.getMemberUID());
-      address.setParentEntityName(UserType.MEMBER.name());
+      Address saveAddress = Address.builder(address)
+          .setParentEntityUID(member.getMemberUID())
+          .setParentEntityName(UserType.MEMBER.name())
+          .build();
 
-      contactRepo.saveAddress(address, user);
+      contactRepo.saveAddress(saveAddress, user);
     }
 
     for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
@@ -305,9 +307,12 @@ import org.springframework.util.Assert;
     }
 
     for (EmailAddress email : member.getPerson().getEmailAddresses()) {
-      email.setParentEntityUID(member.getMemberUID());
-      email.setParentEntityName(UserType.MEMBER.name());
-      contactRepo.saveEmailAddress(email, user);
+      EmailAddress saveEmailAddress = EmailAddress.builder(email)
+          .setParentEntityUID(member.getMemberUID())
+          .setParentEntityName(UserType.MEMBER.name())
+          .build();
+
+      contactRepo.saveEmailAddress(saveEmailAddress, user);
     }
 
     return savedMember;

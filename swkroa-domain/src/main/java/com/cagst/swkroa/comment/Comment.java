@@ -97,9 +97,9 @@ public abstract class Comment implements Serializable, Comparable<Comment> {
   }
 
   /**
-   * Returns a new {@link Builder} with default values.
+   * Returns a {@link Builder} with default values.
    *
-   * @return A new {@link Builder}
+   * @return A {@link Builder}
    */
   public static Builder builder() {
     return new AutoValue_Comment.Builder()
@@ -110,12 +110,12 @@ public abstract class Comment implements Serializable, Comparable<Comment> {
   }
 
   /**
-   * Returns a new {@link Builder} based upon the values from the specified {@link Comment}.
+   * Returns a {@link Builder} based upon the values from the specified {@link Comment}.
    *
    * @param comment
    *    The {@link Comment} to base this builder off of.
    *
-   * @return A new {@link Builder}.
+   * @return A {@link Builder}.
    */
   public static Builder builder(Comment comment) {
     return new AutoValue_Comment.Builder()
@@ -146,7 +146,7 @@ public abstract class Comment implements Serializable, Comparable<Comment> {
     @JsonProperty(value = "commentText", required = true)
     public abstract Builder setCommentText(String commentText);
 
-    @JsonProperty(value = "active", defaultValue = "true")
+    @JsonProperty(value = "active")
     public abstract Builder setActive(boolean active);
 
     @JsonProperty(value = "commentUpdateCount")

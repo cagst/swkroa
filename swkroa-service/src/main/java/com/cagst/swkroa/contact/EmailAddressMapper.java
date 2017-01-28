@@ -27,17 +27,16 @@ public class EmailAddressMapper implements RowMapper<EmailAddress> {
 
   @Override
   public EmailAddress mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-    EmailAddress email = new EmailAddress();
-    email.setEmailAddressUID(rs.getLong(EMAIL_ID));
-    email.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
-    email.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    email.setEmailTypeCD(rs.getLong(EMAIL_TYPE));
-    email.setEmailAddress(rs.getString(EMAIL_ADDRESS));
-    email.setPrimary(rs.getBoolean(PRIMARY_IND));
-    email.setActive(rs.getBoolean(ACTIVE_IND));
-    email.setEmailAddressUpdateCount(rs.getLong(UPDT_CNT));
-
-    return email;
+    return EmailAddress.builder()
+        .setEmailAddressUID(rs.getLong(EMAIL_ID))
+        .setParentEntityUID(rs.getLong(PARENT_ENTITY_ID))
+        .setParentEntityName(rs.getString(PARENT_ENTITY_NAME))
+        .setEmailTypeCD(rs.getLong(EMAIL_TYPE))
+        .setEmailAddress(rs.getString(EMAIL_ADDRESS))
+        .setPrimary(rs.getBoolean(PRIMARY_IND))
+        .setActive(rs.getBoolean(ACTIVE_IND))
+        .setEmailAddressUpdateCount(rs.getLong(UPDT_CNT))
+        .build();
   }
 
   /**

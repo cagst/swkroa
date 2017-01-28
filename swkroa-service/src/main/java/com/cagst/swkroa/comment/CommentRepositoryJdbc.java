@@ -140,7 +140,9 @@ import org.springframework.util.Assert;
         .update(stmtLoader.load(UPDATE_COMMENT), CommentMapper.mapUpdateStatement(comment, user));
 
     if (cnt == 1) {
-      return Comment.builder(comment).setCommentUpdateCount(comment.getCommentUpdateCount() + 1).build();
+      return Comment.builder(comment)
+          .setCommentUpdateCount(comment.getCommentUpdateCount() + 1)
+          .build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");
