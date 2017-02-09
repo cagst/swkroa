@@ -1,7 +1,6 @@
 package com.cagst.swkroa.controller.api;
 
 import javax.inject.Inject;
-
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -29,14 +28,14 @@ public class ForgotPasswordApiController {
 
   private final ResourceBundle resourceBundle;
 
+  private UserRepository userRepo;
+
   /**
    * Default Constructor
    */
   public ForgotPasswordApiController() {
     resourceBundle = ResourceBundle.getBundle("properties.i18n.auth", Locale.US);
   }
-
-  private UserRepository userRepo;
 
   @Inject
   public void setUserRepository(UserRepository userRepo) {

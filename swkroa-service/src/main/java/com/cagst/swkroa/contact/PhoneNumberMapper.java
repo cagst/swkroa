@@ -29,18 +29,17 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
 
   @Override
   public PhoneNumber mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-    PhoneNumber phone = new PhoneNumber();
-    phone.setPhoneUID(rs.getLong(PHONE_ID));
-    phone.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
-    phone.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    phone.setPhoneTypeCD(rs.getLong(PHONE_TYPE));
-    phone.setPhoneNumber(rs.getString(PHONE_NUMBER));
-    phone.setPhoneExtension(rs.getString(PHONE_EXTENSION));
-    phone.setPrimary(rs.getBoolean(PRIMARY_IND));
-    phone.setActive(rs.getBoolean(ACTIVE_IND));
-    phone.setPhoneUpdateCount(rs.getLong(UPDT_CNT));
-
-    return phone;
+    return PhoneNumber.builder()
+        .setPhoneUID(rs.getLong(PHONE_ID))
+        .setParentEntityUID(rs.getLong(PARENT_ENTITY_ID))
+        .setParentEntityName(rs.getString(PARENT_ENTITY_NAME))
+        .setPhoneTypeCD(rs.getLong(PHONE_TYPE))
+        .setPhoneNumber(rs.getString(PHONE_NUMBER))
+        .setPhoneExtension(rs.getString(PHONE_EXTENSION))
+        .setPrimary(rs.getBoolean(PRIMARY_IND))
+        .setActive(rs.getBoolean(ACTIVE_IND))
+        .setPhoneUpdateCount(rs.getLong(UPDT_CNT))
+        .build();
   }
 
   /**
@@ -60,7 +59,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
     params.addValue(PARENT_ENTITY_ID, phoneNumber.getParentEntityUID());
     params.addValue(PARENT_ENTITY_NAME, phoneNumber.getParentEntityName());
     params.addValue(PHONE_TYPE, phoneNumber.getPhoneTypeCD() != 0L ? phoneNumber.getPhoneTypeCD() : null);
-    params.addValue(PHONE_NUMBER, phoneNumber.getPhoneNumber());
+    params.addValue(PHONE_NUMBER, phoneNumber.getCleanPhoneNumber());
     params.addValue(PHONE_EXTENSION,
         StringUtils.isNotBlank(phoneNumber.getPhoneExtension()) ? phoneNumber.getPhoneExtension() : null);
     params.addValue(PRIMARY_IND, phoneNumber.isPrimary());
@@ -86,7 +85,7 @@ public class PhoneNumberMapper implements RowMapper<PhoneNumber> {
   public static MapSqlParameterSource mapUpdateStatement(final PhoneNumber phoneNumber, final User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(PHONE_TYPE, phoneNumber.getPhoneTypeCD() != 0L ? phoneNumber.getPhoneTypeCD() : null);
-    params.addValue(PHONE_NUMBER, phoneNumber.getPhoneNumber());
+    params.addValue(PHONE_NUMBER, phoneNumber.getCleanPhoneNumber());
     params.addValue(PHONE_EXTENSION,
         StringUtils.isNotBlank(phoneNumber.getPhoneExtension()) ? phoneNumber.getPhoneExtension() : null);
     params.addValue(PRIMARY_IND, phoneNumber.isPrimary());

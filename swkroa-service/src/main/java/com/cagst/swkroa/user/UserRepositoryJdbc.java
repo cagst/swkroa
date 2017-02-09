@@ -478,15 +478,21 @@ import org.springframework.util.Assert;
     }
 
     for (PhoneNumber phone : savedUser.getPhoneNumbers()) {
-      if (member.isPresent()) {
-        phone.setParentEntityUID(member.get().getMemberUID());
-        phone.setParentEntityName(UserType.MEMBER.name());
-      } else {
-        phone.setParentEntityUID(savedUser.getUserUID());
-        phone.setParentEntityName(UserType.STAFF.name());
-      }
+      PhoneNumber savePhoneNumber;
 
-      contactRepo.savePhoneNumber(phone, user);
+      savePhoneNumber = member.map(
+          member1 ->
+              PhoneNumber.builder(phone)
+                  .setParentEntityUID(member1.getMemberUID())
+                  .setParentEntityName(UserType.MEMBER.name())
+                  .build())
+          .orElseGet(() ->
+              PhoneNumber.builder(phone)
+                  .setParentEntityUID(savedUser.getUserUID())
+                  .setParentEntityName(UserType.STAFF.name())
+                  .build());
+
+      contactRepo.savePhoneNumber(savePhoneNumber, user);
     }
 
     for (EmailAddress email : savedUser.getEmailAddresses()) {

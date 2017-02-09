@@ -209,13 +209,13 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     int cnt = getJdbcTemplate().update(stmtLoader.load(INSERT_PHONE),
         PhoneNumberMapper.mapInsertStatement(phoneNumber, user), keyHolder);
 
-    if (cnt == 1) {
-      phoneNumber.setPhoneUID(keyHolder.getKey().longValue());
-    } else {
+    if (cnt != 1) {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return phoneNumber;
+    return PhoneNumber.builder(phoneNumber)
+        .setPhoneUID(keyHolder.getKey().longValue())
+        .build();
   }
 
   private PhoneNumber update(PhoneNumber phoneNumber, User user) {
@@ -227,15 +227,15 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
         PhoneNumberMapper.mapUpdateStatement(phoneNumber, user));
 
     if (cnt == 1) {
-      phoneNumber.setPhoneUpdateCount(phoneNumber.getPhoneUpdateCount() + 1);
+      return PhoneNumber.builder(phoneNumber)
+          .setPhoneUpdateCount(phoneNumber.getPhoneUpdateCount() + 1)
+          .build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");
     } else {
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
-
-    return phoneNumber;
   }
 
   @Override

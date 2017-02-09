@@ -227,12 +227,13 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     assertFalse("Ensure the phones collection not is empty.", phones1.isEmpty());
     assertEquals("Ensure we found the correct number of phones.", 2, phones1.size());
 
-    PhoneNumber phone = new PhoneNumber();
-    phone.setParentEntityUID(member.getMemberUID());
-    phone.setParentEntityName(UserType.MEMBER.name());
-    phone.setPhoneTypeCD(1L);
-    phone.setPhoneNumber("NUMBER");
-    phone.setPhoneExtension("EXT");
+    PhoneNumber phone = PhoneNumber.builder()
+        .setParentEntityUID(member.getMemberUID())
+        .setParentEntityName(UserType.MEMBER.name())
+        .setPhoneTypeCD(1L)
+        .setPhoneNumber("NUMBER")
+        .setPhoneExtension("EXT")
+        .build();
 
     PhoneNumber newPhone = repo.savePhoneNumber(phone, user);
     assertNotNull("Ensure we have a new phone.", newPhone);
@@ -259,12 +260,15 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct number of phones.", 2, phones1.size());
 
     PhoneNumber phone1 = phones1.iterator().next();
-    phone1.setPhoneNumber(phone1.getPhoneNumber() + "00000");
 
-    PhoneNumber phone2 = repo.savePhoneNumber(phone1, user);
+    PhoneNumber savePhoneNumber = PhoneNumber.builder(phone1)
+        .setPhoneNumber(phone1.getPhoneNumber() + "00000")
+        .build();
+
+    PhoneNumber phone2 = repo.savePhoneNumber(savePhoneNumber, user);
     assertNotNull("Ensure we have a new phone number.", phone2);
     assertEquals("Ensure the phone number was updated.", 1, phone2.getPhoneUpdateCount());
-    assertEquals("Ensure it is the correct phone number.", phone2.getPhoneNumber(), phone1.getPhoneNumber());
+    assertEquals("Ensure it is the correct phone number.", phone2.getPhoneNumber(), savePhoneNumber.getPhoneNumber());
 
     Collection<PhoneNumber> phones2 = repo.getPhoneNumbersForMember(member);
     assertNotNull("Ensure the phones collection is not null.", phones2);
@@ -287,12 +291,14 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure we found the correct number of phones.", 2, phones1.size());
 
     PhoneNumber phone1 = phones1.iterator().next();
-    phone1.setPhoneNumber(phone1.getPhoneNumber() + "00000");
 
     // force a failure due to update count
-    phone1.setPhoneUpdateCount(99L);
+    PhoneNumber savePhoneNumber = PhoneNumber.builder(phone1)
+        .setPhoneNumber(phone1.getPhoneNumber() + "00000")
+        .setPhoneUpdateCount(99L)
+        .build();
 
-    repo.savePhoneNumber(phone1, user);
+    repo.savePhoneNumber(savePhoneNumber, user);
   }
 
   /**

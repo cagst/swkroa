@@ -213,6 +213,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- JavaX EMail Dependencies -->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mailapi</artifactId>
+    </dependency>
+
     <!-- StageMonitor Framework
     <dependency>
       <groupId>org.stagemonitor</groupId>

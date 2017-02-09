@@ -174,10 +174,12 @@ public final class MembershipServiceImpl implements MembershipService {
       }
 
       for (PhoneNumber phone : member.getPhoneNumbers()) {
-        phone.setParentEntityUID(member.getMemberUID());
-        phone.setParentEntityName(UserType.MEMBER.name());
+        PhoneNumber savePhone = PhoneNumber.builder(phone)
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
 
-        contactRepo.savePhoneNumber(phone, user);
+        contactRepo.savePhoneNumber(savePhone, user);
       }
 
       for (EmailAddress email : member.getEmailAddresses()) {

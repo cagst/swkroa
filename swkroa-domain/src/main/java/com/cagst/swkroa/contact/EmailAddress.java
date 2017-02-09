@@ -7,6 +7,7 @@ import com.cagst.swkroa.utils.SwkroaToStringStyle;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,10 +23,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
     "parentEntityUID",
     "parentEntityName",
     "emailTypeCD",
+    "emailAddress",
     "primary",
     "active",
     "emailAddressUpdateCount"
 })
+@JsonDeserialize(builder = EmailAddress.Builder.class)
 public abstract class EmailAddress implements Serializable, Comparable<EmailAddress> {
   private static final long serialVersionUID = 1L;
 

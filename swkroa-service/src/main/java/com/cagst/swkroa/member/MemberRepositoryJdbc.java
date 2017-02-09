@@ -300,10 +300,12 @@ import org.springframework.util.Assert;
     }
 
     for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
-      phone.setParentEntityUID(member.getMemberUID());
-      phone.setParentEntityName(UserType.MEMBER.name());
+      PhoneNumber savePhoneNumber = PhoneNumber.builder(phone)
+          .setParentEntityUID(member.getMemberUID())
+          .setParentEntityName(UserType.MEMBER.name())
+          .build();
 
-      contactRepo.savePhoneNumber(phone, user);
+      contactRepo.savePhoneNumber(savePhoneNumber, user);
     }
 
     for (EmailAddress email : member.getPerson().getEmailAddresses()) {

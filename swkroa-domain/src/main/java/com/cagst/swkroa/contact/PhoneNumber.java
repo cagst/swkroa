@@ -1,114 +1,75 @@
 package com.cagst.swkroa.contact;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Represents a PhoneNumber within the system.
  *
  * @author Craig Gaskill
  */
-public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> {
+@AutoValue
+@JsonPropertyOrder({
+    "phoneUID",
+    "parentEntityUID",
+    "parentEntityName",
+    "phoneTypeCD",
+    "phoneNumber",
+    "phoneExtension",
+    "primary",
+    "active",
+    "phoneUpdateCount"
+})
+@JsonDeserialize
+public abstract class PhoneNumber implements Serializable, Comparable<PhoneNumber> {
   private static final long serialVersionUID = 1L;
 
-  private long phone_id;
-  private long parent_entity_id;
-  private String parent_entity_name;
-  private long phone_type_cd;
-  private String phone_number;
-  private String phone_extension;
-  private boolean primary_ind;
+  @JsonProperty(value = "phoneUID", required = true)
+  public abstract long getPhoneUID();
 
-  // meta-data
-  private boolean active_ind = true;
-  private long updt_cnt;
+  @JsonProperty(value = "parentEntityUID", required = true)
+  public abstract long getParentEntityUID();
 
-  public long getPhoneUID() {
-    return phone_id;
+  @JsonProperty(value = "parentEntityName", required = true)
+  public abstract String getParentEntityName();
+
+  @JsonProperty(value = "phoneTypeCD", required = true)
+  public abstract long getPhoneTypeCD();
+
+  @JsonProperty(value = "phoneNumber", required = true)
+  public abstract String getPhoneNumber();
+
+  public String getCleanPhoneNumber() {
+    return getPhoneNumber().replaceAll("[^0-9]", "");
   }
 
-  /* package */void setPhoneUID(final long uid) {
-    this.phone_id = uid;
-  }
+  @Nullable
+  @JsonProperty(value = "phoneExtension")
+  public abstract String getPhoneExtension();
 
-  @JsonIgnore
-  public long getParentEntityUID() {
-    return parent_entity_id;
-  }
+  @JsonProperty(value = "primary", required = true)
+  public abstract boolean isPrimary();
 
-  public void setParentEntityUID(final long uid) {
-    this.parent_entity_id = uid;
-  }
+  @JsonProperty(value = "active", required = true)
+  public abstract boolean isActive();
 
-  @JsonIgnore
-  public String getParentEntityName() {
-    return parent_entity_name;
-  }
-
-  public void setParentEntityName(final String name) {
-    this.parent_entity_name = name;
-  }
-
-  public long getPhoneTypeCD() {
-    return phone_type_cd;
-  }
-
-  public void setPhoneTypeCD(final long phone_type_cd) {
-    this.phone_type_cd = phone_type_cd;
-  }
-
-  public String getPhoneNumber() {
-    return phone_number;
-  }
-
-  public void setPhoneNumber(final String phoneNumber) {
-    if (phoneNumber != null) {
-      this.phone_number = phoneNumber.replaceAll("[^0-9]", "");
-    } else {
-      this.phone_number = null;
-    }
-  }
-
-  public String getPhoneExtension() {
-    return phone_extension;
-  }
-
-  public void setPhoneExtension(final String extension) {
-    this.phone_extension = extension;
-  }
-
-  public boolean isPrimary() {
-    return primary_ind;
-  }
-
-  public void setPrimary(boolean primary_ind) {
-    this.primary_ind = primary_ind;
-  }
-
-  public boolean isActive() {
-    return active_ind;
-  }
-
-  public void setActive(final boolean active) {
-    this.active_ind = active;
-  }
-
-  public long getPhoneUpdateCount() {
-    return updt_cnt;
-  }
-
-  /* package */void setPhoneUpdateCount(final long updateCount) {
-    this.updt_cnt = updateCount;
-  }
+  @JsonProperty(value = "phoneUpdateCount", required = true)
+  public  abstract long getPhoneUpdateCount();
 
   @Override
   public int hashCode() {
-    return Objects.hash(phone_number, phone_extension);
+    return Objects.hash(getPhoneNumber(), getPhoneExtension());
   }
 
   @Override
@@ -125,15 +86,15 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
 
     PhoneNumber rhs = (PhoneNumber) obj;
 
-    return Objects.equals(phone_number, rhs.getPhoneNumber()) &&
-        Objects.equals(phone_extension, rhs.getPhoneExtension());
+    return Objects.equals(getPhoneNumber(), rhs.getPhoneNumber()) &&
+        Objects.equals(getPhoneExtension(), rhs.getPhoneExtension());
   }
 
   @Override
   public String toString() {
-    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    builder.append("number", phone_number);
-    builder.append("extension", phone_extension);
+    ToStringBuilder builder = new ToStringBuilder(this, SwkroaToStringStyle.SWKROA_PREFIX_STYLE);
+    builder.append("number", getPhoneNumber());
+    builder.append("extension", getPhoneExtension());
 
     return builder.build();
   }
@@ -141,9 +102,83 @@ public final class PhoneNumber implements Serializable, Comparable<PhoneNumber> 
   @Override
   public int compareTo(final PhoneNumber rhs) {
     CompareToBuilder builder = new CompareToBuilder();
-    builder.append(phone_number, rhs.getPhoneNumber());
-    builder.append(phone_extension, rhs.getPhoneExtension());
+    builder.append(getPhoneNumber(), rhs.getPhoneNumber());
+    builder.append(getPhoneExtension(), rhs.getPhoneExtension());
 
     return builder.build();
+  }
+
+  /**
+   * Returns a {@link Builder} with default values.
+   *
+   * @return A {@link Builder}
+   */
+  public static Builder builder() {
+    return new AutoValue_PhoneNumber.Builder()
+        .setPhoneUID(0L)
+        .setParentEntityUID(0L)
+        .setPhoneTypeCD(0L)
+        .setPrimary(false)
+        .setActive(true)
+        .setPhoneUpdateCount(0L);
+  }
+
+  /**
+   * Returns a {@link Builder} based upon the values from the specified {@link PhoneNumber}.
+   *
+   * @param phoneNumber
+   *    The {@link PhoneNumber} to base this builder off of.
+   *
+   * @return A {@link Builder}
+   */
+  public static Builder builder(PhoneNumber phoneNumber) {
+    return new AutoValue_PhoneNumber.Builder()
+        .setPhoneUID(phoneNumber.getPhoneUID())
+        .setParentEntityUID(phoneNumber.getParentEntityUID())
+        .setParentEntityName(phoneNumber.getParentEntityName())
+        .setPhoneTypeCD(phoneNumber.getPhoneTypeCD())
+        .setPhoneNumber(phoneNumber.getPhoneNumber())
+        .setPhoneExtension(phoneNumber.getPhoneExtension())
+        .setPrimary(phoneNumber.isPrimary())
+        .setActive(phoneNumber.isActive())
+        .setPhoneUpdateCount(phoneNumber.getPhoneUpdateCount());
+  }
+
+  @AutoValue.Builder
+  @JsonPOJOBuilder
+  public abstract static class Builder {
+    @JsonProperty(value = "phoneUID", required = true)
+    public abstract Builder setPhoneUID(long phoneUID);
+
+    @JsonProperty(value = "parentEntityUID", required = true)
+    public abstract Builder setParentEntityUID(long parentEntityUID);
+
+    @JsonProperty(value = "parentEntityName", required = true)
+    public abstract Builder setParentEntityName(String parentEntityName);
+
+    @JsonProperty(value = "phoneTypeCD", required = true)
+    public abstract Builder setPhoneTypeCD(long phoneTypeCD);
+
+    @JsonProperty(value = "phoneNumber", required = true)
+    public abstract Builder setPhoneNumber(String phoneNumber);
+
+    @JsonProperty(value = "phoneExtension")
+    public abstract Builder setPhoneExtension(String phoneExtension);
+
+    @JsonProperty(value = "primary", required = true)
+    public abstract Builder setPrimary(boolean primary);
+
+    @JsonProperty(value = "active", required = true)
+    public abstract Builder setActive(boolean active);
+
+    @JsonProperty(value = "phoneUpdateCount", required = true)
+    public  abstract Builder setPhoneUpdateCount(long updateCount);
+
+    public abstract PhoneNumber build();
+
+    @JsonCreator
+    private static Builder builder() {
+      return PhoneNumber.builder();
+    }
   }
 }
