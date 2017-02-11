@@ -31,7 +31,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
     "active",
     "phoneUpdateCount"
 })
-@JsonDeserialize
+@JsonDeserialize(builder = PhoneNumber.Builder.class)
 public abstract class PhoneNumber implements Serializable, Comparable<PhoneNumber> {
   private static final long serialVersionUID = 1L;
 
@@ -41,6 +41,7 @@ public abstract class PhoneNumber implements Serializable, Comparable<PhoneNumbe
   @JsonProperty(value = "parentEntityUID", required = true)
   public abstract long getParentEntityUID();
 
+  @Nullable
   @JsonProperty(value = "parentEntityName", required = true)
   public abstract String getParentEntityName();
 

@@ -143,6 +143,39 @@ if (typeof String.prototype.startsWith != 'function') {
     }
   });
 
+  angular.module('swkroaApp').directive('swkroaAddress', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        addresses: '=addresses',
+        addressTypeDisplay: '=addressTypeDisplay'
+      },
+      templateUrl: '/directives/address_template.html'
+    }
+  });
+
+  angular.module('swkroaApp').directive('swkroaPhone', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        phoneNumbers: '=phoneNumbers',
+        phoneTypeDisplay: '=phoneTypeDisplay'
+      },
+      templateUrl: '/directives/phone_template.html'
+    }
+  });
+
+  angular.module('swkroaApp').directive('swkroaEmail', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        emailAddresses: '=emailAddresses',
+        emailTypeDisplay: '=emailTypeDisplay'
+      },
+      templateUrl: '/directives/email_template.html'
+    }
+  });
+
 })(window, window.angular, window.jQuery);
 
 function responseSuccessful(response) {

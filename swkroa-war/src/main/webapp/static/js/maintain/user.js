@@ -38,6 +38,10 @@
     vm.editUser = editUser;
     vm.newUser = newUser;
 
+    vm.getAddressTypeDisplay = getAddressTypeDisplay;
+    vm.getPhoneTypeDisplay = getPhoneTypeDisplay;
+    vm.getEmailTypeDisplay = getEmailTypeDisplay;
+
     vm.addAddress = addAddress;
     vm.ensurePrimaryAddress = ensurePrimaryAddress;
     vm.removeAddress = removeAddress;
@@ -188,6 +192,18 @@
 
       vm.view = 'add';
       vm.original = angular.copy(vm.selectedUser);
+    }
+
+    function getAddressTypeDisplay(address) {
+      return contactService.getAddressTypeDisplay(address, vm.addressTypes);
+    }
+
+    function getPhoneTypeDisplay(phone) {
+      return contactService.getPhoneTypeDisplay(phone, vm.phoneTypes);
+    }
+
+    function getEmailTypeDisplay(email) {
+      return contactService.getEmailTypeDisplay(email, vm.emailTypes);
     }
 
     function addAddress(member) {

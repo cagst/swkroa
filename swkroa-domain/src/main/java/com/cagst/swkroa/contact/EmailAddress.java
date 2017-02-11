@@ -1,5 +1,6 @@
 package com.cagst.swkroa.contact;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.text.Collator;
 
@@ -38,6 +39,7 @@ public abstract class EmailAddress implements Serializable, Comparable<EmailAddr
   @JsonProperty(value = "parentEntityUID", required = true)
   public abstract long getParentEntityUID();
 
+  @Nullable
   @JsonProperty(value = "parentEntityName", required = true)
   public abstract String getParentEntityName();
 

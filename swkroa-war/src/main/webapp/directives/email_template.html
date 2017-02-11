@@ -1,0 +1,8 @@
+<div data-ng-repeat="email in emailAddresses" class="row spacer-top">
+  <div class="col-xs-4">
+    <strong data-ng-bind="emailTypeDisplay(email, emailTypes)"></strong>
+  </div>
+  <div class="col-xs=8">
+    <span data-ng-bind="email.emailAddress"></span>
+  </div>
+</div>

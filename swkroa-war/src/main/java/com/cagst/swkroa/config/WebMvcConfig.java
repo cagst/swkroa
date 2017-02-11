@@ -42,6 +42,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Application
     registry.addResourceHandler("/static/**")
         .addResourceLocations("/static/", "classpath:/static/");
     //        .setCacheControl(CacheControl.maxAge(15, TimeUnit.DAYS).cachePublic());
+
+    registry.addResourceHandler("/directives/**")
+        .addResourceLocations("/directives/", "classpath:/directives/");
   }
 
   @Bean(name = "messageSource")

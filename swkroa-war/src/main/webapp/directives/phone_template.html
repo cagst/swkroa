@@ -1,0 +1,9 @@
+<div data-ng-repeat="phone in phoneNumbers" class="row spacer-top">
+  <div class="col-xs-4">
+    <strong data-ng-bind="phoneTypeDisplay(phone)"></strong>
+  </div>
+  <div class="col-xs=8">
+    <span data-ng-bind="phone.phoneNumber | tel"></span>
+    <span data-ng-show="phone.phoneExtension" data-ng-bind-template="Ext. {{phone.phoneExtension}}"></span>
+  </div>
+</div>

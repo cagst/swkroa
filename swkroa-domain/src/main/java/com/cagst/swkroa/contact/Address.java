@@ -46,6 +46,7 @@ public abstract class Address implements Serializable, Comparable<Address> {
   @JsonProperty(value = "parentEntityUID", required = true)
   public abstract long getParentEntityUID();
 
+  @Nullable
   @JsonProperty(value = "parentEntityName", required = true)
   public abstract String getParentEntityName();
 

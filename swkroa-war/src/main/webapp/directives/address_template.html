@@ -1,0 +1,11 @@
+<div class="row" data-ng-repeat="address in addresses" data-ng-show="addresses.length > 0">
+  <div class="col-xs-3">
+    <strong data-ng-bind="addressTypeDisplay(address)"></strong>
+  </div>
+  <div class="col-xs-9">
+    <div data-ng-bind="address.addressLine1"></div>
+    <div data-ng-bind="address.addressLine2"></div>
+    <div data-ng-bind="address.addressLine3"></div>
+    <div data-ng-bind-template="{{address.city}}, {{address.state}} {{address.postalCode | zip}}"></div>
+  </div>
+</div>

@@ -84,20 +84,7 @@
           <div class="col-xs-4">
             <div>
               <h4 class="divider-bottom">Addresses</h4>
-
-              <div class="row"
-                   data-ng-repeat="address in ctrl.membership.primaryMember.addresses"
-                   data-ng-show="ctrl.membership.primaryMember.addresses.length > 0">
-                <div class="col-xs-3">
-                  <strong data-ng-bind="ctrl.getAddressTypeDisplay(address)"></strong>
-                </div>
-                <div class="col-xs-9">
-                  <div data-ng-bind="address.addressLine1"></div>
-                  <div data-ng-bind="address.addressLine2"></div>
-                  <div data-ng-bind="address.addressLine3"></div>
-                  <div data-ng-bind-template="{{address.city}}, {{address.state}} {{address.postalCode | zip}}"></div>
-                </div>
-              </div>
+              <swkroa-address addresses="ctrl.membership.primaryMember.addresses" address-type-display="ctrl.getAddressTypeDisplay"></swkroa-address>
             </div>
           </div>
 
@@ -105,18 +92,7 @@
           <div class="col-xs-4">
             <div>
               <h4 class="divider-bottom">Phone Numbers</h4>
-
-              <div class="row"
-                   data-ng-repeat="phone in ctrl.membership.primaryMember.phoneNumbers"
-                   data-ng-show="ctrl.membership.primaryMember.phoneNumbers.length > 0">
-                <div class="col-xs-3">
-                  <strong data-ng-bind="ctrl.getPhoneTypeDisplay(phone)"></strong>
-                </div>
-                <div class="col-xs-9">
-                  <span data-ng-bind-template="{{phone.phoneNumber | tel}}"></span>
-                  <span data-ng-show="phone.phoneExtension" data-ng-bind-template="Ext. {{phone.phoneExtension}}"></span>
-                </div>
-              </div>
+              <swkroa-phone phone-numbers="ctrl.membership.primaryMember.phoneNumbers" phone-type-display="ctrl.getPhoneTypeDisplay"></swkroa-phone>
             </div>
           </div>
 
@@ -124,17 +100,7 @@
           <div class="col-xs-4">
             <div>
               <h4 class="divider-bottom">Email Addresses</h4>
-
-              <div class="row"
-                   data-ng-repeat="email in ctrl.membership.primaryMember.emailAddresses"
-                   data-ng-show="ctrl.membership.primaryMember.emailAddresses.length > 0">
-                <div class="col-xs-3">
-                  <strong data-ng-bind="ctrl.getEmailTypeDisplay(email)"></strong>
-                </div>
-                <div class="col-xs=9">
-                  <span data-ng-bind="email.emailAddress"></span>
-                </div>
-              </div>
+              <swkroa-email email-addresses="ctrl.membership.primaryMember.emailAddresses" email-type-display="ctrl.getEmailTypeDisplay"></swkroa-email>
             </div>
           </div>
         </div>
@@ -168,20 +134,7 @@
               <div class="col-xs-4">
                 <div>
                   <h4 class="divider-bottom">Addresses</h4>
-
-                  <div class="row"
-                       data-ng-repeat="address in member.addresses"
-                       data-ng-show="member.addresses.length > 0">
-                    <div class="col-xs-3">
-                      <strong data-ng-bind="ctrl.getAddressTypeDisplay(address)"></strong>
-                    </div>
-                    <div class="col-xs-9">
-                      <div data-ng-bind="address.addressLine1"></div>
-                      <div data-ng-bind="address.addressLine2"></div>
-                      <div data-ng-bind="address.addressLine3"></div>
-                      <div data-ng-bind-template="{{address.city}}, {{address.state}} {{address.postalCode | zip}}"></div>
-                    </div>
-                  </div>
+                  <swkroa-address addresses="member.addresses" address-type-display="ctrl.getAddressTypeDisplay"></swkroa-address>
                 </div>
               </div>
 
@@ -189,18 +142,7 @@
               <div class="col-xs-4">
                 <div>
                   <h4 class="divider-bottom">Phone Numbers</h4>
-
-                  <div class="row"
-                       data-ng-repeat="phone in member.phoneNumbers"
-                       data-ng-show="member.phoneNumbers.length > 0">
-                    <div class="col-xs-3">
-                      <strong data-ng-bind="ctrl.getPhoneTypeDisplay(phone)"></strong>
-                    </div>
-                    <div class="col-xs-9">
-                      <span data-ng-bind-template="{{phone.phoneNumber | tel}}"></span>
-                      <span data-ng-show="phone.phoneExtension" data-ng-bind-template="Ext. {{phone.phoneExtension}}"></span>
-                    </div>
-                  </div>
+                  <swkroa-phone phone-numbers="member.phoneNumbers" phone-type-display="ctrl.getPhoneTypeDisplay"></swkroa-phone>
                 </div>
               </div>
 
@@ -208,17 +150,7 @@
               <div class="col-xs-4">
                 <div>
                   <h4 class="divider-bottom">Email Addresses</h4>
-
-                  <div class="row"
-                       data-ng-repeat="email in member.emailAddresses"
-                       data-ng-show="member.emailAddresses.length > 0">
-                    <div class="col-xs-3">
-                      <strong data-ng-bind="ctrl.getEmailTypeDisplay(email)"></strong>
-                    </div>
-                    <div class="col-xs=9">
-                      <span data-ng-bind="email.emailAddress"></span>
-                    </div>
-                  </div>
+                  <swkroa-email email-addresses="member.emailAddresses" email-type-display="ctrl.getEmailTypeDisplay"></swkroa-email>
                 </div>
               </div>
             </div>
