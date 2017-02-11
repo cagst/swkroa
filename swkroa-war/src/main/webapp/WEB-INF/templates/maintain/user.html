@@ -92,19 +92,22 @@
                   </h3>
                   <div th:attr="data-ng-bind-template=#{user.last.signed.in}"></div>
 
+                  <!-- Addresses -->
                   <div data-ng-show="ctrl.selectedUser.addresses.length > 0">
                     <h4 class="divider-bottom" th:text="#{user.addresses}">z_Addresses</h4>
-                    <swkroa-address addresses="ctrl.selectedUser.addresses" address-type-display="ctrl.getAddressTypeDisplay"></swkroa-address>
+                    <swkroa-address addresses="ctrl.selectedUser.addresses" type-display="ctrl.getAddressTypeDisplay"></swkroa-address>
                   </div>
 
+                  <!-- Phone Numbers -->
                   <div data-ng-show="ctrl.selectedUser.phoneNumbers.length > 0">
                     <h4 class="divider-bottom" th:text="#{user.phoneNumber}">z_PhoneNumbers</h4>
-                    <swkroa-phone phone-numbers="ctrl.selectedUser.phoneNumbers" phone-type-display="ctrl.getPhoneTypeDisplay"></swkroa-phone>
+                    <swkroa-phone phones="ctrl.selectedUser.phoneNumbers" type-display="ctrl.getPhoneTypeDisplay"></swkroa-phone>
                   </div>
 
+                  <!-- Email Addresses -->
                   <div data-ng-show="ctrl.selectedUser.emailAddresses.length > 0">
                     <h4 class="divider-bottom" th:text="#{user.emailAddress}">z_EmailAddresses</h4>
-                    <swkroa-email email-addresses="ctrl.selectedUser.emailAddresses" email-type-display="ctrl.getEmailTypeDisplay"></swkroa-email>
+                    <swkroa-email emails="ctrl.selectedUser.emailAddresses" type-display="ctrl.getEmailTypeDisplay"></swkroa-email>
                   </div>
                 </div>
 

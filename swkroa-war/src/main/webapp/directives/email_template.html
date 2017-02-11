@@ -1,6 +1,6 @@
-<div data-ng-repeat="email in emailAddresses" class="row spacer-top">
+<div data-ng-repeat="email in emails" class="row spacer-top">
   <div class="col-xs-4">
-    <strong data-ng-bind="emailTypeDisplay(email, emailTypes)"></strong>
+    <strong data-ng-bind="typeDisplay(email, emailTypes)"></strong>
   </div>
   <div class="col-xs=8">
     <span data-ng-bind="email.emailAddress"></span>

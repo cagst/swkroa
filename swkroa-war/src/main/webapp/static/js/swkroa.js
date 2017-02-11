@@ -148,7 +148,7 @@ if (typeof String.prototype.startsWith != 'function') {
       restrict: 'E',
       scope: {
         addresses: '=addresses',
-        addressTypeDisplay: '=addressTypeDisplay'
+        typeDisplay: '=typeDisplay'
       },
       templateUrl: '/directives/address_template.html'
     }
@@ -158,8 +158,8 @@ if (typeof String.prototype.startsWith != 'function') {
     return {
       restrict: 'E',
       scope: {
-        phoneNumbers: '=phoneNumbers',
-        phoneTypeDisplay: '=phoneTypeDisplay'
+        phones: '=phones',
+        typeDisplay: '=typeDisplay'
       },
       templateUrl: '/directives/phone_template.html'
     }
@@ -169,8 +169,8 @@ if (typeof String.prototype.startsWith != 'function') {
     return {
       restrict: 'E',
       scope: {
-        emailAddresses: '=emailAddresses',
-        emailTypeDisplay: '=emailTypeDisplay'
+        emails: '=emails',
+        typeDisplay: '=typeDisplay'
       },
       templateUrl: '/directives/email_template.html'
     }
