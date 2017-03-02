@@ -56,11 +56,6 @@ public class MaintenanceController {
     this.codeValueRepository = codeValueRepository;
   }
 
-//  @InitBinder
-//  protected void initBinder(WebDataBinder binder) {
-//    binder.registerCustomEditor(Date.class, new CustomDateEditor(DATE_FORMAT, true));
-//  }
-
   /**
    * Handles and retrieves the CodeSet page.
    *
@@ -216,5 +211,17 @@ public class MaintenanceController {
     LOGGER.info("Received request to show users listing page");
 
     return "maintain/user";
+  }
+
+  /**
+   * Handles and retrieves the System settup page.
+   *
+   * @return The location and name of the page template.
+   */
+  @RequestMapping(value = "system", method = RequestMethod.GET)
+  public String getSystemPage() {
+    LOGGER.info("Received request to show system page.");
+
+    return "maintain/system";
   }
 }
