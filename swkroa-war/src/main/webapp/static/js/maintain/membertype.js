@@ -16,7 +16,7 @@
   MemberTypeController.$inject = ['$http', 'MemberTypeService'];
 
   function MemberTypeController($http, memberTypeService) {
-    var vm = this;
+    const vm = this;
 
     vm.selected = null;
     vm.allMemberTypes = null;
@@ -59,13 +59,13 @@
 
     function saveMemberType(memberType) {
       $http.post('/api/membertypes/', memberType).then(function(response) {
-        if (response.status == 201) {
+        if (response.status === 201) {
           vm.selected = response.data;
           vm.types.push(response.data);
-        } else if (response.status == 200) {
+        } else if (response.status === 200) {
           vm.selected = response.data;
-          for (var idx = 0; idx < vm.types.length; idx++) {
-            if (vm.types[idx].memberTypeUID == memberType.memberTypeUID) {
+          for (let idx = 0; idx < vm.types.length; idx++) {
+            if (vm.types[idx].memberTypeUID === memberType.memberTypeUID) {
               vm.types[idx] = response.data;
               break;
             }

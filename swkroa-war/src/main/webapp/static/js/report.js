@@ -9,7 +9,7 @@
 function submitReportForm(reportType, altAction) {
   $("#reportType").val(reportType);
 
-  if (altAction && altAction != 'undefined') {
+  if (altAction && altAction !== 'undefined') {
     document.reportForm.action = document.reportForm.getAttribute(altAction);
   }
 

@@ -13,8 +13,8 @@
   CodeSetService.$inject = ['$http'];
 
   function CodeSetService($http) {
-    var vm = this;
-    var rootUrl = "/api/codesets";
+    const vm = this;
+    const rootUrl = "/api/codesets";
 
     vm.getCodeSets = getCodeSets;
     vm.getCodeValuesForCodeSet = getCodeValuesForCodeSet;

@@ -13,7 +13,7 @@
   DepositController.$inject = ['CodeSetService', 'DepositService', 'TransactionService'];
 
   function DepositController(codeSetService, depositService, transactionService) {
-    var vm = this;
+    const vm = this;
 
     $('#createdMessage').hide();
     $('#updatedMessage').hide();
@@ -87,7 +87,7 @@
           vm.deposit  = reponse.data;
 
           // need to add the paidAmount to the deposit transaction so when it is removed it can be removed from the total
-          for (var idx = 0; idx < vm.deposit.transactions.length; idx++) {
+          for (let idx = 0; idx < vm.deposit.transactions.length; idx++) {
             vm.deposit.transactions[idx].amountPaid = vm.deposit.transactions[idx].transactionAmount;
             vm.deposit.transactions[idx].amountRemaining = vm.deposit.transactions[idx].transactionAmount;
             vm.deposit.transactions[idx].transactionInDeposit = true;
@@ -102,7 +102,7 @@
           vm.unpaid = response.data;
 
           // need to add the deposit transaction to the unpaid but mark it as included in deposit so if it is removed it will re-appear in the unpaid invoices section
-          for (var idx = 0; idx < vm.deposit.transactions.length; idx++) {
+          for (let idx = 0; idx < vm.deposit.transactions.length; idx++) {
             vm.unpaid.push(vm.deposit.transactions[idx]);
           }
         }
@@ -123,12 +123,12 @@
     function addInvoiceToDeposit(transaction) {
       transaction.transactionInDeposit = true;
 
-      var tx = angular.copy(transaction);
+      let tx = angular.copy(transaction);
       tx.amountPaid = tx.amountRemaining;
       tx.amountRemaining = 0;
 
       // flip the polarity of the transaction entries
-      for (var idx = 0; idx < tx.transactionEntries.length; idx++) {
+      for (let idx = 0; idx < tx.transactionEntries.length; idx++) {
         tx.transactionEntries[idx].transactionEntryAmount = Math.abs(tx.transactionEntries[idx].transactionEntryAmount);
       }
 
@@ -137,8 +137,8 @@
     }
 
     function removeInvoiceFromDeposit(transaction) {
-      for (var idx1 = 0; idx1 < vm.unpaid.length; idx1++) {
-        if (vm.unpaid[idx1].transactionUID == transaction.transactionUID) {
+      for (let idx1 = 0; idx1 < vm.unpaid.length; idx1++) {
+        if (vm.unpaid[idx1].transactionUID === transaction.transactionUID) {
           vm.unpaid[idx1].transactionInDeposit = false;
           break;
         }
@@ -150,7 +150,7 @@
       if (transaction.depositTransactionUID) {
         transaction.active = false;
       } else {
-        var idx2 = vm.deposit.transactions.indexOf(transaction);
+        const idx2 = vm.deposit.transactions.indexOf(transaction);
         vm.deposit.transactions.splice(idx2, 1);
       }
     }
@@ -177,9 +177,9 @@
     function saveDeposit() {
       depositService.saveDeposit(vm.deposit).then(function(response) {
         if (responseSuccessful(response)) {
-          if (response.status == 201) {
+          if (response.status === 201) {
             $('#createdMessage').show();
-          } else if (response.status == 200) {
+          } else if (response.status === 200) {
             $('#updatedMessage').show();
           }
 

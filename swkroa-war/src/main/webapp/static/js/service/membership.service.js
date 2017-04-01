@@ -13,8 +13,8 @@
   MembershipService.$inject = ['$http'];
 
   function MembershipService($http) {
-    var vm = this;
-    var rootUrl = "/api/memberships";
+    const vm = this;
+    const rootUrl = "/api/memberships";
 
     vm.getMembership = getMembership;
     vm.getMemberships = getMemberships;
@@ -30,7 +30,7 @@
      ********************************************/
 
     function getMembership(membershipUID, including) {
-      var url = rootUrl + '/' + membershipUID;
+      let url = rootUrl + '/' + membershipUID;
 
       if (Object.prototype.toString.call(including) === '[object Array]') {
         url = url + "?including=" + including.toString();
@@ -40,14 +40,14 @@
     }
 
     function getMemberships(query, status, balance) {
-      var params = "";
+      let params = "";
 
       if (query && query.length > 0) {
         params = "?q=" + query;
       }
 
       if (status && status.length > 0) {
-        if (params.length == 0) {
+        if (params.length === 0) {
           params = "?";
         } else {
           params = params + "&";
@@ -57,7 +57,7 @@
       }
 
       if (balance && balance.length > 0) {
-        if (params.length == 0) {
+        if (params.length === 0) {
           params = "?";
         } else {
           params = params + "&";
@@ -86,12 +86,12 @@
     }
 
     function closeMemberships(membershipIdsArg, closeReasonArg, closeTextArg) {
-      var closeReasonText = "";
+      let closeReasonText = "";
       if (closeTextArg) {
         closeReasonText = closeTextArg;
       }
 
-      var data = {
+      const data = {
         membershipIds: membershipIdsArg,
         closeReason: closeReasonArg,
         closeText: closeReasonText
@@ -101,8 +101,8 @@
     }
 
     function renewMemberships(membershipIdsArg, transDateArg, transDescArg, transMemoArg) {
-      var transDesc = "";
-      var transMemo = "";
+      let transDesc = "";
+      let transMemo = "";
 
       if (transDescArg) {
         transDesc = transDescArg;
@@ -112,7 +112,7 @@
         transMemo = transMemoArg;
       }
 
-      var data = {
+      const data = {
         membershipIds: membershipIdsArg,
         transactionDate: transDateArg,
         transactionDescription: transDesc,

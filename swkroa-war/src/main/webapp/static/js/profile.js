@@ -80,7 +80,7 @@ swkroaApp.controller('profileController',
 }]);
 
 swkroaApp.controller('modifyProfileController', ['$scope', '$http', 'codesetService', '$state', function($scope, $http, codesetService, $state) {
-  var original = angular.copy($scope.share.user);
+  const original = angular.copy($scope.share.user);
 
   $("#errorMessage").hide();
 
@@ -97,7 +97,7 @@ swkroaApp.controller('modifyProfileController', ['$scope', '$http', 'codesetServ
   $scope.save = function() {
     $http.post('/api/users', $scope.share.user).
       success(function(data) {
-        if ($scope.share.user.userUID == 0) {
+        if ($scope.share.user.userUID === 0) {
           $scope.share.user = data;
           $scope.share.successMessage = "User " + data.fullName + " was created successfully!";
         } else {

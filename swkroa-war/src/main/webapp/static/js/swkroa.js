@@ -5,7 +5,7 @@
  */
 
 // add a 'startsWith' method to the String class
-if (typeof String.prototype.startsWith != 'function') {
+if (typeof String.prototype.startsWith !== 'function') {
   String.prototype.startsWith = function(str) {
     return this.slice(0, str.length) === str;
   };
@@ -25,13 +25,13 @@ if (typeof String.prototype.startsWith != 'function') {
     return function (tel) {
       if (!tel) { return ''; }
 
-      var value = tel.toString().trim().replace(/^\+/, '');
+      const value = tel.toString().trim().replace(/^\+/, '');
 
       if (value.match(/[^0-9]/)) {
         return tel;
       }
 
-      var country, city, number;
+      let country, city, number;
 
       switch (value.length) {
         case 10: // +1PPP####### -> C (PPP) ###-####
@@ -56,7 +56,7 @@ if (typeof String.prototype.startsWith != 'function') {
           return tel;
       }
 
-      if (country == 1) {
+      if (country === 1) {
         country = "";
       }
 
@@ -70,7 +70,7 @@ if (typeof String.prototype.startsWith != 'function') {
     return function (zip) {
       if (!zip) { return ''; }
 
-      var value = zip.toString().trim().replace(/^\+/, '');
+      const value = zip.toString().trim().replace(/^\+/, '');
 
       if (value.match(/[^0-9]/)) {
         return zip;
@@ -112,7 +112,7 @@ if (typeof String.prototype.startsWith != 'function') {
       },
 
       'responseError': function(rejection) {
-        if (rejection.status == 409) {
+        if (rejection.status === 409) {
           $('#optimisticErrorMessageDlg').modal('show');
         } else if (rejection.status >= 400 && rejection.status <= 599) {
           $('#unknownErrorMessage').text(rejection.data.message);
@@ -191,12 +191,12 @@ function hideProcessingDialog() {
 }
 
 function toggleTransactionDetails(transaction) {
-  var img       = $(transaction).children()[0];
-  var collapsed = $(img).hasClass("fa-caret-right");
+  const img       = $(transaction).children()[0];
+  const collapsed = $(img).hasClass("fa-caret-right");
 
-  var parentDiv = $(transaction).parent();
-  var parentCol = $(parentDiv).parent();
-  var parentRow = $(parentCol).parent();
+  const parentDiv = $(transaction).parent();
+  const parentCol = $(parentDiv).parent();
+  const parentRow = $(parentCol).parent();
 
   if (collapsed) {
     $(parentRow).siblings().removeClass("hide");

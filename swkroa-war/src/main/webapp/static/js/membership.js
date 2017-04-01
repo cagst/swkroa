@@ -13,7 +13,7 @@
   MembershipController.$inject = ['$http', 'CodeSetService', 'ContactService', 'MembershipService', 'TransactionService'];
 
   function MembershipController($http, codeSetService, contactService, membershipService, transactionService) {
-    var vm = this;
+    const vm = this;
 
     vm.query            = "";
     vm.view             = "listing";
@@ -140,37 +140,37 @@
     }
 
     function onQueryKeydown($event) {
-      if ($event.keyCode == 13 && vm.query.length >= 2) {
+      if ($event.keyCode === 13 && vm.query.length >= 2) {
         vm.getMemberships();
       }
     }
 
     function getFilters() {
-      var filterText = "";
+      let filterText = "";
 
-      if (vm.filterStatus == 'ACTIVE') {
+      if (vm.filterStatus === 'ACTIVE') {
         if (filterText) {
           filterText = filterText + ", ";
         }
         filterText = filterText + "Active";
-      } else if (vm.filterStatus == 'INACTIVE') {
+      } else if (vm.filterStatus === 'INACTIVE') {
         if (filterText) {
           filterText = filterText + ", ";
         }
         filterText = filterText + "Inactive";
       }
 
-      if (vm.filterBalance == 'DELINQUENT') {
+      if (vm.filterBalance === 'DELINQUENT') {
         if (filterText) {
           filterText = filterText + ", ";
         }
         filterText = filterText + "Delinquent";
-      } else if (vm.filterBalance == 'PAID') {
+      } else if (vm.filterBalance === 'PAID') {
         if (filterText) {
           filterText = filterText + ", ";
         }
         filterText = filterText + "Paid";
-      } else if (vm.filterBalance == 'CREDIT') {
+      } else if (vm.filterBalance === 'CREDIT') {
         if (filterText) {
           filterText = filterText + ", ";
         }
@@ -207,7 +207,7 @@
       vm.updated = false;
 
       membershipService.getMemberships(vm.query, vm.filterStatus, vm.filterBalance).then(function(response) {
-        if (response.status == 200) {
+        if (response.status === 200) {
           vm.memberships = response.data;
           vm.searched    = true;
         }
@@ -219,10 +219,10 @@
       vm.updated = false;
 
       membershipService.getMembership(membershipUID).then(function(response) {
-        if (response.status == 200) {
+        if (response.status === 200) {
           vm.membership = response.data;
-          for (var idx = 0; idx < vm.memberships.length; idx++) {
-            if (vm.memberships[idx].membershipUID == vm.membership.membershipUID) {
+          for (let idx = 0; idx < vm.memberships.length; idx++) {
+            if (vm.memberships[idx].membershipUID === vm.membership.membershipUID) {
               vm.memberships[idx] = vm.membership;
               break;
             }
@@ -233,7 +233,7 @@
 
     function addMembership() {
       membershipService.getMembership(0).then(function(response) {
-        if (response.status == 200) {
+        if (response.status === 200) {
           vm.membership      = response.data;
           vm.original        = angular.copy(response.data);
         }
@@ -264,8 +264,8 @@
       $('#openMembershipsDlg').modal('hide');
 
       membershipService.saveMembership(vm.membership).then(function(response) {
-        if (response.status == 200) {
-          var idx = vm.memberships.indexOf(vm.membership);
+        if (response.status === 200) {
+          const idx = vm.memberships.indexOf(vm.membership);
           vm.memberships.splice(idx, 1);
           vm.getMemberships();
         } else {
@@ -275,7 +275,7 @@
     }
 
     function closeMembership() {
-      var membershipIds = [];
+      let membershipIds = [];
       membershipIds.push(vm.membership.membershipUID);
 
       membershipService.closeMemberships(membershipIds, vm.closeReason, vm.closeText).success(function() {
@@ -312,7 +312,7 @@
       vm.comment.parentEntityUID  = vm.membership.membershipUID;
 
       $http.put("/api/comments", vm.comment).success(function(data) {
-        if (vm.commentIdx == -1) {
+        if (vm.commentIdx === -1) {
           vm.membership.comments.push(data);
         } else {
           vm.membership.comments[vm.commentIdx] = data;
@@ -337,8 +337,8 @@
     }
 
     function calculateTransactionAmount() {
-      var amount = 0;
-      for (var idx = 0; idx < vm.transaction.transactionEntries.length; idx++) {
+      let amount = 0;
+      for (let idx = 0; idx < vm.transaction.transactionEntries.length; idx++) {
         if (vm.transaction.transactionEntries[idx].active) {
           amount = amount + vm.transaction.transactionEntries[idx].transactionEntryAmount;
         }
@@ -373,7 +373,7 @@
       vm.transaction.membershipUID  = vm.membership.membershipUID;
 
       transactionService.saveTransaction(vm.transaction).success(function(data, status) {
-        if (status == 201) {
+        if (status === 201) {
           vm.membership.transactions.push(data);
         } else {
           vm.membership.transactions[vm.transactionIdx] = data;
@@ -384,22 +384,22 @@
     }
 
     function addTransactionEntry() {
-      var entryType;
+      let entryType;
 
-      for (var idx = 0; idx < vm.entryTypes.length; idx++) {
-        if (vm.entryTypes[idx].meaning == 'TRANS_DUES_BASE') {
+      for (let idx = 0; idx < vm.entryTypes.length; idx++) {
+        if (vm.entryTypes[idx].meaning === 'TRANS_DUES_BASE') {
           entryType = vm.entryTypes[idx];
           break;
         }
       }
 
-      var entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0, transactionEntryType: entryType};
+      const entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0, transactionEntryType: entryType};
       vm.transaction.transactionEntries.push(entry);
     }
 
     function deleteTransactionEntry(entry) {
-      var idx = vm.transaction.transactionEntries.indexOf(entry);
-      if (entry.transactionEntryUID == 0) {
+      const idx = vm.transaction.transactionEntries.indexOf(entry);
+      if (entry.transactionEntryUID === 0) {
         vm.transaction.transactionEntries.splice(idx, 1);
       } else {
         entry.active = false;
@@ -452,8 +452,8 @@
     }
 
     function addSpouse() {
-      var spouseMember = null;
-      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
+      let spouseMember = null;
+      for (let idx = 0; idx < vm.memberTypes.length; idx++) {
         if (vm.memberTypes[idx].memberTypeMeaning === 'SPOUSE') {
           spouseMember = vm.memberTypes[idx];
           break;
@@ -486,7 +486,7 @@
       if (county.membershipCountyUID > 0) {
         county.active = false;
       } else {
-        var idx = vm.membership.membershipCounties.indexOf(county);
+        const idx = vm.membership.membershipCounties.indexOf(county);
         vm.membership.membershipCounties.splice(idx, 1);
       }
     }
@@ -504,8 +504,8 @@
     }
 
     function addMember() {
-      var familyMember = null;
-      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
+      let familyMember = null;
+      for (let idx = 0; idx < vm.memberTypes.length; idx++) {
         if (vm.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
           familyMember = vm.memberTypes[idx];
           break;
@@ -522,22 +522,22 @@
       if (member.memberUID > 0) {
         member.active = false;
       } else {
-        var idx = vm.membership.members.indexOf(member);
+        const idx = vm.membership.members.indexOf(member);
         vm.membership.members.splice(idx, 1);
       }
     }
 
     function generateOwnerId(member) {
-      var firstName  = member.person.firstName;
-      var lastName   = member.person.lastName;
-      var ownerIdent = member.ownerIdent;
+      const firstName  = member.person.firstName;
+      const lastName   = member.person.lastName;
+      const ownerIdent = member.ownerIdent;
 
       if (firstName  && firstName.length > 2 &&
           lastName   && lastName.length > 2 &&
-          (!ownerIdent || ownerIdent.length == 0)) {
+          (!ownerIdent || ownerIdent.length === 0)) {
 
         membershipService.generateOwnerId(firstName, lastName).then(function(response) {
-          if (response.status == 200) {
+          if (response.status === 200) {
             member.ownerIdent = response.data;
           }
         });
@@ -549,7 +549,7 @@
     }
 
     function cancelChanges() {
-      if (vm.membership.membershipUID == 0) {
+      if (vm.membership.membershipUID === 0) {
         vm.membership = null;
       } else {
         vm.membership = vm.original
@@ -561,7 +561,7 @@
 
     function saveMembership() {
       membershipService.saveMembership(vm.membership).then(function(response) {
-        if (response.status == 201) {
+        if (response.status === 201) {
           if (vm.memberships) {
             vm.memberships.push(response.data);
           } else {
@@ -572,8 +572,8 @@
           vm.view       = "listing";
           vm.original   = null;
           vm.created    = true;
-        } else if (response.status == 200) {
-          var idx = vm.memberships.indexOf(vm.membership);
+        } else if (response.status === 200) {
+          const idx = vm.memberships.indexOf(vm.membership);
 
           vm.memberships[idx] = response.data;
           vm.membership       = response.data;

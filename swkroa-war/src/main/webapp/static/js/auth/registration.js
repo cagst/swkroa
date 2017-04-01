@@ -13,8 +13,8 @@
   RegistrationController.$inject = ['$http', 'CodeSetService'];
 
   function RegistrationController($http, codeSetService) {
-    var vm = this;
-    var rootUrl = "/api/register";
+    const vm = this;
+    const rootUrl = "/api/register";
 
     vm.errorText = "";
     vm.step = "IDENTIFY";
@@ -52,7 +52,7 @@
      ********************************************/
 
     function enableVerify() {
-      var cnt = (vm.registerUser.firstName.length > 0 ? 1 : 0);
+      let cnt = (vm.registerUser.firstName.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.lastName.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.phoneNumber.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.zipCode.length > 0 ? 1 : 0);
@@ -61,7 +61,7 @@
     }
 
     function enableComplete() {
-      var cnt = (vm.registerUser.emailAddress.length > 0 ? 1 : 0);
+      let cnt = (vm.registerUser.emailAddress.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.username.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.password.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.confirm.length > 0 ? 1 : 0);
@@ -77,12 +77,10 @@
       cnt += (vm.registerUser.question3 > 0 ? 1 : 0);
       cnt += (vm.registerUser.answer3.length > 0 ? 1 : 0);
 
-      return (cnt == 11);
+      return (cnt === 11);
     }
 
     function registerIdentification() {
-      var url = rootUrl + "/identification/" + vm.registerUser.ownerId;
-
       $http({
         method: 'GET',
         url: rootUrl + "/identification/" + vm.registerUser.ownerId,

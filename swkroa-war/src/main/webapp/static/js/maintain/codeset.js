@@ -15,7 +15,7 @@
   CodeSetController.$inject = ['CodeSetService'];
 
   function CodeSetController(codeSetService) {
-    var vm = this;
+    const vm = this;
 
     vm.codeSets = null;
     vm.selectedCodeSet = null;
@@ -69,7 +69,7 @@
     }
 
     function validate(display) {
-      if (display.length == 0) {
+      if (display.length === 0) {
         return "Display is required!";
       } else {
         return true;
@@ -78,9 +78,9 @@
 
     function saveCodeValue(codeValue) {
       codeSetService.saveCodeValue(vm.selectedCodeSet.meaning, codeValue).then(function(response) {
-        if (response.status == 201) {
+        if (response.status === 201) {
           vm.selectedCodeValue = response.data;
-        } else if (response.status == 200) {
+        } else if (response.status === 200) {
           vm.selectedCodeValue = response.data;
         }
       });

@@ -13,7 +13,7 @@
   InvoiceController.$inject = ['MembershipService'];
 
   function InvoiceController(membershipService) {
-    var vm = this;
+    const vm = this;
 
     vm.membershipsDue = [];
     vm.days = 30;
@@ -46,7 +46,7 @@
           vm.checkAll = true;
           vm.totalAmount = 0;
 
-          for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+          for (let idx = 0; idx < vm.membershipsDue.length; idx++) {
             vm.membershipsDue[idx].selected = true;
             vm.totalAmount += vm.membershipsDue[idx].calculatedDuesAmount;
           }
@@ -59,7 +59,7 @@
     }
 
     function toggleCheckAll() {
-      for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+      for (let idx = 0; idx < vm.membershipsDue.length; idx++) {
         vm.membershipsDue[idx].selected = vm.checkAll;
       }
 
@@ -71,8 +71,8 @@
     }
 
     function canExport() {
-      var membershipsSelected = false;
-      for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+      let membershipsSelected = false;
+      for (let idx = 0; idx < vm.membershipsDue.length; idx++) {
         if (vm.membershipsDue[idx].selected) {
           membershipsSelected = true;
         }
@@ -84,8 +84,8 @@
     function renewingMemberships() {
       $('#renewMembershipsDlg').modal('hide');
 
-      var memberships = [];
-      for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+      let memberships = [];
+      for (let idx = 0; idx < vm.membershipsDue.length; idx++) {
         if (vm.membershipsDue[idx].selected) {
           memberships.push(vm.membershipsDue[idx].membershipUID);
         }
@@ -107,7 +107,7 @@
       vm.totalMemberships = 0;
       vm.totalAmount = 0;
 
-      for (var idx = 0; idx < vm.membershipsDue.length; idx++) {
+      for (let idx = 0; idx < vm.membershipsDue.length; idx++) {
         if (vm.membershipsDue[idx].selected) {
           vm.totalAmount += vm.membershipsDue[idx].calculatedDuesAmount;
           vm.totalMemberships += 1;
@@ -116,7 +116,7 @@
     }
 
     function activate() {
-      var currentYear = new Date().getFullYear();
+      const currentYear = new Date().getFullYear();
 
       vm.membershipRenewalPeriod = "(" + currentYear + " - " + (currentYear + 1) + ")";
       vm.transactionDescription  = "Invoice " + currentYear + " - " + (currentYear + 1);
@@ -126,7 +126,7 @@
 
 })(window, window.angular, window.jQuery);
 
-var generateMembershipRenewalLetters = function(reportyType) {
+let generateMembershipRenewalLetters = function(reportyType) {
   $('#renewalLetterDlg').modal('hide');
   submitReportForm(reportyType);
 };

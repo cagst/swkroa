@@ -13,7 +13,7 @@
   DelinquencyController.$inject = ['CodeSetService', 'MembershipService'];
 
   function DelinquencyController(codeSetService, membershipService) {
-    var vm = this;
+    const vm = this;
 
     vm.delinquencies = [];
 
@@ -49,7 +49,7 @@
           vm.delinquencies = response.data;
           vm.checkAll = true;
 
-          for (var idx = 0; idx < vm.delinquencies.length; idx++) {
+          for (let idx = 0; idx < vm.delinquencies.length; idx++) {
             vm.delinquencies[idx].selected = true;
           }
         }
@@ -57,14 +57,14 @@
     }
 
     function toggleCheckAll() {
-      for (var idx = 0; idx < vm.delinquencies.length; idx++) {
+      for (let idx = 0; idx < vm.delinquencies.length; idx++) {
         vm.delinquencies[idx].selected = vm.checkAll;
       }
     }
 
     function canExport() {
-      var membershipsSelected = false;
-      for (var idx = 0; idx < vm.delinquencies.length; idx++) {
+      let membershipsSelected = false;
+      for (let idx = 0; idx < vm.delinquencies.length; idx++) {
         if (vm.delinquencies[idx].selected) {
           membershipsSelected = true;
         }
@@ -82,8 +82,8 @@
     }
 
     function closeMemberships() {
-      var memberships = [];
-      for (var idx = 0; idx < vm.delinquencies.length; idx++) {
+      let memberships = [];
+      for (let idx = 0; idx < vm.delinquencies.length; idx++) {
         if (vm.delinquencies[idx].selected) {
           memberships.push(vm.delinquencies[idx].membershipUID);
         }
@@ -100,7 +100,7 @@
 
 })(window, window.angular, window.jQuery);
 
-var generateMembershipReminderLetters = function(reportyType, altAction) {
+let generateMembershipReminderLetters = function(reportyType, altAction) {
   $('#reminderLetterDlg').modal('hide');
   submitReportForm(reportyType, altAction);
 };
