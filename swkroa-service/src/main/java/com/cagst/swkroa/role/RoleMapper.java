@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
- * Maps a row in the resultset into a {@link Role} object. Used to marshal / unmarshal a
+ * Maps a row in the result set into a {@link Role} object. Used to marshal / un-marshal a
  * {@link Role} to / from the database.
  *
  * @author Craig Gaskill

@@ -140,7 +140,7 @@
                                entry.transactionEntryType.meaning != 'TRANS_SPECIAL_FUNDS')">
                 <select class="form-control" name="relatedTransaction"
                         data-ng-model="entry.relatedTransaction"
-                        data-ng-options="tran.transactionDescription for tran in ctrl.membership.transactions | filter:{transactionType:'INVOICE'} track by trans.transactionUID">
+                        data-ng-options="tran.transactionDescription for tran in ctrl.membership.transactions | filter:{transactionType:'INVOICE'} track by tran.transactionUID">
                 </select>
               </td>
             </tr>

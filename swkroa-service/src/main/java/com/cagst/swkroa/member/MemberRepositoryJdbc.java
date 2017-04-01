@@ -290,31 +290,33 @@ import org.springframework.util.Assert;
       savedMember = updateMember(member, membership, user);
     }
 
-    for (Address address : member.getPerson().getAddresses()) {
-      Address saveAddress = Address.builder(address)
-          .setParentEntityUID(member.getMemberUID())
-          .setParentEntityName(UserType.MEMBER.name())
-          .build();
+    if (member.getPerson() != null) {
+      for (Address address : member.getPerson().getAddresses()) {
+        Address saveAddress = Address.builder(address)
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
 
-      contactRepo.saveAddress(saveAddress, user);
-    }
+        contactRepo.saveAddress(saveAddress, user);
+      }
 
-    for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
-      PhoneNumber savePhoneNumber = PhoneNumber.builder(phone)
-          .setParentEntityUID(member.getMemberUID())
-          .setParentEntityName(UserType.MEMBER.name())
-          .build();
+      for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
+        PhoneNumber savePhoneNumber = PhoneNumber.builder(phone)
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
 
-      contactRepo.savePhoneNumber(savePhoneNumber, user);
-    }
+        contactRepo.savePhoneNumber(savePhoneNumber, user);
+      }
 
-    for (EmailAddress email : member.getPerson().getEmailAddresses()) {
-      EmailAddress saveEmailAddress = EmailAddress.builder(email)
-          .setParentEntityUID(member.getMemberUID())
-          .setParentEntityName(UserType.MEMBER.name())
-          .build();
+      for (EmailAddress email : member.getPerson().getEmailAddresses()) {
+        EmailAddress saveEmailAddress = EmailAddress.builder(email)
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
 
-      contactRepo.saveEmailAddress(saveEmailAddress, user);
+        contactRepo.saveEmailAddress(saveEmailAddress, user);
+      }
     }
 
     return savedMember;

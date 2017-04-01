@@ -101,6 +101,20 @@ public final class TransactionRepositoryJdbc extends BaseRepositoryJdbc implemen
         new MapSqlParameterSource("membership_id", membershipUID),
         new TransactionListExtractor(codeValueRepo));
 
+    // map related transactions for transaction-entries
+    for (Transaction transaction : results) {
+      for (TransactionEntry entry : transaction.getTransactionEntries()) {
+        if (entry.getRelatedTransactionUID() > 0L) {
+          for (Transaction tx : results) {
+            if (entry.getRelatedTransactionUID() == tx.getTransactionUID()) {
+              entry.setRelatedTransaction(tx);
+              break;
+            }
+          }
+        }
+      }
+    }
+
     results.sort(Comparator.comparing(Transaction::getTransactionDate));
     return results;
   }

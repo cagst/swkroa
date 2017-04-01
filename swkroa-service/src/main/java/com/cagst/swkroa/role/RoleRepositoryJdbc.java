@@ -35,12 +35,12 @@ import org.springframework.util.Assert;
    *     The {@link DataSource} used to retrieve / persist data objects.
    */
   @Inject
-  public RoleRepositoryJdbc(final DataSource dataSource) {
+  public RoleRepositoryJdbc(DataSource dataSource) {
     super(dataSource);
   }
 
   @Override
-  public List<Role> getRolesForUser(final User user) {
+  public List<Role> getRolesForUser(User user) {
     Assert.notNull(user, "Argument [user} cannot be null.");
 
     LOGGER.info("Calling getRolesForUser [{}].", user.getUsername());

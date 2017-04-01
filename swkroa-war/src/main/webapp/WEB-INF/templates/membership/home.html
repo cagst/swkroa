@@ -294,8 +294,8 @@
                   </label>
                   <input id="companyName" name="companyName" type="text" class="form-control" maxlength="100"
                          data-ng-model="ctrl.closeText"
-                         data-ng-disabled="closeReason.meaning != 'CLOSE_OTHER'"
-                         data-ng-required="closeReason.meaning == 'CLOSE_OTHER'" />
+                         data-ng-disabled="ctrl.closeReason.meaning != 'CLOSE_OTHER'"
+                         data-ng-required="ctrl.closeReason.meaning == 'CLOSE_OTHER'" />
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-danger"
