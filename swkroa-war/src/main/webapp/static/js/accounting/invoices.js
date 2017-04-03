@@ -13,7 +13,7 @@
   InvoiceController.$inject = ['$http', 'TransactionService'];
 
   function InvoiceController($http, transactionService) {
-    const vm = this;
+    var vm = this;
 
     vm.increment     = 10;
     vm.increments    = [];
@@ -56,7 +56,7 @@
           vm.invoiceGroups = response.data.items;
           vm.pages = Math.ceil(response.data.totalItemCount / vm.increment);
 
-          for (let idx = 0; idx < vm.pages; idx++) {
+          for (var idx = 0; idx < vm.pages; idx++) {
             vm.increments.push(idx + 1);
           }
         }

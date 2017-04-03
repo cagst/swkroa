@@ -11,12 +11,12 @@
   TransactionService.$inject = ['$http'];
 
   function TransactionService($http) {
-    const vm = this;
-    const INVOICES = 'invoices';
-    const PAYMENTS = "payments";
-    const UNPAID   = 'unpaid';
+    var vm = this;
+    var INVOICES = 'invoices';
+    var PAYMENTS = "payments";
+    var UNPAID   = 'unpaid';
 
-    const rootUrl = "/api/transactions";
+    var rootUrl = "/api/transactions";
 
     vm.getInvoiceGroups = getInvoiceGroups;
     vm.getPaymentGroups = getPaymentGroups;

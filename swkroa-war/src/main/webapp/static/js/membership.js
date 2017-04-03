@@ -13,7 +13,7 @@
   MembershipController.$inject = ['$http', 'CodeSetService', 'ContactService', 'MembershipService', 'TransactionService'];
 
   function MembershipController($http, codeSetService, contactService, membershipService, transactionService) {
-    const vm = this;
+    var vm = this;
 
     vm.query            = "";
     vm.view             = "listing";
@@ -146,7 +146,7 @@
     }
 
     function getFilters() {
-      let filterText = "";
+      var filterText = "";
 
       if (vm.filterStatus === 'ACTIVE') {
         if (filterText) {
@@ -221,7 +221,7 @@
       membershipService.getMembership(membershipUID).then(function(response) {
         if (response.status === 200) {
           vm.membership = response.data;
-          for (let idx = 0; idx < vm.memberships.length; idx++) {
+          for (var idx = 0; idx < vm.memberships.length; idx++) {
             if (vm.memberships[idx].membershipUID === vm.membership.membershipUID) {
               vm.memberships[idx] = vm.membership;
               break;
@@ -265,7 +265,7 @@
 
       membershipService.saveMembership(vm.membership).then(function(response) {
         if (response.status === 200) {
-          const idx = vm.memberships.indexOf(vm.membership);
+          var idx = vm.memberships.indexOf(vm.membership);
           vm.memberships.splice(idx, 1);
           vm.getMemberships();
         } else {
@@ -275,7 +275,7 @@
     }
 
     function closeMembership() {
-      let membershipIds = [];
+      var membershipIds = [];
       membershipIds.push(vm.membership.membershipUID);
 
       membershipService.closeMemberships(membershipIds, vm.closeReason, vm.closeText).success(function() {
@@ -337,8 +337,8 @@
     }
 
     function calculateTransactionAmount() {
-      let amount = 0;
-      for (let idx = 0; idx < vm.transaction.transactionEntries.length; idx++) {
+      var amount = 0;
+      for (var idx = 0; idx < vm.transaction.transactionEntries.length; idx++) {
         if (vm.transaction.transactionEntries[idx].active) {
           amount = amount + vm.transaction.transactionEntries[idx].transactionEntryAmount;
         }
@@ -384,21 +384,21 @@
     }
 
     function addTransactionEntry() {
-      let entryType;
+      var entryType;
 
-      for (let idx = 0; idx < vm.entryTypes.length; idx++) {
+      for (var idx = 0; idx < vm.entryTypes.length; idx++) {
         if (vm.entryTypes[idx].meaning === 'TRANS_DUES_BASE') {
           entryType = vm.entryTypes[idx];
           break;
         }
       }
 
-      const entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0, transactionEntryType: entryType};
+      var entry = {transactionEntryUID: 0, active: true, transactionEntryAmount: 0.0, transactionEntryType: entryType};
       vm.transaction.transactionEntries.push(entry);
     }
 
     function deleteTransactionEntry(entry) {
-      const idx = vm.transaction.transactionEntries.indexOf(entry);
+      var idx = vm.transaction.transactionEntries.indexOf(entry);
       if (entry.transactionEntryUID === 0) {
         vm.transaction.transactionEntries.splice(idx, 1);
       } else {
@@ -452,8 +452,8 @@
     }
 
     function addSpouse() {
-      let spouseMember = null;
-      for (let idx = 0; idx < vm.memberTypes.length; idx++) {
+      var spouseMember = null;
+      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
         if (vm.memberTypes[idx].memberTypeMeaning === 'SPOUSE') {
           spouseMember = vm.memberTypes[idx];
           break;
@@ -486,7 +486,7 @@
       if (county.membershipCountyUID > 0) {
         county.active = false;
       } else {
-        const idx = vm.membership.membershipCounties.indexOf(county);
+        var idx = vm.membership.membershipCounties.indexOf(county);
         vm.membership.membershipCounties.splice(idx, 1);
       }
     }
@@ -504,8 +504,8 @@
     }
 
     function addMember() {
-      let familyMember = null;
-      for (let idx = 0; idx < vm.memberTypes.length; idx++) {
+      var familyMember = null;
+      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
         if (vm.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
           familyMember = vm.memberTypes[idx];
           break;
@@ -522,15 +522,15 @@
       if (member.memberUID > 0) {
         member.active = false;
       } else {
-        const idx = vm.membership.members.indexOf(member);
+        var idx = vm.membership.members.indexOf(member);
         vm.membership.members.splice(idx, 1);
       }
     }
 
     function generateOwnerId(member) {
-      const firstName  = member.person.firstName;
-      const lastName   = member.person.lastName;
-      const ownerIdent = member.ownerIdent;
+      var firstName  = member.person.firstName;
+      var lastName   = member.person.lastName;
+      var ownerIdent = member.ownerIdent;
 
       if (firstName  && firstName.length > 2 &&
           lastName   && lastName.length > 2 &&
@@ -573,7 +573,7 @@
           vm.original   = null;
           vm.created    = true;
         } else if (response.status === 200) {
-          const idx = vm.memberships.indexOf(vm.membership);
+          var idx = vm.memberships.indexOf(vm.membership);
 
           vm.memberships[idx] = response.data;
           vm.membership       = response.data;

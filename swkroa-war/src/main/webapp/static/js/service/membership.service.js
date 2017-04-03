@@ -13,8 +13,8 @@
   MembershipService.$inject = ['$http'];
 
   function MembershipService($http) {
-    const vm = this;
-    const rootUrl = "/api/memberships";
+    var vm = this;
+    var rootUrl = "/api/memberships";
 
     vm.getMembership = getMembership;
     vm.getMemberships = getMemberships;
@@ -30,7 +30,7 @@
      ********************************************/
 
     function getMembership(membershipUID, including) {
-      let url = rootUrl + '/' + membershipUID;
+      var url = rootUrl + '/' + membershipUID;
 
       if (Object.prototype.toString.call(including) === '[object Array]') {
         url = url + "?including=" + including.toString();
@@ -40,7 +40,7 @@
     }
 
     function getMemberships(query, status, balance) {
-      let params = "";
+      var params = "";
 
       if (query && query.length > 0) {
         params = "?q=" + query;
@@ -86,12 +86,12 @@
     }
 
     function closeMemberships(membershipIdsArg, closeReasonArg, closeTextArg) {
-      let closeReasonText = "";
+      var closeReasonText = "";
       if (closeTextArg) {
         closeReasonText = closeTextArg;
       }
 
-      const data = {
+      var data = {
         membershipIds: membershipIdsArg,
         closeReason: closeReasonArg,
         closeText: closeReasonText
@@ -101,8 +101,8 @@
     }
 
     function renewMemberships(membershipIdsArg, transDateArg, transDescArg, transMemoArg) {
-      let transDesc = "";
-      let transMemo = "";
+      var transDesc = "";
+      var transMemo = "";
 
       if (transDescArg) {
         transDesc = transDescArg;
@@ -112,7 +112,7 @@
         transMemo = transMemoArg;
       }
 
-      const data = {
+      var data = {
         membershipIds: membershipIdsArg,
         transactionDate: transDateArg,
         transactionDescription: transDesc,

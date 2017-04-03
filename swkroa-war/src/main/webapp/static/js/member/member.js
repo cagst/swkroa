@@ -14,10 +14,10 @@
   MemberController.$inject = ['$http', 'CodeSetService', 'ContactService', 'MembershipService'];
 
   function MemberController($http, codeSetService, contactService, membershipService) {
-    const vm = this;
+    var vm = this;
 
-    const membershipId = $('#membershipUID').val();
-    const including    = ['LOAD_MEMBERS', 'LOAD_CONTACTS', 'LOAD_COUNTIES'];
+    var membershipId = $('#membershipUID').val();
+    var including    = ['LOAD_MEMBERS', 'LOAD_CONTACTS', 'LOAD_COUNTIES'];
 
     vm.view = "view";
     vm.fullyLoaded = false;
@@ -74,8 +74,8 @@
     }
 
     function addSpouse() {
-      let spouseMember = null;
-      for (let idx = 0; idx < vm.memberTypes.length; idx++) {
+      var spouseMember = null;
+      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
         if (vm.memberTypes[idx].memberTypeMeaning === 'SPOUSE') {
           spouseMember = vm.memberTypes[idx];
           break;
@@ -108,7 +108,7 @@
       if (county.membershipCountyUID > 0) {
         county.active = false;
       } else {
-        const idx = vm.membership.membershipCounties.indexOf(county);
+        var idx = vm.membership.membershipCounties.indexOf(county);
         vm.membership.membershipCounties.splice(idx, 1);
       }
     }
@@ -126,8 +126,8 @@
     }
 
     function addMember() {
-      let familyMember = null;
-      for (let idx = 0; idx < vm.memberTypes.length; idx++) {
+      var familyMember = null;
+      for (var idx = 0; idx < vm.memberTypes.length; idx++) {
         if (vm.memberTypes[idx].memberTypeMeaning === 'FAMILY_MEMBER') {
           familyMember = vm.memberTypes[idx];
           break;
@@ -144,15 +144,15 @@
       if (member.memberUID > 0) {
         member.active = false;
       } else {
-        const idx = vm.membership.members.indexOf(member);
+        var idx = vm.membership.members.indexOf(member);
         vm.membership.members.splice(idx, 1);
       }
     }
 
     function generateOwnerId(member) {
-      const firstName  = member.person.firstName;
-      const lastName   = member.person.lastName;
-      const ownerIdent = member.ownerIdent;
+      var firstName  = member.person.firstName;
+      var lastName   = member.person.lastName;
+      var ownerIdent = member.ownerIdent;
 
       if (firstName && firstName.length > 2 &&
         lastName && lastName.length > 2 &&

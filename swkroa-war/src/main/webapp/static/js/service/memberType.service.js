@@ -13,8 +13,8 @@
   MemberTypeService.$inject = ['$http'];
 
   function MemberTypeService($http) {
-    const vm = this;
-    const rootUrl = "/api/membertypes";
+    var vm = this;
+    var rootUrl = "/api/membertypes";
 
     vm.getMemberTypes = getMemberTypes;
     vm.getAllMemberTypesByMemberTypeId = getAllMemberTypesByMemberTypeId;

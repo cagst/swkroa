@@ -80,7 +80,7 @@ swkroaApp.controller('profileController',
 }]);
 
 swkroaApp.controller('modifyProfileController', ['$scope', '$http', 'codesetService', '$state', function($scope, $http, codesetService, $state) {
-  const original = angular.copy($scope.share.user);
+  var original = angular.copy($scope.share.user);
 
   $("#errorMessage").hide();
 

@@ -13,7 +13,7 @@
   PaymentController.$inject = ['TransactionService'];
 
   function PaymentController(transactionService) {
-    const vm = this;
+    var vm = this;
 
     vm.increment     = 10;
     vm.increments    = [];
@@ -51,7 +51,7 @@
 
           vm.pages = Math.ceil(response.data.totalItemCount / vm.increment);
 
-          for (let idx = 0; idx < vm.pages; idx++) {
+          for (var idx = 0; idx < vm.pages; idx++) {
             vm.increments.push(idx + 1);
           }
         }

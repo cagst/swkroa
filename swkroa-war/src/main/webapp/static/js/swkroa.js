@@ -25,13 +25,13 @@ if (typeof String.prototype.startsWith !== 'function') {
     return function (tel) {
       if (!tel) { return ''; }
 
-      const value = tel.toString().trim().replace(/^\+/, '');
+      var value = tel.toString().trim().replace(/^\+/, '');
 
       if (value.match(/[^0-9]/)) {
         return tel;
       }
 
-      let country, city, number;
+      var country, city, number;
 
       switch (value.length) {
         case 10: // +1PPP####### -> C (PPP) ###-####
@@ -70,7 +70,7 @@ if (typeof String.prototype.startsWith !== 'function') {
     return function (zip) {
       if (!zip) { return ''; }
 
-      const value = zip.toString().trim().replace(/^\+/, '');
+      var value = zip.toString().trim().replace(/^\+/, '');
 
       if (value.match(/[^0-9]/)) {
         return zip;
@@ -191,12 +191,12 @@ function hideProcessingDialog() {
 }
 
 function toggleTransactionDetails(transaction) {
-  const img       = $(transaction).children()[0];
-  const collapsed = $(img).hasClass("fa-caret-right");
+  var img       = $(transaction).children()[0];
+  var collapsed = $(img).hasClass("fa-caret-right");
 
-  const parentDiv = $(transaction).parent();
-  const parentCol = $(parentDiv).parent();
-  const parentRow = $(parentCol).parent();
+  var parentDiv = $(transaction).parent();
+  var parentCol = $(parentDiv).parent();
+  var parentRow = $(parentCol).parent();
 
   if (collapsed) {
     $(parentRow).siblings().removeClass("hide");

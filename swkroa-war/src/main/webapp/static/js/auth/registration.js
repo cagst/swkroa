@@ -13,8 +13,8 @@
   RegistrationController.$inject = ['$http', 'CodeSetService'];
 
   function RegistrationController($http, codeSetService) {
-    const vm = this;
-    const rootUrl = "/api/register";
+    var vm = this;
+    var rootUrl = "/api/register";
 
     vm.errorText = "";
     vm.step = "IDENTIFY";
@@ -52,7 +52,7 @@
      ********************************************/
 
     function enableVerify() {
-      let cnt = (vm.registerUser.firstName.length > 0 ? 1 : 0);
+      var cnt = (vm.registerUser.firstName.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.lastName.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.phoneNumber.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.zipCode.length > 0 ? 1 : 0);
@@ -61,7 +61,7 @@
     }
 
     function enableComplete() {
-      let cnt = (vm.registerUser.emailAddress.length > 0 ? 1 : 0);
+      var cnt = (vm.registerUser.emailAddress.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.username.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.password.length > 0 ? 1 : 0);
       cnt += (vm.registerUser.confirm.length > 0 ? 1 : 0);

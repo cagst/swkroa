@@ -13,8 +13,8 @@
   ForgotPasswordController.$inject = ['$http'];
 
   function ForgotPasswordController($http) {
-    const vm = this;
-    const rootUrl = "/api/forgotPassword";
+    var vm = this;
+    var rootUrl = "/api/forgotPassword";
 
     vm.errorText = "";
     vm.step = "IDENTIFY";
@@ -51,7 +51,7 @@
     }
 
     function enableVerify() {
-      let cnt = (vm.forgotPassword.username.length > 0 ? 1 : 0);
+      var cnt = (vm.forgotPassword.username.length > 0 ? 1 : 0);
       cnt += (vm.forgotPassword.ownerId.length > 0 ? 1 : 0);
 
       return (cnt > 1);

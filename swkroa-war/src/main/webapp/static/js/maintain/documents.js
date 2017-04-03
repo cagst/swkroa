@@ -5,23 +5,23 @@
  */
 
 enableUploadDocument = function() {
-  const description  = $('#documentDesc').val();
-  const documentType = $('#documentTypeUID').val();
-  const beginDate    = $('#beginDate').val();
-  const uploadFile   = $("#uploadFile").val();
+  var description  = $('#documentDesc').val();
+  var documentType = $('#documentTypeUID').val();
+  var beginDate    = $('#beginDate').val();
+  var uploadFile   = $("#uploadFile").val();
 
-  const disabled = !(description.length > 0 && documentType.length > 0 && beginDate.length > 0 && uploadFile.length > 0);
+  var disabled = !(description.length > 0 && documentType.length > 0 && beginDate.length > 0 && uploadFile.length > 0);
 
   $('#uploadDocumentButton').prop('disabled', disabled);
 };
 
 displayEditDialog = function(el) {
-  const parentRow = $(el).closest("tr");
-  const fields    = $(parentRow).find("td");
-  let   idx       = 0;
+  var parentRow = $(el).closest("tr");
+  var fields    = $(parentRow).find("td");
+  var idx       = 0;
 
   $.each(fields, function() {
-    let value = $(this).text();
+    var value = $(this).text();
 
     if (idx === 0) {
       $('#documentUID').val($(this).attr('id'));
@@ -42,11 +42,11 @@ displayEditDialog = function(el) {
 };
 
 enableSaveDocument = function() {
-  const description  = $('#editDocumentDesc').val();
-  const documentType = $('#editDocumentTypeUID').val();
-  const beginDate    = $('#editBeginDate').val();
+  var description  = $('#editDocumentDesc').val();
+  var documentType = $('#editDocumentTypeUID').val();
+  var beginDate    = $('#editBeginDate').val();
 
-  const disabled = !(description.length > 0 && documentType.length > 0 && beginDate.length > 0);
+  var disabled = !(description.length > 0 && documentType.length > 0 && beginDate.length > 0);
 
   $('#saveDocumentButton').prop('disabled', disabled);
 };

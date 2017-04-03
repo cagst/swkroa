@@ -13,8 +13,8 @@
   ContactService.$inject = ['$http'];
 
   function ContactService($http) {
-    const vm = this;
-    const rootUrl = "/api/countries";
+    var vm = this;
+    var rootUrl = "/api/countries";
 
     vm.getCountries = getCountries;
     vm.getAllStates = getAllStates;
@@ -65,16 +65,16 @@
       if (address.addressUID > 0) {
         address.active = false;
       } else {
-        const idx = entity.addresses.indexOf(address);
+        var idx = entity.addresses.indexOf(address);
         entity.addresses.splice(idx, 1);
       }
     }
 
     function ensurePrimaryAddress(entity, address) {
       if (address.primary) {
-        const pos = entity.addresses.indexOf(address);
+        var pos = entity.addresses.indexOf(address);
 
-        for (let idx = 0; idx < entity.addresses.length; idx++) {
+        for (var idx = 0; idx < entity.addresses.length; idx++) {
           if (entity.addresses[idx].primary && pos !== idx) {
             entity.addresses[idx].primary = false;
           }
@@ -96,16 +96,16 @@
       if (phone.phoneUID > 0) {
         phone.active = false;
       } else {
-        const idx = entity.phoneNumbers.indexOf(phone);
+        var idx = entity.phoneNumbers.indexOf(phone);
         entity.phoneNumbers.splice(idx, 1);
       }
     }
 
     function ensurePrimaryPhone(entity, phone) {
       if (phone.primary) {
-        const pos = entity.phoneNumbers.indexOf(phone);
+        var pos = entity.phoneNumbers.indexOf(phone);
 
-        for (let idx = 0; idx < entity.phoneNumbers.length; idx++) {
+        for (var idx = 0; idx < entity.phoneNumbers.length; idx++) {
           if (entity.phoneNumbers[idx].primary && pos !== idx) {
             entity.phoneNumbers[idx].primary = false;
           }
@@ -126,16 +126,16 @@
       if (email.emailAddressUID > 0) {
         email.active = false;
       } else {
-        const idx = entity.emailAddresses.indexOf(email);
+        var idx = entity.emailAddresses.indexOf(email);
         entity.emailAddresses.splice(idx, 1);
       }
     }
 
     function ensurePrimaryEmail(entity, email) {
       if (email.primary) {
-        const pos = entity.emailAddresses.indexOf(email);
+        var pos = entity.emailAddresses.indexOf(email);
 
-        for (let idx = 0; idx < entity.emailAddresses.length; idx++) {
+        for (var idx = 0; idx < entity.emailAddresses.length; idx++) {
           if (entity.emailAddresses[idx].primary && pos !== idx) {
             entity.emailAddresses[idx].primary = false;
           }
@@ -144,7 +144,7 @@
     }
 
     function getAddressTypeDisplay(address, types) {
-      for (let idx1 = 0; idx1 < types.length; idx1++) {
+      for (var idx1 = 0; idx1 < types.length; idx1++) {
         if (address.addressTypeCD === types[idx1].codeValueUID) {
           return types[idx1].display;
         }
@@ -152,7 +152,7 @@
     }
 
     function getPhoneTypeDisplay(phone, types) {
-      for (let idx1 = 0; idx1 < types.length; idx1++) {
+      for (var idx1 = 0; idx1 < types.length; idx1++) {
         if (phone.phoneTypeCD === types[idx1].codeValueUID) {
           return types[idx1].display;
         }
@@ -160,7 +160,7 @@
     }
 
     function getEmailTypeDisplay(email, types) {
-      for (let idx1 = 0; idx1 < types.length; idx1++) {
+      for (var idx1 = 0; idx1 < types.length; idx1++) {
         if (email.emailTypeCD === types[idx1].codeValueUID) {
           return types[idx1].display;
         }

@@ -16,7 +16,7 @@
   MemberTypeController.$inject = ['$http', 'MemberTypeService'];
 
   function MemberTypeController($http, memberTypeService) {
-    const vm = this;
+    var vm = this;
 
     vm.selected = null;
     vm.allMemberTypes = null;
@@ -64,7 +64,7 @@
           vm.types.push(response.data);
         } else if (response.status === 200) {
           vm.selected = response.data;
-          for (let idx = 0; idx < vm.types.length; idx++) {
+          for (var idx = 0; idx < vm.types.length; idx++) {
             if (vm.types[idx].memberTypeUID === memberType.memberTypeUID) {
               vm.types[idx] = response.data;
               break;

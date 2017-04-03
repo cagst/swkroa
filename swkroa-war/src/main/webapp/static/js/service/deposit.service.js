@@ -13,8 +13,8 @@
   DepositService.$inject = ['$http'];
 
   function DepositService($http) {
-    const vm = this;
-    const rootUrl = "/api/deposits";
+    var vm = this;
+    var rootUrl = "/api/deposits";
 
     vm.getDeposits = getDeposits;
     vm.getDeposit = getDeposit;

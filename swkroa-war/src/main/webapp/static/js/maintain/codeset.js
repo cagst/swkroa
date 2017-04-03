@@ -15,7 +15,7 @@
   CodeSetController.$inject = ['CodeSetService'];
 
   function CodeSetController(codeSetService) {
-    const vm = this;
+    var vm = this;
 
     vm.codeSets = null;
     vm.selectedCodeSet = null;

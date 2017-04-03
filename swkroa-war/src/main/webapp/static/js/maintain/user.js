@@ -13,7 +13,7 @@
   UserController.$inject = ['$http', 'CodeSetService', 'ContactService'];
 
   function UserController($http, codeSetService, contactService) {
-    const vm = this;
+    var vm = this;
 
     vm.view = 'home';
     vm.successMessage = null;
@@ -117,11 +117,11 @@
     }
 
     function getUser(user) {
-      const url = "/api/users/" + user.userUID;
+      var url = "/api/users/" + user.userUID;
 
       $http.get(url).then(function(response) {
         if (responseSuccessful(response)) {
-          const idx = vm.users.indexOf(user);
+          var idx = vm.users.indexOf(user);
           vm.users[idx] = response.data;
           vm.selectedUser = response.data;
         }
@@ -129,11 +129,11 @@
     }
 
     function unlockUser() {
-      const url = "/api/users/" + vm.selectedUser.userUID + "?actions=unlock";
+      var url = "/api/users/" + vm.selectedUser.userUID + "?actions=unlock";
 
       $http.put(url).then(function(response) {
         if (responseSuccessful(response)) {
-          const idx = vm.users.indexOf(vm.selectedUser);
+          var idx = vm.users.indexOf(vm.selectedUser);
           vm.users[idx] = response.data;
           vm.selectedUser = response.data;
         }
@@ -141,11 +141,11 @@
     }
 
     function disableUser() {
-      const url = "/api/users/" + vm.selectedUser.userUID + "?action=disable";
+      var url = "/api/users/" + vm.selectedUser.userUID + "?action=disable";
 
       $http.put(url).then(function(response) {
         if (responseSuccessful(response)) {
-          const idx = vm.users.indexOf(vm.selectedUser);
+          var idx = vm.users.indexOf(vm.selectedUser);
           vm.users[idx] = response.data;
           vm.selectedUser = response.data;
         }
@@ -153,11 +153,11 @@
     }
 
     function enableUser() {
-      const url = "/api/users/" + vm.selectedUser.userUID + "?action=enable";
+      var url = "/api/users/" + vm.selectedUser.userUID + "?action=enable";
 
       $http.put(url).then(function(response) {
         if (responseSuccessful(response)) {
-          const idx = vm.users.indexOf(vm.selectedUser);
+          var idx = vm.users.indexOf(vm.selectedUser);
           vm.users[idx] = response.data;
           vm.selectedUser = response.data;
         }
@@ -165,11 +165,11 @@
     }
 
     function resetUserPassword() {
-      const url = "/api/users/" + vm.selectedUser.userUID + "?action=resetpwd";
+      var url = "/api/users/" + vm.selectedUser.userUID + "?action=resetpwd";
 
       $http.put(url).then(function(response) {
         if (responseSuccessful(response)) {
-          const idx = vm.users.indexOf(vm.selectedUser);
+          var idx = vm.users.indexOf(vm.selectedUser);
           vm.users[idx] = response.data;
           vm.selectedUser = response.data;
 
@@ -254,7 +254,7 @@
 
     function doesUsernameExist() {
       if (vm.selectedUser.userUID === 0 && vm.selectedUser.username && vm.selectedUser.username.length > 0) {
-        const url = "/api/users/" + vm.selectedUser.username + "/exists";
+        var url = "/api/users/" + vm.selectedUser.username + "/exists";
 
         $http.get(url).then(function(response) {
           if (responseSuccessful(response)) {
@@ -282,7 +282,7 @@
             vm.selectedUser = data;
             vm.successMessage = "User " + data.fullName + " was created successfully!";
           } else {
-            const idx = vm.users.indexOf(vm.selectedUser);
+            var idx = vm.users.indexOf(vm.selectedUser);
 
             vm.users[idx] = data;
             vm.selectedUser = data;
