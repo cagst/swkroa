@@ -97,7 +97,6 @@ import org.springframework.util.Assert;
   }
 
   @Override
-//  @Cacheable(value = "membersList", key = "#membership.getMembershipUID()")
   public List<Member> getMembersForMembership(Membership membership) {
     Assert.notNull(membership, "Argument [membership] cannot be null");
 
@@ -210,7 +209,6 @@ import org.springframework.util.Assert;
   }
 
   @Override
-//  @Cacheable(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
   public List<MembershipCounty> getMembershipCountiesForMembership(Membership membership) {
     Assert.notNull(membership, "Argument [membership] cannot be null");
 
@@ -268,7 +266,6 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-//  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
   public Member saveMember(Member member, Membership membership, User user)
       throws DataAccessException {
 
@@ -288,6 +285,19 @@ import org.springframework.util.Assert;
       savedMember = insertMember(member, membership, user);
     } else {
       savedMember = updateMember(member, membership, user);
+    }
+
+    // reset Member Name since it may have changed
+    if (StringUtils.isNotEmpty(savedMember.getCompanyName())) {
+      savedMember.setMemberName(savedMember.getCompanyName());
+    } else if (savedMember.getPerson() != null) {
+      if (StringUtils.isNotEmpty(savedMember.getPerson().getLastName()) && StringUtils.isNotEmpty(savedMember.getPerson().getFirstName())) {
+        savedMember.setMemberName(savedMember.getPerson().getLastName() + ", " + savedMember.getPerson().getFirstName());
+      } else if (StringUtils.isNotEmpty(savedMember.getPerson().getLastName())) {
+        savedMember.setMemberName(savedMember.getPerson().getLastName());
+      } else {
+        savedMember.setMemberName(savedMember.getPerson().getFirstName());
+      }
     }
 
     if (member.getPerson() != null) {
@@ -324,7 +334,6 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-//  @CacheEvict(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
   public MembershipCounty saveMembershipCounty(MembershipCounty county,
                                                Membership membership,
                                                User user)

@@ -25,9 +25,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String COMPANY_NAME            = "company_name";
   private static final String OWNER_IDENT             = "owner_ident";
   private static final String JOIN_DT                 = "join_dt";
-  private static final String NAME_LAST               = "name_last";
-  private static final String NAME_MIDDLE             = "name_middle";
-  private static final String NAME_FIRST              = "name_first";
   private static final String CALCULATED_DUES         = "calculated_dues";
   private static final String INCREMENTAL_DUES        = "incremental_dues";
   private static final String BALANCE                 = "balance";
@@ -71,10 +68,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     membership.setCompanyName(rs.getString(COMPANY_NAME));
     membership.setOwnerId(rs.getString(OWNER_IDENT));
     membership.setJoinDate(DateTimeConverter.convert(rs.getTimestamp(JOIN_DT)));
-
-    membership.setLastName(rs.getString(NAME_LAST));
-    membership.setMiddleName(rs.getString(NAME_MIDDLE));
-    membership.setFirstName(rs.getString(NAME_FIRST));
 
     membership.setCalculatedDuesAmount(rs.getBigDecimal(CALCULATED_DUES));
     membership.setIncrementalDues(rs.getBigDecimal(INCREMENTAL_DUES));

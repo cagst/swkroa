@@ -36,7 +36,6 @@ import org.springframework.util.Assert;
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
   private static final String GET_MEMBERSHIP_BY_UID         = "GET_MEMBERSHIP_BY_UID";
-  private static final String GET_MEMBERSHIP_BY_PERSON_ID   = "GET_MEMBERSHIP_BY_PERSON_ID";
   private static final String GET_MEMBERSHIPS               = "GET_MEMBERSHIPS";
   private static final String GET_MEMBERSHIPS_BY_NAME       = "GET_MEMBERSHIPS_BY_NAME";
   private static final String GET_MEMBERSHIPS_DUE_IN_X_DAYS = "GET_MEMBERSHIPS_DUE_IN_X_DAYS";
@@ -148,7 +147,6 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-//  @CacheEvict(value = "memberships", key = "#membership.getMembershipUID()")
   public Membership saveMembership(Membership membership, User user)
       throws DataAccessException {
 
@@ -156,6 +154,14 @@ import org.springframework.util.Assert;
     Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving Membership for [{}]", membership.getMembershipUID());
+
+    // if the Membership is an Individual, ensure the primary member company name field is cleared
+    if (StringUtils.equals("ENTITY_INDIVIDUAL", membership.getEntityType().getMeaning())) {
+      Member primaryMember = membership.getPrimaryMember();
+      if (primaryMember != null) {
+        primaryMember.setCompanyName(null);
+      }
+    }
 
     if (membership.getMembershipUID() == 0L) {
       insertMembership(membership, user);
@@ -178,7 +184,6 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-//  @CacheEvict(value = "memberships", allEntries = true)
   public int closeMemberships(Set<Long> membershipIds, CodeValue closeReason, String closeText, User user)
       throws DataAccessException {
 

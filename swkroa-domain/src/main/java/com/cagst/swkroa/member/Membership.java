@@ -33,9 +33,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private String owner_ident;
   private DateTime join_dt;
   private MemberType member_type;
-  private String name_last;
-  private String name_middle;
-  private String name_first;
   private BigDecimal calculated_dues;
   private BigDecimal incremental_dues;
   private BigDecimal balance;
@@ -124,30 +121,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setMemberType(final MemberType memberType) {
     this.member_type = memberType;
-  }
-
-  public String getLastName() {
-    return name_last;
-  }
-
-  public void setLastName(final String lastName) {
-    this.name_last = lastName;
-  }
-
-  public String getMiddleName() {
-    return name_middle;
-  }
-
-  public void setMiddleName(final String middleName) {
-    this.name_middle = middleName;
-  }
-
-  public String getFirstName() {
-    return name_first;
-  }
-
-  public void setFirstName(final String firstName) {
-    this.name_first = firstName;
   }
 
   public BigDecimal getCalculatedDuesAmount() {
