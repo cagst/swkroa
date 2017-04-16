@@ -120,7 +120,7 @@
               <div data-ng-show="ctrl.memberships.length">
                 <div class="list-group-item alt-list-group-item sel-list-group-item"
                      data-ng-repeat="mem in ctrl.memberships"
-                     data-ng-class="{active: mem.membershipUID === membership.membershipUID}"
+                     data-ng-class="{active: mem.membershipUID === ctrl.membership.membershipUID}"
                      data-ng-click="ctrl.getMembership(mem.membershipUID)">
                   <div>
                     <span data-ng-bind="mem.membershipName" class="lead lead-in">z_MembershipName</span>

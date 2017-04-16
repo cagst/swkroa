@@ -27,7 +27,6 @@ import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserType;
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,9 +163,7 @@ public final class MembershipServiceImpl implements MembershipService {
     Membership savedMembership = membershipRepo.saveMembership(membership, user);
 
     // re-generate the Membership Name (since it may have changed due to change or company and/or primary member)
-    if (StringUtils.isNotEmpty(savedMembership.getCompanyName())) {
-      savedMembership.setMembershipName(savedMembership.getCompanyName());
-    } else if (savedMembership.getPrimaryMember() != null) {
+    if (savedMembership.getPrimaryMember() != null) {
       savedMembership.setMembershipName(savedMembership.getPrimaryMember().getMemberName());
     }
 

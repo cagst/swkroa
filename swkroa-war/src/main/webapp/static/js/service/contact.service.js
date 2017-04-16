@@ -57,6 +57,7 @@
       }
 
       entity.addresses.push({
+        country: 'US',
         active: true
       });
     }

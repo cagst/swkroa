@@ -29,8 +29,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private CodeValue entity_type;
   private DateTime next_due_dt;
   private long member_id;
-  private String company_name;
-  private String owner_ident;
   private DateTime join_dt;
   private MemberType member_type;
   private BigDecimal calculated_dues;
@@ -89,22 +87,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setMemberUID(final long memberID) {
     this.member_id = memberID;
-  }
-
-  public String getCompanyName() {
-    return company_name;
-  }
-
-  public void setCompanyName(final String companyName) {
-    this.company_name = companyName;
-  }
-
-  public String getOwnerId() {
-    return owner_ident;
-  }
-
-  public void setOwnerId(final String ownderId) {
-    this.owner_ident = ownderId;
   }
 
   public DateTime getJoinDate() {

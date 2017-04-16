@@ -22,8 +22,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   private static final String ENTITY_TYPE_CD          = "entity_type_cd";
   private static final String MEMBER_TYPE_ID          = "member_type_id";
   private static final String NEXT_DUE_DT             = "next_due_dt";
-  private static final String COMPANY_NAME            = "company_name";
-  private static final String OWNER_IDENT             = "owner_ident";
   private static final String JOIN_DT                 = "join_dt";
   private static final String CALCULATED_DUES         = "calculated_dues";
   private static final String INCREMENTAL_DUES        = "incremental_dues";
@@ -65,8 +63,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     membership.setEntityType(codeValueRepo.getCodeValueByUID(rs.getLong(ENTITY_TYPE_CD)));
     membership.setMemberType(memberTypeRepo.getMemberTypeByUID(rs.getLong(MEMBER_TYPE_ID)));
     membership.setNextDueDate(DateTimeConverter.convert(rs.getTimestamp(NEXT_DUE_DT)));
-    membership.setCompanyName(rs.getString(COMPANY_NAME));
-    membership.setOwnerId(rs.getString(OWNER_IDENT));
     membership.setJoinDate(DateTimeConverter.convert(rs.getTimestamp(JOIN_DT)));
 
     membership.setCalculatedDuesAmount(rs.getBigDecimal(CALCULATED_DUES));
