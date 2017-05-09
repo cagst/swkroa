@@ -464,12 +464,12 @@ import org.springframework.util.Assert;
 
       saveAddress = member.map(
           member1 ->
-              Address.builder(address)
+              address.toBuilder()
                   .setParentEntityUID(member1.getMemberUID())
                   .setParentEntityName(UserType.MEMBER.name())
                   .build())
           .orElseGet(() ->
-              Address.builder(address)
+              address.toBuilder()
                   .setParentEntityUID(savedUser.getUserUID())
                   .setParentEntityName(UserType.STAFF.name())
                   .build());
@@ -482,12 +482,12 @@ import org.springframework.util.Assert;
 
       savePhoneNumber = member.map(
           member1 ->
-              PhoneNumber.builder(phone)
+              phone.toBuilder()
                   .setParentEntityUID(member1.getMemberUID())
                   .setParentEntityName(UserType.MEMBER.name())
                   .build())
           .orElseGet(() ->
-              PhoneNumber.builder(phone)
+              phone.toBuilder()
                   .setParentEntityUID(savedUser.getUserUID())
                   .setParentEntityName(UserType.STAFF.name())
                   .build());
@@ -500,12 +500,12 @@ import org.springframework.util.Assert;
 
       saveEmailAddress = member.map(
           member1 ->
-              EmailAddress.builder(email)
+              email.toBuilder()
                   .setParentEntityUID(member1.getMemberUID())
                   .setParentEntityName(UserType.MEMBER.name())
                   .build())
           .orElseGet(() ->
-              EmailAddress.builder(email)
+              email.toBuilder()
                   .setParentEntityUID(savedUser.getUserUID())
                   .setParentEntityName(UserType.STAFF.name())
                   .build());

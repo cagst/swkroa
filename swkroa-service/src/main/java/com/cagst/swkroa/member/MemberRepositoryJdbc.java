@@ -302,7 +302,7 @@ import org.springframework.util.Assert;
 
     if (member.getPerson() != null) {
       for (Address address : member.getPerson().getAddresses()) {
-        Address saveAddress = Address.builder(address)
+        Address saveAddress = address.toBuilder()
             .setParentEntityUID(member.getMemberUID())
             .setParentEntityName(UserType.MEMBER.name())
             .build();
@@ -311,7 +311,7 @@ import org.springframework.util.Assert;
       }
 
       for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
-        PhoneNumber savePhoneNumber = PhoneNumber.builder(phone)
+        PhoneNumber savePhoneNumber = phone.toBuilder()
             .setParentEntityUID(member.getMemberUID())
             .setParentEntityName(UserType.MEMBER.name())
             .build();
@@ -320,7 +320,7 @@ import org.springframework.util.Assert;
       }
 
       for (EmailAddress email : member.getPerson().getEmailAddresses()) {
-        EmailAddress saveEmailAddress = EmailAddress.builder(email)
+        EmailAddress saveEmailAddress = email.toBuilder()
             .setParentEntityUID(member.getMemberUID())
             .setParentEntityName(UserType.MEMBER.name())
             .build();

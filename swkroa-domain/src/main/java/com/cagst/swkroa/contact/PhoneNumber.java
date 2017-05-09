@@ -125,25 +125,11 @@ public abstract class PhoneNumber implements Serializable, Comparable<PhoneNumbe
   }
 
   /**
-   * Returns a {@link Builder} based upon the values from the specified {@link PhoneNumber}.
+   * Returns a {@link Builder} based upon the values from the current {@link PhoneNumber}.
    *
-   * @param phoneNumber
-   *    The {@link PhoneNumber} to base this builder off of.
-   *
-   * @return A {@link Builder}
+   * @return A new {@link Builder}
    */
-  public static Builder builder(PhoneNumber phoneNumber) {
-    return new AutoValue_PhoneNumber.Builder()
-        .setPhoneUID(phoneNumber.getPhoneUID())
-        .setParentEntityUID(phoneNumber.getParentEntityUID())
-        .setParentEntityName(phoneNumber.getParentEntityName())
-        .setPhoneTypeCD(phoneNumber.getPhoneTypeCD())
-        .setPhoneNumber(phoneNumber.getPhoneNumber())
-        .setPhoneExtension(phoneNumber.getPhoneExtension())
-        .setPrimary(phoneNumber.isPrimary())
-        .setActive(phoneNumber.isActive())
-        .setPhoneUpdateCount(phoneNumber.getPhoneUpdateCount());
-  }
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
   @JsonPOJOBuilder

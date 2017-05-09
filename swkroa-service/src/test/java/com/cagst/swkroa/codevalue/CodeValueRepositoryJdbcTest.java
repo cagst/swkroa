@@ -185,7 +185,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue.getMeaning());
 
     String newDisplay = codevalue.getDisplay() + "-EDITED";
-    CodeValue editedCodeValue = CodeValue.builder(codevalue)
+    CodeValue editedCodeValue = codevalue.toBuilder()
         .setDisplay(newDisplay)
         .build();
 
@@ -207,7 +207,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
 
     String newDisplay = cv.getDisplay() + "-EDITED";
 
-    CodeValue editedCodeVale = CodeValue.builder(cv)
+    CodeValue editedCodeVale = cv.toBuilder()
         .setDisplay(newDisplay)
         .setCodeValueUpdateCount(cv.getCodeValueUpdateCount() + 1)
         .build();

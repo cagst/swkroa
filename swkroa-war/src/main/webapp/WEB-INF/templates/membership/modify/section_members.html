@@ -194,7 +194,7 @@
                 <select class="form-control" name="state"
                         data-ng-model="address.state"
                         data-ng-options="state.stateCode as state.stateName for state in ctrl.states | filter:{countryCode:address.country}"
-                        data-ng-required="address.active">
+                        data-ng-required="address.active && address.country != 'ES'">
                 </select>
               </div>
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.postalCode.$invalid}">

@@ -201,7 +201,7 @@ import org.springframework.util.Assert;
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return CodeValue.builder(codeValue).setCodeValueUID(keyHolder.getKey().longValue()).build();
+    return codeValue.toBuilder().setCodeValueUID(keyHolder.getKey().longValue()).build();
   }
 
   private CodeValue updateCodeValueForCodeSet(CodeValue codeValue, User user)
@@ -216,7 +216,7 @@ import org.springframework.util.Assert;
         CodeValueMapper.mapUpdateStatement(codeValue, user));
 
     if (cnt == 1) {
-      return CodeValue.builder(codeValue).setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount() + 1).build();
+      return codeValue.toBuilder().setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount() + 1).build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");

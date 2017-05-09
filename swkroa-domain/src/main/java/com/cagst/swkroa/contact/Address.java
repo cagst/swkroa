@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -67,6 +66,7 @@ public abstract class Address implements Serializable, Comparable<Address> {
   @JsonProperty(value = "city", required =  true)
   public abstract String getCity();
 
+  @Nullable
   @JsonProperty(value = "state", required = true)
   public abstract String getState();
 
@@ -163,33 +163,13 @@ public abstract class Address implements Serializable, Comparable<Address> {
   }
 
   /**
-   * Returns a {@link Builder} based upon the values from the specified {@link Address}.
+   * Returns a {@link Builder} based upon the values from the current {@link Address}.
    *
-   * @param address
-   *    The {@link Address} to base this builder off of.
-   *
-   * @return A {@link Builder}.
+   * @return A new {@link Builder}.
    */
-  public static Builder builder(Address address) {
-    return new AutoValue_Address.Builder()
-        .setAddressUID(address.getAddressUID())
-        .setParentEntityUID(address.getParentEntityUID())
-        .setParentEntityName(address.getParentEntityName())
-        .setAddressTypeCD(address.getAddressTypeCD())
-        .setAddressLine1(address.getAddressLine1())
-        .setAddressLine2(address.getAddressLine2())
-        .setAddressLine3(address.getAddressLine3())
-        .setCity(address.getCity())
-        .setState(address.getState())
-        .setPostalCode(address.getPostalCode())
-        .setCountry(address.getCountry())
-        .setPrimary(address.isPrimary())
-        .setActive(address.isActive())
-        .setAddressUpdateCount(address.getAddressUpdateCount());
-  }
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
-  @JsonPOJOBuilder
   public abstract static class Builder {
     @JsonProperty(value = "addressUID")
     public abstract Builder setAddressUID(long uid);
@@ -215,7 +195,7 @@ public abstract class Address implements Serializable, Comparable<Address> {
     @JsonProperty(value = "city", required =  true)
     public abstract Builder setCity(String city);
 
-    @JsonProperty(value = "state", required = true)
+    @JsonProperty(value = "state")
     public abstract Builder setState(String state);
 
     @JsonProperty(value = "postalCode", required = true)

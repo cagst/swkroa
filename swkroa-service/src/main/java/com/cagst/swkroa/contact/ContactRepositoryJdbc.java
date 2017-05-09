@@ -162,7 +162,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return Address.builder(address)
+    return address.toBuilder()
         .setAddressUID(keyHolder.getKey().longValue())
         .build();
   }
@@ -175,7 +175,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
     int cnt = getJdbcTemplate()
         .update(stmtLoader.load(UPDATE_ADDRESS), AddressMapper.mapUpdateStatement(address, user));
     if (cnt == 1) {
-      return Address.builder(address)
+      return address.toBuilder()
           .setAddressUpdateCount(address.getAddressUpdateCount() + 1)
           .build();
     } else if (cnt == 0) {
@@ -213,7 +213,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return PhoneNumber.builder(phoneNumber)
+    return phoneNumber.toBuilder()
         .setPhoneUID(keyHolder.getKey().longValue())
         .build();
   }
@@ -227,7 +227,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
         PhoneNumberMapper.mapUpdateStatement(phoneNumber, user));
 
     if (cnt == 1) {
-      return PhoneNumber.builder(phoneNumber)
+      return phoneNumber.toBuilder()
           .setPhoneUpdateCount(phoneNumber.getPhoneUpdateCount() + 1)
           .build();
     } else if (cnt == 0) {
@@ -265,7 +265,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return EmailAddress.builder(emailAddress)
+    return emailAddress.toBuilder()
         .setEmailAddressUID(keyHolder.getKey().longValue())
         .build();
   }
@@ -279,7 +279,7 @@ public class ContactRepositoryJdbc extends BaseRepositoryJdbc implements Contact
         EmailAddressMapper.mapUpdateStatement(emailAddress, user));
 
     if (cnt == 1) {
-      return EmailAddress.builder(emailAddress)
+      return emailAddress.toBuilder()
           .setEmailAddressUpdateCount(emailAddress.getEmailAddressUpdateCount() + 1)
           .build();
     } else if (cnt == 0) {

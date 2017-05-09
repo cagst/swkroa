@@ -111,24 +111,11 @@ public abstract class EmailAddress implements Serializable, Comparable<EmailAddr
   }
 
   /**
-   * Returns a {@link Builder} based upon the values from the specified {@link EmailAddress}.
+   * Returns a {@link Builder} based upon the values from the current {@link EmailAddress}.
    *
-   * @param emailAddress
-   *    The {@link EmailAddress} to base this builder off of.
-   *
-   * @return A {@link Builder}.
+   * @return A new {@link Builder}.
    */
-  public static Builder builder(EmailAddress emailAddress) {
-    return new AutoValue_EmailAddress.Builder()
-        .setEmailAddressUID(emailAddress.getEmailAddressUID())
-        .setParentEntityUID(emailAddress.getParentEntityUID())
-        .setEmailTypeCD(emailAddress.getEmailTypeCD())
-        .setParentEntityName(emailAddress.getParentEntityName())
-        .setEmailAddress(emailAddress.getEmailAddress())
-        .setPrimary(emailAddress.isPrimary())
-        .setActive(emailAddress.isActive())
-        .setEmailAddressUpdateCount(emailAddress.getEmailAddressUpdateCount());
-  }
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
   @JsonPOJOBuilder

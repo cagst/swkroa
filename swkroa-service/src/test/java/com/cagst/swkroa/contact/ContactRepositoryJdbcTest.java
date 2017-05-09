@@ -175,7 +175,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     Address address1 = addresses1.iterator().next();
     String newAddressLine1 = address1.getAddressLine1() + "_EDITED";
 
-    Address saveAddress = Address.builder(address1)
+    Address saveAddress = address1.toBuilder()
         .setAddressLine1(newAddressLine1)
         .build();
 
@@ -206,7 +206,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     Address address1 = addresses1.iterator().next();
 
     // force a failure due to update count
-    Address saveAddress = Address.builder(address1)
+    Address saveAddress = address1.toBuilder()
         .setAddressLine1(address1.getAddressLine1() + "_EDITED")
         .setAddressUpdateCount(99L)
         .build();
@@ -261,7 +261,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
 
     PhoneNumber phone1 = phones1.iterator().next();
 
-    PhoneNumber savePhoneNumber = PhoneNumber.builder(phone1)
+    PhoneNumber savePhoneNumber = phone1.toBuilder()
         .setPhoneNumber(phone1.getPhoneNumber() + "00000")
         .build();
 
@@ -293,7 +293,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     PhoneNumber phone1 = phones1.iterator().next();
 
     // force a failure due to update count
-    PhoneNumber savePhoneNumber = PhoneNumber.builder(phone1)
+    PhoneNumber savePhoneNumber = phone1.toBuilder()
         .setPhoneNumber(phone1.getPhoneNumber() + "00000")
         .setPhoneUpdateCount(99L)
         .build();
@@ -347,7 +347,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
 
     EmailAddress email1 = emails1.iterator().next();
 
-    EmailAddress saveEmailAddress = EmailAddress.builder(email1)
+    EmailAddress saveEmailAddress = email1.toBuilder()
         .setEmailAddress(email1.getEmailAddress() + "_EDITED")
         .build();
 
@@ -378,7 +378,7 @@ public class ContactRepositoryJdbcTest extends BaseTestRepository {
     EmailAddress email1 = emails1.iterator().next();
 
     // force a failure due to update count
-    EmailAddress saveEmailAddress = EmailAddress.builder(email1)
+    EmailAddress saveEmailAddress = email1.toBuilder()
         .setEmailAddress(email1.getEmailAddress() + "_EDITED")
         .setEmailAddressUpdateCount(99L)
         .build();

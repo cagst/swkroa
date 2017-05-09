@@ -170,7 +170,7 @@ public final class MembershipServiceImpl implements MembershipService {
     // save the Contact information (Addresses, Phone Numbers, Email Addresses)
     for (Member member : savedMembership.getMembers()) {
       for (Address address : member.getAddresses()) {
-        Address saveAddress = Address.builder(address)
+        Address saveAddress = address.toBuilder()
             .setParentEntityUID(member.getMemberUID())
             .setParentEntityName(UserType.MEMBER.name())
             .build();
@@ -179,7 +179,7 @@ public final class MembershipServiceImpl implements MembershipService {
       }
 
       for (PhoneNumber phone : member.getPhoneNumbers()) {
-        PhoneNumber savePhone = PhoneNumber.builder(phone)
+        PhoneNumber savePhone = phone.toBuilder()
             .setParentEntityUID(member.getMemberUID())
             .setParentEntityName(UserType.MEMBER.name())
             .build();
@@ -188,7 +188,7 @@ public final class MembershipServiceImpl implements MembershipService {
       }
 
       for (EmailAddress email : member.getEmailAddresses()) {
-        EmailAddress saveEmailAddress = EmailAddress.builder(email)
+        EmailAddress saveEmailAddress = email.toBuilder()
             .setParentEntityUID(member.getMemberUID())
             .setParentEntityName(UserType.MEMBER.name())
             .build();

@@ -109,22 +109,11 @@ public abstract class CodeValue implements Serializable, Comparable<CodeValue> {
   }
 
   /**
-   * Returns a new {@link Builder} based upon the values from the specified {@link CodeValue}.
-   *
-   * @param codeValue
-   *    The {@link CodeValue} to base this builder off of.
+   * Returns a {@link Builder} based upon the values from the current {@link CodeValue}.
    *
    * @return A new {@link Builder}.
    */
-  public static Builder builder(CodeValue codeValue) {
-    return new AutoValue_CodeValue.Builder()
-        .setCodeSetUID(codeValue.getCodeSetUID())
-        .setCodeValueUID(codeValue.getCodeValueUID())
-        .setDisplay(codeValue.getDisplay())
-        .setMeaning(codeValue.getMeaning())
-        .setActive(codeValue.isActive())
-        .setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount());
-  }
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
   @JsonPOJOBuilder
