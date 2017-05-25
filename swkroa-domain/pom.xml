@@ -15,12 +15,6 @@
   <packaging>jar</packaging>
 
   <dependencies>
-    <!-- CAGST Common Dependencies -->
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-common-util</artifactId>
-    </dependency>
-
     <!-- Apache Commons Dependencies -->
     <dependency>
       <groupId>org.apache.commons</groupId>

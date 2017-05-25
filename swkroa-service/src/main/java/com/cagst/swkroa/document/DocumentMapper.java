@@ -7,9 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,8 +71,8 @@ import org.springframework.jdbc.core.support.SqlLobValue;
     document.setDocumentFormat(rs.getString(DOCUMENT_FORMAT));
     document.setDocumentLocation(rs.getString(DOCUMENT_LOCATION));
     document.setDocumentDescription(rs.getString(DOCUMENT_DESCRIPTION));
-    document.setBeginEffectiveDate(CGTDateTimeUtils.getDateTime(rs, BEG_EFF_DT));
-    document.setEndEffectiveDate(CGTDateTimeUtils.getDateTime(rs, END_EFF_DT));
+    document.setBeginEffectiveDate(DateTimeConverter.convert(rs.getTimestamp(BEG_EFF_DT)));
+    document.setEndEffectiveDate(DateTimeConverter.convert(rs.getTimestamp(END_EFF_DT)));
 
     if (retrieveContent) {
       Blob content = rs.getBlob(DOCUMENT_CONTENT);

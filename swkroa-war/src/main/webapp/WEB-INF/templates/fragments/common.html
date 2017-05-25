@@ -12,20 +12,20 @@
 
     <title th:text="#{com.cagst.swkroa.title}">zzz SWKROA</title>
 
-    <link type="text/css" th:href="@{//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet" />
+    <link type="text/css" th:href="@{//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet" />
     <link type="text/css" th:href="@{/static/css/swkroa.css}" rel="stylesheet" />
 
     <!-- JQuery Support -->
     <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js}"></script>
 
     <!-- Angular Support -->
-    <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.js}"></script>
+    <script type="text/javascript" th:src="@{//ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js}"></script>
 
     <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js}"></script>
     <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-utils/0.1.1/angular-ui-utils.min.js}"></script>
     <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-xeditable/0.1.9/js/xeditable.min.js}"></script>
 
-    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js}"></script>
+    <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.3.0/ui-bootstrap-tpls.min.js}"></script>
 
   </th:block>
 
@@ -46,6 +46,12 @@
     <script type="text/javascript" th:src="@{//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
 
     <script type="text/javascript" th:src="@{/static/js/swkroa.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/service/contact.service.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/service/codeset.service.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/service/memberType.service.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/service/membership.service.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/service/transaction.service.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/service/deposit.service.js}"></script>
   </th:block>
 
   <th:block sec:authorize="!isAuthenticated()">

@@ -3,14 +3,11 @@ package com.cagst.swkroa.document;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
-import com.cagst.swkroa.member.Membership;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +15,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
@@ -61,10 +59,12 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getDocumentByUID for [{}]", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("document_id", uid);
 
-    List<Document> documents = getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENT_BY_UID), params, new DocumentMapper(codeValueRepo, true));
+    List<Document> documents = getJdbcTemplate().query(
+        stmtLoader.load(GET_DOCUMENT_BY_UID),
+        new MapSqlParameterSource("document_id", uid),
+        new DocumentMapper(codeValueRepo, true));
+
     if (documents.size() == 1) {
       return documents.get(0);
     } else if (documents.size() == 0) {
@@ -77,12 +77,10 @@ import org.springframework.util.Assert;
   }
 
   @Override
-  public List<Document> getDocumentsForMembership(Membership membership) {
-    Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
+  public List<Document> getDocumentsForMembership(long membershipUID) {
+    LOGGER.info("Calling getDocumentsForMembership [{}]", membershipUID);
 
-    LOGGER.info("Calling getDocumentsForMembership [{}]", membership.getMemberUID());
-
-    return getDocumentsForEntity(Document.MEMBERSHIP, membership.getMembershipUID());
+    return getDocumentsForEntity(Document.MEMBERSHIP, membershipUID);
   }
 
   @Override
@@ -98,8 +96,8 @@ import org.springframework.util.Assert;
   public Document saveDocument(Document document, User user)
       throws DataAccessException {
 
-    Assert.notNull(document, "Assertion Failed - argument [document] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(document, "Argument [document] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving Document for [{}, {}]", document.getParentEntityName(), document.getParentEntityUID());
 
@@ -123,9 +121,9 @@ import org.springframework.util.Assert;
   private List<Document> getDocumentsForEntity(String entityName, long entityID) {
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, Object> params = new HashMap<>();
-    params.put("parent_entity_name", entityName);
-    params.put("parent_entity_id", entityID);
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("parent_entity_name", entityName);
+    params.addValue("parent_entity_id", entityID);
 
     return getJdbcTemplate().query(stmtLoader.load(GET_DOCUMENTS_FOR_ENTITY), params, new DocumentMapper(codeValueRepo, false));
   }

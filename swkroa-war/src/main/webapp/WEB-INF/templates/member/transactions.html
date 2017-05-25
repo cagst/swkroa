@@ -10,7 +10,7 @@
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="transactionController" data-ng-cloak>
+<div id="page-content">
   <input id="membershipUID" type="hidden" th:value="${membershipUID}"/>
 
   <h1 th:text="#{member.transaction.page}">zzz Transactions</h1>
@@ -25,48 +25,43 @@
         <th th:text="#{member.transaction.amount}" style="width:100px; text-align:right">zzz Amount</th>
       </tr>
       </thead>
-      <tbody data-ng-repeat="transaction in transactions | orderBy: 'transactionDate': true"
-             data-ng-show="transaction.active">
+      <tbody th:each="tx : ${transactions}">
       <tr>
         <td style="width:125px">
           <div>
             <a href="#" onclick="toggleTransactionDetails(this)">
               <i class="fa fa-caret-right"></i>
             </a>
-            {{transaction.transactionDate | date:'mediumDate'}}
+            <span th:text="${#dates.format(tx.transactionDate, 'MMM dd, yyyy')}"></span>
           </div>
         </td>
         <td>
-          <span data-ng-show="transaction.transactionType == 'INVOICE'"
-                th:text="#{com.cagst.swkroa.membership.transaction.invoice}">
+          <span th:if="${tx.transactionType == T(com.cagst.swkroa.transaction.TransactionType).INVOICE}"
+                th:text="#{membership.transaction.invoice}">
           </span>
-          <span data-ng-show="transaction.transactionType == 'PAYMENT'"
-                th:text="#{com.cagst.swkroa.membership.transaction.payment}">
+          <span th:if="${tx.transactionType == T(com.cagst.swkroa.transaction.TransactionType).PAYMENT}"
+                th:text="#{membership.transaction.payment}">
           </span>
           <div class="pull-right">
             <a class="btn btn-default btn-xs"
                target="_blank"
-               data-ng-show="{{transaction.documentUID > 0}}"
-               data-ng-href="documents/{{transaction.documentUID}}">
+               th:if="${tx.documentUID > 0}"
+               th:href="@{'/member/documents/' + ${tx.documentUID}}">
               <i class="fa fa-binoculars"></i>
               <span th:text="#{maintain.documents.action.view}">zzz View</span>
             </a>
           </div>
         </td>
-        <td>{{transaction.transactionDescription}}</td>
+        <td th:text="${tx.transactionDescription}"></td>
         <td style="width:100px">
-          <div class="pull-right">
-            {{transaction.transactionAmount | currency}}
-          </div>
+          <div class="pull-right" th:text="${'$' + #numbers.formatDecimal(tx.transactionAmount, 0, 'COMMA', 2, 'POINT')}"></div>
         </td>
       </tr>
-      <tr class="details hide" data-ng-repeat="entry in transaction.transactionEntries">
+      <tr class="details hide" th:each="entry : ${tx.transactionEntries}">
         <td></td>
-        <td colspan="2">{{entry.transactionEntryType.display}}</td>
+        <td colspan="2" th:text="${entry.transactionEntryType.display}"></td>
         <td style="width:100px">
-          <div class="pull-right">
-            {{entry.transactionEntryAmount | currency}}
-          </div>
+          <div class="pull-right" th:text="${'$' + #numbers.formatDecimal(entry.transactionEntryAmount, 0, 'COMMA', 2, 'POINT')}">Amount</div>
         </td>
       </tr>
       </tbody>
@@ -75,6 +70,5 @@
 
 </div>
 
-<script type="text/javascript" th:src="@{/static/js/member/transactions.js}"></script>
 </body>
 </html>

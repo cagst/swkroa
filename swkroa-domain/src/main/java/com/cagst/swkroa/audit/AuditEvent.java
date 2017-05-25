@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
  * @author Craig Gaskill
  */
 public class AuditEvent implements Serializable {
-  private static final long serialVersionUID = 5568939371877454284L;
+  private static final long serialVersionUID = 1L;
 
   private final AuditEventType audit_event_type;
   private final String audit_action;
@@ -89,21 +89,11 @@ public class AuditEvent implements Serializable {
     return create_dt_tm;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return Objects.hash(audit_event_type, audit_action, audit_instigator, audit_message);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -124,11 +114,6 @@ public class AuditEvent implements Serializable {
         Objects.equals(audit_message, rhs.getAuditMessage());
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);

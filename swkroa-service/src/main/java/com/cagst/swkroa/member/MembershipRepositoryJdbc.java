@@ -3,18 +3,15 @@ package com.cagst.swkroa.member;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
-import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.utils.SwkroaStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -39,7 +36,6 @@ import org.springframework.util.Assert;
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipRepositoryJdbc.class);
 
   private static final String GET_MEMBERSHIP_BY_UID         = "GET_MEMBERSHIP_BY_UID";
-  private static final String GET_MEMBERSHIP_BY_PERSON_ID   = "GET_MEMBERSHIP_BY_PERSON_ID";
   private static final String GET_MEMBERSHIPS               = "GET_MEMBERSHIPS";
   private static final String GET_MEMBERSHIPS_BY_NAME       = "GET_MEMBERSHIPS_BY_NAME";
   private static final String GET_MEMBERSHIPS_DUE_IN_X_DAYS = "GET_MEMBERSHIPS_DUE_IN_X_DAYS";
@@ -86,12 +82,9 @@ import org.springframework.util.Assert;
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
 
-    Map<String, Long> params = new HashMap<>(1);
-    params.put("membership_id", uid);
-
     List<Membership> memberships = getJdbcTemplate().query(
         stmtLoader.load(GET_MEMBERSHIP_BY_UID),
-        params,
+        new MapSqlParameterSource("membership_id", uid),
         new MembershipMapper(codeValueRepo, memberTypeRepo)
     );
 
@@ -110,13 +103,13 @@ import org.springframework.util.Assert;
   public List<Membership> getMemberships(Status status, MembershipBalance balance) {
     LOGGER.info("Calling getMemberships with status [{}] and balance [{}]", status, balance);
 
-    Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
-    Assert.notNull(balance, "Assertion Failure - argument [balance] cannot be null");
+    Assert.notNull(status, "Argument [status] cannot be null");
+    Assert.notNull(balance, "Argument [balance] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(2);
-    params.put("status", status.toString());
-    params.put("balance", balance.toString());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("status", status.toString());
+    params.addValue("balance", balance.toString());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
@@ -125,15 +118,15 @@ import org.springframework.util.Assert;
   public List<Membership> getMembershipsByName(String name, Status status, MembershipBalance balance) {
     LOGGER.info("Calling getMembershipsByName for [{}].", name);
 
-    Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
-    Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
-    Assert.notNull(balance, "Assertion Failure - argument [balance] cannot be null");
+    Assert.hasText(name, "Argument [name] cannot be null or empty");
+    Assert.notNull(status, "Argument [status] cannot be null");
+    Assert.notNull(balance, "Argument [balance] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, String> params = new HashMap<>(3);
-    params.put("name", CGTStringUtils.normalizeToKey(name) + "%");
-    params.put("status", status.toString());
-    params.put("balance", balance.toString());
+    MapSqlParameterSource params = new MapSqlParameterSource();
+    params.addValue("name", SwkroaStringUtils.normalizeToKey(name) + "%");
+    params.addValue("status", status.toString());
+    params.addValue("balance", balance.toString());
 
     return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_BY_NAME), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
@@ -142,25 +135,33 @@ import org.springframework.util.Assert;
   public List<Membership> getMembershipsDueInXDays(int days) {
     LOGGER.info("Calling getMembershipsDueInXDays for [{}]", days);
 
-    Assert.isTrue(days >= 0, "[Assertion Failure] - argument [days] must be greater than or equal to zero");
+    Assert.isTrue(days >= 0, "Argument [days] must be greater than or equal to zero");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    Map<String, Date> params = new HashMap<>(1);
-    params.put("nextDueDate", DateTime.now().plusDays(days).toDate());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS), params, new MembershipMapper(codeValueRepo, memberTypeRepo));
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERSHIPS_DUE_IN_X_DAYS),
+        new MapSqlParameterSource("nextDueDate", DateTime.now().plusDays(days).toDate()),
+        new MembershipMapper(codeValueRepo, memberTypeRepo));
   }
 
   @Override
   @Transactional
-//  @CacheEvict(value = "memberships", key = "#membership.getMembershipUID()")
   public Membership saveMembership(Membership membership, User user)
       throws DataAccessException {
 
-    Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(membership, "Argument [membership] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving Membership for [{}]", membership.getMembershipUID());
+
+    // if the Membership is an Individual, ensure the primary member company name field is cleared
+    if (StringUtils.equals("ENTITY_INDIVIDUAL", membership.getEntityType().getMeaning())) {
+      Member primaryMember = membership.getPrimaryMember();
+      if (primaryMember != null) {
+        primaryMember.setCompanyName(null);
+      }
+    }
 
     if (membership.getMembershipUID() == 0L) {
       insertMembership(membership, user);
@@ -183,13 +184,12 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-//  @CacheEvict(value = "memberships", allEntries = true)
   public int closeMemberships(Set<Long> membershipIds, CodeValue closeReason, String closeText, User user)
       throws DataAccessException {
 
-    Assert.notEmpty(membershipIds, "Assertion Failure - argument [membershipIds] cannot be null or empty");
-    Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notEmpty(membershipIds, "Argument [membershipIds] cannot be null or empty");
+    Assert.notNull(closeReason, "Argument [closeReason] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Closing Memberships");
 
@@ -207,7 +207,7 @@ import org.springframework.util.Assert;
   @Transactional
 //  @CacheEvict(value = "memberships", allEntries = true)
   public int updateNextDueDate(long membershipId, User user) throws DataAccessException {
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Billing Memberships");
 

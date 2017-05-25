@@ -48,32 +48,20 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!-- CAGST Compile Dependencies -->
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-common-db</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-common-service</artifactId>
-    </dependency>
-
     <!-- SWKROA Dependencies -->
     <dependency>
       <groupId>com.cagst.swkroa</groupId>
       <artifactId>swkroa-domain</artifactId>
     </dependency>
 
-    <!-- Spring JDBC Dependencies -->
+    <!-- Spring Dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
     </dependency>
-
-    <!-- Spring Web Dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
+      <artifactId>spring-context-support</artifactId>
     </dependency>
 
     <!-- AspectJ Dependencies -->
@@ -113,24 +101,19 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!--
+    <!-- JavaX EMail Dependencies -->
     <dependency>
-      <groupId>com.lowagie</groupId>
-      <artifactId>itext</artifactId>
-      <version>2.1.7.js3</version>
+      <groupId>javax.mail</groupId>
+      <artifactId>mailapi</artifactId>
     </dependency>
-    -->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+    </dependency>
 
     <!--                   -->
     <!-- Test Dependencies -->
     <!--                   -->
-
-    <!-- CAGST Test Dependencies -->
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-test</artifactId>
-      <scope>test</scope>
-    </dependency>
 
     <!-- JUnit Dependencies -->
     <dependency>

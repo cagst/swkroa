@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import com.cagst.swkroa.job.JobStatus;
 import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.user.UserType;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,13 +121,13 @@ public final class MembershipServiceImpl implements MembershipService {
     }
 
     if (loadingPolicy.containsAttribute(LOAD_TRANSACTIONS)) {
-      List<Transaction> transactions = transactionRepo.getTransactionsForMembership(membership);
-      Collections.sort(transactions);
+      List<Transaction> transactions = transactionRepo.getTransactionsForMembership(membership.getMembershipUID());
+      transactions.sort(Comparator.comparing(Transaction::getTransactionDate).reversed());
       membership.setTransactions(transactions);
     }
 
     if (loadingPolicy.containsAttribute(LOAD_DOCUMENTS)) {
-      List<Document> documents = documentRepository.getDocumentsForMembership(membership);
+      List<Document> documents = documentRepository.getDocumentsForMembership(membership.getMembershipUID());
       membership.setDocuments(documents);
     }
 
@@ -160,12 +162,49 @@ public final class MembershipServiceImpl implements MembershipService {
 
     Membership savedMembership = membershipRepo.saveMembership(membership, user);
 
+    // re-generate the Membership Name (since it may have changed due to change or company and/or primary member)
+    if (savedMembership.getPrimaryMember() != null) {
+      savedMembership.setMembershipName(savedMembership.getPrimaryMember().getMemberName());
+    }
+
+    // save the Contact information (Addresses, Phone Numbers, Email Addresses)
+    for (Member member : savedMembership.getMembers()) {
+      for (Address address : member.getAddresses()) {
+        Address saveAddress = address.toBuilder()
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
+
+        contactRepo.saveAddress(saveAddress, user);
+      }
+
+      for (PhoneNumber phone : member.getPhoneNumbers()) {
+        PhoneNumber savePhone = phone.toBuilder()
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
+
+        contactRepo.savePhoneNumber(savePhone, user);
+      }
+
+      for (EmailAddress email : member.getEmailAddresses()) {
+        EmailAddress saveEmailAddress = email.toBuilder()
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
+
+        contactRepo.saveEmailAddress(saveEmailAddress, user);
+      }
+    }
+
     // save Comments
     for (Comment comment : savedMembership.getComments()) {
-      comment.setParentEntityUID(savedMembership.getMembershipUID());
-      comment.setParentEntityName(Comment.MEMBERSHIP);
+      Comment saveComment = Comment.builder(comment)
+          .setParentEntityUID(savedMembership.getMembershipUID())
+          .setParentEntityName(Comment.MEMBERSHIP)
+          .build();
 
-      commentRepo.saveComment(comment, user);
+      commentRepo.saveComment(saveComment, user);
     }
 
     // save Transactions

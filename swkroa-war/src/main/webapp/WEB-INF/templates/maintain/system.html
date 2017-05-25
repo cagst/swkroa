@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <th:block th:replace="fragments/common :: head" />
+
+  <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js}"></script>
+  <script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js}"></script>
+</head>
+
+<body>
+<div th:replace="fragments/main :: header"></div>
+<div th:replace="fragments/main :: navigation"></div>
+
+<div id="page-content">
+  <div class="page-header">
+    <div class="container clear-left clear-right" style="width:100%">
+    <h3 class="pull-left" th:text="#{maintain.system.title}">zzz Maintain System</h3>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.dao.OptimisticLockingFailureException;
 
 /**
  * Definition of a repository that retrieves and persists {@link MemberType} objects.
@@ -29,8 +28,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByUID(final long id) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  MemberType getMemberTypeByUID(long id) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link MemberType} by its meaning that is in effect as of NOW.
@@ -46,8 +44,7 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByMeaning(final String meaning) throws EmptyResultDataAccessException,
-      IncorrectResultSizeDataAccessException;
+  MemberType getMemberTypeByMeaning(String meaning) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link MemberType} by its meaning that is in effect as of the specified effective
@@ -66,8 +63,8 @@ public interface MemberTypeRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 MemberType was found.
    */
-  MemberType getMemberTypeByMeaningAsOf(final String meaning, final DateTime effectiveDateTime)
-      throws EmptyResultDataAccessException, IncorrectResultSizeDataAccessException;
+  MemberType getMemberTypeByMeaningAsOf(String meaning, DateTime effectiveDate)
+      throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves all active {@link MemberType MemberTypes} in the system that are currently in effect
@@ -88,7 +85,7 @@ public interface MemberTypeRepository {
    * @return A {@link List} of active {@link MemberType MemberTypes} in the system that were in
    * effect as of the time specified.
    */
-  List<MemberType> getActiveMemberTypesAsOf(final DateTime effectiveDateTime);
+  List<MemberType> getActiveMemberTypesAsOf(DateTime effectiveDate);
 
   /**
    * Retrieves all active {@link MemberType MemberTypes} in the system that correspond to the specified MemberType.
@@ -100,6 +97,5 @@ public interface MemberTypeRepository {
    */
   List<MemberType> getActiveMemberTypesForMemberType(final long memberTypeId);
 
-  MemberType saveMemberType(final MemberType memberType, final User user)
-      throws OptimisticLockingFailureException, IncorrectResultSizeDataAccessException, DataAccessException;
+  MemberType saveMemberType(MemberType memberType, User user) throws DataAccessException;
 }

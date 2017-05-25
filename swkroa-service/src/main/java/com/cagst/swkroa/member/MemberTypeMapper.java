@@ -3,8 +3,8 @@ package com.cagst.swkroa.member;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -47,8 +47,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     type.setPrimary(rs.getBoolean(PRIMARY_IND));
     type.setAllowSpouse(rs.getBoolean(ALLOW_SPOUSE_IND));
     type.setAllowMember(rs.getBoolean(ALLOW_MEMBER_IND));
-    type.setBeginEffectiveDate(CGTDateTimeUtils.getDateTime(rs, BEG_EFF_DT));
-    type.setEndEffectiveDate(CGTDateTimeUtils.getDateTime(rs, END_EFF_DT));
+    type.setBeginEffectiveDate(DateTimeConverter.convert(rs.getTimestamp(BEG_EFF_DT)));
+    type.setEndEffectiveDate(DateTimeConverter.convert(rs.getTimestamp(END_EFF_DT)));
     type.setActive(rs.getBoolean(ACTIVE_IND));
     type.setMemberTypeUpdateCount(rs.getLong(MEMBER_TYPE_UPDT_CNT));
 

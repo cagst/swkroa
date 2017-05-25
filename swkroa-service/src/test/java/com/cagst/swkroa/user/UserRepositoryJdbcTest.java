@@ -13,8 +13,8 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
-import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.contact.ContactRepository;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.member.MemberRepository;
 import com.cagst.swkroa.person.Person;
 import com.cagst.swkroa.person.PersonRepository;
@@ -48,7 +48,7 @@ public class UserRepositoryJdbcTest extends BaseTestRepository {
     when(memberRepo.getMemberByPersonUID(anyLong())).thenReturn(Optional.empty());
 
     repo = new UserRepositoryJdbc(createTestDataSource(), personRepo, memberRepo, contactRepo);
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**

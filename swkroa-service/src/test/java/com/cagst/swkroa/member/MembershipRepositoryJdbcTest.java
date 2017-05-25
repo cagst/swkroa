@@ -12,9 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.cagst.common.db.StatementLoader;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.codevalue.CodeValueRepository;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import com.google.common.collect.Sets;
@@ -78,7 +78,7 @@ public class MembershipRepositoryJdbcTest extends BaseTestRepository {
     when(memberTypeRepo.getMemberTypeByUID(anyLong())).thenReturn(new MemberType());
 
     repo = new MembershipRepositoryJdbc(createTestDataSource(), memberRepo, codeValueRepo, memberTypeRepo);
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**

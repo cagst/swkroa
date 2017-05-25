@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
   @Before
   public void setUp() {
     repo = new CodeValueRepositoryJdbc(createTestDataSource());
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
 
     user = new User();
     user.setUserUID(1L);
@@ -185,7 +185,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
     assertEquals("Ensure it was the correct codevalue.", "FAX", codevalue.getMeaning());
 
     String newDisplay = codevalue.getDisplay() + "-EDITED";
-    CodeValue editedCodeValue = CodeValue.builder(codevalue)
+    CodeValue editedCodeValue = codevalue.toBuilder()
         .setDisplay(newDisplay)
         .build();
 
@@ -207,7 +207,7 @@ public class CodeValueRepositoryJdbcTest extends BaseTestRepository {
 
     String newDisplay = cv.getDisplay() + "-EDITED";
 
-    CodeValue editedCodeVale = CodeValue.builder(cv)
+    CodeValue editedCodeVale = cv.toBuilder()
         .setDisplay(newDisplay)
         .setCodeValueUpdateCount(cv.getCodeValueUpdateCount() + 1)
         .build();

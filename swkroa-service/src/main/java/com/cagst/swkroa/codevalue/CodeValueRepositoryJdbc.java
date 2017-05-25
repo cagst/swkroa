@@ -5,8 +5,8 @@ import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.List;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,10 +56,12 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling CodeSetByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("codeset_id", uid);
 
-    List<CodeSet> codesets = getJdbcTemplate().query(stmtLoader.load(GET_CODESET_BY_UID), params, new CodeSetMapper());
+    List<CodeSet> codesets = getJdbcTemplate().query(
+        stmtLoader.load(GET_CODESET_BY_UID),
+        new MapSqlParameterSource("codeset_id", uid),
+        new CodeSetMapper());
+
     if (codesets.size() == 1) {
       return codesets.get(0);
     } else if (codesets.size() == 0) {
@@ -83,29 +85,30 @@ import org.springframework.util.Assert;
   @Override
   @Cacheable(value = "codeValueLists")
   public List<CodeValue> getCodeValuesForCodeSet(CodeSet codeset) {
-    Assert.notNull(codeset, "Assertion Failed - argument [codeset] cannot be null.");
+    Assert.notNull(codeset, "Argument [codeset] cannot be null.");
 
     LOGGER.info("Calling CodeValuesForCodeSet for [{}].", codeset.getDisplay());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("codeset_id", codeset.getCodeSetUID());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUES_FOR_CODESET), params, new CodeValueMapper());
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_CODEVALUES_FOR_CODESET),
+        new MapSqlParameterSource("codeset_id", codeset.getCodeSetUID()),
+        new CodeValueMapper());
   }
 
   @Override
   @Cacheable(value = "codeValueLists")
   public List<CodeValue> getCodeValuesForCodeSetByType(CodeSetType codeSetType) {
-    Assert.notNull(codeSetType, "Assertion Failed - argument [codeSetType] cannot be null.");
+    Assert.notNull(codeSetType, "Argument [codeSetType] cannot be null.");
 
     LOGGER.info("Calling getCodeValuesForCodeSetByType for [{}].", codeSetType);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("codeset_meaning", codeSetType.name());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUES_FOR_CODESET_BY_MEANING), params,
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_CODEVALUES_FOR_CODESET_BY_MEANING),
+        new MapSqlParameterSource("codeset_meaning", codeSetType.name()),
         new CodeValueMapper());
   }
 
@@ -119,10 +122,10 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getCodeValueByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("codevalue_id", uid);
 
-    List<CodeValue> codevalues = getJdbcTemplate().query(stmtLoader.load(GET_CODEVALUE_BY_UID), params,
+    List<CodeValue> codevalues = getJdbcTemplate().query(
+        stmtLoader.load(GET_CODEVALUE_BY_UID),
+        new MapSqlParameterSource("codevalue_id", uid),
         new CodeValueMapper());
 
     if (codevalues.size() == 1) {
@@ -139,12 +142,13 @@ import org.springframework.util.Assert;
   @Override
   @Cacheable(value = "codeValues")
   public CodeValue getCodeValueByMeaning(CodeSetType codeSetType, String meaning) {
-    Assert.notNull(codeSetType, "Assertion Failed - argument [codeSetType] cannot be null");
-    Assert.hasText(meaning, "Assertion Failed - argument [meaning] cannot be null or empty.");
+    Assert.notNull(codeSetType, "Argument [codeSetType] cannot be null");
+    Assert.hasText(meaning, "Argument [meaning] cannot be null or empty.");
 
     LOGGER.info("Calling getCodeValueByMeaning for [{}].", meaning);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("codeset_meaning", codeSetType.name());
     params.addValue("meaning", meaning);
@@ -158,7 +162,7 @@ import org.springframework.util.Assert;
       LOGGER.warn("No codevalues with meaning of [{}] were found!", meaning);
       throw new EmptyResultDataAccessException(1);
     } else {
-      LOGGER.warn("More and 1 codevalue with meaning of [{}] was found!", meaning);
+      LOGGER.warn("More than 1 codevalue with meaning of [{}] was found!", meaning);
       throw new IncorrectResultSizeDataAccessException(1, codevalues.size());
     }
   }
@@ -168,8 +172,8 @@ import org.springframework.util.Assert;
   public CodeValue saveCodeValueForCodeSet(CodeValue codeValue, User user)
       throws DataAccessException {
 
-    Assert.notNull(codeValue, "Assertion failed - argument codeValue cannot be null.");
-    Assert.notNull(user, "Assertion failed - argument user cannot be null.");
+    Assert.notNull(codeValue, "Argument codeValue cannot be null.");
+    Assert.notNull(user, "Argument user cannot be null.");
 
     LOGGER.info("Saving CodeValue [{}].", codeValue.getDisplay());
 
@@ -197,7 +201,7 @@ import org.springframework.util.Assert;
       throw new IncorrectResultSizeDataAccessException(1, cnt);
     }
 
-    return CodeValue.builder(codeValue).setCodeValueUID(keyHolder.getKey().longValue()).build();
+    return codeValue.toBuilder().setCodeValueUID(keyHolder.getKey().longValue()).build();
   }
 
   private CodeValue updateCodeValueForCodeSet(CodeValue codeValue, User user)
@@ -212,7 +216,7 @@ import org.springframework.util.Assert;
         CodeValueMapper.mapUpdateStatement(codeValue, user));
 
     if (cnt == 1) {
-      return CodeValue.builder(codeValue).setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount() + 1).build();
+      return codeValue.toBuilder().setCodeValueUpdateCount(codeValue.getCodeValueUpdateCount() + 1).build();
     } else if (cnt == 0) {
       throw new OptimisticLockingFailureException("invalid update count of [" + cnt
           + "] possible update count mismatch");

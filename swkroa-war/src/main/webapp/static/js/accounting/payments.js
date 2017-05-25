@@ -5,60 +5,87 @@
  *
  * Author:  Craig Gaskill
  */
+(function(window, angular, $) {
+  'use strict';
 
-swkroaApp.controller('paymentController',
-                     ['$scope',
-                      '$http',
-                      'transactionService',
-    function($scope, $http, transactionService) {
+  angular.module('swkroaApp').controller('PaymentController', PaymentController);
 
-  $scope.increment     = 10;
-  $scope.increments    = [];
-  $scope.paymentGroups = [];
-  $scope.start         = 0;
-  $scope.page          = 0;
-  $scope.pages         = 1;
+  PaymentController.$inject = ['TransactionService'];
 
-  $scope.getPaymentGroups = function(start, limit) {
-    transactionService.getPaymentGroups(start, limit).success(function(data) {
-      $scope.paymentGroups = data.items;
+  function PaymentController(transactionService) {
+    var vm = this;
 
-      $scope.pages = Math.ceil(data.totalItemCount / $scope.increment);
+    vm.increment     = 10;
+    vm.increments    = [];
+    vm.paymentGroups = [];
+    vm.start         = 0;
+    vm.page          = 0;
+    vm.pages         = 1;
 
-      for (var idx = 0; idx < $scope.pages; idx++) {
-        $scope.increments.push(idx+1);
-      }
+    /********************************************
+     * Define binding methods
+     ********************************************/
+
+    vm.getPaymentGroups = getPaymentGroups;
+    vm.generatePaymentsReport = generatePaymentsReport;
+
+    vm.firstPage = firstPage;
+    vm.prevPage = prevPage;
+    vm.nextPage = nextPage;
+    vm.lastPage = lastPage;
+
+    activate();
+
+    /********************************************
+     * Implement Methods
+     ********************************************/
+
+    function activate() {
+      vm.firstPage();
     }
-  )};
 
-  $scope.firstPage = function() {
-    $scope.setPage(1);
-  };
+    function getPaymentGroups(start, limit) {
+      transactionService.getPaymentGroups(start, limit).then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.paymentGroups = response.data.items;
 
-  $scope.prevPage = function() {
-    $scope.setPage($scope.page - 1);
-  };
+          vm.pages = Math.ceil(response.data.totalItemCount / vm.increment);
 
-  $scope.setPage = function(page) {
-    $scope.page = page;
-    $scope.getPaymentGroups(($scope.page - 1) * $scope.increment, $scope.increment);
-  };
+          for (var idx = 0; idx < vm.pages; idx++) {
+            vm.increments.push(idx + 1);
+          }
+        }
+      })
+    }
 
-  $scope.nextPage = function() {
-    $scope.setPage($scope.page + 1);
-  };
+    function generatePaymentsReport(reportType, startDate, endDate) {
+      $("#reportType").val(reportType);
+      $("#start_date").val(startDate);
+      $("#end_date").val(endDate);
 
-  $scope.lastPage = function() {
-    $scope.setPage($scope.pages);
-  };
+      submitReportForm(reportType);
+    }
 
-  $scope.generatePaymentsReport = function(reportType, startDate, endDate) {
-    $("#reportType").val(reportType);
-    $("#start_date").val(startDate);
-    $("#end_date").val(endDate);
+    function firstPage() {
+      setPage(1);
+    }
 
-    submitReportForm(reportType);
-  };
+    function prevPage() {
+      setPage(vm.page - 1);
+    }
 
-  $scope.firstPage();
-}]);
+    function nextPage() {
+      setPage(vm.page + 1);
+    }
+
+    function lastPage() {
+      setPage(vm.pages);
+    }
+
+    function setPage(page) {
+      vm.page = page;
+      vm.getPaymentGroups((vm.page - 1) * vm.increment, vm.increment);
+    }
+  }
+
+})(window, window.angular, window.jQuery);

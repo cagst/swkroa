@@ -34,24 +34,22 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
   @Override
   public Address mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-    Address address = new Address();
-    address.setAddressUID(rs.getLong(ADDRESS_ID));
-    address.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
-    address.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    address.setAddressTypeCD(rs.getLong(ADDRESS_TYPE));
-    address.setAddressLine1(rs.getString(ADDRESS1));
-    address.setAddressLine2(rs.getString(ADDRESS2));
-    address.setAddressLine3(rs.getString(ADDRESS3));
-    address.setCity(rs.getString(CITY));
-    address.setState(rs.getString(STATE_CODE));
-    address.setPostalCode(rs.getString(POSTAL_CODE));
-    address.setCountry(rs.getString(COUNTRY_CODE));
-    address.setPrimary(rs.getBoolean(PRIMARY_IND));
-
-    address.setActive(rs.getBoolean(ACTIVE_IND));
-    address.setAddressUpdateCount(rs.getLong(UPDT_CNT));
-
-    return address;
+    return Address.builder()
+        .setAddressUID(rs.getLong(ADDRESS_ID))
+        .setParentEntityUID(rs.getLong(PARENT_ENTITY_ID))
+        .setParentEntityName(rs.getString(PARENT_ENTITY_NAME))
+        .setAddressTypeCD(rs.getLong(ADDRESS_TYPE))
+        .setAddressLine1(rs.getString(ADDRESS1))
+        .setAddressLine2(rs.getString(ADDRESS2))
+        .setAddressLine3(rs.getString(ADDRESS3))
+        .setCity(rs.getString(CITY))
+        .setState(rs.getString(STATE_CODE))
+        .setPostalCode(rs.getString(POSTAL_CODE))
+        .setCountry(rs.getString(COUNTRY_CODE))
+        .setPrimary(rs.getBoolean(PRIMARY_IND))
+        .setActive(rs.getBoolean(ACTIVE_IND))
+        .setAddressUpdateCount(rs.getLong(UPDT_CNT))
+        .build();
   }
 
   /**

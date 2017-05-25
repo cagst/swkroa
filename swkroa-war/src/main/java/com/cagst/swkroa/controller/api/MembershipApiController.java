@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -130,7 +131,7 @@ public final class MembershipApiController {
       primary.setPerson(new Person());
 
       Membership membership = new Membership();
-      membership.setEntityType(codeValueRepo.getCodeValueByMeaning(CodeSetType.EMAIL_TYPE, "ENTITY_INDIVIDUAL"));
+      membership.setEntityType(codeValueRepo.getCodeValueByMeaning(CodeSetType.ENTITY_TYPE, "ENTITY_INDIVIDUAL"));
       membership.addMember(primary);
 
       return membership;
@@ -163,7 +164,7 @@ public final class MembershipApiController {
    * @return The next available OwnerId based upon the specified first name and last name, or an empty string if no
    * OwnerId could be determined.
    */
-  @RequestMapping(value = "/ownerId/{firstName}/{lastName}", method = RequestMethod.GET)
+  @RequestMapping(value = "/ownerId/{firstName}/{lastName}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
   public String generateOwnerId(@PathVariable String firstName, @PathVariable String lastName) {
     String ownerId = StringUtils.EMPTY;
 

@@ -1,13 +1,13 @@
 package com.cagst.swkroa.controller.api;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 
-import com.cagst.swkroa.county.County;
-import com.cagst.swkroa.county.CountyRepository;
+import com.cagst.swkroa.country.CountryRepository;
+import com.cagst.swkroa.country.County;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 public final class CountyApiController {
   private static final Logger LOGGER = LoggerFactory.getLogger(CountyApiController.class);
 
-  @Autowired
-  private CountyRepository countyRepo;
+  private final CountryRepository countryRepo;
+
+  @Inject
+  public CountyApiController(CountryRepository countryRepo) {
+    this.countryRepo = countryRepo;
+  }
 
   /**
    * Handles the request and retrieves the active Counties within the system.
@@ -34,7 +38,7 @@ public final class CountyApiController {
   public List<County> getActiveCounties() {
     LOGGER.info("Received request to retrieve active counties.");
 
-    List<County> counties = (List<County>) countyRepo.getActiveCounties();
+    List<County> counties = countryRepo.getActiveCounties();
     Collections.sort(counties);
 
     return counties;

@@ -3,14 +3,12 @@ package com.cagst.swkroa.member;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.cagst.common.formatter.DefaultNameFormatter;
-import com.cagst.common.formatter.NameFormatter;
-import com.cagst.common.util.CGTCollatorBuilder;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.comment.Comment;
 import com.cagst.swkroa.document.Document;
@@ -24,20 +22,15 @@ import org.springframework.util.CollectionUtils;
  * @author Craig Gaskill
  */
 public final class Membership implements Serializable, Comparable<Membership> {
-  private static final long serialVersionUID = 5583617519331577882L;
+  private static final long serialVersionUID = 1L;
 
   private long membership_id;
   private String membership_name;
   private CodeValue entity_type;
   private DateTime next_due_dt;
   private long member_id;
-  private String company_name;
-  private String owner_ident;
   private DateTime join_dt;
   private MemberType member_type;
-  private String name_last;
-  private String name_middle;
-  private String name_first;
   private BigDecimal calculated_dues;
   private BigDecimal incremental_dues;
   private BigDecimal balance;
@@ -55,8 +48,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
   private List<Comment> comments = new ArrayList<>();
   private List<Transaction> transactions = new ArrayList<>();
   private List<Document> documents = new ArrayList<>();
-
-  private NameFormatter nameFormatter = new DefaultNameFormatter();
 
   public long getMembershipUID() {
     return membership_id;
@@ -98,22 +89,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
     this.member_id = memberID;
   }
 
-  public String getCompanyName() {
-    return company_name;
-  }
-
-  public void setCompanyName(final String companyName) {
-    this.company_name = companyName;
-  }
-
-  public String getOwnerId() {
-    return owner_ident;
-  }
-
-  public void setOwnerId(final String ownderId) {
-    this.owner_ident = ownderId;
-  }
-
   public DateTime getJoinDate() {
     return join_dt;
   }
@@ -128,38 +103,6 @@ public final class Membership implements Serializable, Comparable<Membership> {
 
   public void setMemberType(final MemberType memberType) {
     this.member_type = memberType;
-  }
-
-  public String getLastName() {
-    return name_last;
-  }
-
-  public void setLastName(final String lastName) {
-    this.name_last = lastName;
-  }
-
-  public String getMiddleName() {
-    return name_middle;
-  }
-
-  public void setMiddleName(final String middleName) {
-    this.name_middle = middleName;
-  }
-
-  public String getFirstName() {
-    return name_first;
-  }
-
-  public void setFirstName(final String firstName) {
-    this.name_first = firstName;
-  }
-
-  public String getFullName() {
-    if (nameFormatter == null) {
-      return null;
-    }
-
-    return nameFormatter.formatFullName(name_last, name_first, name_middle);
   }
 
   public BigDecimal getCalculatedDuesAmount() {
@@ -429,9 +372,9 @@ public final class Membership implements Serializable, Comparable<Membership> {
       return 0;
     }
 
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(getMembershipName(), rhs.getMembershipName());
+    Collator collator = Collator.getInstance();
+    collator.setStrength(Collator.PRIMARY);
 
-    return builder.build();
+    return collator.compare(getMembershipName(), rhs.getMembershipName());
   }
 }

@@ -5,8 +5,8 @@ import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.List;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,11 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("person_id", uid);
 
-    List<Person> persons = getJdbcTemplate().query(stmtLoader.load(GET_PERSON_BY_UID), params, new PersonMapper());
+    List<Person> persons = getJdbcTemplate().query(
+        stmtLoader.load(GET_PERSON_BY_UID),
+        new MapSqlParameterSource("person_id", uid),
+        new PersonMapper());
+
     if (persons.size() == 1) {
       return persons.get(0);
     } else if (persons.size() == 0) {
@@ -64,8 +68,8 @@ public class PersonRepositoryJdbc extends BaseRepositoryJdbc implements PersonRe
 
   @Override
   public Person savePerson(Person person, User user) {
-    Assert.notNull(person, "Assertion Failure - argument [person] cannot be null");
-    Assert.notNull(user, "Assertion Failure - argument [user] cannot be null");
+    Assert.notNull(person, "Argument [person] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving person [{}, {}].", person.getLastName(), person.getFirstName());
 

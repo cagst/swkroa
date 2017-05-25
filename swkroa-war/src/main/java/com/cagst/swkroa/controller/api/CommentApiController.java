@@ -38,7 +38,7 @@ public final class CommentApiController {
    * @return The {@link Comment} after it has been persisted.
    */
   @RequestMapping(method = RequestMethod.PUT)
-  public Comment saveComment(final @RequestBody Comment comment) {
+  public Comment saveComment(@RequestBody Comment comment) {
     LOGGER.info("Received request to save comment.");
 
     return commentRepo.saveComment(comment, WebAppUtils.getUser());

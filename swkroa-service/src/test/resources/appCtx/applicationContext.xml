@@ -17,8 +17,4 @@
       </list>
     </property>
   </bean>
-
-  <bean id="nameFormatter" class="com.cagst.common.formatter.DefaultNameFormatter"/>
-  <bean id="ageFormatter" class="com.cagst.common.formatter.DefaultAgeFormatter"/>
-  <bean id="phoneFormatter" class="com.cagst.common.formatter.DefaultPhoneNumberFormatter"/>
 </beans>

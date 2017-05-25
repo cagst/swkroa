@@ -3,6 +3,8 @@ package com.cagst.swkroa.transaction;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.auto.value.AutoValue;
 import org.joda.time.DateTime;
 
@@ -12,16 +14,36 @@ import org.joda.time.DateTime;
  * @author Craig Gaskill
  */
 @AutoValue
+@JsonPropertyOrder({
+    "transactionDate",
+    "transactionCount",
+    "transactionAmount"
+})
 public abstract class TransactionGroup implements Serializable {
-  static TransactionGroup create(final DateTime date,
-                                 final long count,
-                                 final BigDecimal amount) {
-    return new AutoValue_TransactionGroup(date, count, amount);
-  }
-
+  @JsonProperty(value = "transactionDate")
   public abstract DateTime getTransactionDate();
 
+  @JsonProperty(value = "transactionCount")
   public abstract long getTransactionCount();
 
+  @JsonProperty(value = "transactionAmount")
   public abstract BigDecimal getTransactionAmount();
+
+  public static Builder builder() {
+    return new AutoValue_TransactionGroup.Builder();
+  }
+
+  @AutoValue.Builder
+  interface Builder {
+    @JsonProperty(value = "transactionDate")
+    Builder setTransactionDate(DateTime transactionDate);
+
+    @JsonProperty(value = "transactionCount")
+    Builder setTransactionCount(long transactionCount);
+
+    @JsonProperty(value = "transactionAmount")
+    Builder setTransactionAmount(BigDecimal amount);
+
+    TransactionGroup build();
+  }
 }

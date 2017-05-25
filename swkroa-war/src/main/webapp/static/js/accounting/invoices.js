@@ -5,63 +5,91 @@
  *
  * Author:  Craig Gaskill
  */
+(function(window, angular, $) {
+  'use strict';
 
-swkroaApp.controller('invoiceController',
-                     ['$scope',
-                      '$http',
-                      'transactionService',
-    function($scope, $http, transactionService) {
+  angular.module('swkroaApp').controller('InvoiceController', InvoiceController);
 
-  $scope.increment     = 10;
-  $scope.increments    = [];
-  $scope.invoiceGroups = [];
-  $scope.start         = 0;
-  $scope.page          = 0;
-  $scope.pages         = 1;
+  InvoiceController.$inject = ['$http', 'TransactionService'];
 
-  $http.get('/api/jobs/pending/RENEWAL').then(function(response) {
-    $scope.jobsPending = (response.data.length > 0);
-  });
+  function InvoiceController($http, transactionService) {
+    var vm = this;
 
-  $scope.getInvoiceGroups = function(start, limit) {
-    transactionService.getInvoiceGroups(start, limit).success(function(data) {
-      $scope.invoiceGroups = data.items;
-      $scope.pages = Math.ceil(data.totalItemCount / $scope.increment);
+    vm.increment     = 10;
+    vm.increments    = [];
+    vm.invoiceGroups = [];
+    vm.start         = 0;
+    vm.page          = 0;
+    vm.pages         = 1;
 
-      for (var idx = 0; idx < $scope.pages; idx++) {
-        $scope.increments.push(idx+1);
-      }
+    /********************************************
+     * Define binding methods
+     ********************************************/
+
+    vm.getInvoiceGroups = getInvoiceGroups;
+    vm.generateInvoicesReport = generateInvoicesReport;
+
+    vm.firstPage = firstPage;
+    vm.prevPage = prevPage;
+    vm.nextPage = nextPage;
+    vm.lastPage = lastPage;
+
+    activate();
+
+    /********************************************
+     * Implement Methods
+     ********************************************/
+
+    function activate() {
+      $http.get('/api/jobs/pending/RENEWAL').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.jobsPending = (response.data.length > 0);
+        }
+      });
+
+      vm.firstPage();
     }
-  )};
 
-  $scope.firstPage = function() {
-    $scope.setPage(1);
-  };
+    function getInvoiceGroups(start, limit) {
+      transactionService.getInvoiceGroups(start, limit).then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.invoiceGroups = response.data.items;
+          vm.pages = Math.ceil(response.data.totalItemCount / vm.increment);
 
-  $scope.prevPage = function() {
-    $scope.setPage($scope.page - 1);
-  };
+          for (var idx = 0; idx < vm.pages; idx++) {
+            vm.increments.push(idx + 1);
+          }
+        }
+      })
+    }
 
-  $scope.setPage = function(page) {
-    $scope.page = page;
-    $scope.getInvoiceGroups(($scope.page - 1) * $scope.increment, $scope.increment);
-  };
+    function generateInvoicesReport(reportType, startDate, endDate) {
+      $("#reportType").val(reportType);
+      $("#start_date").val(startDate);
+      $("#end_date").val(endDate);
 
-  $scope.nextPage = function() {
-    $scope.setPage($scope.page + 1);
-  };
+      submitReportForm(reportType);
+    }
 
-  $scope.lastPage = function() {
-    $scope.setPage($scope.pages);
-  };
+    function firstPage() {
+      setPage(1);
+    }
 
-  $scope.generateInvoicesReport = function(reportType, startDate, endDate) {
-    $("#reportType").val(reportType);
-    $("#start_date").val(startDate);
-    $("#end_date").val(endDate);
+    function prevPage() {
+      setPage(vm.page - 1);
+    }
 
-    submitReportForm(reportType);
-  };
+    function nextPage() {
+      setPage(vm.page + 1);
+    }
 
-  $scope.firstPage();
-}]);
+    function lastPage() {
+      setPage(vm.pages);
+    }
+
+    function setPage(page) {
+      vm.page = page;
+      vm.getInvoiceGroups((vm.page - 1) * vm.increment, vm.increment);
+    }
+  }
+})(window, window.angular, window.jQuery);

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cagst.common.util.CGTDateTimeUtils;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
@@ -35,7 +35,7 @@ import org.springframework.jdbc.core.RowMapper;
     inv.setMembershipName(rs.getString(MEMBERSHIP_NAME));
     inv.setMembershipUID(rs.getLong(MEMBERSHIP_ID));
     inv.setTransactionUID(rs.getLong(TRANSACTION_ID));
-    inv.setTransactionDate(CGTDateTimeUtils.getDateTime(rs.getTimestamp(TRANSACTION_DT)));
+    inv.setTransactionDate(DateTimeConverter.convert(rs.getTimestamp(TRANSACTION_DT)));
     inv.setTransactionType(TransactionType.values()[transactionTypeFlag]);
     inv.setTransactionDescription(rs.getString(TRANSACTION_DESC));
     inv.setReferenceNumber(rs.getString(REF_NUM));

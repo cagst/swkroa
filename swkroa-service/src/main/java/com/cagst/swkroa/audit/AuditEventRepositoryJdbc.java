@@ -5,8 +5,8 @@ import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.Collection;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -49,7 +49,7 @@ import org.springframework.util.Assert;
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void save(final AuditEvent auditEvent) {
-    Assert.notNull(auditEvent, "Assertion Failed - auditEvent is required; it must not be null");
+    Assert.notNull(auditEvent, "Argument [auditEvent] cannot be null");
 
     logger.info("Calling save for AuditEvent [{}].", auditEvent);
 

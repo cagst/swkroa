@@ -19,7 +19,7 @@ public class BillingRunModel {
     return transactionDt;
   }
 
-  public void setTransactionDate(final DateTime transactionDate) {
+  public void setTransactionDate(DateTime transactionDate) {
     this.transactionDt = transactionDate;
   }
 
@@ -27,7 +27,7 @@ public class BillingRunModel {
     return transactionDesc;
   }
 
-  public void setTransactionDescription(final String desc) {
+  public void setTransactionDescription(String desc) {
     this.transactionDesc = desc;
   }
 
@@ -35,7 +35,7 @@ public class BillingRunModel {
     return transactionMemo;
   }
 
-  public void setTransactionMemo(final String memo) {
+  public void setTransactionMemo(String memo) {
     this.transactionMemo = memo;
   }
 
@@ -43,7 +43,7 @@ public class BillingRunModel {
     return membershipIds;
   }
 
-  public void setMembershipIds(final Set<Long> ids) {
+  public void setMembershipIds(Set<Long> ids) {
     this.membershipIds = ids;
   }
 }

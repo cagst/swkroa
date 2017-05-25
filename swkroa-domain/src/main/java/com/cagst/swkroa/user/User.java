@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Craig Gaskill
  */
 public final class User extends Person implements UserDetails {
-  private static final long serialVersionUID = 459919042550669570L;
+  private static final long serialVersionUID = 1L;
 
   private long user_id;
   private String username;

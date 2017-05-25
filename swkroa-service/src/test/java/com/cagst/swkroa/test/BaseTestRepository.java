@@ -2,7 +2,7 @@ package com.cagst.swkroa.test;
 
 import javax.sql.DataSource;
 
-import com.cagst.common.db.DataSourceFactory;
+import com.cagst.swkroa.DataSourceFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 

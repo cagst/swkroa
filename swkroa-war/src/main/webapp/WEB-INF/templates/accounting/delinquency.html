@@ -9,11 +9,11 @@
   <script type="text/javascript" th:src="@{/static/js/report.js}"></script>
 </head>
 
-<body>
+<body data-ng-app="swkroaApp">
 <div th:replace="fragments/main :: header"></div>
 <div th:replace="fragments/main :: navigation"></div>
 
-<div id="page-content" data-ng-app="swkroaApp" data-ng-controller="delinquencyController">
+<div id="page-content" data-ng-controller="DelinquencyController as ctrl">
   <div class="page-header">
     <h3 th:text="#{delinquency.title}">zzz Delinquencies</h3>
   </div>
@@ -21,30 +21,30 @@
   <form name="reportForm" target="_blank" method="post"
         th:action="@{/report/membership/delinquent}"
         th:attr="remind=@{/report/membership/remind}">
-    <div class="row" data-ng-show="delinquencies">
+    <div class="row" data-ng-show="ctrl.delinquencies">
       <div class="col-xs-3">
         <div class="btn-group-vertical">
           <input id="reportType" type="hidden" name="reportType" />
           <a id="generatePdf" class="btn btn-primary"
              href="javascript:submitReportForm('pdf')"
-             data-ng-disabled="!canExport()">
+             data-ng-disabled="!ctrl.canExport()">
             <i class="fa fa-print"></i>
             <span th:text="#{com.cagst.swkroa.print}">zzz Print</span>
           </a>
           <a id="generateCsv" class="btn btn-default"
              href="javascript:submitReportForm('csv')"
-             data-ng-disabled="!canExport()">
+             data-ng-disabled="!ctrl.canExport()">
             <i class="fa fa-download"></i>
             <span th:text="#{com.cagst.swkroa.export}">zzz Export</span>
           </a>
           <a id="generateReminderPdf" type="button" class="btn btn-default"
              href="javascript:generateMembershipReminderLetters('pdf', 'remind')"
-             data-ng-disabled="!canExport()">
+             data-ng-disabled="!ctrl.canExport()">
             <i class="fa fa-print"></i>
             <span th:text="#{com.cagst.swkroa.report.member.reminder.report}">zzz Renew</span>
           </a>
           <button type="button" class="btn btn-danger"
-                  data-ng-disabled="!canExport()"
+                  data-ng-disabled="!ctrl.canExport()"
                   data-toggle="modal" data-target="#closeMembershipsDlg">
             <i class="fa fa-power-off"></i>
             <span th:text="#{delinquency.close.button}">zzz Close</span>
@@ -56,7 +56,7 @@
           <thead>
             <tr>
               <th>
-                <input id="checkAll" type="checkbox" data-ng-model="checkAll" data-ng-change="toggleCheckAll()" />
+                <input id="checkAll" type="checkbox" data-ng-model="ctrl.checkAll" data-ng-change="ctrl.toggleCheckAll()" />
               </th>
               <th th:text="#{delinquency.membership}">zzz Membership</th>
               <th th:text="#{delinquency.duesamount}">zzz Dues Amount</th>
@@ -64,9 +64,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr data-ng-repeat="mem in delinquencies">
+            <tr data-ng-repeat="mem in ctrl.delinquencies">
               <td>
-                <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox" data-ng-model="mem.selected" />
+                <input id="{{mem.membershipUID}}" name="selectedMembership_{{mem.membershipUID}}" type="checkbox"
+                       data-ng-model="mem.selected" />
               </td>
               <td>{{mem.membershipName}}</td>
               <td>{{mem.calculatedDuesAmount | currency}}</td>
@@ -94,31 +95,31 @@
               zzz Close Reason
             </label>
             <select id="closeReason" name="closeReason" class="form-control"
-                    data-ng-model="closeReason"
+                    data-ng-model="ctrl.closeReason"
                     data-ng-required="true"
-                    data-ng-options="reason.display for reason in closeReasons">
+                    data-ng-options="reason.display for reason in ctrl.closeReasons">
             </select>
             <label for="companyName" class="control-label"
-                   data-ng-class="{'label-required': closeReason.meaning == 'CLOSE_OTHER'}"
+                   data-ng-class="{'label-required': ctrl.closeReason.meaning == 'CLOSE_OTHER'}"
                    th:text="#{delinquency.close.text}">
               zzz CloseText
             </label>
             <input id="companyName" name="companyName"
                    type="text" class="form-control" maxlength="100"
-                   data-ng-model="closeText"
-                   data-ng-disabled="closeReason.meaning != 'CLOSE_OTHER'"
-                   data-ng-required="closeReason.meaning == 'CLOSE_OTHER'" />
+                   data-ng-model="ctrl.closeText"
+                   data-ng-disabled="ctrl.closeReason.meaning != 'CLOSE_OTHER'"
+                   data-ng-required="ctrl.closeReason.meaning == 'CLOSE_OTHER'" />
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger"
-                    data-ng-click="closeMemberships()"
-                    data-ng-disabled="!canClose()"
+                    data-ng-click="ctrl.closeMemberships()"
+                    data-ng-disabled="!ctrl.canClose()"
                     th:text="#{delinquency.close.button}">
               zzz Delete
             </button>
             <button type="button" class="btn btn-default"
                     data-dismiss="modal"
-                    th:text="#{com.cagst.swkroa.cancel}">
+                    th:text="#{common.cancel}">
               zzz Cancel
             </button>
           </div>

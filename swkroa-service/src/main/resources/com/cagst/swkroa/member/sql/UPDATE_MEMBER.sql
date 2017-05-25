@@ -1,5 +1,6 @@
 UPDATE member
    SET membership_id        = :membership_id
+      ,person_id            = :person_id
       ,company_name         = :company_name
       ,company_name_key     = :company_name_key
       ,owner_ident          = :owner_ident

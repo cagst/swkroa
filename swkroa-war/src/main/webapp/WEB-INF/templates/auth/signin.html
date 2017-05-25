@@ -23,24 +23,12 @@
 
     <div class="row divider-bottom" style="padding-bottom: 20px;">
       <div class="container-medium pull-right">
-        <p class="lead lead-sm" th:text="#{signin.message}">
-          zzz Sign in
-        </p>
+        <p class="lead lead-sm" th:text="#{signin.message}">zzz Sign in</p>
 
         <div class="text-danger"
              th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']}">
-          <strong th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
-          </strong>
+          <strong th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></strong>
         </div>
-
-        <!--
-        <div th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']}"
-             style="margin-top: 20px">
-          <a th:href="@{/auth/forgot}" th:text="#{signin.forgot.pwd}">
-            zzz Forgot
-          </a>
-        </div>
-        -->
       </div>
 
       <div class="container-medium divider-right" style="padding-right:20px;">
@@ -53,6 +41,7 @@
                  class="form-control input-block-level"
                  th:placeholder="#{signin.username.prompt}" autofocus="autofocus" />
         </div>
+
         <div class="form-group">
           <label for="password" class="form_label label-required"
                  th:text="#{signin.password.label}">
@@ -76,6 +65,13 @@
           zzz Register
         </a>
       </div>
+    </div>
+
+    <div class="row spacer-top">
+      <a th:text="#{signin.forgot.pwd}"
+         th:href="@{/auth/forgotPassword}">
+        zzz Forgot Password
+      </a>
     </div>
 
   </form>

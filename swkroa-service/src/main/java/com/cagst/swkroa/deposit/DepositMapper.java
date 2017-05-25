@@ -3,8 +3,8 @@ package com.cagst.swkroa.deposit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.user.User;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -29,7 +29,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   public Deposit mapRow(ResultSet rs, int rowNum) throws SQLException {
     Deposit deposit = new Deposit();
     deposit.setDepositUID(rs.getLong(DEPOSIT_ID));
-    deposit.setDepositDate(CGTDateTimeUtils.getDateTime(rs, DEPOSIT_DATE));
+    deposit.setDepositDate(DateTimeConverter.convert(rs.getTimestamp(DEPOSIT_DATE)));
     deposit.setDepositNumber(rs.getString(DEPOSIT_REF));
     deposit.setDepositAmount(rs.getBigDecimal(DEPOSIT_AMOUNT));
     deposit.setActive(rs.getBoolean(ACTIVE_IND));
@@ -51,7 +51,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   public static MapSqlParameterSource mapInsertStatement(final Deposit deposit, final User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
 
-    params.addValue(DEPOSIT_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(deposit.getDepositDate()));
+    params.addValue(DEPOSIT_DATE, DateTimeConverter.convert(deposit.getDepositDate()));
     params.addValue(DEPOSIT_REF, deposit.getDepositNumber());
     params.addValue(DEPOSIT_AMOUNT, deposit.getDepositAmount());
     params.addValue(ACTIVE_IND, deposit.isActive());
@@ -74,7 +74,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
   public static MapSqlParameterSource mapUpdateStatement(final Deposit deposit, final User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
 
-    params.addValue(DEPOSIT_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(deposit.getDepositDate()));
+    params.addValue(DEPOSIT_DATE, DateTimeConverter.convert(deposit.getDepositDate()));
     params.addValue(DEPOSIT_REF, deposit.getDepositNumber());
     params.addValue(DEPOSIT_AMOUNT, deposit.getDepositAmount());
     params.addValue(ACTIVE_IND, deposit.isActive());

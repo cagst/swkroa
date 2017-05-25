@@ -2,96 +2,54 @@ package com.cagst.swkroa.security;
 
 import java.io.Serializable;
 
+import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Representation of a Security Policy within the system.
  *
  * @author Craig Gaskill
  */
-public final class SecurityPolicy implements Serializable {
-  private static final long serialVersionUID = -5761738041576289806L;
+@AutoValue
+@JsonPropertyOrder({
+    "securityPolicyUID",
+    "name",
+    "signinAttempts",
+    "timeoutPeriodInMinutes",
+    "passwordExpiryInDays",
+    "accountLockedDays"
+})
+@JsonDeserialize(builder = AutoValue_SecurityPolicy.Builder.class)
+public abstract class SecurityPolicy implements Serializable {
+  private static final long serialVersionUID = 1L;
 
-  private long security_policy_id;
-  private String security_policy_name;
-  private int max_signin_attempts;
-  private int timeout_period_mins;
-  private int password_expiry_days;
-  private int account_locked_days;
+  @JsonProperty(value = "securityPolicyUID", required = true)
+  public abstract long getSecurityPolicyUID();
 
-  public long getSecurityPolicyUID() {
-    return security_policy_id;
-  }
+  @JsonProperty(value = "name", required = true)
+  public abstract String getSecurityPolicyName();
 
-  /* package */void setSecurityPolicyUID(final long securityPolicyUID) {
-    this.security_policy_id = securityPolicyUID;
-  }
+  @JsonProperty(value = "signinAttempts", required = true)
+  public abstract int getMaxSigninAttempts();
 
-  public String getSecurityPolicyName() {
-    return security_policy_name;
-  }
+  @JsonProperty(value = "timeoutPeriodInMinutes", required = true)
+  public abstract int getTimeoutPeriodInMinutes();
 
-  public void setSecurityPolicyName(final String securityPolicyName) {
-    this.security_policy_name = securityPolicyName;
-  }
+  @JsonProperty(value = "passwordExpiryInDays", required = true)
+  public abstract int getPasswordExpiryInDays();
 
-  public int getMaxSigninAttempts() {
-    return max_signin_attempts;
-  }
-
-  public void setMaxSigninAttempts(final int maxSigninAttempts) {
-    this.max_signin_attempts = maxSigninAttempts;
-  }
-
-  public int getTimeoutPeriodInMinutes() {
-    return timeout_period_mins;
-  }
-
-  public void setTimeoutPeriodInMinutes(final int timeoutPeriod) {
-    this.timeout_period_mins = timeoutPeriod;
-  }
-
-  public int getPasswordExpiryInDays() {
-    return password_expiry_days;
-  }
-
-  public void setPasswordExpiryInDays(final int passwordExpiryDays) {
-    this.password_expiry_days = passwordExpiryDays;
-  }
-
-  public int getAccountLockedDays() {
-    return account_locked_days;
-  }
-
-  public void setAccountLockedDays(final int accountLockedDays) {
-    this.account_locked_days = accountLockedDays;
-  }
-
-  @Override
-  public String toString() {
-    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    builder.append(security_policy_id);
-    builder.append(security_policy_name);
-    builder.append(max_signin_attempts);
-    builder.append(timeout_period_mins);
-    builder.append(password_expiry_days);
-    builder.append(account_locked_days);
-
-    return builder.build();
-
-  }
+  @JsonProperty(value = "accountLockedDays", required = true)
+  public abstract int getAccountLockedDays();
 
   @Override
   public int hashCode() {
-    return security_policy_name.hashCode();
+    return getSecurityPolicyName().hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {
@@ -106,6 +64,51 @@ public final class SecurityPolicy implements Serializable {
 
     SecurityPolicy rhs = (SecurityPolicy) obj;
 
-    return security_policy_name.equals(rhs.getSecurityPolicyName());
+    return getSecurityPolicyName().equals(rhs.getSecurityPolicyName());
+  }
+
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this, SwkroaToStringStyle.SWKROA_PREFIX_STYLE);
+    builder.append("name", getSecurityPolicyName());
+    builder.append("attempts", getMaxSigninAttempts());
+    builder.append("timeout", getTimeoutPeriodInMinutes());
+    builder.append("expiry", getPasswordExpiryInDays());
+    builder.append("locked", getAccountLockedDays());
+
+    return builder.build();
+  }
+
+  public static Builder builder() {
+    return new AutoValue_SecurityPolicy.Builder()
+        .setSecurityPolicyUID(0L)
+        .setSecurityPolicyName("Default")
+        .setMaxSigninAttempts(3)
+        .setTimeoutPeriodInMinutes(15)
+        .setPasswordExpiryInDays(90)
+        .setAccountLockedDays(7);
+  }
+
+  @AutoValue.Builder
+  public interface Builder {
+    @JsonProperty(value = "securityPolicyUID", required = true)
+    Builder setSecurityPolicyUID(long uid);
+
+    @JsonProperty(value = "name", required = true)
+    Builder setSecurityPolicyName(String name);
+
+    @JsonProperty(value = "signinAttempts", required = true)
+    Builder setMaxSigninAttempts(int attempts);
+
+    @JsonProperty(value = "timeoutPeriodInMinutes", required = true)
+    Builder setTimeoutPeriodInMinutes(int timeout);
+
+    @JsonProperty(value = "passwordExpiryInDays", required = true)
+    Builder setPasswordExpiryInDays(int expiry);
+
+    @JsonProperty(value = "accountLockedDays", required = true)
+    Builder setAccountLockedDays(int lockedDays);
+
+    SecurityPolicy build();
   }
 }

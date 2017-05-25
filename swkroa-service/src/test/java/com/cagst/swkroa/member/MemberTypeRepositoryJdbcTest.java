@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
-import com.cagst.common.db.StatementLoader;
+import com.cagst.swkroa.internal.StatementDialect;
 import com.cagst.swkroa.test.BaseTestRepository;
 import com.cagst.swkroa.user.User;
 import org.joda.time.DateTime;
@@ -38,7 +38,7 @@ public class MemberTypeRepositoryJdbcTest extends BaseTestRepository {
     user.setUserUID(1L);
 
     repo = new MemberTypeRepositoryJdbc(createTestDataSource());
-    repo.setStatementDialect(StatementLoader.HSQLDB_DIALECT);
+    repo.setStatementDialect(StatementDialect.HSQLDB);
   }
 
   /**

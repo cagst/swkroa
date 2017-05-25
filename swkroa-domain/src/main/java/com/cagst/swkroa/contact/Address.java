@@ -1,155 +1,100 @@
 package com.cagst.swkroa.contact;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.cagst.swkroa.utils.SwkroaToStringStyle;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.auto.value.AutoValue;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Represents an Address within the system.
  *
  * @author Craig Gaskill
  */
-public final class Address implements Serializable, Comparable<Address> {
-  private static final long serialVersionUID = 7499345705626185164L;
+@AutoValue
+@JsonPropertyOrder({
+    "addressUID",
+    "parentEntityUID",
+    "parentEntityName",
+    "addressTypeCD",
+    "addressLine1",
+    "addressLine2",
+    "addressLine3",
+    "city",
+    "state",
+    "postalCode",
+    "country",
+    "primary",
+    "active",
+    "addressUpdateCount"
+})
+@JsonDeserialize(builder = Address.Builder.class)
+public abstract class Address implements Serializable, Comparable<Address> {
+  private static final long serialVersionUID = 1L;
 
-  private long address_id;
-  private long parent_entity_id;
-  private String parent_entity_name;
-  private long address_type_cd;
-  private String address1;
-  private String address2;
-  private String address3;
-  private String city;
-  private String state_code;
-  private String postal_code;
-  private String country_code = "US";
-  private boolean primary_ind;
+  @JsonProperty(value = "addressUID", required = true)
+  public abstract long getAddressUID();
 
-  // meta-data
-  private boolean active_ind = true;
-  private long updt_cnt;
+  @JsonProperty(value = "parentEntityUID", required = true)
+  public abstract long getParentEntityUID();
 
-  public long getAddressUID() {
-    return address_id;
-  }
+  @Nullable
+  @JsonProperty(value = "parentEntityName", required = true)
+  public abstract String getParentEntityName();
 
-  /* package */void setAddressUID(final long uid) {
-    this.address_id = uid;
-  }
+  @JsonProperty(value = "addressTypeCD", required = true)
+  public abstract long getAddressTypeCD();
 
-  @JsonIgnore
-  public long getParentEntityUID() {
-    return parent_entity_id;
-  }
+  @JsonProperty(value = "addressLine1", required = true)
+  public abstract String getAddressLine1();
 
-  public void setParentEntityUID(final long uid) {
-    this.parent_entity_id = uid;
-  }
+  @Nullable
+  @JsonProperty(value = "addressLine2")
+  public abstract String getAddressLine2();
 
-  @JsonIgnore
-  public String getParentEntityName() {
-    return parent_entity_name;
-  }
+  @Nullable
+  @JsonProperty(value = "addressLine3")
+  public abstract String getAddressLine3();
 
-  public void setParentEntityName(final String name) {
-    this.parent_entity_name = name;
-  }
+  @JsonProperty(value = "city", required =  true)
+  public abstract String getCity();
 
-  public long getAddressTypeCD() {
-    return address_type_cd;
-  }
+  @Nullable
+  @JsonProperty(value = "state", required = true)
+  public abstract String getState();
 
-  public void setAddressTypeCD(final long address_type_cd) {
-    this.address_type_cd = address_type_cd;
-  }
+  @JsonProperty(value = "postalCode", required = true)
+  public abstract String getPostalCode();
 
-  public String getAddressLine1() {
-    return address1;
-  }
+  @JsonProperty(value = "country", required = true)
+  public abstract String getCountry();
 
-  public void setAddressLine1(final String address1) {
-    this.address1 = address1;
-  }
+  @JsonProperty(value = "primary", required = true)
+  public abstract boolean isPrimary();
 
-  public String getAddressLine2() {
-    return address2;
-  }
+  @JsonProperty(value = "active", required = true)
+  public abstract boolean isActive();
 
-  public void setAddressLine2(final String address2) {
-    this.address2 = address2;
-  }
-
-  public String getAddressLine3() {
-    return address3;
-  }
-
-  public void setAddressLine3(final String address3) {
-    this.address3 = address3;
-  }
-
-  public String getCity() {
-    return city;
-  }
-
-  public void setCity(final String city) {
-    this.city = city;
-  }
-
-  public String getState() {
-    return state_code;
-  }
-
-  public void setState(final String stateCode) {
-    this.state_code = stateCode;
-  }
-
-  public String getPostalCode() {
-    return postal_code;
-  }
-
-  public void setPostalCode(final String postalCode) {
-    this.postal_code = postalCode;
-  }
-
-  public String getCountry() {
-    return country_code;
-  }
-
-  public void setCountry(final String countryCode) {
-    this.country_code = countryCode;
-  }
-
-  public boolean isPrimary() {
-    return primary_ind;
-  }
-
-  public void setPrimary(boolean primary_ind) {
-    this.primary_ind = primary_ind;
-  }
-
-  public boolean isActive() {
-    return active_ind;
-  }
-
-  public void setActive(final boolean active) {
-    this.active_ind = active;
-  }
-
-  public long getAddressUpdateCount() {
-    return updt_cnt;
-  }
-
-  /* package */void setAddressUpdateCount(final long updateCount) {
-    this.updt_cnt = updateCount;
-  }
+  @JsonProperty(value = "addressUpdateCount", required = true)
+  public abstract long getAddressUpdateCount();
 
   @Override
   public int hashCode() {
-    return Objects.hash(address1, address2, address3, city, state_code, postal_code, country_code);
+    return Objects.hash(
+        getAddressLine1(),
+        getAddressLine2(),
+        getAddressLine3(),
+        getCity(),
+        getState(),
+        getPostalCode(),
+        getCountry());
   }
 
   @Override
@@ -166,25 +111,25 @@ public final class Address implements Serializable, Comparable<Address> {
 
     Address rhs = (Address) obj;
 
-    return Objects.equals(address1, rhs.getAddressLine1()) &&
-        Objects.equals(address2, rhs.getAddressLine2()) &&
-        Objects.equals(address3, rhs.getAddressLine3()) &&
-        Objects.equals(city, rhs.getCity()) &&
-        Objects.equals(state_code, rhs.getState()) &&
-        Objects.equals(postal_code, rhs.getPostalCode()) &&
-        Objects.equals(country_code, rhs.getCountry());
+    return Objects.equals(getAddressLine1(), rhs.getAddressLine1()) &&
+        Objects.equals(getAddressLine2(), rhs.getAddressLine2()) &&
+        Objects.equals(getAddressLine3(), rhs.getAddressLine3()) &&
+        Objects.equals(getCity(), rhs.getCity()) &&
+        Objects.equals(getState(), rhs.getState()) &&
+        Objects.equals(getPostalCode(), rhs.getPostalCode()) &&
+        Objects.equals(getCountry(), rhs.getCountry());
   }
 
   @Override
   public String toString() {
-    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    builder.append("line1", address1);
-    builder.append("line2", address2);
-    builder.append("line3", address3);
-    builder.append("city", city);
-    builder.append("state_code", state_code);
-    builder.append("zip", postal_code);
-    builder.append("country_code", country_code);
+    ToStringBuilder builder = new ToStringBuilder(this, SwkroaToStringStyle.SWKROA_PREFIX_STYLE);
+    builder.append("line1", getAddressLine1());
+    builder.append("line2", getAddressLine2());
+    builder.append("line3", getAddressLine3());
+    builder.append("city", getCity());
+    builder.append("state_code", getState());
+    builder.append("zip", getPostalCode());
+    builder.append("country_code", getCountry());
 
     return builder.build();
   }
@@ -192,14 +137,87 @@ public final class Address implements Serializable, Comparable<Address> {
   @Override
   public int compareTo(final Address rhs) {
     CompareToBuilder builder = new CompareToBuilder();
-    builder.append(address1, rhs.getAddressLine1());
-    builder.append(address2, rhs.getAddressLine2());
-    builder.append(address3, rhs.getAddressLine3());
-    builder.append(city, rhs.getCity());
-    builder.append(state_code, rhs.getState());
-    builder.append(postal_code, rhs.getPostalCode());
-    builder.append(country_code, rhs.getCountry());
+    builder.append(getAddressLine1(), rhs.getAddressLine1());
+    builder.append(getAddressLine2(), rhs.getAddressLine2());
+    builder.append(getAddressLine3(), rhs.getAddressLine3());
+    builder.append(getCity(), rhs.getCity());
+    builder.append(getState(), rhs.getState());
+    builder.append(getPostalCode(), rhs.getPostalCode());
+    builder.append(getCountry(), rhs.getCountry());
 
     return builder.build();
+  }
+
+  /**
+   * Returns a {@link Builder} with default values.
+   *
+   * @return A {@link Builder}
+   */
+  public static Builder builder() {
+    return new AutoValue_Address.Builder()
+        .setAddressUID(0L)
+        .setParentEntityUID(0L)
+        .setPrimary(false)
+        .setActive(true)
+        .setAddressUpdateCount(0L);
+  }
+
+  /**
+   * Returns a {@link Builder} based upon the values from the current {@link Address}.
+   *
+   * @return A new {@link Builder}.
+   */
+  public abstract Builder toBuilder();
+
+  @AutoValue.Builder
+  public abstract static class Builder {
+    @JsonProperty(value = "addressUID")
+    public abstract Builder setAddressUID(long uid);
+
+    @JsonProperty(value = "parentEntityUID")
+    public abstract Builder setParentEntityUID(long parentEntityUID);
+
+    @JsonProperty(value = "parentEntityName")
+    public abstract Builder setParentEntityName(String parentEntityName);
+
+    @JsonProperty(value = "addressTypeCD", required = true)
+    public abstract Builder setAddressTypeCD(long addressTypeCD);
+
+    @JsonProperty(value = "addressLine1", required = true)
+    public abstract Builder setAddressLine1(String addressLine1);
+
+    @JsonProperty(value = "addressLine2")
+    public abstract Builder setAddressLine2(String addressLine2);
+
+    @JsonProperty(value = "addressLine3")
+    public abstract Builder setAddressLine3(String addressLine3);
+
+    @JsonProperty(value = "city", required =  true)
+    public abstract Builder setCity(String city);
+
+    @JsonProperty(value = "state")
+    public abstract Builder setState(String state);
+
+    @JsonProperty(value = "postalCode", required = true)
+    public abstract Builder setPostalCode(String postalCode);
+
+    @JsonProperty(value = "country", required = true)
+    public abstract Builder setCountry(String country);
+
+    @JsonProperty(value = "primary")
+    public abstract Builder setPrimary(boolean primary);
+
+    @JsonProperty(value = "active")
+    public abstract Builder setActive(boolean active);
+
+    @JsonProperty(value = "addressUpdateCount")
+    public abstract Builder setAddressUpdateCount(long updateCount);
+
+    public abstract Address build();
+
+    @JsonCreator
+    private static Builder builder() {
+      return Address.builder();
+    }
   }
 }

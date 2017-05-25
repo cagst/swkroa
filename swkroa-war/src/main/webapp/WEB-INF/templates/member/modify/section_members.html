@@ -5,94 +5,94 @@
 
 <div th:fragment="sectionMembers" class="panel panel-default">
   <div class="panel-heading">
-    <span th:text="#{com.cagst.swkroa.membership.section.additional}">zzz Additional Members</span>
-    <span class="pull-right" data-ng-show="isPrimaryMember">
+    <span th:text="#{membership.section.additional}">zzz Additional Members</span>
+    <span class="pull-right" data-ng-show="ctrl.isPrimaryMember">
       <button type="button" class="btn btn-success btn-xs hover-reveal"
-              data-ng-click="addMember()">
+              data-ng-click="ctrl.addMember()">
         <i class="fa fa-plus"></i>
-        <span th:text="#{com.cagst.swkroa.membership.member.add}">zzz Add Member</span>
+        <span th:text="#{membership.member.add}">zzz Add Member</span>
       </button>
     </span>
   </div>
 
   <div class="panel-body">
-    <div data-ng-repeat="member in membership.members"
+    <div data-ng-repeat="member in ctrl.membership.members"
          data-ng-show="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true"
          data-ng-form="memberForm">
       <div class="row">
         <div class="divider-inner">
-          <span th:text="#{com.cagst.swkroa.membership.member.divider}">zzz MEMBERS</span>
+          <span th:text="#{membership.member.divider}">zzz MEMBERS</span>
           <span>{{$index}}</span>
           <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
-                  data-ng-show="isPrimaryMember"
-                  data-ng-click="removeMember(member)">
+                  data-ng-show="ctrl.isPrimaryMember"
+                  data-ng-click="ctrl.removeMember(member)">
             <i class="fa fa-trash-o"></i>
-            <span th:text="#{com.cagst.swkroa.membership.member.remove}">zzz Remove Member</span>
+            <span th:text="#{membership.member.remove}">zzz Remove Member</span>
           </button>
         </div>
         <div>
           <div class="col-xs-2">
-            <label for="title" th:text="#{com.cagst.swkroa.membership.member.title.label}">zzz Title</label>
+            <label for="title" th:text="#{membership.member.title.label}">zzz Title</label>
             <select id="title" class="form-control"
                     data-ng-model="member.person.titleCD"
-                    data-ng-options="title.codeValueUID as title.display for title in titles">
-              <option value="" th:text="#{com.cagst.swkroa.none}"></option>
+                    data-ng-options="title.codeValueUID as title.display for title in ctrl.titles">
+              <option value="" th:text="#{common.none}"></option>
             </select>
           </div>
           <div class="col-xs-2" data-ng-class="{'has-error': memberForm.firstName.$invalid}">
             <label for="firstName" class="control-label label-required"
-                   th:text="#{com.cagst.swkroa.membership.member.firstname.label}">
+                   th:text="#{membership.member.firstname.label}">
               zzz First Name
             </label>
             <input id="firstName" name="firstName" type="text" class="form-control" maxlength="50"
-                   th:placeholder="#{com.cagst.swkroa.membership.member.firstname.prompt}"
+                   th:placeholder="#{membership.member.firstname.prompt}"
                    data-ng-model="member.person.firstName"
                    data-ng-required="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true"
-                   data-ng-blur="generateOwnerId(member)" />
+                   data-ng-blur="ctrl.generateOwnerId(member)" />
           </div>
           <div class="col-xs-2">
-            <label th:text="#{com.cagst.swkroa.membership.member.middlename.label}">zzz Middle Name</label>
+            <label th:text="#{membership.member.middlename.label}">zzz Middle Name</label>
             <input type="text" class="form-control" maxlength="50"
-                   th:placeholder="#{com.cagst.swkroa.membership.member.middlename.prompt}"
+                   th:placeholder="#{membership.member.middlename.prompt}"
                    data-ng-model="member.person.middleName" />
           </div>
           <div class="col-xs-2" data-ng-class="{'has-error': memberForm.lastName.$invalid}">
             <label class="control-label label-required"
-                   th:text="#{com.cagst.swkroa.membership.member.lastname.label}">
+                   th:text="#{membership.member.lastname.label}">
               zzz Last Name
             </label>
             <input type="text" class="form-control" name="lastName" maxlength="50"
-                   th:placeholder="#{com.cagst.swkroa.membership.member.lastname.prompt}"
+                   th:placeholder="#{membership.member.lastname.prompt}"
                    data-ng-model="member.person.lastName"
                    data-ng-required="member.memberType.memberTypeMeaning == 'FAMILY_MEMBER' && member.active === true"
-                   data-ng-blur="generateOwnerId(member)" />
+                   data-ng-blur="ctrl.generateOwnerId(member)" />
           </div>
         </div>
       </div>
 
       <div class="row spacer-top">
         <div class="col-xs-2">
-          <label th:text="#{com.cagst.swkroa.membership.member.greeting.label}">zzz Greeting</label>
+          <label th:text="#{membership.member.greeting.label}">zzz Greeting</label>
           <input type="text" class="form-control" maxlength="25"
-                 th:placeholder="#{com.cagst.swkroa.membership.member.greeting.prompt}"
+                 th:placeholder="#{membership.member.greeting.prompt}"
                  data-ng-model="member.greeting" />
         </div>
         <div class="col-xs-2">
-          <label th:text="#{com.cagst.swkroa.membership.member.incareof.label}">zzz C/O</label>
+          <label th:text="#{membership.member.incareof.label}">zzz C/O</label>
           <input type="text" class="form-control" maxlength="50"
                  data-ng-model="member.inCareOf" />
         </div>
         <div class="col-xs-2">
           <div>&nbsp;</div>
           <input id="primaryMailNewsletter" type="checkbox" data-ng-model="member.mailNewsletter" />
-          <label for="primaryMailNewsletter" th:text="#{com.cagst.swkroa.membership.member.newsletter.mail}">
+          <label for="primaryMailNewsletter" th:text="#{membership.member.newsletter.mail}">
             zzz Mail
           </label>
         </div>
         <div class="col-xs-2">
           <div>&nbsp;</div>
           <input id="primaryEmailNewsletter" type="checkbox" data-ng-model="member.emailNewsletter" />
-          <label for="primaryEmailNewsletter" th:text="#{com.cagst.swkroa.membership.member.newsletter.email}">
+          <label for="primaryEmailNewsletter" th:text="#{membership.member.newsletter.email}">
             zzz Email
           </label>
         </div>
@@ -101,11 +101,11 @@
       <div class="row spacer-top">
         <div class="col-xs-4">
           <div class="divider-inner-row">
-            <span th:text="#{com.cagst.swkroa.membership.member.address.label}">zzz Addresses</span>
+            <span th:text="#{membership.member.address.label}">zzz Addresses</span>
             <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
-                    data-ng-click="contactService.addAddress(member)">
+                    data-ng-click="ctrl.addAddress(member)">
               <i class="fa fa-plus"></i>
-              <span th:text="#{com.cagst.swkroa.membership.member.address.add}">zzz Add Address</span>
+              <span th:text="#{membership.member.address.add}">zzz Add Address</span>
             </button>
           </div>
           <div data-ng-repeat="address in member.addresses"
@@ -115,7 +115,7 @@
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.addressType.$invalid}">
                 <select class="form-control" name="addressType"
-                        data-ng-options="type.codeValueUID as type.display for type in addressTypes"
+                        data-ng-options="type.codeValueUID as type.display for type in ctrl.addressTypes"
                         data-ng-model="address.addressTypeCD"
                         data-ng-required="address.active">
                 </select>
@@ -123,24 +123,24 @@
               <div class="col-xs-4">
                 <input id="primaryAddress{{$index}}" type="checkbox"
                        data-ng-model="address.primary"
-                       data-ng-change="contactService.ensurePrimaryAddress(member, address)" />
+                       data-ng-change="ctrl.ensurePrimaryAddress(member, address)" />
                 <label for="primaryAddress{{$index}}"
-                       th:text="#{com.cagst.swkroa.membership.member.address.primary}">
+                       th:text="#{membership.member.address.primary}">
                   zzz Primary Address
                 </label>
               </div>
               <div class="col-xs-4">
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
-                        data-ng-click="contactService.removeAddress(member, address)">
+                        data-ng-click="ctrl.removeAddress(member, address)">
                   <i class="fa fa-trash-o"></i>
-                  <span th:text="#{com.cagst.swkroa.membership.member.address.remove}">zzz Remove Address</span>
+                  <span th:text="#{membership.member.address.remove}">zzz Remove Address</span>
                 </button>
               </div>
             </div>
             <div class="row spacer-top">
               <div class="col-xs-12" data-ng-class="{'has-error': addressForm.address1.$invalid}">
                 <input type="text" class="form-control" name="address1" maxlength="50"
-                       th:placeholder="#{com.cagst.swkroa.membership.member.address.line1}"
+                       th:placeholder="#{membership.member.address.line1}"
                        data-ng-model="address.addressLine1"
                        data-ng-required="address.active" />
               </div>
@@ -148,36 +148,45 @@
             <div class="row spacer-top">
               <div class="col-xs-12">
                 <input type="text" class="form-control" maxlength="50"
-                       th:placeholder="#{com.cagst.swkroa.membership.member.address.line2}"
+                       th:placeholder="#{membership.member.address.line2}"
                        data-ng-model="address.addressLine2" />
               </div>
             </div>
             <div class="row spacer-top">
               <div class="col-xs-12">
                 <input type="text" class="form-control" maxlength="50"
-                       th:placeholder="#{com.cagst.swkroa.membership.member.address.line3}"
+                       th:placeholder="#{membership.member.address.line3}"
                        data-ng-model="address.addressLine3" />
               </div>
             </div>
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.city.$invalid}">
                 <input type="text" class="form-control" name="city" maxlength="50"
-                       th:placeholder="#{com.cagst.swkroa.membership.member.address.city}"
+                       th:placeholder="#{membership.member.address.city}"
                        data-ng-model="address.city"
                        data-ng-required="address.active" />
               </div>
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.state.$invalid}">
                 <select class="form-control" name="state"
                         data-ng-model="address.state"
-                        data-ng-options="state.code as state.name for state in states"
-                        data-ng-required="address.active">
+                        data-ng-options="state.stateCode as state.stateName for state in ctrl.states | filter:{countryCode:address.country}"
+                        data-ng-required="address.active && address.country != 'ES'">
                 </select>
               </div>
               <div class="col-xs-4" data-ng-class="{'has-error': addressForm.postalCode.$invalid}">
                 <input type="text" class="form-control" name="postalCode" maxlength="15"
-                       th:placeholder="#{com.cagst.swkroa.membership.member.address.zip}"
+                       th:placeholder="#{membership.member.address.zip}"
                        data-ng-model="address.postalCode"
                        data-ng-required="address.active" />
+              </div>
+            </div>
+            <div class="row spacer-top">
+              <div class="col-xs-12" data-ng-class="{'has-error': addressForm.country.$invalid}">
+                <select class="form-control" name="country"
+                        data-ng-model="address.country"
+                        data-ng-options="country.countryCode as country.countryName for country in ctrl.countries"
+                        data-ng-required="address.country">
+                </select>
               </div>
             </div>
           </div>
@@ -185,11 +194,11 @@
 
         <div class="col-xs-4">
           <div class="divider-inner-row">
-            <span th:text="#{com.cagst.swkroa.membership.member.phone.label}">zzz Phone Numbers</span>
+            <span th:text="#{membership.member.phone.label}">zzz Phone Numbers</span>
             <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
-                    data-ng-click="contactService.addPhone(member)">
+                    data-ng-click="ctrl.addPhone(member)">
               <i class="fa fa-plus"></i>
-              <span th:text="#{com.cagst.swkroa.membership.member.phone.add}">zzz Add Phone</span>
+              <span th:text="#{membership.member.phone.add}">zzz Add Phone</span>
             </button>
           </div>
           <div data-ng-repeat="phone in member.phoneNumbers"
@@ -199,7 +208,7 @@
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': phoneForm.phoneType.$invalid}">
                 <select class="form-control" name="phoneType"
-                        data-ng-options="type.codeValueUID as type.display for type in phoneTypes"
+                        data-ng-options="type.codeValueUID as type.display for type in ctrl.phoneTypes"
                         data-ng-model="phone.phoneTypeCD"
                         data-ng-required="phone.active">
                 </select>
@@ -207,16 +216,16 @@
               <div class="col-xs-4">
                 <input id="primaryPhone{{$index}}" type="checkbox"
                        data-ng-model="phone.primary"
-                       data-ng-change="contactService.ensurePrimaryPhone(member, phone)" />
-                <label for="primaryPhone{{$index}}" th:text="#{com.cagst.swkroa.membership.member.phone.primary}">
+                       data-ng-change="ctrl.ensurePrimaryPhone(member, phone)" />
+                <label for="primaryPhone{{$index}}" th:text="#{membership.member.phone.primary}">
                   zzz Primary Phone
                 </label>
               </div>
               <div class="col-xs-4">
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
-                        data-ng-click="contactService.removePhone(member, phone)">
+                        data-ng-click="ctrl.removePhone(member, phone)">
                   <i class="fa fa-trash-o"></i>
-                  <span th:text="#{com.cagst.swkroa.membership.member.phone.remove}">zzz Remove Phone</span>
+                  <span th:text="#{membership.member.phone.remove}">zzz Remove Phone</span>
                 </button>
               </div>
             </div>
@@ -229,7 +238,7 @@
               </div>
               <div class="col-xs-4">
                 <input type="text" class="form-control" maxlength="10"
-                       th:placeholder="#{com.cagst.swkroa.membership.member.extension.label}"
+                       th:placeholder="#{membership.member.extension.label}"
                        data-ng-model="phone.phoneExtension" />
               </div>
             </div>
@@ -238,11 +247,11 @@
 
         <div class="col-xs-4">
           <div class="divider-inner-row">
-            <span th:text="#{com.cagst.swkroa.membership.member.email.label}">zzz Email Addresses</span>
+            <span th:text="#{membership.member.email.label}">zzz Email Addresses</span>
             <button type="button" class="btn btn-success btn-xs hover-reveal pull-right"
-                    data-ng-click="contactService.addEmail(member)">
+                    data-ng-click="ctrl.addEmail(member)">
               <i class="fa fa-plus"></i>
-              <span th:text="#{com.cagst.swkroa.membership.member.email.add}">zzz Add Email</span>
+              <span th:text="#{membership.member.email.add}">zzz Add Email</span>
             </button>
           </div>
           <div data-ng-repeat="email in member.emailAddresses"
@@ -252,7 +261,7 @@
             <div class="row spacer-top">
               <div class="col-xs-4" data-ng-class="{'has-error': emailForm.emailType.$invalid}">
                 <select class="form-control" name="emailType"
-                        data-ng-options="type.codeValueUID as type.display for type in emailTypes"
+                        data-ng-options="type.codeValueUID as type.display for type in ctrl.emailTypes"
                         data-ng-model="email.emailTypeCD"
                         data-ng-required="email.active">
                 </select>
@@ -260,8 +269,8 @@
               <div class="col-xs-4">
                 <input id="primaryEmail{{$index}}" type="checkbox"
                        data-ng-model="email.primary"
-                       data-ng-change="contactService.ensurePrimaryEmail(member, email)" />
-                <label for="primaryEmail{{$index}}" th:text="#{com.cagst.swkroa.membership.member.email.primary}">
+                       data-ng-change="ctrl.ensurePrimaryEmail(member, email)" />
+                <label for="primaryEmail{{$index}}" th:text="#{membership.member.email.primary}">
                   zzz Primary Email
                 </label>
               </div>
@@ -269,14 +278,14 @@
                 <button type="button" class="btn btn-danger btn-xs hover-reveal pull-right"
                         data-ng-click="contactService.removeEmail(member, email)">
                   <i class="fa fa-trash-o"></i>
-                  <span th:text="#{com.cagst.swkroa.membership.member.email.remove}">zzz Remove Email</span>
+                  <span th:text="#{membership.member.email.remove}">zzz Remove Email</span>
                 </button>
               </div>
             </div>
             <div class="row spacer-top">
               <div class="col-xs-12" data-ng-class="{'has-error': emailForm.emailAddress.$invalid}">
                 <input type="email" class="form-control" name="emailAddress" maxlength="256"
-                       th:placeholder="#{com.cagst.swkroa.membership.member.email.prompt}"
+                       th:placeholder="#{membership.member.email.prompt}"
                        data-ng-model="email.emailAddress"
                        data-ng-required="email.active" />
               </div>

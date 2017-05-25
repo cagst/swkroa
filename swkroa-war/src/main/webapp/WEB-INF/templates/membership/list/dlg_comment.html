@@ -10,55 +10,54 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title"
-              th:text="#{com.cagst.swkroa.membership.comment.update}"
-              data-ng-show="commentIdx > -1">
-            zzz Modify comment
+              th:text="#{membership.comment.update}"
+              data-ng-show="ctrl.commentIdx > -1">
+            z_Modify
           </h4>
           <h4 class="modal-title"
-              th:text="#{com.cagst.swkroa.membership.comment.create}"
-              data-ng-show="commentIdx == -1">
-            zzz Create comment
+              th:text="#{membership.comment.create}"
+              data-ng-show="ctrl.commentIdx == -1">
+            z_Create
           </h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="commentDate" class="form-label" th:text="#{com.cagst.swkroa.membership.comment.modify.date}">
-              zzz Date
-            </label>
+            <label for="commentDate" class="form-label" th:text="#{membership.comment.modify.date}">z_Date</label>
 
             <div class="input-group">
               <input id="commentDate" name="commentDate" type="text" class="form-control"
                      data-uib-datepicker-popup="MM/dd/yyyy"
-                     data-is-open="opened"
-                     data-show-button-bar="false"
-                     data-show-weeks="false"
-                     data-ng-model="comment.commentDate" />
+                     data-is-open="ctrl.isOpen.commentDate"
+                     data-ng-click="ctrl.openCommentDate($event)"
+                     data-ng-model="ctrl.comment.commentDate"
+                     data-ng-required="true" />
               <span class="input-group-btn">
-                <button type="button" class="btn btn-default" data-ng-click="open($event)">
+                <button type="button" class="btn btn-default" data-ng-click="ctrl.openCommentDate($event)">
                   <i class="fa fa-calendar"></i>
                 </button>
               </span>
             </div>
           </div>
-          <label for="commentText" th:text="#{com.cagst.swkroa.membership.comment.modify.message}">zzz Comment</label>
-          <textarea id="commentText" name="commentText" class="form-control" rows="3" data-ng-model="comment.commentText" autofocus></textarea>
+          <label for="commentText" th:text="#{membership.comment.modify.message}">z_Comment</label>
+          <textarea id="commentText" name="commentText" class="form-control" rows="3"
+                    data-ng-model="ctrl.comment.commentText" autofocus></textarea>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success"
-                  data-ng-click="saveComment()"
-                  data-ng-show="commentIdx > -1"
-                  th:text="#{com.cagst.swkroa.update}">
+                  data-ng-click="ctrl.saveComment()"
+                  data-ng-show="ctrl.commentIdx > -1"
+                  th:text="#{common.update}">
             zzz Update
           </button>
           <button type="button" class="btn btn-success"
-                  data-ng-click="saveComment()"
-                  data-ng-show="commentIdx == -1"
-                  th:text="#{com.cagst.swkroa.create}">
+                  data-ng-click="ctrl.saveComment()"
+                  data-ng-show="ctrl.commentIdx == -1"
+                  th:text="#{common.create}">
             zzz Create
           </button>
           <button type="button" class="btn btn-default"
                   data-dismiss="modal"
-                  th:text="#{com.cagst.swkroa.cancel}">
+                  th:text="#{common.cancel}">
             zzz Cancel
           </button>
         </div>
@@ -73,26 +72,24 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" th:text="#{com.cagst.swkroa.membership.comment.delete.title}">
-            zzz Please confirm
-          </h4>
+          <h4 class="modal-title" th:text="#{membership.comment.delete.title}">z_DeleteComment</h4>
         </div>
         <div class="modal-body">
-          <p th:text="#{com.cagst.swkroa.membership.comment.delete.message}">zzz Delete this?</p>
+          <p th:text="#{membership.comment.delete.message}">z_Delete?</p>
           <blockquote>
-            <p class="comment-text">{{comment.commentText}}</p>
+            <p class="comment-text">{{ctrl.comment.commentText}}</p>
           </blockquote>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger"
-                  data-ng-click="removeComment()"
-                  th:text="#{com.cagst.swkroa.delete}">
-            zzz Delete
+                  data-ng-click="ctrl.removeComment()"
+                  th:text="#{common.delete}">
+            z_Delete
           </button>
           <button type="button" class="btn btn-primary"
                   data-dismiss="modal"
-                  th:text="#{com.cagst.swkroa.keep}">
-            zzz Keep
+                  th:text="#{common.keep}">
+            z_Keep
           </button>
         </div>
       </div>

@@ -15,16 +15,6 @@
   <packaging>war</packaging>
 
   <dependencies>
-    <!-- CAGST Dependencies -->
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-common-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.cagst</groupId>
-      <artifactId>cagst-common-service</artifactId>
-    </dependency>
-
     <!-- SWKROA Dependencies -->
     <dependency>
       <groupId>com.cagst.swkroa</groupId>
@@ -223,6 +213,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- JavaX EMail Dependencies -->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mailapi</artifactId>
+    </dependency>
+
     <!-- StageMonitor Framework
     <dependency>
       <groupId>org.stagemonitor</groupId>
@@ -267,6 +263,19 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+
+    <plugins>
+      <!-- Maven War Configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+
+    </plugins>
 
   </build>
 

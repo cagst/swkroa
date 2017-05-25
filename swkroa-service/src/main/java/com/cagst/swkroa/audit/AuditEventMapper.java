@@ -3,7 +3,7 @@ package com.cagst.swkroa.audit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cagst.common.util.CGTDateTimeUtils;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,7 +27,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     String action = rs.getString(AUDIT_ACTION);
     String instigator = rs.getString(AUDIT_INSTIGATOR);
     String message = rs.getString(AUDIT_MESSAGE);
-    DateTime createDtTm = CGTDateTimeUtils.getUTCDateTime(rs, CREATE_DT_TM);
+    DateTime createDtTm = DateTimeConverter.convert(rs.getTimestamp(CREATE_DT_TM));
 
     return new AuditEvent(eventType, action, instigator, message, createDtTm);
   }

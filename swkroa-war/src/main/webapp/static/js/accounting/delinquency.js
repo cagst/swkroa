@@ -5,69 +5,100 @@
  *
  * Author:  Craig Gaskill
  */
+(function(window, angular, $) {
+  'use strict';
 
-swkroaApp.controller('delinquencyController', ['$scope', 'codesetService', 'membershipService',
-    function($scope, codesetService, membershipService) {
+  angular.module('swkroaApp').controller('DelinquencyController', DelinquencyController);
 
-  $scope.delinquencies = [];
+  DelinquencyController.$inject = ['CodeSetService', 'MembershipService'];
 
-  $scope.getDelinquencies = function() {
-    membershipService.getDelinquentMemberships().success(function(data) {
-      $scope.delinquencies = data;
-      $scope.checkAll = true;
+  function DelinquencyController(codeSetService, membershipService) {
+    var vm = this;
 
-      for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
-          $scope.delinquencies[idx].selected = true;
+    vm.delinquencies = [];
+
+    /********************************************
+     * Define binding methods
+     ********************************************/
+
+    vm.getDelinquencies = getDelinquencies;
+    vm.toggleCheckAll = toggleCheckAll;
+    vm.canExport = canExport;
+    vm.canClose = canClose;
+    vm.closeMemberships = closeMemberships;
+
+    activate();
+
+    /********************************************
+     * Implement Methods
+     ********************************************/
+
+    function activate() {
+      codeSetService.getCodeValuesForCodeSet('CLOSE_REASONS').then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.closeReasons = response.data;
+        }
+      });
+
+      vm.getDelinquencies();
+    }
+
+    function getDelinquencies() {
+      membershipService.getDelinquentMemberships().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.delinquencies = response.data;
+          vm.checkAll = true;
+
+          for (var idx = 0; idx < vm.delinquencies.length; idx++) {
+            vm.delinquencies[idx].selected = true;
+          }
+        }
+      });
+    }
+
+    function toggleCheckAll() {
+      for (var idx = 0; idx < vm.delinquencies.length; idx++) {
+        vm.delinquencies[idx].selected = vm.checkAll;
       }
-    });
-  };
-
-  $scope.toggleCheckAll = function() {
-    for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
-        $scope.delinquencies[idx].selected = $scope.checkAll;
     }
-  };
 
-  $scope.canExport = function() {
-    var membershipsSelected = false;
-    for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
-      if ($scope.delinquencies[idx].selected) {
-        membershipsSelected = true;
+    function canExport() {
+      var membershipsSelected = false;
+      for (var idx = 0; idx < vm.delinquencies.length; idx++) {
+        if (vm.delinquencies[idx].selected) {
+          membershipsSelected = true;
+        }
+      }
+
+      return membershipsSelected;
+    }
+
+    function canClose() {
+      if (vm.closeReason) {
+        return (vm.canExport() && (vm.closeReason.codeValueUID > 0));
+      } else {
+        return false;
       }
     }
 
-    return membershipsSelected;
-  };
-
-  $scope.canClose = function() {
-    if ($scope.closeReason) {
-      return ($scope.canExport() && ($scope.closeReason.codeValueUID > 0));
-    } else {
-      return false;
-    }
-  };
-
-  $scope.closeMemberships = function() {
-    var memberships = [];
-    for (var idx = 0; idx < $scope.delinquencies.length; idx++) {
-      if ($scope.delinquencies[idx].selected) {
-        memberships.push($scope.delinquencies[idx].membershipUID);
+    function closeMemberships() {
+      var memberships = [];
+      for (var idx = 0; idx < vm.delinquencies.length; idx++) {
+        if (vm.delinquencies[idx].selected) {
+          memberships.push(vm.delinquencies[idx].membershipUID);
+        }
       }
+
+      membershipService.closeMemberships(memberships, vm.closeReason, vm.closeText).then(function(response) {
+        if (responseSuccessful(response)) {
+          $('#closeMembershipsDlg').modal('hide');
+          vm.getDelinquencies();
+        }
+      });
     }
+  }
 
-    membershipService.closeMemberships(memberships, $scope.closeReason, $scope.closeText).success(function(data) {
-      $('#closeMembershipsDlg').modal('hide');
-      $scope.getDelinquencies();
-    });
-  };
-
-  codesetService.getCodeValuesForCodeSet('CLOSE_REASONS').success(function(data) {
-    $scope.closeReasons = data;
-  });
-
-  $scope.getDelinquencies();
-
-}]);
+})(window, window.angular, window.jQuery);
 
 var generateMembershipReminderLetters = function(reportyType, altAction) {
   $('#reminderLetterDlg').modal('hide');

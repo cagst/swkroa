@@ -1,6 +1,16 @@
 INSERT INTO audit_log (audit_log_id, audit_event_type, audit_action, audit_instigator, create_dt_tm) VALUES (1, 0, 'SIGNIN_ATTEMP', 'cgaskill', CURRENT_TIMESTAMP);
 INSERT INTO audit_log (audit_log_id, audit_event_type, audit_action, audit_instigator, create_dt_tm) VALUES (2, 0, 'SIGNIN_SUCCESSFUL', 'cgaskill', CURRENT_TIMESTAMP);
 
+INSERT INTO country (country_code, country_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'United States', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO country (country_code, country_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('CA', 'Canada', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'CO', 'Colorado', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'KS', 'Kansas', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'MO', 'Missouri', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('US', 'NE', 'Nebraska', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('CA', 'AB', 'Alberta', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+INSERT INTO state (country_code, state_code, state_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('CA', 'BC', 'British Columbia', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
+
 INSERT INTO county (state_code, county_code, county_name, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('KS', 'JO', 'Johnson', 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO county (state_code, county_code, county_name, swkroa_county_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('KS', 'SV', 'Stevents', 1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
 INSERT INTO county (state_code, county_code, county_name, swkroa_county_ind, create_id, create_dt_tm, updt_id, updt_dt_tm) VALUES ('KS', 'GT', 'Grant', 1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP);
@@ -156,3 +166,11 @@ INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, par
 INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (5, 4, 'SUBMITTED', 3, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (6, 4, 'SUBMITTED', 4, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
 INSERT INTO job_detail (job_detail_id, job_id, job_status, parent_entity_id, parent_entity_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES (7, 4, 'SUBMITTED', 5, 'MEMBERSHIP', CURRENT_TIMESTAMP, 0, CURRENT_TIMESTAMP, 0);
+
+INSERT INTO system (system_key, system_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES ('mail.host', 'Mail Host', CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1);
+INSERT INTO system (system_key, system_name, system_value, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES ('mail.port', 'Mail Port', '25', CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1);
+INSERT INTO system (system_key, system_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES ('mail.username', 'Mail Username', CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1);
+INSERT INTO system (system_key, system_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES ('mail.password', 'Mail Password', CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1);
+INSERT INTO system (system_key, system_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES ('mail.auth', 'Mail Authorization', CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1);
+INSERT INTO system (system_key, system_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES ('mail.tls', 'Mail TLS', CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1);
+INSERT INTO system (system_key, system_name, create_dt_tm, create_id, updt_dt_tm, updt_id) VALUES ('mail.timeout', 'Mail Timeout', CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1);

@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 
-import com.cagst.common.util.CGTDateTimeUtils;
 import com.cagst.swkroa.person.BasePersonMapper;
+import com.cagst.swkroa.util.DateTimeConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
@@ -71,18 +71,18 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
       }
     }
 
-    user.setLastSigninDate(CGTDateTimeUtils.getDateTime(rs, LAST_SIGNIN_DATE));
+    user.setLastSigninDate(DateTimeConverter.convert(rs.getTimestamp(LAST_SIGNIN_DATE)));
     user.setLastSigninIp(rs.getString(LAST_SIGNIN_IP));
-    user.setAccountedLockedDate(CGTDateTimeUtils.getDateTime(rs, ACCOUNT_LOCKED_DATE));
-    user.setAccountExpiredDate(CGTDateTimeUtils.getDateTime(rs, ACCOUNT_EXPIRED_DATE));
-    user.setPasswordChangedDate(CGTDateTimeUtils.getDateTime(rs, PASSWORD_CHANGED_DATE));
+    user.setAccountedLockedDate(DateTimeConverter.convert(rs.getTimestamp(ACCOUNT_LOCKED_DATE)));
+    user.setAccountExpiredDate(DateTimeConverter.convert(rs.getTimestamp(ACCOUNT_EXPIRED_DATE)));
+    user.setPasswordChangedDate(DateTimeConverter.convert(rs.getTimestamp(PASSWORD_CHANGED_DATE)));
     user.setUserType(UserType.valueOf(rs.getString(USER_TYPE)));
 
     // meta-data
     user.setActive(rs.getBoolean(ACTIVE_IND));
     user.setUserUpdateCount(rs.getLong(USER_UPDT_CNT));
     user.setPersonUpdateCount(rs.getLong(PERSON_UPDT_CNT));
-    user.setCreateDateTime(CGTDateTimeUtils.getUTCDateTime(rs, USER_CREATE_DT_TM));
+    user.setCreateDateTime(DateTimeConverter.convert(rs.getTimestamp(USER_CREATE_DT_TM)));
 
     return user;
   }
@@ -102,10 +102,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     params.addValue(PERSON_ID, newUser.getPersonUID());
     params.addValue(USERNAME, newUser.getUsername());
     params.addValue(PASSWORD, newUser.getPassword());
-    params.addValue(PASSWORD_CHANGED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(newUser.getPasswordChangedDate()));
+    params.addValue(PASSWORD_CHANGED_DATE, DateTimeConverter.convert(newUser.getPasswordChangedDate()));
     params.addValue(TEMPORARY_PWD_IND, newUser.isPasswordTemporary());
-    params.addValue(ACCOUNT_LOCKED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(newUser.getAccountLockedDate()));
-    params.addValue(ACCOUNT_EXPIRED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(newUser.getAccountExpiredDate()));
+    params.addValue(ACCOUNT_LOCKED_DATE, DateTimeConverter.convert(newUser.getAccountLockedDate()));
+    params.addValue(ACCOUNT_EXPIRED_DATE, DateTimeConverter.convert(newUser.getAccountExpiredDate()));
     params.addValue(USER_TYPE, newUser.getUserType().name());
     params.addValue(ACTIVE_IND, newUser.isActive());
     params.addValue(CREATE_ID, user.getUserUID());
@@ -128,8 +128,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue(USERNAME, saveUser.getUsername());
     params.addValue(TEMPORARY_PWD_IND, saveUser.isPasswordTemporary());
-    params.addValue(ACCOUNT_LOCKED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(saveUser.getAccountLockedDate()));
-    params.addValue(ACCOUNT_EXPIRED_DATE, CGTDateTimeUtils.convertDateTimeToTimestamp(saveUser.getAccountExpiredDate()));
+    params.addValue(ACCOUNT_LOCKED_DATE, DateTimeConverter.convert(saveUser.getAccountLockedDate()));
+    params.addValue(ACCOUNT_EXPIRED_DATE, DateTimeConverter.convert(saveUser.getAccountExpiredDate()));
     params.addValue(USER_TYPE, saveUser.getUserType().name());
     params.addValue(ACTIVE_IND, saveUser.isActive());
     params.addValue(UPDT_ID, user.getUserUID());

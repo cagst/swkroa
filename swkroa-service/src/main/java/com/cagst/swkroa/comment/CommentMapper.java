@@ -29,19 +29,15 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
   @Override
   public Comment mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-    Comment comment = new Comment();
-
-    comment.setCommentUID(rs.getLong(COMMENT_ID));
-    comment.setParentEntityUID(rs.getLong(PARENT_ENTITY_ID));
-    comment.setParentEntityName(rs.getString(PARENT_ENTITY_NAME));
-    comment.setCommentDate(new DateTime(rs.getTimestamp(COMMENT_DT)));
-    comment.setCommentText(rs.getString(COMMENT_TXT));
-
-    // meta-data
-    comment.setCommentUpdateCount(rs.getLong(COMMENT_UPDT_CNT));
-    comment.setActive(rs.getBoolean(ACTIVE_IND));
-
-    return comment;
+    return Comment.builder()
+        .setCommentUID(rs.getLong(COMMENT_ID))
+        .setParentEntityUID(rs.getLong(PARENT_ENTITY_ID))
+        .setParentEntityName(rs.getString(PARENT_ENTITY_NAME))
+        .setCommentDate(new DateTime(rs.getTimestamp(COMMENT_DT)))
+        .setCommentText(rs.getString(COMMENT_TXT))
+        .setCommentUpdateCount(rs.getLong(COMMENT_UPDT_CNT))
+        .setActive(rs.getBoolean(ACTIVE_IND))
+        .build();
   }
 
   /**

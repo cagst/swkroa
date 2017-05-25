@@ -30,23 +30,23 @@ public interface TransactionRepository {
    * @throws IncorrectResultSizeDataAccessException
    *     if more than 1 {@link Transaction} was found.
    */
-  Transaction getTransactionByUID(final long uid) throws IncorrectResultSizeDataAccessException;
+  Transaction getTransactionByUID(long uid) throws IncorrectResultSizeDataAccessException;
 
   /**
    * Retrieves a {@link List} of {@link Transaction Transactions} defined withing the system for the specified
    * {@link Membership}.
    *
-   * @param membership
-   *     The {@link Membership} to retrieve transactions for.
+   * @param membershipUID
+   *     A {@code long} that uniquely identifies the Membership to retrieve transactions for.
    *
    * @return A {@link List} of {@link Transaction Transactions} associated with the specified Membership.
    */
-  List<Transaction> getTransactionsForMembership(final Membership membership);
+  List<Transaction> getTransactionsForMembership(long membershipUID);
 
   /**
    * @return The number of {@link TransactionGroup} defined in the system for the specified {@link TransactionType}.
    */
-  long getCountOfTransactionGroupsForType(final TransactionType type);
+  long getCountOfTransactionGroupsForType(TransactionType type);
 
   /**
    * Retrieves a {@link List} of {@link TransactionGroup TransactionGroups} representing a group of transactions
@@ -55,13 +55,13 @@ public interface TransactionRepository {
    * @param type
    *      The {@link TransactionType} to retrieve {@link TransactionGroup TransactionGroups} for.
    * @param start
-   *      An {@link int} that defines the first element to retrieve.
+   *      An {@code int} that defines the first element to retrieve.
    * @param limit
-   *      An {@link int} that defines the number of elements to retrieve.
+   *      An {@code int} that defines the number of elements to retrieve.
    *
    * @return A {@link List} of {@link TransactionGroup} representing a group of invoices created in the system.
    */
-  List<TransactionGroup> getTransactionGroupsForType(final TransactionType type, final int start, final int limit);
+  List<TransactionGroup> getTransactionGroupsForType(TransactionType type, int start, int limit);
 
   /**
    * Retrieves a {@link List} of {@link DepositTransaction Transactions} defined within the system for the specified
@@ -72,7 +72,7 @@ public interface TransactionRepository {
    *
    * @return A {@link List} of {@link DepositTransaction Transactions} associated with the specified Deposit.
    */
-  List<DepositTransaction> getTransactionsForDeposit(final Deposit deposit);
+  List<DepositTransaction> getTransactionsForDeposit(Deposit deposit);
 
   /**
    * Retrieves a {@link List} of {@link Transaction Transactions} that have not been paid in full.
@@ -98,5 +98,5 @@ public interface TransactionRepository {
    * @throws DataAccessException
    *     if the query fails
    */
-  Transaction saveTransaction(final Transaction transaction, final User user) throws DataAccessException;
+  Transaction saveTransaction(Transaction transaction, User user) throws DataAccessException;
 }

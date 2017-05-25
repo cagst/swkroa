@@ -4,56 +4,96 @@
  * Author: Craig Gaskill
  */
 
-swkroaApp.run(function(editableOptions) {
-  editableOptions.theme = 'bs3';
-});
+(function(window, angular, $) {
+  'use strict';
 
-swkroaApp.controller('membertypeController', ['$scope', 'memberTypeService', '$http', function($scope, memberTypeService, $http) {
-  $scope.beginDateIsOpen = false;
-
-  memberTypeService.getMemberTypes().success(function(data) {
-    $scope.types = data;
+  angular.module('swkroaApp').run(function(editableOptions) {
+    editableOptions.theme = 'bs3';
   });
 
-  $scope.openBeginDate = function($event) {
-    $scope.beginDateIsOpen = true;
-  };
+  angular.module('swkroaApp').controller('MemberTypeController', MemberTypeController);
 
-  $scope.getType = function(type) {
-    $scope.selected = type;
+  MemberTypeController.$inject = ['$http', 'MemberTypeService'];
 
-    memberTypeService.getAllMemberTypesByMemberTypeId(type.memberTypeUID).success(function(data) {
-      $scope.allMemberTypes = data;
-    });
-  };
+  function MemberTypeController($http, memberTypeService) {
+    var vm = this;
 
-  $scope.saveMemberType = function(memberType) {
-    $http.post('/api/membertypes/', memberType).then(function(response) {
-      if (response.status == 201) {
-        $scope.selected = response.data;
-        $scope.types.push(response.data);
-      } else if (response.status == 200) {
-        $scope.selected = response.data;
-        for (idx = 0; idx < $scope.types.length; idx++) {
-          if ($scope.types[idx].memberTypeUID == memberType.memberTypeUID) {
-            $scope.types[idx] = response.data;
-            break;
+    vm.selected = null;
+    vm.allMemberTypes = null;
+    vm.memberRate = null;
+
+    vm.isOpen = {
+      beginDate: false
+    };
+
+    /********************************************
+     * Define binding methods
+     ********************************************/
+
+    vm.getType = getType;
+    vm.openBeginDate = openBeginDate;
+    vm.saveMemberType = saveMemberType;
+    vm.newRate = newRate;
+    vm.saveNewRate = saveNewRate;
+
+    activate();
+
+    /********************************************
+     * Implement Methods
+     ********************************************/
+
+    function getType(type) {
+      vm.selected = type;
+
+      memberTypeService.getAllMemberTypesByMemberTypeId(type.memberTypeUID).success(function(data) {
+        vm.allMemberTypes = data;
+      });
+    }
+
+    function openBeginDate($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      vm.isOpen.beginDate = true;
+    }
+
+    function saveMemberType(memberType) {
+      $http.post('/api/membertypes/', memberType).then(function(response) {
+        if (response.status === 201) {
+          vm.selected = response.data;
+          vm.types.push(response.data);
+        } else if (response.status === 200) {
+          vm.selected = response.data;
+          for (var idx = 0; idx < vm.types.length; idx++) {
+            if (vm.types[idx].memberTypeUID === memberType.memberTypeUID) {
+              vm.types[idx] = response.data;
+              break;
+            }
           }
         }
-      }
-    });
-  };
+      });
+    }
 
-  $scope.newRate = function() {
-    $scope.memberRate = {active: true, beginEffectiveDate: new Date(), duesAmount: $scope.selected.duesAmount};
-  };
+    function newRate() {
+      vm.memberRate = {active: true, beginEffectiveDate: new Date(), duesAmount: vm.selected.duesAmount};
+    }
 
-  $scope.saveNewRate = function() {
-    $http.put('/api/membertypes/' + $scope.selected.previousMemberTypeUID, $scope.memberRate).success(function(data) {
-      $scope.getType($scope.selected);
-    });
+    function saveNewRate() {
+      $http.put('/api/membertypes/' + vm.selected.previousMemberTypeUID, vm.memberRate).then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.getType(vm.selected);
+        }
+      });
 
-    $('#changeRateDlg').modal('hide');
+      $('#changeRateDlg').modal('hide');
+    }
+
+    function activate() {
+      memberTypeService.getMemberTypes().then(function(response) {
+        if (responseSuccessful(response)) {
+          vm.types = response.data;
+        }
+      });
+    }
   }
-
-}]);
+})(window, window.angular, window.jQuery);

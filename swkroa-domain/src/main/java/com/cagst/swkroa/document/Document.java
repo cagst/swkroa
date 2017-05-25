@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
  */
 public final class Document implements Serializable {
   public static final String MEMBERSHIP = "MEMBERSHIP";
+  public static final String TRANSACTION = "TRANSACTION";
 
   private long document_id;
   private long parent_entity_id;

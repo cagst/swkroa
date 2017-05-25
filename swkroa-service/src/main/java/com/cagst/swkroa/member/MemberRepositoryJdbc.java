@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.cagst.common.db.BaseRepositoryJdbc;
-import com.cagst.common.db.StatementLoader;
-import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.codevalue.CodeValue;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.ContactRepository;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
-import com.cagst.swkroa.county.CountyRepository;
+import com.cagst.swkroa.country.CountryRepository;
+import com.cagst.swkroa.internal.BaseRepositoryJdbc;
+import com.cagst.swkroa.internal.StatementLoader;
 import com.cagst.swkroa.person.PersonRepository;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserType;
+import com.cagst.swkroa.utils.SwkroaStringUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -64,7 +64,7 @@ import org.springframework.util.Assert;
 
   private final PersonRepository personRepo;
   private final MemberTypeRepository memberTypeRepo;
-  private final CountyRepository countyRepo;
+  private final CountryRepository countryRepo;
   private final ContactRepository contactRepo;
 
   /**
@@ -76,8 +76,8 @@ import org.springframework.util.Assert;
    *     The {@link PersonRepository} to use to retrieve the Person attributes.
    * @param memberTypeRepo
    *     The {@link MemberTypeRepository} to use to populate the {@link MemberType} objects.
-   * @param countyRepo
-   *     The {@link CountyRepository} to use to populate the MembershipCounty objects.
+   * @param countryRepo
+   *     The {@link CountryRepository} to use to populate the MembershipCounty objects.
    * @param contactRepo
    *     The {@link ContactRepository} to use to populate contact objects.
    */
@@ -85,41 +85,42 @@ import org.springframework.util.Assert;
   public MemberRepositoryJdbc(DataSource dataSource,
                               PersonRepository personRepo,
                               MemberTypeRepository memberTypeRepo,
-                              CountyRepository countyRepo,
+                              CountryRepository countryRepo,
                               ContactRepository contactRepo) {
 
     super(dataSource);
 
     this.personRepo = personRepo;
     this.memberTypeRepo = memberTypeRepo;
-    this.countyRepo = countyRepo;
+    this.countryRepo = countryRepo;
     this.contactRepo = contactRepo;
   }
 
   @Override
-//  @Cacheable(value = "membersList", key = "#membership.getMembershipUID()")
   public List<Member> getMembersForMembership(Membership membership) {
-    Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
+    Assert.notNull(membership, "Argument [membership] cannot be null");
 
     LOGGER.info("Calling getMembersForMembership for [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("membership_id", membership.getMembershipUID());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERS_FOR_MEMBERSHIP), params, new MemberMapper(personRepo, memberTypeRepo));
+    return getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERS_FOR_MEMBERSHIP),
+        new MapSqlParameterSource("membership_id", membership.getMembershipUID()),
+        new MemberMapper(personRepo, memberTypeRepo));
   }
 
   @Override
   public List<Member> getMembersByName(String name, Status status, int start, int limit) {
     LOGGER.info("Calling getMembersByName for [{}].", name);
 
-    Assert.hasText(name, "Assertion Failture - argument [name] cannot be null or empty");
-    Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
+    Assert.hasText(name, "Argument [name] cannot be null or empty");
+    Assert.notNull(status, "Argument [status] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
     MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.addValue("name", SwkroaStringUtils.normalizeToKey(name) + "%");
     params.addValue("status", status.toString());
     params.addValue("start", start);
     params.addValue("limit", limit);
@@ -135,8 +136,9 @@ import org.springframework.util.Assert;
     Assert.notNull(status, "Assertion Failure - argument [status] cannot be null");
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
+
     MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("name", CGTStringUtils.normalizeToKey(name) + "%");
+    params.addValue("name", SwkroaStringUtils.normalizeToKey(name) + "%");
     params.addValue("status", status.toString());
 
     return getJdbcTemplate().queryForObject(stmtLoader.load(GET_MEMBERS_BY_NAME_COUNT), params, Long.class);
@@ -147,10 +149,9 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getMemberByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("member_id", uid);
 
-    List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_UID), params,
+    List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_UID),
+        new MapSqlParameterSource("member_id", uid),
         new MemberMapper(personRepo, memberTypeRepo));
 
     if (members.size() == 1) {
@@ -169,11 +170,9 @@ import org.springframework.util.Assert;
     LOGGER.info("Calling getMemberByPersonUID for [{}]", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("person_id", uid);
 
     List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_PERSON_UID),
-        params,
+        new MapSqlParameterSource("person_id", uid),
         new MemberMapper(personRepo, memberTypeRepo));
 
     if (members.size() == 1) {
@@ -188,15 +187,14 @@ import org.springframework.util.Assert;
 
   @Override
   public Optional<Member> getMemberByOwnerId(String ownerId) throws IncorrectResultSizeDataAccessException {
-    Objects.requireNonNull(ownerId, "Assertion Failure: argument [ownerId] cannot be null");
+    Objects.requireNonNull(ownerId, "Argument [ownerId] cannot be null");
 
     LOGGER.info("Calling getMemberByOwnerId for [{}]", ownerId);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("owner_ident", ownerId);
 
-    List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_OWNER_ID), params,
+    List<Member> members = getJdbcTemplate().query(stmtLoader.load(GET_MEMBER_BY_OWNER_ID),
+        new MapSqlParameterSource("owner_ident", ownerId),
         new MemberMapper(personRepo, memberTypeRepo));
 
     if (members.size() == 1) {
@@ -211,31 +209,28 @@ import org.springframework.util.Assert;
   }
 
   @Override
-//  @Cacheable(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
   public List<MembershipCounty> getMembershipCountiesForMembership(Membership membership) {
-    Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
+    Assert.notNull(membership, "Argument [membership] cannot be null");
 
     LOGGER.info("Calling getMembershipCountiesForMembership for [{}].", membership.getMembershipUID());
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("membership_id", membership.getMembershipUID());
 
-    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP), params,
-        new MembershipCountyMapper(countyRepo));
+    return getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_COUNTIES_FOR_MEMBERSHIP),
+        new MapSqlParameterSource("membership_id", membership.getMembershipUID()),
+        new MembershipCountyMapper(countryRepo));
   }
 
   @Override
   public MembershipCounty getMembershipCountyByUID(long uid) throws IncorrectResultSizeDataAccessException {
-
     LOGGER.info("Calling getMembershipCountyByUID for [{}].", uid);
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("membership_county_id", uid);
 
-    List<MembershipCounty> counties = getJdbcTemplate().query(stmtLoader.load(GET_MEMBERSHIP_COUNTY_BY_UID), params,
-        new MembershipCountyMapper(countyRepo));
+    List<MembershipCounty> counties = getJdbcTemplate().query(
+        stmtLoader.load(GET_MEMBERSHIP_COUNTY_BY_UID),
+        new MapSqlParameterSource("membership_county_id", uid),
+        new MembershipCountyMapper(countryRepo));
 
     if (counties.size() == 1) {
       return counties.get(0);
@@ -250,32 +245,33 @@ import org.springframework.util.Assert;
 
   @Override
   public String generateOwnerId(String firstName, String lastName) {
-    Assert.hasText(firstName, "Assertion Failure - argument [firstName] cannot be null or empty.");
-    Assert.isTrue(firstName.length() > 2, "Assertion Failure - argument [firstName] must have at least 3 characters.");
-    Assert.hasText(lastName, "Assertion Failure - argument [lastName] cannot be null or empty.");
-    Assert.isTrue(lastName.length() > 2, "Assertion Failure - argument [lastName] must have at least 3 characters.");
+    Assert.hasText(firstName, "Argument [firstName] cannot be null or empty.");
+    Assert.isTrue(firstName.length() > 2, "Argument [firstName] must have at least 3 characters.");
+    Assert.hasText(lastName, "Argument [lastName] cannot be null or empty.");
+    Assert.isTrue(lastName.length() > 2, "Argument [lastName] must have at least 3 characters.");
 
     LOGGER.info("Calling generateOwnerId for [{}, {}].", lastName, firstName);
 
     String partial = StringUtils.left(lastName, 3).toUpperCase() + StringUtils.left(firstName, 3).toUpperCase();
 
     StatementLoader stmtLoader = StatementLoader.getLoader(getClass(), getStatementDialect());
-    MapSqlParameterSource params = new MapSqlParameterSource();
-    params.addValue("ownerIdent", partial + '%');
 
-    int cnt = getJdbcTemplate().queryForObject(stmtLoader.load(GET_PARTIAL_OWNERID_COUNT), params, Integer.class);
+    int cnt = getJdbcTemplate().queryForObject(
+        stmtLoader.load(GET_PARTIAL_OWNERID_COUNT),
+        new MapSqlParameterSource("ownerIdent", partial + '%'),
+        Integer.class);
+
     return (partial + cnt);
   }
 
   @Override
   @Transactional
-//  @CacheEvict(value = "membersList", key = "#membership.getMembershipUID()")
   public Member saveMember(Member member, Membership membership, User user)
       throws DataAccessException {
 
-    Assert.notNull(member, "Assertion Failed - argument [member] cannot be null");
-    Assert.notNull(membership, "Assertion Failed - argument [membership] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(member, "Argument [member] cannot be null");
+    Assert.notNull(membership, "Argument [membership] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving Member [{}]", member.getMembershipUID());
 
@@ -291,24 +287,46 @@ import org.springframework.util.Assert;
       savedMember = updateMember(member, membership, user);
     }
 
-    for (Address address : member.getPerson().getAddresses()) {
-      address.setParentEntityUID(member.getMemberUID());
-      address.setParentEntityName(UserType.MEMBER.name());
-
-      contactRepo.saveAddress(address, user);
+    // reset Member Name since it may have changed
+    if (StringUtils.isNotEmpty(savedMember.getCompanyName())) {
+      savedMember.setMemberName(savedMember.getCompanyName());
+    } else if (savedMember.getPerson() != null) {
+      if (StringUtils.isNotEmpty(savedMember.getPerson().getLastName()) && StringUtils.isNotEmpty(savedMember.getPerson().getFirstName())) {
+        savedMember.setMemberName(savedMember.getPerson().getLastName() + ", " + savedMember.getPerson().getFirstName());
+      } else if (StringUtils.isNotEmpty(savedMember.getPerson().getLastName())) {
+        savedMember.setMemberName(savedMember.getPerson().getLastName());
+      } else {
+        savedMember.setMemberName(savedMember.getPerson().getFirstName());
+      }
     }
 
-    for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
-      phone.setParentEntityUID(member.getMemberUID());
-      phone.setParentEntityName(UserType.MEMBER.name());
+    if (member.getPerson() != null) {
+      for (Address address : member.getPerson().getAddresses()) {
+        Address saveAddress = address.toBuilder()
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
 
-      contactRepo.savePhoneNumber(phone, user);
-    }
+        contactRepo.saveAddress(saveAddress, user);
+      }
 
-    for (EmailAddress email : member.getPerson().getEmailAddresses()) {
-      email.setParentEntityUID(member.getMemberUID());
-      email.setParentEntityName(UserType.MEMBER.name());
-      contactRepo.saveEmailAddress(email, user);
+      for (PhoneNumber phone : member.getPerson().getPhoneNumbers()) {
+        PhoneNumber savePhoneNumber = phone.toBuilder()
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
+
+        contactRepo.savePhoneNumber(savePhoneNumber, user);
+      }
+
+      for (EmailAddress email : member.getPerson().getEmailAddresses()) {
+        EmailAddress saveEmailAddress = email.toBuilder()
+            .setParentEntityUID(member.getMemberUID())
+            .setParentEntityName(UserType.MEMBER.name())
+            .build();
+
+        contactRepo.saveEmailAddress(saveEmailAddress, user);
+      }
     }
 
     return savedMember;
@@ -316,14 +334,13 @@ import org.springframework.util.Assert;
 
   @Override
   @Transactional
-//  @CacheEvict(value = "membershipCountiesList", key = "#membership.getMembershipUID()")
   public MembershipCounty saveMembershipCounty(MembershipCounty county,
                                                Membership membership,
                                                User user)
       throws DataAccessException {
 
-    Assert.notNull(county, "Assertion Failed - argument [builder] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(county, "Argument [builder] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Saving MembershipCounty [{}]", county.getCounty().getCountyName());
 
@@ -340,9 +357,9 @@ import org.springframework.util.Assert;
   public Member closeMember(Member member, CodeValue closeReason, String closeText, User user)
       throws IncorrectResultSizeDataAccessException {
 
-    Assert.notNull(closeReason, "Assertion Failure - argument [closeReason] cannot be null");
-    Assert.notNull(member, "Assertion Failure - argument [member] cannot be null");
-    Assert.notNull(user, "Assertion Failed - argument [user] cannot be null");
+    Assert.notNull(closeReason, "Argument [closeReason] cannot be null");
+    Assert.notNull(member, "Argument [member] cannot be null");
+    Assert.notNull(user, "Argument [user] cannot be null");
 
     LOGGER.info("Closing Member [{}]", member.getMemberUID());
 

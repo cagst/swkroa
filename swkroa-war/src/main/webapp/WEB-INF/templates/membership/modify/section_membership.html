@@ -9,18 +9,18 @@
       <div class="row">
         <div class="col-xs-2">
           <select class="form-control"
-                  data-ng-model="membership.primaryMember.memberType"
-                  data-ng-options="type.memberTypeDisplay for type in memberTypes | filter:{primary:!false}">
+                  data-ng-model="ctrl.membership.primaryMember.memberType"
+                  data-ng-options="type.memberTypeDisplay for type in ctrl.memberTypes | filter:{primary:!false} track by type.memberTypeUID">
           </select>
         </div>
         <div class="col-xs-10">
           <span class="pull-right"
-                data-ng-show="membership.primaryMember.memberType.allowSpouse">
+                data-ng-show="ctrl.membership.primaryMember.memberType.allowSpouse">
             <button type="button" class="btn btn-success btn-xs hover-reveal"
-                    data-ng-show="!membership.spouse || !membership.spouse.active"
-                    data-ng-click="addSpouse()">
+                    data-ng-show="!ctrl.membership.spouse || !ctrl.membership.spouse.active"
+                    data-ng-click="ctrl.addSpouse()">
               <i class="fa fa-plus"></i>
-              <span th:text="#{com.cagst.swkroa.membership.member.spouse.add}">zzz Add Spouse</span>
+              <span th:text="#{membership.member.spouse.add}">zzz Add Spouse</span>
             </button>
           </span>
         </div>
@@ -30,7 +30,7 @@
     <div class="panel-body">
       <div th:include="membership/modify/section_primary_member"></div>
       <div th:include="membership/modify/section_primary_spouse"
-           data-ng-show="membership.spouse && membership.spouse.active"></div>
+           data-ng-show="ctrl.membership.spouse && ctrl.membership.spouse.active"></div>
       <div th:include="membership/modify/section_primary_contact"></div>
     </div>
   </div>

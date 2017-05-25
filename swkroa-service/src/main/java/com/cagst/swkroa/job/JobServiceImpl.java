@@ -65,14 +65,14 @@ public class JobServiceImpl implements JobService {
    *    The {@link JobRepository} used to retrieve {@link Job} and {@link JobDetail} objects.
    */
   @Inject
-  public JobServiceImpl(final JobRepository jobRepo,
-                        final CodeValueRepository codeValueRepo,
-                        final MembershipRepository membershipRepo,
-                        final MemberRepository memberRepo,
-                        final MemberTypeRepository memberTypeRepo,
-                        final DocumentRepository documentRepo,
-                        final TransactionRepository transactionRepo,
-                        final DataSource dataSource) {
+  public JobServiceImpl(JobRepository jobRepo,
+                        CodeValueRepository codeValueRepo,
+                        MembershipRepository membershipRepo,
+                        MemberRepository memberRepo,
+                        MemberTypeRepository memberTypeRepo,
+                        DocumentRepository documentRepo,
+                        TransactionRepository transactionRepo,
+                        DataSource dataSource) {
     this.jobRepo = jobRepo;
     this.codeValueRepo = codeValueRepo;
     this.membershipRepo = membershipRepo;
@@ -86,11 +86,11 @@ public class JobServiceImpl implements JobService {
 
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void processRenewalJob(final JobDetail jobDetail,
-                                final String transactionDescription,
-                                final DateTime transactionDate,
-                                final String transactionMemo,
-                                final User user) {
+  public void processRenewalJob(JobDetail jobDetail,
+                                String transactionDescription,
+                                DateTime transactionDate,
+                                String transactionMemo,
+                                User user) {
     // set JobDetail as started (In-Process)
     jobDetail.setJobStatus(JobStatus.INPROCESS);
     jobRepo.saveJobDetail(jobDetail, user);
@@ -113,25 +113,6 @@ public class JobServiceImpl implements JobService {
     CodeValue incrementalDues = codeValueRepo.getCodeValueByMeaning(CodeSetType.TRANSACTION_ENTRY_TYPE, "TRANS_DUES_INC");
 
     try {
-      // load the report template
-      JasperReport jasperReport = JasperReportLoader.getReport(JasperReportLoader.MEMBERSHIP_RENEWAL_PDF);
-
-      // Create the Document for the Renewal Membership Letter
-      byte[] reportContent = generateDueRenewalReport(jasperReport, membershipId, transactionDescription);
-
-      Document document = new Document();
-      document.setParentEntityUID(membershipId);
-      document.setParentEntityName(Document.MEMBERSHIP);
-      document.setDocumentType(renewalLetter);
-      document.setDocumentName(transactionDescription);
-      document.setDocumentFormat(MediaType.PDF.toString());
-      document.setDocumentContents(reportContent);
-      document.setBeginEffectiveDate(new DateTime());
-      document.setDocumentDescription(transactionDescription);
-
-      // Save the Renewal Membership Letter document
-      documentRepo.saveDocument(document, user);
-
       List<Member> members = memberRepo.getMembersForMembership(membership);
 
       // Create Transaction
@@ -169,7 +150,26 @@ public class JobServiceImpl implements JobService {
       }
 
       // Save the Invoice (transaction)
-      transactionRepo.saveTransaction(invoice, user);
+      Transaction savedTransaction = transactionRepo.saveTransaction(invoice, user);
+
+      // load the report template
+      JasperReport jasperReport = JasperReportLoader.getReport(JasperReportLoader.MEMBERSHIP_RENEWAL_PDF);
+
+      // Create the Document for the Renewal Membership Letter
+      byte[] reportContent = generateDueRenewalReport(jasperReport, membershipId, transactionDescription);
+
+      Document document = new Document();
+      document.setParentEntityUID(savedTransaction.getTransactionUID());
+      document.setParentEntityName(Document.TRANSACTION);
+      document.setDocumentType(renewalLetter);
+      document.setDocumentName(transactionDescription);
+      document.setDocumentFormat(MediaType.PDF.toString());
+      document.setDocumentContents(reportContent);
+      document.setBeginEffectiveDate(new DateTime());
+      document.setDocumentDescription(transactionDescription);
+
+      // Save the Renewal Membership Letter document
+      documentRepo.saveDocument(document, user);
 
       // Update Membership (next_due_dt)
       membershipRepo.updateNextDueDate(membershipId, user);
@@ -191,10 +191,7 @@ public class JobServiceImpl implements JobService {
                                           final long membershipId,
                                           final String transactionDescription) {
 
-    Connection connection = null;
-    try {
-      connection = dataSource.getConnection();
-
+    try (Connection connection = dataSource.getConnection()) {
       List<Long> membershipIds = new ArrayList<>(1);
       membershipIds.add(membershipId);
 
@@ -206,14 +203,6 @@ public class JobServiceImpl implements JobService {
     } catch (JRException|SQLException ex) {
       LOGGER.error(ex.getMessage(), ex);
       return null;
-    } finally {
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException ex) {
-          // ignore, we are closing
-        }
-      }
     }
   }
 }

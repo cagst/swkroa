@@ -1,14 +1,13 @@
 package com.cagst.swkroa.person;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import com.cagst.common.formatter.DefaultNameFormatter;
-import com.cagst.common.formatter.NameFormatter;
-import com.cagst.common.util.CGTCollatorBuilder;
+
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
@@ -16,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTimeZone;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Representation of a generic Person within the system.
@@ -24,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Craig Gaskill
  */
 public class Person implements Serializable, Comparable<Person> {
-  private static final long serialVersionUID = 4546930957600757055L;
+  private static final long serialVersionUID = 1L;
 
   private long person_id;
   private long title_cd;
@@ -41,9 +39,6 @@ public class Person implements Serializable, Comparable<Person> {
   // meta-data
   private boolean active_ind = true;
   private long updt_cnt;
-
-  @Autowired
-  private final NameFormatter nameFormatter = new DefaultNameFormatter();
 
   /**
    * Gets the unique identifier for the Person.
@@ -127,14 +122,6 @@ public class Person implements Serializable, Comparable<Person> {
    */
   public void setMiddleName(final String middleName) {
     this.name_middle = middleName;
-  }
-
-  public String getFullName() {
-    if (getPersonUID() == 1L) {
-      return name_last;
-    }
-
-    return nameFormatter.formatFullName(name_last, name_first, name_middle);
   }
 
   public Locale getLocale() {
@@ -319,10 +306,14 @@ public class Person implements Serializable, Comparable<Person> {
       return 0;
     }
 
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(name_last, rhs.getLastName());
-    builder.append(name_first, rhs.getFirstName());
+    Collator collator = Collator.getInstance();
+    collator.setStrength(Collator.PRIMARY);
 
-    return builder.build();
+    int cmp = collator.compare(name_last, rhs.getLastName());
+    if (cmp != 0) {
+      return cmp;
+    }
+
+    return collator.compare(name_first, rhs.getFirstName());
   }
 }

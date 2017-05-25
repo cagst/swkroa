@@ -1,16 +1,16 @@
 package com.cagst.swkroa.member;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.cagst.common.util.CGTCollatorBuilder;
-import com.cagst.common.util.CGTStringUtils;
 import com.cagst.swkroa.contact.Address;
 import com.cagst.swkroa.contact.EmailAddress;
 import com.cagst.swkroa.contact.PhoneNumber;
 import com.cagst.swkroa.person.Person;
+import com.cagst.swkroa.utils.SwkroaStringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -21,7 +21,7 @@ import org.joda.time.DateTime;
  * @author Craig Gaskill
  */
 public final class Member implements Serializable, Comparable<Member> {
-  private static final long serialVersionUID = 3919236058086901376L;
+  private static final long serialVersionUID = 1L;
 
   private long member_id;
   private String member_name;
@@ -114,7 +114,7 @@ public final class Member implements Serializable, Comparable<Member> {
    *     The {@link String} that identifies the Member for the user.
    */
   public void setOwnerIdent(final String ownerIdent) {
-    this.owner_ident = CGTStringUtils.normalizeToKey(ownerIdent);
+    this.owner_ident = SwkroaStringUtils.normalizeToKey(ownerIdent);
   }
 
   public MemberType getMemberType() {
@@ -306,9 +306,9 @@ public final class Member implements Serializable, Comparable<Member> {
       return 0;
     }
 
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(getMemberName(), rhs.getMemberName());
+    Collator collator = Collator.getInstance();
+    collator.setStrength(Collator.PRIMARY);
 
-    return builder.build();
+    return collator.compare(getMemberName(), rhs.getMemberName());
   }
 }

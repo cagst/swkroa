@@ -5,10 +5,11 @@ import javax.servlet.Filter;
 
 import com.cagst.swkroa.security.ForceChangePasswordFilter;
 import com.cagst.swkroa.security.SigninSuccessHandler;
-import com.cagst.swkroa.security.SignoutHandler;
 import com.cagst.swkroa.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,7 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private static final int STRENGTH = 12;
 
   private SigninSuccessHandler signinSuccessHandler;
-  private SignoutHandler signoutHandler;
 
   @Bean
   public PasswordEncoder getPasswordEncoder() {
@@ -41,9 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Inject
   public void configureGlobal(AuthenticationManagerBuilder auth, UserService userService) throws Exception {
     auth.userDetailsService(userService).passwordEncoder(getPasswordEncoder());
+    auth.authenticationEventPublisher(getAuthenticationEventPublisher());
 
     signinSuccessHandler = new SigninSuccessHandler(userService);
-    signoutHandler = new SignoutHandler();
   }
 
   @Override
@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .antMatchers("/public/**").permitAll()
           .antMatchers("/auth/**").permitAll()
           .antMatchers("/api/register/**").permitAll()
+          .antMatchers("/api/forgotPassword/**").permitAll()
           .antMatchers("/api/codesets/**").permitAll()
           .anyRequest().authenticated()
         .and().formLogin()
@@ -74,8 +75,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .invalidateHttpSession(true)
           .deleteCookies("JSESSIONID")
           .logoutSuccessUrl("/auth/signedout")
-          .logoutSuccessHandler(signoutHandler)
         .and().addFilterAfter(getChangePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
+  }
+
+  @Bean
+  public AuthenticationEventPublisher getAuthenticationEventPublisher() {
+    return new DefaultAuthenticationEventPublisher();
   }
 
   private Filter getChangePasswordFilter() {

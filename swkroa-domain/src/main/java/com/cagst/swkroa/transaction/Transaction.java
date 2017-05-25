@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import com.cagst.common.util.CGTCollatorBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -17,7 +16,9 @@ import org.joda.time.DateTime;
  *
  * @author Craig Gaskill
  */
-public class Transaction implements Serializable, Comparable<Transaction> {
+public class Transaction implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   private long transaction_id;
   private long membership_id;
   private String membership_name;
@@ -196,17 +197,5 @@ public class Transaction implements Serializable, Comparable<Transaction> {
         Objects.equals(transaction_dt, rhs.getTransactionDate()) &&
         Objects.equals(transaction_type, rhs.getTransactionType()) &&
         Objects.equals(getTransactionAmount(), rhs.getTransactionAmount());
-  }
-
-  @Override
-  public int compareTo(final Transaction rhs) {
-    if (rhs == null) {
-      return 0;
-    }
-
-    CGTCollatorBuilder builder = new CGTCollatorBuilder();
-    builder.append(transaction_dt, rhs.getTransactionDate());
-
-    return builder.build();
   }
 }

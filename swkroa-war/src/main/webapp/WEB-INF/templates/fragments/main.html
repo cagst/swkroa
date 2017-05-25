@@ -103,6 +103,9 @@
           <li>
             <a th:href="@{/maintain/users}" th:text="#{maintain.menu.user}">zzz Users</a>
           </li>
+          <li>
+            <a th:href="@{/maintain/system}" th:text="#{maintain.menu.system}">zzz System</a>
+          </li>
         </ul>
       </li>
       <li id="menuTransactions" sec:authorize="hasRole('MEMBER')">

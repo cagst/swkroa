@@ -55,9 +55,9 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
     return entry;
   }
 
-  public static TransactionEntry mapRow(final SqlRowSet rs,
-                                        final Transaction transaction,
-                                        final CodeValueRepository codeValueRepo) {
+  public static TransactionEntry mapRow(SqlRowSet rs,
+                                        Transaction transaction,
+                                        CodeValueRepository codeValueRepo) {
 
     TransactionEntry entry = new TransactionEntry();
     entry.setTransactionEntryUID(rs.getLong(TRANSACTION_ENTRY_ID));
@@ -82,7 +82,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
    *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
-  public static MapSqlParameterSource mapInsertStatement(final TransactionEntry entry, final User user) {
+  public static MapSqlParameterSource mapInsertStatement(TransactionEntry entry, User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
     mapCommonParameters(params, entry, user);
     params.addValue(CREATE_ID, user.getUserUID());
@@ -100,7 +100,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
    *
    * @return A {@link MapSqlParameterSource} that can be used in a {@code jdbcTemplate.update} statement.
    */
-  public static MapSqlParameterSource mapUpdateStatement(final TransactionEntry entry, final User user) {
+  public static MapSqlParameterSource mapUpdateStatement(TransactionEntry entry, User user) {
     MapSqlParameterSource params = new MapSqlParameterSource();
     mapCommonParameters(params, entry, user);
     params.addValue(TRANSACTION_ENTRY_ID, entry.getTransactionEntryUID());
@@ -109,7 +109,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
     return params;
   }
 
-  private static void mapCommonParameters(final MapSqlParameterSource params, final TransactionEntry entry, final User user) {
+  private static void mapCommonParameters(MapSqlParameterSource params, TransactionEntry entry, User user) {
 //    params.addValue(MEMBER_ID, entry.getMember() != null ? entry.getMember().getMemberUID() : null);
     params.addValue(TRANSACTION_ID, entry.getTransaction().getTransactionUID());
     params.addValue(TRANSACTION_ENTRY_TYPE_CD, entry.getTransactionEntryType().getCodeValueUID());
