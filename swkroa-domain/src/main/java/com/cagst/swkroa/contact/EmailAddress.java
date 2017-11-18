@@ -105,6 +105,7 @@ public abstract class EmailAddress implements Serializable, Comparable<EmailAddr
     return new AutoValue_EmailAddress.Builder()
         .setEmailAddressUID(0L)
         .setParentEntityUID(0L)
+        .setEmailTypeCD(0L)
         .setPrimary(false)
         .setActive(true)
         .setEmailAddressUpdateCount(0L);
@@ -129,7 +130,7 @@ public abstract class EmailAddress implements Serializable, Comparable<EmailAddr
     @JsonProperty(value = "parentEntityName", required = true)
     public abstract Builder setParentEntityName(String parentEntityName);
 
-    @JsonProperty(value = "emailTypeCD", required = true)
+    @JsonProperty(value = "emailTypeCD")
     public abstract Builder setEmailTypeCD(long emailTypeCD);
 
     @JsonProperty(value = "emailAddress", required =  true)

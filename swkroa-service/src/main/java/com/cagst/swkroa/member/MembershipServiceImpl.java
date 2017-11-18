@@ -27,6 +27,7 @@ import com.cagst.swkroa.transaction.Transaction;
 import com.cagst.swkroa.transaction.TransactionRepository;
 import com.cagst.swkroa.user.User;
 import com.cagst.swkroa.user.UserType;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Craig Gaskill
  */
 @Named("membershipService")
-public final class MembershipServiceImpl implements MembershipService {
+public class MembershipServiceImpl implements MembershipService {
   private static final Logger LOGGER = LoggerFactory.getLogger(MembershipServiceImpl.class);
 
   private final MembershipRepository membershipRepo;
@@ -179,19 +180,63 @@ public final class MembershipServiceImpl implements MembershipService {
       }
 
       for (PhoneNumber phone : member.getPhoneNumbers()) {
-        PhoneNumber savePhone = phone.toBuilder()
-            .setParentEntityUID(member.getMemberUID())
-            .setParentEntityName(UserType.MEMBER.name())
-            .build();
+        PhoneNumber savePhone;
+        if (phone.getPhoneUID() > 0L) {
+          if (StringUtils.isEmpty(phone.getPhoneNumber())) {
+            savePhone = phone.toBuilder()
+                .setParentEntityUID(member.getMemberUID())
+                .setParentEntityName(UserType.MEMBER.name())
+                .setPhoneTypeCD(0L)
+                .setActive(false)
+                .build();
+          } else {
+            savePhone = phone.toBuilder()
+                .setParentEntityUID(member.getMemberUID())
+                .setParentEntityName(UserType.MEMBER.name())
+                .build();
+          }
+        } else {
+          if (StringUtils.isEmpty(phone.getPhoneNumber())) {
+            // skip, no need to save a new phone number w/o an actual phone number
+            continue;
+          } else {
+            savePhone = phone.toBuilder()
+                .setParentEntityUID(member.getMemberUID())
+                .setParentEntityName(UserType.MEMBER.name())
+                .build();
+          }
+        }
 
         contactRepo.savePhoneNumber(savePhone, user);
       }
 
       for (EmailAddress email : member.getEmailAddresses()) {
-        EmailAddress saveEmailAddress = email.toBuilder()
-            .setParentEntityUID(member.getMemberUID())
-            .setParentEntityName(UserType.MEMBER.name())
-            .build();
+        EmailAddress saveEmailAddress;
+        if (email.getEmailAddressUID() > 0L) {
+          if (StringUtils.isEmpty(email.getEmailAddress())) {
+            saveEmailAddress = email.toBuilder()
+                .setParentEntityUID(member.getMemberUID())
+                .setParentEntityName(UserType.MEMBER.name())
+                .setEmailTypeCD(0L)
+                .setActive(false)
+                .build();
+          } else {
+            saveEmailAddress = email.toBuilder()
+                .setParentEntityUID(member.getMemberUID())
+                .setParentEntityName(UserType.MEMBER.name())
+                .build();
+          }
+        } else {
+          if (StringUtils.isEmpty(email.getEmailAddress())) {
+            // skip, no need to save a new email address w/o an actual email address
+            continue;
+          } else {
+            saveEmailAddress = email.toBuilder()
+                .setParentEntityUID(member.getMemberUID())
+                .setParentEntityName(UserType.MEMBER.name())
+                .build();
+          }
+        }
 
         contactRepo.saveEmailAddress(saveEmailAddress, user);
       }

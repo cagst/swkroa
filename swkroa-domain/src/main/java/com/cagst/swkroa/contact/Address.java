@@ -157,6 +157,7 @@ public abstract class Address implements Serializable, Comparable<Address> {
     return new AutoValue_Address.Builder()
         .setAddressUID(0L)
         .setParentEntityUID(0L)
+        .setAddressTypeCD(0L)
         .setPrimary(false)
         .setActive(true)
         .setAddressUpdateCount(0L);
@@ -180,7 +181,7 @@ public abstract class Address implements Serializable, Comparable<Address> {
     @JsonProperty(value = "parentEntityName")
     public abstract Builder setParentEntityName(String parentEntityName);
 
-    @JsonProperty(value = "addressTypeCD", required = true)
+    @JsonProperty(value = "addressTypeCD")
     public abstract Builder setAddressTypeCD(long addressTypeCD);
 
     @JsonProperty(value = "addressLine1", required = true)

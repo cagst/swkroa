@@ -45,7 +45,7 @@ public abstract class PhoneNumber implements Serializable, Comparable<PhoneNumbe
   @JsonProperty(value = "parentEntityName", required = true)
   public abstract String getParentEntityName();
 
-  @JsonProperty(value = "phoneTypeCD", required = true)
+  @JsonProperty(value = "phoneTypeCD")
   public abstract long getPhoneTypeCD();
 
   @JsonProperty(value = "phoneNumber", required = true)
@@ -143,7 +143,7 @@ public abstract class PhoneNumber implements Serializable, Comparable<PhoneNumbe
     @JsonProperty(value = "parentEntityName", required = true)
     public abstract Builder setParentEntityName(String parentEntityName);
 
-    @JsonProperty(value = "phoneTypeCD", required = true)
+    @JsonProperty(value = "phoneTypeCD")
     public abstract Builder setPhoneTypeCD(long phoneTypeCD);
 
     @JsonProperty(value = "phoneNumber", required = true)

@@ -1,5 +1,6 @@
 package com.cagst.swkroa.controller.web;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import com.cagst.swkroa.user.User;
@@ -7,7 +8,6 @@ import com.cagst.swkroa.user.UserService;
 import com.cagst.swkroa.web.util.WebAppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public final class HomeController {
   private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
-  @Autowired
+  @Inject
   private UserService userService;
 
   /**

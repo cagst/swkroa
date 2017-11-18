@@ -92,6 +92,20 @@
       <input id="primarySpouseCareOf" type="text" class="form-control" maxlength="50"
              data-ng-model="ctrl.membership.spouse.inCareOf" />
     </div>
+    <div class="col-xs-2">
+      <label for="spouseEmailType" class="control-label">Email Type</label>
+      <select id="spouseEmailType" class="form-control" name="emailType"
+              data-ng-options="type.codeValueUID as type.display for type in ctrl.emailTypes"
+              data-ng-model="ctrl.membership.spouse.emailAddresses[0].emailTypeCD">
+        <option value="" th:text="#{common.none}"></option>
+      </select>
+    </div>
+    <div class="col-xs-2">
+      <label for="spouseEmail" class="control-label">Email Address</label>
+      <input id="spouseEmail" type="email" class="form-control" maxlength="256"
+             th:placeholder="#{membership.member.email.prompt}"
+             data-ng-model="ctrl.membership.spouse.emailAddresses[0].emailAddress" />
+    </div>
   </div>
 </div>
 
